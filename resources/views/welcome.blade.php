@@ -144,6 +144,201 @@
                 </div>
             </div>
         </section>
+        <section class="rcnt_vd">
+            <div class="main_container">
+                <div class="title_container">
+                    <h2>Recent Trainings</h2>
+                </div>
+                <div class="container">
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="fr_img">
+                            <div class="img_container">
+                                <img src="/images/image5-min-1.png"/>
+                                <div class="trns">
+                                    <div class="logo">
+                                        <img src="../images/gpt_logo.png"/>
+                                    </div>
+                                    <div class="ctchprs">
+                                        <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>Watch Here</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="caption">
+                                <div class="ctgry_dur">
+                                    <div class="ctgry">
+                                        <p>Category: <i>Tips & Tricks</i></p>
+                                    </div>
+                                    <div class="dur">
+                                        <p>Duration: <i>30s</i></p>
+                                    </div>
+                                </div>
+                                <div class="trainer">
+                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                </div>    
+                            </div>                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
     <script src="script/home_slider.js"></script>
 </html>

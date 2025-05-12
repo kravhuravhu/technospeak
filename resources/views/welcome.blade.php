@@ -324,7 +324,7 @@
                             <div class="caption">
                                 <div class="ctgry_dur">
                                     <div class="ctgry">
-                                        <p>Category: <i>Tips & Tricks</i></p>
+                                        <p>Category: <i>Workshops</i></p>
                                     </div>
                                     <div class="dur">
                                         <p>Duration: <i>30s</i></p>

@@ -331,7 +331,7 @@
                                     </div>
                                 </div>
                                 <div class="trainer">
-                                    <p>Instructor: <i>Lehlogonolo</i></p>
+                                    <p>Instructor: <i>Phuti</i></p>
                                 </div>    
                             </div>                  
                         </div>

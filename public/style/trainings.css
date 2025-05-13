@@ -1,0 +1,115 @@
+*,
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+    font-family: 'Roboto', sans-serif;
+}
+
+:root {
+    /* Colours */
+    --white-color: #fff;
+    --white2-color: #ffffff;
+    --powBlue-color: #38b6ff;
+    --skBlue-color: #38b6ff;
+    --blue-color: #114672e0;
+    --liGrey-color: #ededed;
+    --liGrey2-color: #b4b4b4;
+    --black-color: #000000;
+    --midGrey-color: #ffffff94;
+    --liMidGrey-color: #cccccc;
+    --white-color: #fff;
+    --white-color: #fff;
+    --white-color: #fff;
+}
+
+/* nav bar section */
+.nav_container {
+    width: 100%;
+    position: relative;
+    padding: 10px;
+    background-color: #38b6ff;
+
+    & > nav {
+        width: 80%;
+        position: relative;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        & > .logo_container {
+            height: fit-content;
+            width: fit-content;
+            position: relative;
+            & a {
+                text-decoration: none; 
+                & > img {
+                    height: 100px;
+                    position: relative;
+                    object-fit: contain;
+                }
+            }
+        }
+        /* Menu Toggle */
+        & > .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            cursor: pointer;
+            height: fit-content;
+            width: fit-content;
+            justify-self: center;
+            align-self: center;
+            & > .menu-li {
+                width: 35px;
+                height: 2.5px;
+                margin: 7px 0;
+                background-color: #ededed;
+                transition: all 0.3s ease-in-out;
+            }
+        }
+        & > .nav_block {
+            width: 65%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            & > .nav-links {
+                & > ul {
+                    display: flex;
+                    padding: 0;
+                    margin: 0;
+                    list-style-type: none;
+                }
+                & > ul > li,
+                & > ul > li > a {
+                    display: inline-block;
+                    font-family: 'Roboto', sans-serif;
+                    margin: 0 10px;
+                    font-size: 1.2em;
+                    text-decoration: none;
+                    color: #fff;
+                    font-weight: 300;
+                    align-self: center;
+                    justify-self: center;
+                    transition: all .3s ease-in-out;
+                }
+                & > ul > li > a.active {
+                    padding: 10px 25px;
+                    background-color: #ffffff;
+                    color: #000000;
+                    border-radius: 50px;
+                }
+                & > ul > li > a:hover {
+                    color: #ffffff94;
+                }
+            }
+        }
+    }
+}

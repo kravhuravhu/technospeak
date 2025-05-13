@@ -144,6 +144,24 @@
                 </div>
             </div>
         </section>
+        <section class="about_summ">
+            <div class="main_container">
+                <div class="image_block block">
+                    <img src="/images/image5-min-1.png"/>
+                </div>
+                <div class="about_brief block">
+                    <div class="title_container">
+                        <h2>About Us</h2>
+                    </div>
+                    <div class="dscpt">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    </div>
+                    <div class="bttn">
+                        <button>Read More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="rcnt_vd">
             <div class="main_container">
                 <div class="title_container">
@@ -324,7 +342,7 @@
                             <div class="caption">
                                 <div class="ctgry_dur">
                                     <div class="ctgry">
-                                        <p>Category: <i>Tips & Tricks</i></p>
+                                        <p>Category: <i>Workshops</i></p>
                                     </div>
                                     <div class="dur">
                                         <p>Duration: <i>30s</i></p>

@@ -78,6 +78,7 @@ body {
                     font-weight: 300;
                     align-self: center;
                     justify-self: center;
+                    transition: all .3s ease-in-out;
                 }
                 & > ul > li > a.active {
                     padding: 10px 25px;
@@ -86,7 +87,7 @@ body {
                     border-radius: 50px;
                 }
                 & > ul > li > a:hover {
-                    color: #c9ebfff5;
+                    color: #ffffff94;
                 }
             }
         }
@@ -159,6 +160,7 @@ body {
                                 color: #cccccc;
                                 font-size: 1.2rem;
                                 font-family: 'Roboto', sans-serif;
+                                font-weight: 350;
                             }
                         }
                         & > .cta {
@@ -174,6 +176,10 @@ body {
                                     background-color: #38b6ff;
                                     width: fit-content;
                                     border-radius: 50px;
+                                    transition: all .3s ease-in-out;
+                                    &:hover {
+                                        background-color: #114672e0;
+                                    }
                                 }
                             }
                         }                    
@@ -231,13 +237,23 @@ body {
         align-items: center;
         justify-content: center;
         & > .title_container {
-            width: 100%;
+            width: auto;
             padding: 20px;
             & > h2 {
                 font-size: 3.5em;
                 font-family: 'Roboto', sans-serif;
                 color: #000000;
                 text-align: center;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30%;
+                    height: 7px;
+                    background-color: #38b6ff;
+                }
             }
         }
         & > .main_cont {
@@ -314,6 +330,7 @@ body {
                                     font-size: 1.2em;
                                     font-family: 'Roboto', sans-serif;
                                     color: #000000;
+                                    font-weight: 350;
                                 }
                             }
                             & > div {
@@ -344,6 +361,96 @@ body {
     }
 }
 
+/* brief about */
+.about_summ {
+    background-color: #ededed;
+    width: 100%;
+    position: relative;
+    padding: 35px;
+    & > .main_container {
+        width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-self: center;
+        align-self: center;
+        position: relative;
+        & > .block {
+            height: 400px;
+            flex: 1 1 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 0;
+        }
+        & > .image_block {
+            position: relative;
+            & > img {
+                height: 370px;
+                width: 500px;
+                object-fit: cover;
+                position: relative;
+                border-radius: 50px;
+            }
+        }
+        & > .about_brief {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 0;
+            & > .title_container {
+                & > h2 {
+                    position: relative;
+                    font-size: 3.5em;
+                    font-family: 'Roboto', sans-serif;
+                    color: #000000;
+                    text-align: center;
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -5px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 30%;
+                        height: 7px;
+                        background-color: #38b6ff;
+                    }
+                }
+            }
+            & > .dscpt {
+                padding: 30px;
+                & > p {
+                    font-family: "Roboto", sans-serif;
+                    font-size: 1.2em;
+                    text-align: center;
+                    font-weight: 350;
+                }
+            }
+            & > .bttn {
+                width: 100%;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                & > button {
+                    padding: 15px 20px;
+                    background-color: #38b6ff;
+                    color: #ffffff;
+                    border: none;
+                    font-size: 1em;
+                    font-family: "Roboto", sans-serif;
+                    border-radius: 50px;
+                    position: relative;
+                    cursor: pointer;
+                    transition: all .3s ease-in-out;
+                    &:hover {
+                        background-color: #114672e0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /* recent videos */
 .rcnt_vd {
     width: 100%;
@@ -353,13 +460,23 @@ body {
         width: 80%;
         margin: 0 auto;
         & > .title_container {
-            width: 100%;
+            width: auto;
             padding: 20px;
             & > h2 {
                 font-size: 3.5em;
                 font-family: 'Roboto', sans-serif;
                 color: #000000;
                 text-align: center;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 100px;
+                    height: 7px;
+                    background-color: #38b6ff;
+                }
             }
         }
         & > .container {
@@ -443,6 +560,10 @@ body {
                                     border-radius: 50px;
                                     position: relative;
                                     cursor: pointer;
+                                    transition: all .3s ease-in-out;
+                                    &:hover {
+                                        background-color: #114672e0;
+                                    }
                                 }
                             }
                         }
@@ -464,6 +585,7 @@ body {
                                     color: #000000;
                                     font-size: 1em;
                                     font-family: 'Roboto', sans-serif;
+                                    font-weight: 350;
                                 }
                             }
                             & > .dur {
@@ -473,6 +595,7 @@ body {
                                     color: #000000;
                                     font-size: 1em;
                                     font-family: 'Roboto', sans-serif;
+                                    font-weight: 350;
                                 }
                             }
                         }
@@ -484,6 +607,7 @@ body {
                                 color: #000000;
                                 font-size: 1em;
                                 font-family: 'Roboto', sans-serif;
+                                font-weight: 350;
                             }
                         }
                     }

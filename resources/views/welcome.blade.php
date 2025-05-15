@@ -157,7 +157,7 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                     </div>
                     <div class="bttn">
-                        <button>Read More</button>
+                        <a href="/about">Read More</a>
                     </div>
                 </div>
             </div>
@@ -180,7 +180,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -211,7 +211,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -242,7 +242,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -273,7 +273,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -304,7 +304,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -335,7 +335,7 @@
                                         <h3>Get To Learn How To Apply For Jobs Using ChatGPT!</h3>
                                     </div>
                                     <div class="bttn">
-                                        <button>Watch Here</button>
+                                        <a href="">Watch Here</a>
                                     </div>
                                 </div> 
                             </div>
@@ -354,6 +354,60 @@
                             </div>                  
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+        <section class="wkly_sessions">
+            <div class="main_container">
+                <div class="title_container">
+                    <h3>Real Questions. Real Answers.</h3>
+                    <h2>Join Our Weekly Q/A Sessions</h2>
+                </div>
+                <div class="button">
+                    <a href="">Register Q/A</a>
+                </div>
+            </div>
+        </section>
+        <section class="gtch">
+            <div class="main_container">
+                <div class="title_container">
+                    <h2>Get In Touch</h2>
+                </div>
+                <div class="form_container">
+                    <div class="form"> 
+                        <form action="">
+                            <div class="block">
+                                <div class="prgrph">
+                                    <p>Full Names:</p>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="uname" placeholder="Enter name here.."/>
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="prgrph">
+                                    <p>Email Address:</p>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="email" placeholder="Enter email here.."/>
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="prgrph">
+                                    <p>Message:</p>
+                                </div>
+                                <div class="field">
+                                    <textarea name="message" placeholder="Enter your message.."></textarea>
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="field">
+                                    <a href="">Submit</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="scl_md_container"></div>
                 </div>
             </div>
         </section>

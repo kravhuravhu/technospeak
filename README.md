@@ -1,61 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://technospeak.com" target="_blank"><img src="public/images/white-no-logo.png" width="400" alt="Technospeak Logo"></a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="https://github.com/technospeak/technospeak/actions/workflows/tests.yml"><img src="https://github.com/technospeak/technospeak/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/technospeak/core"><img src="https://img.shields.io/packagist/dt/technospeak/core" alt="Total Downloads"></a>
+<a href="https://github.com/technospeak/technospeak/releases"><img src="https://img.shields.io/github/v/release/technospeak/technospeak" alt="Latest Release"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
 </p>
 
-## About Laravel
+## About Technospeak
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Technospeak is an interactive tech education platform that empowers **users to master digital tools, cybersecurity, and productivity** through simple, engaging tutorials. Designed for students, entrepreneurs, and professionals, we bridge the gap between confusion and confidence in tech. Our mission is to bridge the digital literacy gap with:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Practical, bite-sized tutorials** that solve real-world problems
+- **Tiered learning paths** for all skill levels
+- **Personalized coaching** for accelerated growth
+- **Enterprise-ready training** solutions
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Core Features
 
-## Learning Laravel
+### 🎓 Learning Management System
+| Feature | Description |
+|---------|-------------|
+| Adaptive Learning | AI-driven course recommendations |
+| Progress Tracking | Visualize your learning journey |
+| Skill Assessments | Validate your knowledge |
+| Certification | Shareable course completions |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 💼 Subscription Tiers
+```php
+// Example subscription logic
+$user->subscriptions()->create([
+    'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
+    'price' => 30000, // in cents
+    'interval' => 'yearly'
+]);
+📊 Dashboard Components
+Learning Hub
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Active courses
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Recommended content
 
-## Laravel Sponsors
+Achievement badges
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Resource Center
 
-### Premium Partners
+Downloadable cheat sheets
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+Project templates
 
-## Contributing
+Code snippets
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Admin Panel
 
-## Code of Conduct
+User management
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Content moderation
 
-## Security Vulnerabilities
+Analytics dashboard
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+🚀 Getting Started
+System Requirements
+PHP 8.2+
 
-## License
+MySQL 8.0+ / PostgreSQL 13+
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Redis 6.2+
+
+Node.js 18+
+
+Installation
+bash
+# Clone repository
+git clone https://github.com/kravhuravhu/technospeak.git
+cd technospeak
+
+# Install dependencies
+composer install --optimize-autoloader
+npm ci && npm run build
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations
+php artisan migrate --seed
+
+# Start queue worker (in separate terminal)
+php artisan queue:work
+Development
+bash
+# Hot-reload frontend assets
+npm run dev
+
+# Run tests
+php artisan test
+
+# Generate API docs
+php artisan scribe:generate
+🛠️ Technical Architecture
+Backend Structure
+app/
+├── Console/
+├── Events/           
+├── Http/             
+│   ├── Controllers/
+│   ├── Middleware/
+│   └── Requests/
+├── Models/    
+├── Policies/      
+└── Services/ 
+Frontend Components
+Learning Portal: Vue 3 Composition API
+
+Admin Dashboard: Inertia.js
+
+Interactive Tutorials: Livewire 3
+
+API Endpoints
+Endpoint	Method	Description
+/api/courses	GET	List available courses
+/api/progress	POST	Update user progress
+/api/checkout	POST	Initiate subscription
+📈 Performance Metrics
+⚡ Page load: <500ms (cached)
+
+📜 License
+Technospeak is open-source software licensed under the Velisa Africa Academy license.
+
+<p align="center"> "Empowering digital confidence through simplified learning"<br> 📍 Johannesburg, South Africa </p>

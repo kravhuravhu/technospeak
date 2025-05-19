@@ -79,7 +79,6 @@
   <li><strong>Code Snippets</strong>
     <ul>
       <li>Searchable repository</li>
-      <li>Multi-language support</li>
     </ul>
   </li>
 </ul>
@@ -107,6 +106,22 @@
     <td>Admin</td>
   </tr>
 </table>
+
+<h2>🔔 Notification Center</h2>
+<ul>
+    <li><strong>Learning Reminders</strong> - Course deadlines and events</li>
+    <li><strong>System Alerts</strong> - Important platform updates</li>
+    <li><strong>Community Interactions</strong> - Replies to your questions</li>
+    <li><strong>Achievement Unlocks</strong> - Badge award notifications</li>
+</ul>
+ 
+<h2>🛠️ Quick Access Tools</h2>
+<ul>
+    <li><strong>Instant Search</strong> - Find any resource in 2 clicks</li>
+    <li><strong>Progress Tracker</strong> - Visualize your learning journey</li>
+    <li><strong>Help Widget</strong> - Context-sensitive assistance</li>
+    <li><strong>Dark Mode Toggle</strong> - Eye-friendly viewing</li>
+</ul>
 
 <h2>🚀 Getting Started</h2>
 
@@ -144,13 +159,13 @@ php artisan migrate --seed</code></pre>
 
 <h2>🛠️ Payment Gateway</h2>
 <ul>
-  <li><strong>Too be added</strong>soon</li>
+  <li><strong>Too be added</strong> soon</li>
 </ul>
 
 <h2>📜 License</h2>
-<p><i>under</i> Velisa Africa Academy</p>
+<p><i>under</i><strong> Velisa Africa Academy</strong></p>
 
 <div align="center">
   <p>"Empowering digital confidence"<br>
-  📍 Johannesburg, South Africa</p>
+  📍 <i>Johannesburg, South Africa</li></p>
 </div>

@@ -41,13 +41,13 @@ Our mission is to bridge the digital literacy gap with:
 
 ### 💼 Subscription Tiers
 ```php
-// Example subscription logic
 $user->subscriptions()->create([
     'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
-    'price' => 30000, // in cents
+    'price' => R300,
     'interval' => 'yearly'
 ]);
-📊 Dashboard Components
+
+### 📊 Dashboard Components
 🎯 Learning Hub
 Active Courses - Track your current enrollments with progress indicators
 

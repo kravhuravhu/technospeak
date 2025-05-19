@@ -51,6 +51,95 @@
     'interval' => 'yearly'
 ]);</code></pre>
 
+  <h2>🗂️ Database Structure</h2>
+  <p>This database is designed to power a complete e-learning e-commerce platform. It manages clients, subscriptions, courses, enrollments, payments, admin users, and more.</p>
+  
+  <div class="subsection">
+    <h3>📋 Table Overview</h3>
+    <table>
+      <tr>
+        <th>Table</th>
+        <th>Purpose</th>
+        <th>Key Columns</th>
+      </tr>
+      <tr>
+        <td>course_categories</td>
+        <td>Organizes courses into categories</td>
+        <td>id (PK), name (unique)</td>
+      </tr>
+      <tr>
+        <td>subscriptions_plan</td>
+        <td>Defines subscription plans</td>
+        <td>id (PK), name, description, price, duration_in_days</td>
+      </tr>
+      <tr>
+        <td>courses</td>
+        <td>Stores course details</td>
+        <td>id (PK), title, description, price, category_id (FK), created_by_admin_id (FK)</td>
+      </tr>
+      <tr>
+        <td>clients</td>
+        <td>Stores client account data</td>
+        <td>id (PK), full_name, email, password, subscription_id (FK), preferred_category_id (FK)</td>
+      </tr>
+      <tr>
+        <td>admin_users</td>
+        <td>Admin account management</td>
+        <td>id (PK), username, email, password</td>
+      </tr>
+      <tr>
+        <td>enrollments</td>
+        <td>Links clients with courses</td>
+        <td>id (PK), client_id (FK), course_id (FK), progress_percent</td>
+      </tr>
+      <tr>
+        <td>payments</td>
+        <td>Tracks financial transactions</td>
+        <td>id (PK), client_id (FK), amount, payment_method, status, enrollment_id (FK), subscription_id (FK)</td>
+      </tr>
+      <tr>
+        <td>refunds</td>
+        <td>Handles refunds for payments</td>
+        <td>id (PK), payment_id (FK), amount, reason</td>
+      </tr>
+      <tr>
+        <td>certificates</td>
+        <td>Issues certificates for completed courses</td>
+        <td>id (PK), enrollment_id (FK), certificate_url</td>
+      </tr>
+      <tr>
+        <td>comments</td>
+        <td>Stores client reviews for courses</td>
+        <td>id (PK), client_id (FK), course_id (FK), comment, rating</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>🔗 Key Relationships</h3>
+    <ul>
+      <li>Clients ↔ Subscriptions (many-to-one)</li>
+      <li>Clients ↔ Course Categories (preferred category)</li>
+      <li>Courses ↔ Course Categories (many-to-one)</li>
+      <li>Admins ↔ Courses (created by)</li>
+      <li>Clients ↔ Courses via Enrollments (many-to-many)</li>
+      <li>Payments ↔ Enrollments/Subscriptions (linked by foreign keys)</li>
+      <li>Enrollments ↔ Certificates (one-to-one)</li>
+      <li>Courses ↔ Comments ← Clients (many-to-many with reviews)</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>✅ Integrity & Constraints</h3>
+    <ul>
+      <li>All foreign keys are enforced</li>
+      <li>Ratings are restricted from 1 to 5</li>
+      <li>Unique constraints on emails, usernames, and category names</li>
+      <li>Timestamp tracking for creation times</li>
+    </ul>
+  </div>
+</div>
+
 <h2>📊 Dashboard Components</h2>
 
 <h3>🎯 Learning Hub</h3>
@@ -120,7 +209,6 @@
     <li><strong>Instant Search</strong> - Find any resource in 2 clicks</li>
     <li><strong>Progress Tracker</strong> - Visualize your learning journey</li>
     <li><strong>Help Widget</strong> - Context-sensitive assistance</li>
-    <li><strong>Dark Mode Toggle</strong> - Eye-friendly viewing</li>
 </ul>
 
 <h2>🚀 Getting Started</h2>

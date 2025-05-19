@@ -47,7 +47,7 @@
 <h3>💼 Subscription Tiers</h3>
 <pre><code class="language-php">$user->subscriptions()->create([
     'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
-    'price' => 30000, // in cents
+    'price' => R300,
     'interval' => 'yearly'
 ]);</code></pre>
 

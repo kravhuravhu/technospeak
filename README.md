@@ -1,4 +1,4 @@
-<p align="center"><a href="https://technospeak.com" target="_blank"><img src="public/images/white-no-logo.png" width="400" alt="Technospeak Logo"></a></p>
+<p align="center"><a href="https://technospeak.com" target="_blank"><img src="public/images/default-no-logo.png" width="400" alt="Technospeak Logo"></a></p>
 
 <p align="center">
 <a href="https://github.com/technospeak/technospeak/actions/workflows/tests.yml"><img src="https://github.com/technospeak/technospeak/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
@@ -31,45 +31,56 @@ Technospeak is an interactive tech education platform that empowers **users to m
 // Example subscription logic
 $user->subscriptions()->create([
     'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
-    'price' => 30000, // in cents
+    'price' => 30000,
     'interval' => 'yearly'
 ]);
-📊 Dashboard Components
-Learning Hub
 
-Active courses
+## 📊 Dashboard Components
+### 🎯 Learning Hub
+- **Active Courses** - Track your current enrollments with progress indicators
+- **Recommended Content** - AI-powered suggestions based on your learning patterns
+- **Achievement Badges** - Earn verifiable credentials for completed milestones
+- **Learning Calendar** - Schedule and manage your study sessions
 
-Recommended content
+### 🗃️ Resource Center
+- **Cheat Sheets Library** 
+  - Downloadable PDF quick-reference guides
+  - Editable templates for common tasks
+  - Version-controlled updates
+- **Project Templates**
+  - Ready-to-use starter kits
+  - Industry-specific boilerplates
+  - Compliance-ready document templates
+- **Code Snippets**
+  - Searchable repository
+  - Copy-paste ready solutions
 
-Achievement badges
+### ⚙️ Admin Panel
+| Feature | Description | Access Level |
+|---------|-------------|--------------|
+| User Management | CRUD operations for user accounts | Admin |
+| Content Moderation | Approve/reject user submissions | Moderator+ |
+| Analytics Dashboard | Engagement metrics & revenue reports | Admin |
+| Billing Center | Manage subscriptions & invoices | Finance |
 
-Resource Center
+### 🔔 Notification Center
+- **Learning Reminders** - Training dates and events
+- **Community Interactions** - Replies to your questions
+- **Achievement Unlocks** - Badge award notifications
 
-Downloadable cheat sheets
+### 🛠️ Quick Access Tools
+1. **Instant Search** - Find any resource in 2 clicks
+2. **Progress Tracker** - Visualize your learning journey
+3. **Help Widget** - Context-sensitive assistance
+4. **Dark Mode Toggle** - Eye-friendly viewing
 
-Project templates
+### 🚀 Getting Started
+1. System Requirements
+1.1. ***PHP*** 8.2+
+1.2. ***MySQL*** 8.0+
+1.3. ***Composer***
 
-Code snippets
-
-Admin Panel
-
-User management
-
-Content moderation
-
-Analytics dashboard
-
-🚀 Getting Started
-System Requirements
-PHP 8.2+
-
-MySQL 8.0+ / PostgreSQL 13+
-
-Redis 6.2+
-
-Node.js 18+
-
-Installation
+2. **Installation**
 bash
 # Clone repository
 git clone https://github.com/kravhuravhu/technospeak.git

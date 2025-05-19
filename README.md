@@ -1,7 +1,7 @@
 <div align="center">
   <p>
     <a href="https://technospeak.com" target="_blank">
-      <img src="public/images/default-no-logo.png" width="400" alt="Technospeak Logo">
+      <img src="public/images/default.png" width="400" alt="Technospeak Logo">
     </a>
   </p>
 </div>

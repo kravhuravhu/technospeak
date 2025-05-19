@@ -45,9 +45,8 @@ $user->subscriptions()->create([
     'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
     'price' => R300,
     'interval' => 'yearly'
-]);```
-
-### 📊 Dashboard Components
+]);
+📊 Dashboard Components
 🎯 Learning Hub
 Active Courses - Track your current enrollments with progress indicators
 

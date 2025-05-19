@@ -1,22 +1,7 @@
 <div align="center">
   <p>
     <a href="https://technospeak.com" target="_blank">
-      <img src="public/images/default-no-logo.png" width="400" alt="Technospeak Logo">
-    </a>
-  </p>
-
-  <p>
-    <a href="https://github.com/technospeak/technospeak/actions/workflows/tests.yml">
-      <img src="https://github.com/technospeak/technospeak/actions/workflows/tests.yml/badge.svg" alt="Build Status">
-    </a>
-    <a href="https://packagist.org/packages/technospeak/core">
-      <img src="https://img.shields.io/packagist/dt/technospeak/core" alt="Total Downloads">
-    </a>
-    <a href="https://github.com/technospeak/technospeak/releases">
-      <img src="https://img.shields.io/github/v/release/technospeak/technospeak" alt="Latest Release">
-    </a>
-    <a href="https://opensource.org/licenses/MIT">
-      <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+      <img src="public/images/default.png" width="400" alt="Technospeak Logo">
     </a>
   </p>
 </div>
@@ -135,7 +120,7 @@
 
 <h3>Installation</h3>
 <pre><code class="language-bash"># Clone repo
-git clone https://github.com/technospeak/technospeak.git
+git clone https://github.com/kravhuravhu/technospeak.git
 cd technospeak
 
 # Install dependencies
@@ -151,14 +136,19 @@ php artisan migrate --seed</code></pre>
 
 <h2>🛠️ Tech Stack</h2>
 <ul>
-  <li><strong>Backend</strong>: Laravel 10</li>
-  <li><strong>Frontend</strong>: Vue 3 + Inertia.js</li>
+  <li><strong>Backend</strong>: Laravel 10 + NodeJs</li>
+  <li><strong>Frontend</strong>: Laravel 10</li>
   <li><strong>Database</strong>: MySQL</li>
   <li><strong>Auth</strong>: Laravel Sanctum</li>
 </ul>
 
+<h2>🛠️ Payment Gateway</h2>
+<ul>
+  <li><strong>Too be added</strong>soon</li>
+</ul>
+
 <h2>📜 License</h2>
-<p>MIT License</p>
+<p><i>under</i> Velisa Africa Academy</p>
 
 <div align="center">
   <p>"Empowering digital confidence"<br>

@@ -33,7 +33,7 @@ $user->subscriptions()->create([
     'plan_id' => Plan::DIGITAL_PRODUCTIVITY,
     'price' => 30000,
     'interval' => 'yearly'
-]);
+]);```
 
 ## 📊 Dashboard Components
 ### 🎯 Learning Hub

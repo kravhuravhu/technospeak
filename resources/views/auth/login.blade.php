@@ -1,47 +1,40 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<div class="welcome_" id="welcomeSwapArea">
+    <div class="logo_container">
+        <a href="#"><img src="../images/white-no-logo.png" alt="technospeak white logo"/></a>
+    </div>
+    <div class="title_content">
+        <h2>New here?</h2>
+        <p>Create an account to start your journey with us.</p>
+        <div class="login_button">
+            <a href="/register" id="loadRegister">Register now</a>
         </div>
+    </div>
+</div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+<div class="form_container" id="formSwapArea">
+    <div class="title_container">
+        <h2>Sign in</h2>
+    </div>
+    <div class="hrzntl"><hr><span>Or</span><hr></div>
+    <div class="icons">
+        <a href="#"><i class="fa-brands fa-google"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+    </div>
+    <div class="dscpt"><p>Or continue with using your email</p></div>
+    <div class="form_wrapper">
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="input-icon">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Enter your email" required>
+                @error('email') <p>{{ $message }}</p> @enderror
+            </div>
+            <div class="input-icon">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Enter your password" required>
+                @error('password') <p>{{ $message }}</p> @enderror
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>

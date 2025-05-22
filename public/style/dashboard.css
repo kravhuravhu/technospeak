@@ -1,0 +1,238 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+    color: #000;
+}
+
+/* nav bar */
+section.sidebar {
+    width: 300px;
+    background-color: yellow;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 40px 0;
+    & > .main_container {
+        width: 100%;
+        background-color: red;
+        & > .logo_container {
+            background-color: green;
+            width: fit-content;
+            padding: 0 20px;
+            height: 150px;
+            & > a {
+                text-decoration: none;
+                & > img {
+                    width: 250px;
+                    object-fit: cover;
+                    position: relative;
+                }
+            }
+        }
+        & > .nav-bar {
+            height: 600px;
+            width: 100%;
+            position: relative;
+            background-color: purple;
+            & > .container {
+                background-color: pink;
+                width: 85%;
+                & > .nav-item {
+                    text-decoration: none;
+                    color: #000000;
+                    font-size: 1.3em;
+                    padding: 17px 0;
+                    &.active {
+                        background-color: red;
+                    }
+                    &:hover {
+                        background-color: #38b6ff;
+                        border-top-right-radius: 50px;
+                        border-bottom-right-radius: 50px;
+                    }
+                }
+            }
+        }
+    }
+}
+    .sidebar .promo {
+      background: #bfdbfe;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .promo button {
+      background: #fff;
+      color: #3b82f6;
+      font-weight: bold;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 9999px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar input {
+      width: 50%;
+      padding: 10px;
+      border-radius: 9999px;
+      border: 1px solid #ccc;
+    }
+
+    .topbar .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .welcome {
+      background: #3b82f6;
+      color: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section h3 {
+      margin: 20px 0 10px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .card .image {
+      background: #d1d5db;
+      height: 120px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background: #3b82f6;
+      width: 60%;
+    }
+
+    .recommend {
+      background: #dbeafe;
+    }
+
+    .recommend .price-enroll {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .recommend .price-enroll button {
+      padding: 6px 12px;
+      background: #fff;
+      border: none;
+      border-radius: 9999px;
+      font-weight: bold;
+      color: #3b82f6;
+      cursor: pointer;
+    }
+
+    .rightbar {
+      background: #fff;
+      width: 300px;
+      padding: 20px;
+    }
+
+    .rightbar .box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .rightbar .progress {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 9999px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .rightbar .progress-inner {
+      height: 100%;
+      background: #3b82f6;
+      width: 25%;
+    }
+
+    .rightbar .session {
+      background: #f3f4f6;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .rightbar button {
+      width: 100%;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    @media screen and (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar,
+      .rightbar {
+        width: 100%;
+      }
+
+      .main {
+        padding: 10px;
+      }
+    }

@@ -13,6 +13,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <!-- Font Awesome CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <section class="nav_container">
@@ -30,11 +32,11 @@
                 <div class="nav_block">
                     <div class="nav-links">
                         <ul>
-                            <li><a href="" class="active">Home</a></li>
+                            <li><a href="/" class="active">Home</a></li>
                             <li><a href="">About Us</a></li>
-                            <li><a href="">Trainings</a></li>
+                            <li><a href="/trainings">Trainings</a></li>
                             <li><a href="">Pricing</a></li>
-                            <li><a href="">Sign Up/In</a></li>
+                            <li><a href="/register">Sign Up/In</a></li>
                     </div>
                 </div>
             </nav>
@@ -147,7 +149,7 @@
         <section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
-                    <img src="/images/image5-min-1.png"/>
+                    <img src="/images/teams/two_team.jpeg" alt="office_technospeak"/>
                 </div>
                 <div class="about_brief block">
                     <div class="title_container">
@@ -407,7 +409,23 @@
                             </div>
                         </form>
                     </div>
-                    <div class="scl_md_container"></div>
+                    <div class="scl_md_container">
+                        <div class="md">
+                            <a href="" target="_blank">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                        </div>
+                        <div class="md">
+                            <a href="" target="_blank">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </a>
+                        </div>
+                        <div class="md">
+                            <a href="" target="_blank">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

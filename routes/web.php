@@ -11,6 +11,10 @@ Route::get('/trainings', function () {
     return view('trainings');
 });
 
+Route::get('/pricing', function () {
+    return view('pricing');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

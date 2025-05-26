@@ -196,7 +196,6 @@
     </section>
 
 
-
     <!-- Upcoming Live Sessions & Webinars Section -->
     <section class="webinars-section">
         <div class="section-header">
@@ -229,7 +228,7 @@
                         </div>
                         <div class="meta-item">
                             <i class="fas fa-user-tie"></i>
-                            <span>Dr. Sarah Johnson</span>
+                            <span>Mr. NO Sithebe</span>
                         </div>
                     </div>
                     <button class="webinar-button">

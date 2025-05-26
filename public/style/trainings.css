@@ -456,8 +456,8 @@ body {
     position: absolute;
     width: 60%;
     height: 4px;
-    background: linear-gradient(90deg, #00aaff, #00ffaa);
-    bottom: -10px;
+    background-color: var(--skBlue-color);
+    bottom: -5px;
     left: 20%;
     border-radius: 2px;
 }
@@ -545,7 +545,7 @@ body {
 }
 
 .tip-btn:hover {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
 }
 
@@ -599,8 +599,8 @@ body {
     position: absolute;
     width: 60%;
     height: 4px;
-    background: linear-gradient(90deg, #2196F3, #0d47a1);
-    bottom: -12px;
+    background-color: var(--skBlue-color);
+    bottom: -5px;
     left: 20%;
     border-radius: 2px;
 }
@@ -675,7 +675,7 @@ body {
 }
 
 .icon.dark {
-    color: var(--blue-color);
+    color: var(--secondary-color);
 }
 
 .date-badge {
@@ -716,7 +716,7 @@ body {
     gap: 6px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--blue-color);
+    color: var(--secondary-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -776,7 +776,7 @@ body {
 }
 
 .webinar-button:hover {
-    background-color: var(--blue-color);
+    background-color: var(--secondary-color);
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
@@ -803,7 +803,7 @@ body {
 }
 
 .view-all-link:hover {
-    color: var(--blue-color);
+    color: var(--secondary-color);
     gap: 10px;
 }
 
@@ -828,7 +828,7 @@ body {
 }
 
 
-/* Enhanced Cheatsheet CSS */
+/* Cheatsheet CSS */
 .cheatsheet-section {
     display: flex;
     justify-content: center;
@@ -1002,7 +1002,7 @@ body {
 }
 
 .unlock-btn:hover {
-    background-color: var(--skBlue-color);
+    background-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(29, 161, 242, 0.3);
 }
@@ -1193,7 +1193,7 @@ body {
 }
 
 .submit-btn:hover {
-    background-color: var(--skBlue-color);
+    background-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(29, 161, 242, 0.3);
 }
@@ -1264,7 +1264,7 @@ body {
 }
 
 
-/* Enhanced Footer CSS */
+/* Footer Section */
 .footer {
     background-color: var(--darkBlue-color);
     color: var(--lightWhite-color);
@@ -1419,7 +1419,7 @@ body {
 .contact-item svg {
     width: 20px;
     height: 20px;
-    color: #4299e1;
+    color: var(--primary-color);
     flex-shrink: 0;
     margin-top: 2px;
 }

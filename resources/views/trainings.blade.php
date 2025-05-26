@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Technospeak Strategies - Trainings</title>
+    <title>Technospeak - Trainings</title>
     <meta name="author" content="TechnoSpeak">
     <meta property="og:type" content="website">
     <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">

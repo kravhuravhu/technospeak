@@ -26,105 +26,289 @@
                 </div>
                 <div class="nav-bar">
                     <div class="container">
-                        <div class="nav-item active">Dashboard</div>
-                        <div class="nav-item">All Trainings</div>
-                        <div class="nav-item">Q/A Session Recap</div>
-                        <div class="nav-item">My Subscriptions</div>
-                        <div class="nav-item">Resources</div>
-                        <div class="nav-item">Task Assistance</div>
-                        <div class="nav-item">Help Center</div>
-                        <div class="nav-item">Settings</div>
+                        <div class="nav-item active">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-border-all"></i>
+                            </div>
+                            <div class="title">
+                                <span>Dashboard</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-computer"></i>
+                            </div>
+                            <div class="title">
+                                <span>All Trainings</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-person-circle-question"></i>
+                            </div>
+                            <div class="title">
+                                <span>Q/A Sessions Recap</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-tags"></i>
+                            </div>
+                            <div class="title">
+                                <span>My Subscriptions</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div class="title">
+                                <span>Resources</span>
+                            </div>
+                            </a>
+                        </div>                                                                                                                                                                                                        
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-handshake-angle"></i>
+                            </div>
+                            <div class="title">
+                                <span>Task Assistance</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </div>
+                            <div class="title">
+                                <span>Help Center</span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="">
+                            <div class="icon">
+                                <i class="fa-solid fa-gears"></i>
+                            </div>
+                            <div class="title">
+                                <span>Settings</span>
+                            </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-    <div class="sidebar">
-        <div>
-            
-            </div>
             <div class="promo">
-            <p>Something about cheatsheet? well ipsum dolor sit amet consectetur</p>
-            <button>Upgrade Now</button>
-        </div>
-    </div>
+                <div>
+                    <p>Something about cheatsheet? well ipsum dolor sit amet consectetur</p>
+                    <button>Upgrade Now</button>
+                </div>
+            </div>
+        </section>
+        <section class="main">
+            <div class="container">
+                <div class="topbar search-bar">
+                    <i class="fa fa-search search-icon"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="welcome">
+                    <div class="nname">
+                        <h1>Welcome back, Rose</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </p>
+                    </div>
+                    <div>
+                        <picture>
+                            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.webp" type="image/webp">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.gif" alt="👋"/>
+                        </picture>
+                    </div>
+                </div>
+                <div class="my_learnings">
+                    <div class="container">
+                        <div class="title">
+                            <h1>My Trainings</h1>
+                        </div>
+                        <div class="card-grid">
+                            <a href="">
+                                <div class="card">
+                                    <div class="thmbnail">
+                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                        <div class="trnsprnt"></div>
+                                    </div>
+                                    <div class="details">
+                                        <div class="title content">
+                                            <h1>Training Title</h1>
+                                        </div>
+                                        <div class="dur content">
+                                            <p><i>Duration: 30min</i></p>
+                                        </div>
+                                        <div class="ctprs content">
+                                            <p>Video catchphrase here blah blah
+                                        </div>
+                                        <div class="progress_bar content">
+                                            <div class="main-bar">
+                                                <div class="progress"></div>
+                                            </div>
+                                            <div class="cr-bar">65%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="">
+                                <div class="card">
+                                    <div class="thmbnail">
+                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                        <div class="trnsprnt"></div>
+                                    </div>
+                                    <div class="details">
+                                        <div class="title content">
+                                            <h1>Training Title</h1>
+                                        </div>
+                                        <div class="dur content">
+                                            <p><i>Duration: 30min</i></p>
+                                        </div>
+                                        <div class="ctprs content">
+                                            <p>Video catchphrase here blah blah
+                                        </div>
+                                        <div class="progress_bar content">
+                                            <div class="main-bar">
+                                                <div class="progress"></div>
+                                            </div>
+                                            <div class="cr-bar">65%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="">
+                                <div class="card">
+                                    <div class="thmbnail">
+                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                        <div class="trnsprnt"></div>
+                                    </div>
+                                    <div class="details">
+                                        <div class="title content">
+                                            <h1>Training Title</h1>
+                                        </div>
+                                        <div class="dur content">
+                                            <p><i>Duration: 30min</i></p>
+                                        </div>
+                                        <div class="ctprs content">
+                                            <p>Video catchphrase here blah blah
+                                        </div>
+                                        <div class="progress_bar content">
+                                            <div class="main-bar">
+                                                <div class="progress"></div>
+                                            </div>
+                                            <div class="cr-bar">65%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="">
+                                <div class="card">
+                                    <div class="thmbnail">
+                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                        <div class="trnsprnt"></div>
+                                    </div>
+                                    <div class="details">
+                                        <div class="title content">
+                                            <h1>Training Title</h1>
+                                        </div>
+                                        <div class="dur content">
+                                            <p><i>Duration: 30min</i></p>
+                                        </div>
+                                        <div class="ctprs content">
+                                            <p>Video catchphrase here blah blah
+                                        </div>
+                                        <div class="progress_bar content">
+                                            <div class="main-bar">
+                                                <div class="progress"></div>
+                                            </div>
+                                            <div class="cr-bar">65%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="main">
-        <div class="topbar">
-        <input type="text" placeholder="Search...">
-        <div class="user">
-            <span>Rose Ravhuravhu</span>
-            <div class="avatar" style="width: 30px; height: 30px; background: #ccc; border-radius: 50%;"></div>
-        </div>
-        </div>
+            
+            
 
-        <div class="welcome">
-        <div>
-            <h2>Welcome back, Rose</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        </div>
-        <div style="font-size: 48px;">👋</div>
-        </div>
+            <div class="section">
+            <h3>My Learnings</h3>
+            <div class="card-grid">
+                <div class="card">
+                <div class="image"></div>
+                <h4>Training Title</h4>
+                <p>Duration: 30min</p>
+                <p>Video description We use AI to help</p>
+                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
+                </div>
+                <div class="card">
+                <div class="image"></div>
+                <h4>Training Title</h4>
+                <p>Duration: 30min</p>
+                <p>Video description We use AI to help</p>
+                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
+                </div>
+                <div class="card">
+                <div class="image"></div>
+                <h4>Training Title</h4>
+                <p>Duration: 30min</p>
+                <p>Video description We use AI to help</p>
+                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
+                </div>
+            </div>
+            </div>
 
-        <div class="section">
-        <h3>My Learnings</h3>
-        <div class="card-grid">
-            <div class="card">
-            <div class="image"></div>
-            <h4>Training Title</h4>
-            <p>Duration: 30min</p>
-            <p>Video description We use AI to help</p>
-            <div class="progress-bar"><div class="progress-bar-inner"></div></div>
-            </div>
-            <div class="card">
-            <div class="image"></div>
-            <h4>Training Title</h4>
-            <p>Duration: 30min</p>
-            <p>Video description We use AI to help</p>
-            <div class="progress-bar"><div class="progress-bar-inner"></div></div>
-            </div>
-            <div class="card">
-            <div class="image"></div>
-            <h4>Training Title</h4>
-            <p>Duration: 30min</p>
-            <p>Video description We use AI to help</p>
-            <div class="progress-bar"><div class="progress-bar-inner"></div></div>
-            </div>
-        </div>
-        </div>
-
-        <div class="section">
-        <h3>Recommended Trainings</h3>
-        <div class="card-grid">
-            <div class="card recommend">
-            <div class="image"></div>
-            <h4>Courses Title</h4>
-            <p>Study Smarter with Google & Microsoft Tools</p>
-            <div class="price-enroll">
-                <span>R149.85</span>
-                <button>Enroll</button>
-            </div>
-            </div>
-            <div class="card recommend">
-            <div class="image"></div>
-            <h4>Courses Title</h4>
-            <p>Study Smarter with Google & Microsoft Tools</p>
-            <div class="price-enroll">
-                <span>R149.85</span>
-                <button>Enroll</button>
-            </div>
-            </div>
-            <div class="card recommend">
-            <div class="image"></div>
-            <h4>Courses Title</h4>
-            <p>Study Smarter with Google & Microsoft Tools</p>
-            <div class="price-enroll">
-                <span>R149.85</span>
-                <button>Enroll</button>
+            <div class="section">
+            <h3>Recommended Trainings</h3>
+            <div class="card-grid">
+                <div class="card recommend">
+                <div class="image"></div>
+                <h4>Courses Title</h4>
+                <p>Study Smarter with Google & Microsoft Tools</p>
+                <div class="price-enroll">
+                    <span>R149.85</span>
+                    <button>Enroll</button>
+                </div>
+                </div>
+                <div class="card recommend">
+                <div class="image"></div>
+                <h4>Courses Title</h4>
+                <p>Study Smarter with Google & Microsoft Tools</p>
+                <div class="price-enroll">
+                    <span>R149.85</span>
+                    <button>Enroll</button>
+                </div>
+                </div>
+                <div class="card recommend">
+                <div class="image"></div>
+                <h4>Courses Title</h4>
+                <p>Study Smarter with Google & Microsoft Tools</p>
+                <div class="price-enroll">
+                    <span>R149.85</span>
+                    <button>Enroll</button>
+                </div>
+                </div>
             </div>
             </div>
         </div>
-        </div>
-    </div>
+    </section>
 
     <div class="rightbar">
         <div class="box">

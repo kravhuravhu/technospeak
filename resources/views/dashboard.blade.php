@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <section class="sidebar">
+        <section class="sidebar bar-lt-rt">
             <div class="main_container">
                 <div class="logo_container">
                     <a href="#">
@@ -118,219 +118,323 @@
         </section>
         <section class="main">
             <div class="container">
-                <div class="topbar search-bar">
-                    <i class="fa fa-search search-icon"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-                <div class="welcome">
-                    <div class="nname">
-                        <h1>Welcome back, Rose</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </p>
+                <!-- putting everything under dashboard for easy switch -->
+                <div class="dashboard">
+                    <div class="topbar search-bar">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Search...">
                     </div>
-                    <div>
-                        <picture>
-                            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.webp" type="image/webp">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.gif" alt="👋"/>
-                        </picture>
-                    </div>
-                </div>
-                <div class="my_learnings">
-                    <div class="container">
-                        <div class="title">
-                            <h1>My Trainings</h1>
+                    <div class="welcome">
+                        <div class="nname">
+                            <h1>Welcome back, Rose</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </p>
                         </div>
-                        <div class="card-grid">
-                            <a href="">
-                                <div class="card">
-                                    <div class="thmbnail">
-                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                        <div class="trnsprnt"></div>
-                                    </div>
-                                    <div class="details">
-                                        <div class="title content">
-                                            <h1>Training Title</h1>
-                                        </div>
-                                        <div class="dur content">
-                                            <p><i>Duration: 30min</i></p>
-                                        </div>
-                                        <div class="ctprs content">
-                                            <p>Video catchphrase here blah blah
-                                        </div>
-                                        <div class="progress_bar content">
-                                            <div class="main-bar">
-                                                <div class="progress"></div>
-                                            </div>
-                                            <div class="cr-bar">65%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="">
-                                <div class="card">
-                                    <div class="thmbnail">
-                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                        <div class="trnsprnt"></div>
-                                    </div>
-                                    <div class="details">
-                                        <div class="title content">
-                                            <h1>Training Title</h1>
-                                        </div>
-                                        <div class="dur content">
-                                            <p><i>Duration: 30min</i></p>
-                                        </div>
-                                        <div class="ctprs content">
-                                            <p>Video catchphrase here blah blah
-                                        </div>
-                                        <div class="progress_bar content">
-                                            <div class="main-bar">
-                                                <div class="progress"></div>
-                                            </div>
-                                            <div class="cr-bar">65%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="">
-                                <div class="card">
-                                    <div class="thmbnail">
-                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                        <div class="trnsprnt"></div>
-                                    </div>
-                                    <div class="details">
-                                        <div class="title content">
-                                            <h1>Training Title</h1>
-                                        </div>
-                                        <div class="dur content">
-                                            <p><i>Duration: 30min</i></p>
-                                        </div>
-                                        <div class="ctprs content">
-                                            <p>Video catchphrase here blah blah
-                                        </div>
-                                        <div class="progress_bar content">
-                                            <div class="main-bar">
-                                                <div class="progress"></div>
-                                            </div>
-                                            <div class="cr-bar">65%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="">
-                                <div class="card">
-                                    <div class="thmbnail">
-                                        <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                        <div class="trnsprnt"></div>
-                                    </div>
-                                    <div class="details">
-                                        <div class="title content">
-                                            <h1>Training Title</h1>
-                                        </div>
-                                        <div class="dur content">
-                                            <p><i>Duration: 30min</i></p>
-                                        </div>
-                                        <div class="ctprs content">
-                                            <p>Video catchphrase here blah blah
-                                        </div>
-                                        <div class="progress_bar content">
-                                            <div class="main-bar">
-                                                <div class="progress"></div>
-                                            </div>
-                                            <div class="cr-bar">65%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                        <div>
+                            <picture>
+                                <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.webp" type="image/webp">
+                                <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.gif" alt="👋"/>
+                            </picture>
                         </div>
                     </div>
+                    <div class="my_learnings ln_rcmm">
+                        <div class="container">
+                            <div class="title">
+                                <h1>My Trainings</h1>
+                            </div>
+                            <div class="card-grid">
+                                <a href="">
+                                    <div class="card">
+                                        <div class="thmbnail">
+                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            <div class="trnsprnt"></div>
+                                        </div>
+                                        <div class="details">
+                                            <div class="title content">
+                                                <h1>Training Title</h1>
+                                            </div>
+                                            <div class="dur content">
+                                                <p><i>Duration: 30min</i></p>
+                                            </div>
+                                            <div class="ctprs content">
+                                                <p>Video catchphrase here blah blah</p>
+                                            </div>
+                                            <div class="progress_bar content">
+                                                <div class="main-bar">
+                                                    <div class="progress"></div>
+                                                </div>
+                                                <div class="cr-bar">65%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card">
+                                        <div class="thmbnail">
+                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            <div class="trnsprnt"></div>
+                                        </div>
+                                        <div class="details">
+                                            <div class="title content">
+                                                <h1>Training Title</h1>
+                                            </div>
+                                            <div class="dur content">
+                                                <p><i>Duration: 30min</i></p>
+                                            </div>
+                                            <div class="ctprs content">
+                                                <p>Video catchphrase here blah blah</p>
+                                            </div>
+                                            <div class="progress_bar content">
+                                                <div class="main-bar">
+                                                    <div class="progress"></div>
+                                                </div>
+                                                <div class="cr-bar">65%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card">
+                                        <div class="thmbnail">
+                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            <div class="trnsprnt"></div>
+                                        </div>
+                                        <div class="details">
+                                            <div class="title content">
+                                                <h1>Training Title</h1>
+                                            </div>
+                                            <div class="dur content">
+                                                <p><i>Duration: 30min</i></p>
+                                            </div>
+                                            <div class="ctprs content">
+                                                <p>Video catchphrase here blah blah</p>
+                                            </div>
+                                            <div class="progress_bar content">
+                                                <div class="main-bar">
+                                                    <div class="progress"></div>
+                                                </div>
+                                                <div class="cr-bar">65%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card">
+                                        <div class="thmbnail">
+                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            <div class="trnsprnt"></div>
+                                        </div>
+                                        <div class="details">
+                                            <div class="title content">
+                                                <h1>Training Title</h1>
+                                            </div>
+                                            <div class="dur content">
+                                                <p><i>Duration: 30min</i></p>
+                                            </div>
+                                            <div class="ctprs content">
+                                                <p>Video catchphrase here blah blah</p>
+                                            </div>
+                                            <div class="progress_bar content">
+                                                <div class="main-bar">
+                                                    <div class="progress"></div>
+                                                </div>
+                                                <div class="cr-bar">65%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rcmmnd_trngs ln_rcmm">
+                        <div class="container">
+                            <div class="title">
+                                <h1>Recommended Trainings</h1>
+                            </div>
+                            <div class="card-grid thn_grid_cd">
+                                <a href="">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Training Title</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>1h30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>4 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Training Title</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>1h30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>4 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Training Title</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>1h30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>4 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Training Title</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>1h30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>4 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
+        <section class="rightbar bar-lt-rt rt-bar">
+            <div class="main_container">
+                <div class="right-bar">
+                    <div class="ntfc_name">
+                        <div class="ntfc nt_nm">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div class="name nt_nm">
+                            <div class="cont">
+                                <p>Name Surname</p>
+                            </div>
+                        </div>
+                    </div>
 
-            
-            
+                    <div class="box">
+                        <div class="progress-container">
+                            <div class="progress-header">
+                            <span class="progress-title">Your Overall Progress</span>
+                            <span class="progress-percent">25%</span>
+                            </div>
 
-            <div class="section">
-            <h3>My Learnings</h3>
-            <div class="card-grid">
-                <div class="card">
-                <div class="image"></div>
-                <h4>Training Title</h4>
-                <p>Duration: 30min</p>
-                <p>Video description We use AI to help</p>
-                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
-                </div>
-                <div class="card">
-                <div class="image"></div>
-                <h4>Training Title</h4>
-                <p>Duration: 30min</p>
-                <p>Video description We use AI to help</p>
-                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
-                </div>
-                <div class="card">
-                <div class="image"></div>
-                <h4>Training Title</h4>
-                <p>Duration: 30min</p>
-                <p>Video description We use AI to help</p>
-                <div class="progress-bar"><div class="progress-bar-inner"></div></div>
+                            <div class="progress-track">
+                            <div class="progress-fill" style="width: 25%;"></div>
+                            <div class="level-marker active"></div>
+                            <div class="level-marker active"></div>
+                            <div class="level-marker"></div>
+                            <div class="level-marker"></div>
+                            <div class="level-marker"></div>
+                            </div>
+
+                            <div class="progress-labels">
+                            <div class="label">25%<br><span>Beginner</span></div>
+                            <div class="label">50%<br><span>Intermediate</span></div>
+                            <div class="label">75%<br><span>Advanced</span></div>
+                            <div class="label">100%<br><span>Expert</span></div>
+                            </div>
+
+                            <div class="progress-message">
+                            You're making great progress in the course! Keep up the fantastic work <span class="emoji">💯</span>! You've got this! Keep learning, and you'll be amazed at what you can accomplish.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                    <h4>Upcoming Sessions</h4>
+                    <div class="session">
+                        <strong>Q/A Session - Constant BlueScreen Errors</strong>
+                        <p>21 Aug 2025, Friday</p>
+                    </div>
+                    <div class="session">
+                        <strong>Introduction to Microsoft Office</strong>
+                        <p>01 Oct 2025, Saturday</p>
+                    </div>
+                    <button>View All Courses</button>
+                    </div>
                 </div>
             </div>
-            </div>
-
-            <div class="section">
-            <h3>Recommended Trainings</h3>
-            <div class="card-grid">
-                <div class="card recommend">
-                <div class="image"></div>
-                <h4>Courses Title</h4>
-                <p>Study Smarter with Google & Microsoft Tools</p>
-                <div class="price-enroll">
-                    <span>R149.85</span>
-                    <button>Enroll</button>
-                </div>
-                </div>
-                <div class="card recommend">
-                <div class="image"></div>
-                <h4>Courses Title</h4>
-                <p>Study Smarter with Google & Microsoft Tools</p>
-                <div class="price-enroll">
-                    <span>R149.85</span>
-                    <button>Enroll</button>
-                </div>
-                </div>
-                <div class="card recommend">
-                <div class="image"></div>
-                <h4>Courses Title</h4>
-                <p>Study Smarter with Google & Microsoft Tools</p>
-                <div class="price-enroll">
-                    <span>R149.85</span>
-                    <button>Enroll</button>
-                </div>
-                </div>
-            </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="rightbar">
-        <div class="box">
-        <h4>Your Overall Progress <span style="color:#3b82f6;">25%</span></h4>
-        <div class="progress"><div class="progress-inner"></div></div>
-        <p style="font-size: 12px;">You're making great progress in the course! Keep up the fantastic work 🎉</p>
-        </div>
-
-        <div class="box">
-        <h4>Upcoming Sessions</h4>
-        <div class="session">
-            <strong>Q/A Session - Constant BlueScreen Errors</strong>
-            <p>21 Aug 2025, Friday</p>
-        </div>
-        <div class="session">
-            <strong>Introduction to Microsoft Office</strong>
-            <p>01 Oct 2025, Saturday</p>
-        </div>
-        <button>View All Courses</button>
-        </div>
-    </div>
-
+        </section>
     <script>
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
@@ -339,6 +443,27 @@
             item.classList.add('active');
         });
         });
+    document.addEventListener('DOMContentLoaded', () => {
+      updateProgress(95);
+
+      function updateProgress(percent) {
+        const fill = document.querySelector('.progress-fill');
+        const percentText = document.querySelector('.progress-percent');
+        const markers = document.querySelectorAll('.level-marker');
+
+        fill.style.width = percent + '%';
+        percentText.textContent = percent + '%';
+
+        markers.forEach((marker, index) => {
+          const thresholds = [0, 25, 50, 75, 100];
+          if (percent >= thresholds[index]) {
+            marker.classList.add('active');
+          } else {
+            marker.classList.remove('active');
+          }
+        });
+      }
+    });
     </script>
     </body>
 </html>

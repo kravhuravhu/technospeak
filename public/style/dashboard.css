@@ -11,19 +11,25 @@ body {
   color: #000;
 }
 
-/* nav bar */
-section.sidebar {
+/* nav bar and right as rt */
+section.bar-lt-rt {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   background-color: #ffffff;
   padding: 20px 0;
   height: 100vh; 
+  flex-shrink: 0;
+  &.rt-bar {
+    background-color: red;
+    width: 380px;
+    height: fit-content;
+  }
   & > .main_container {
     width: 100%;
-      flex: 1; 
-      display: flex;
-      flex-direction: column;
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
     & > .logo_container {
       width: fit-content;
       padding: 0 20px;
@@ -103,6 +109,51 @@ section.sidebar {
         }
       }
     }
+    & > .right-bar {
+      background-color: green;
+      padding: 0 15px ;
+      & > .ntfc_name {
+        background-color: purple;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        justify-self: flex-end;
+        padding: 20px;
+        align-items: center;
+        .ntfc {
+          margin: 0 20px 0 0;
+          & > i {
+            font-size: 2.3em;
+            color: rgb(233, 210, 81);
+            position: relative;
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: 30px;
+              left: 50%;
+              width: 10px;
+              height: 10px;
+              border-radius: 50px;
+              background-color: #ff562c;
+            }
+          }
+        }
+        .name {
+          margin: 0 0 0 20px;
+          & > .cont {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 12px 18px;
+            & > p {
+              font-size: 1.4em;
+              font-weight: 370;
+              color: #000000;
+            }
+          }
+        }
+      }
+    }
+
   }
   & > .promo {
     padding: 20px;
@@ -143,177 +194,252 @@ section.sidebar {
   padding: 20px;
   height: 100vh;
   width: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   & > .container {
     padding: 20px;
-    max-width: 1300px; /* will change this later */
-    & > .topbar {
-      position: relative;
-      margin-bottom: 30px;
-      & > .search-icon {
-        position: absolute;
-        top: 50%;
-        left: 20px;
-        transform: translateY(-50%);
-        color: #888;
-        font-size: 18px;
-        pointer-events: none; 
-      }
-      & > input {
-        padding-left: 50px !important;
-        background-color: #ffffff;
-        color: #000;
-        width: 70%;
-        border-radius: 15px;
-        border: none;
-        padding: 15px 20px;
-        font-family: "Roboto", sans-serif;
-        outline: none;
-        transition: box-shadow 0.3s ease-in-out;
-        &::placeholder {
-          color: #1d1d1d;
-          font-size: .9em;
+    /* max-width: 1300px; worked, but removed, will change this later */
+    & > .dashboard {
+      & > .topbar {
+        position: relative;
+        margin-bottom: 30px;
+        & > .search-icon {
+          position: absolute;
+          top: 50%;
+          left: 20px;
+          transform: translateY(-50%);
+          color: #888;
+          font-size: 18px;
+          pointer-events: none; 
         }
-        &:focus {
-          box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.2);
-        }
-      }
-    }
-    & > .welcome {
-      width: 100%;
-      background-color: #38b6ff;
-      position: relative;
-      color: #fff;
-      padding: 35px 50px;
-      margin: 30px 0;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      & > div {
-        margin: 0 15px;
-        &.nname {
-          width: 55%;
-          & > h1 {
-            font-size: 3.5em;
-            margin: 17px 0;
+        & > input {
+          padding-left: 50px !important;
+          background-color: #ffffff;
+          color: #000;
+          width: 70%;
+          border-radius: 15px;
+          border: none;
+          padding: 15px 20px;
+          font-family: "Roboto", sans-serif;
+          outline: none;
+          transition: box-shadow 0.3s ease-in-out;
+          &::placeholder {
+            color: #1d1d1d;
+            font-size: .9em;
           }
-          & > p {
-            margin: 17px 0;
+          &:focus {
+            box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.2);
           }
         }
-        & > picture {
-          & > img {
-            position: relative;
-            object-fit: cover;
-            height: 150px;
-            margin-top: -30px;
-          }
-        }
-        
       }
-    }
-    & > .my_learnings {
-      width: 100%;
-      position: relative;
-      & > .container {
+      & > .welcome {
+        width: 100%;
+        background-color: #38b6ff;
+        position: relative;
+        color: #fff;
+        padding: 35px 50px;
+        margin: 30px 0;
+        border-radius: 40px;
         display: flex;
-        flex: 1;
-        flex-direction: column;
-        & > .title {
-          & > h1 {
-            color: #000000;
-            font-size: 1.35em;
+        align-items: center;
+        & > div {
+          margin: 0 15px;
+          &.nname {
+            width: 55%;
+            & > h1 {
+              font-size: 3.5em;
+              margin: 17px 0;
+            }
+            & > p {
+              margin: 17px 0;
+            }
           }
+          & > picture {
+            & > img {
+              position: relative;
+              object-fit: cover;
+              height: 150px;
+              margin-top: -30px;
+            }
+          }
+          
         }
-        & > .card-grid {
-          width: 100%;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 20px;
-          padding: 25px 0;
-          & > a {
-            text-decoration: none;
-            color: #000000;
-            background-color: #ffffff;
-            width: fit-content;
-            border-radius: 15px;
-            & > .card {
-              background: #ffffff;
-              border-radius: 15px;
-              /* height: 300px; */
-              width: 250px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-              transition: all .3s ease-in-out;
-              &:hover {
-                box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
-                transform: scale(1.05);
-              }
-              & > .thmbnail {
-                height: 150px;
-                width: 100%;
+      }
+      & > .ln_rcmm {
+        width: 100%;
+        position: relative;
+        & > .container {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          & > .title {
+            & > h1 {
+              color: #000000;
+              font-size: 1.35em;
+            }
+          }
+          & > .card-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 25px 0;
+            &.thn_grid_cd {
+              grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+              gap: 30px; 
+            }
+            & > a {
+              text-decoration: none;
+              color: #000000;
+              width: fit-content;
+              & > .card {
+                background: #ffffff;
                 border-radius: 15px;
-                overflow: hidden;
-                position: relative;
-                & > img {
-                  width: 100%;
-                  object-fit: fill;
-                  position: absolute;
-                  transform: scale(1.6) translateY(15%);
+                /* height: 300px; */
+                width: 250px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                transition: all .3s ease-in-out;
+                /* recommended card style */
+                &.rcmmd_cd {
+                  min-width: 280px;
+                  padding: 17px;
+                  background-color: #38b6ff48;
                 }
-                & > .trnsprnt {
-                  background-color: rgba(0, 0, 0, .17);
+                &:hover {
+                  box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
+                  transform: scale(1.05);
+                }
+                & > .thmbnail {
                   height: 150px;
                   width: 100%;
-                  z-index: 2;
+                  border-radius: 15px;
+                  overflow: hidden;
                   position: relative;
-                }
-              }
-              & > .details {
-                padding: 10px;
-                & > .content {
-                  padding: 3px;
-                  &.title {
-                    & > h1 {
-                      font-size: 1.1em
-                    }
+                  &.thn_rcmm {
+                    height: 180px;
+                    border-radius: 0;
+                    display: block;
                   }
-                  &.dur,
-                  &.ctprs {
-                    & > p {
-                      font-size: .9em;
-                      color: #1d1d1d;
-                    }
-                  }
-                  &.progress_bar {
-                    padding: 10px 0;
-                    display: flex;
-                    flex-direction: row;
-                    flex: 1;
+                  & > img {
                     width: 100%;
-                    align-items: center;
-                    justify-content: space-between;
-                    & > .main-bar {
-                      width: 70%;
-                      height: 10px;
+                    object-fit: fill;
+                    position: absolute;
+                    transform: scale(1.6) translateY(15%);
+                  }
+                  & > .trnsprnt {
+                    background-color: rgba(0, 0, 0, .17);
+                    height: 150px;
+                    width: 100%;
+                    z-index: 2;
+                    position: relative;
+                    /* recomm.. image inside thumbnail this parent class */
+                    & > img {
+                      width: 100%;
                       position: relative;
-                      background-color: #2d3748;
-                      & > .progress {
-                        width: 65%;
+                      object-fit: cover;
+                    }
+                  }
+                }
+                & > .details {
+                  padding: 10px;
+                  &.thmb_dt {
+                    padding: 0;
+                  }
+                  & > .content {
+                    padding: 3px;
+                    &.thmb_cnt {
+                      padding: 0;
+                      margin: 15px 0;
+                    }
+                    &.title {
+                      & > h1 {
+                        font-size: 1.1em;
+                        &.thmb_h1 {
+                          font-size: 1.5em;
+                          color: #38b6ff;
+                        }
+                      }
+                    }
+                    &.dur,
+                    &.ctprs {
+                      & > p {
+                        font-size: .9em;
+                        color: #1d1d1d;
+                        &.thmb_ct {
+                          font-size: 1.1em;
+                        }
+                      }
+                    }
+                    &.progress_bar {
+                      padding: 10px 0;
+                      display: flex;
+                      flex-direction: row;
+                      flex: 1;
+                      width: 100%;
+                      align-items: center;
+                      justify-content: space-between;
+                      & > .main-bar {
+                        width: 70%;
                         height: 10px;
                         position: relative;
+                        background-color: #2d3748;
+                        & > .progress {
+                          width: 65%;
+                          height: 10px;
+                          position: relative;
+                          background-color: #38b6ff;
+                        }
+                      }
+                      & > .cr-bar {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        position: relative;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: #ffffff;
+                        font-size: 1em;
                         background-color: #38b6ff;
                       }
                     }
-                    & > .cr-bar {
-                      width: 50px;
-                      height: 50px;
-                      border-radius: 50%;
-                      position: relative;
+                    &.thmb_dur_ep_container {
                       display: flex;
-                      justify-content: center;
+                      flex-direction: row;
+                      justify-content: space-between;
                       align-items: center;
-                      color: #ffffff;
-                      font-size: 1em;
-                      background-color: #38b6ff;
+                      & > .cont {
+                        width: 100%;
+                        & > i {
+                          font-size: 1em;
+                          color: #516485;
+                        }
+                      }
+                    }
+                    &.thmb_enrll {
+                      margin: 0 auto;
+                      display: flex;
+                      justify-self: center;
+                      align-self: center;
+                      width: fit-content;
+                      & > label {
+                        padding: 14px 30px;
+                        text-decoration: none;
+                        color: #ffffff;
+                        background-color: #38b6ff;
+                        font-size: 1.1em;
+                        display: inline-block;
+                        border-radius: 15px;
+                        cursor: pointer;
+                        transition: all .3s ease-in-out;
+                        &:hover {
+                          background-color: #114672e0;
+                        }
+                      }
                     }
                   }
                 }
@@ -327,81 +453,90 @@ section.sidebar {
 }
 
 
+.progress-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  width: 280px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
 
-    .card {
+.progress-percent {
+  color: #2196f3;
+  font-weight: bold;
+}
 
-    }
+.progress-track {
+  position: relative;
+  height: 14px;
+  background: #cfe9ff;
+  border-radius: 7px;
+  margin-bottom: 35px;
+}
 
-    .card .image {
-      background: #d1d5db;
-      height: 120px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
+.progress-fill {
+  height: 100%;
+  background: #2196f3;
+  border-radius: 7px;
+  transition: width 0.3s ease;
+}
 
-    .progress-bar {
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 9999px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
+.level-marker {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  background: #cfe9ff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
 
-    .progress-bar-inner {
-      height: 100%;
-      background: #3b82f6;
-      width: 60%;
-    }
+.level-marker.active {
+  background: #2196f3;
+}
 
-    .recommend {
-      background: #dbeafe;
-    }
+.level-marker:nth-child(2) { left: 0%; }
+.level-marker:nth-child(3) { left: 25%; }
+.level-marker:nth-child(4) { left: 50%; }
+.level-marker:nth-child(5) { left: 75%; }
+.level-marker:nth-child(6) { left: 100%; }
 
-    .recommend .price-enroll {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      align-items: center;
-    }
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  text-align: center;
+  color: #444;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
 
-    .recommend .price-enroll button {
-      padding: 6px 12px;
-      background: #fff;
-      border: none;
-      border-radius: 9999px;
-      font-weight: bold;
-      color: #3b82f6;
-      cursor: pointer;
-    }
+.label span {
+  font-weight: bold;
+  display: block;
+  margin-top: 2px;
+}
 
-    .rightbar {
-      background: #fff;
-      width: 300px;
-      padding: 20px;
-    }
+.progress-message {
+  background: #f1f1f1;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 14px;
+  color: #333;
+}
 
-    .rightbar .box {
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
+.emoji {
+  color: red;
+}
 
-    .rightbar .progress {
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 9999px;
-      margin: 10px 0;
-      overflow: hidden;
-    }
-
-    .rightbar .progress-inner {
-      height: 100%;
-      background: #3b82f6;
-      width: 25%;
-    }
 
     .rightbar .session {
       background: #f3f4f6;

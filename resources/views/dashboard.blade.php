@@ -452,6 +452,24 @@
                                 <p>01 Oct 2025, Saturday</p>
                             </div>
                         </div>
+                        <div class="up_session_bar">
+                            <div class="icon up_container if-qa-session-background-color">
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                            </div>
+                            <div class="content_sbar up_container">
+                                <strong>Q/A Session - Constant BlueScreen Errors</strong>
+                                <p>21 Aug 2025, Friday</p>
+                            </div>
+                        </div>
+                        <div class="up_session_bar">
+                            <div class="icon up_container if-new-video-background-color">
+                                <i class="fa fa-book" aria-hidden="true"></i>
+                            </div>
+                            <div class="content_sbar up_container">
+                                <strong>Introduction to Microsoft Office, manage your productivity</strong>
+                                <p>01 Oct 2025, Saturday</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

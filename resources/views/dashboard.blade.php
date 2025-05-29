@@ -26,17 +26,17 @@
                 </div>
                 <div class="nav-bar">
                     <div class="container">
-                        <div class="nav-item active">
+                        <div class="nav-item active" data-section="usr_dashboard">
                             <a href="">
-                            <div class="icon">
-                                <i class="fa-solid fa-border-all"></i>
-                            </div>
-                            <div class="title">
-                                <span>Dashboard</span>
-                            </div>
+                                <div class="icon">
+                                    <i class="fa-solid fa-border-all"></i>
+                                </div>
+                                <div class="title">
+                                    <span>Dashboard</span>
+                                </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_alltrainings">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-computer"></i>
@@ -46,7 +46,7 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_qasessions">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-person-circle-question"></i>
@@ -56,7 +56,7 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_mysubscriptions">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-tags"></i>
@@ -66,7 +66,7 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_resources">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-award"></i>
@@ -76,7 +76,7 @@
                             </div>
                             </a>
                         </div>                                                                                                                                                                                                        
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_tsassistance">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-handshake-angle"></i>
@@ -86,7 +86,7 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_hlpcenter">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-circle-info"></i>
@@ -96,7 +96,7 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item">
+                        <div class="nav-item" data-section="usr_settings">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-gears"></i>
@@ -116,10 +116,11 @@
                 </div>
             </div>
         </section>
+
         <section class="main">
             <div class="container">
-                <!-- putting everything under dashboard for easy switch -->
-                <div class="dashboard">
+                <!-- dashboard containers -->
+                <div class="content-section active dashboard_content" id="usr_dashboard">
                     <div class="topbar search-bar">
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Search...">
@@ -375,8 +376,21 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- trainings containers -->
+                <div class="content-section alltrainings_content" id="usr_alltrainings">
+                    <h1>All Trainings</h1>
+                    <p>Browse all available training materials here.</p>
+                </div>
+
+                <!-- subscriptions containers -->
+                <div class="content-section subscriptions_content" id="usr_subcriptions">
+                    <h1>Subscriptions Here</h1>
+                    <p>user plans and available plans</p>
+                </div>
             </div>
         </section>
+
         <section class="rightbar bar-lt-rt rt-bar">
             <div class="main_container">
                 <div class="right-bar">
@@ -390,80 +404,117 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="box">
+                    <div class="progress_box">
                         <div class="progress-container">
                             <div class="progress-header">
-                            <span class="progress-title">Your Overall Progress</span>
-                            <span class="progress-percent">25%</span>
+                                <h1 class="progress-title">Your Overall Progress</h1>
+                                <p class="progress-percent">25%</p>
                             </div>
-
                             <div class="progress-track">
-                            <div class="progress-fill" style="width: 25%;"></div>
-                            <div class="level-marker active"></div>
-                            <div class="level-marker active"></div>
-                            <div class="level-marker"></div>
-                            <div class="level-marker"></div>
-                            <div class="level-marker"></div>
+                                <div class="progress-fill" style="width: 25%;"></div>
+                                <div class="level-marker active"></div>
+                                <div class="level-marker active"></div>
+                                <div class="level-marker"></div>
+                                <div class="level-marker"></div>
+                                <div class="level-marker"></div>
                             </div>
-
                             <div class="progress-labels">
-                            <div class="label">25%<br><span>Beginner</span></div>
-                            <div class="label">50%<br><span>Intermediate</span></div>
-                            <div class="label">75%<br><span>Advanced</span></div>
-                            <div class="label">100%<br><span>Expert</span></div>
+                                <div class="label">0%<br><span></span></div>
+                                <div class="label">25%<br><span>Beginner</span></div>
+                                <div class="label">50%<br><span>Intermediate</span></div>
+                                <div class="label">75%<br><span>Advanced</span></div>
+                                <div class="label">100%<br><span>Expert</span></div>
                             </div>
-
                             <div class="progress-message">
-                            You're making great progress in the course! Keep up the fantastic work <span class="emoji">💯</span>! You've got this! Keep learning, and you'll be amazed at what you can accomplish.
+                                <p>You're making great progress in the course! Keep up the fantastic work <span class="emoji">💯</span>! You've got this! Keep learning, and you'll be amazed at what you can accomplish.</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="box">
-                    <h4>Upcoming Sessions</h4>
-                    <div class="session">
-                        <strong>Q/A Session - Constant BlueScreen Errors</strong>
-                        <p>21 Aug 2025, Friday</p>
-                    </div>
-                    <div class="session">
-                        <strong>Introduction to Microsoft Office</strong>
-                        <p>01 Oct 2025, Saturday</p>
-                    </div>
-                    <button>View All Courses</button>
+                    <div class="upcoming_box">
+                        <div class="title">
+                            <h4>Upcoming Sessions</h4>
+                        </div>
+                        <div class="up_session_bar">
+                            <div class="icon up_container if-qa-session-background-color">
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                            </div>
+                            <div class="content_sbar up_container">
+                                <strong>Q/A Session - Constant BlueScreen Errors</strong>
+                                <p>21 Aug 2025, Friday</p>
+                            </div>
+                        </div>
+                        <div class="up_session_bar">
+                            <div class="icon up_container if-new-video-background-color">
+                                <i class="fa fa-book" aria-hidden="true"></i>
+                            </div>
+                            <div class="content_sbar up_container">
+                                <strong>Introduction to Microsoft Office, manage your productivity</strong>
+                                <p>01 Oct 2025, Saturday</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-    <script>
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navItems.forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
-        });
-        });
-    document.addEventListener('DOMContentLoaded', () => {
-      updateProgress(95);
 
-      function updateProgress(percent) {
-        const fill = document.querySelector('.progress-fill');
-        const percentText = document.querySelector('.progress-percent');
-        const markers = document.querySelectorAll('.level-marker');
+        <!-- Js connections -->
+        <script>
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                updateProgress(50);
 
-        fill.style.width = percent + '%';
-        percentText.textContent = percent + '%';
+                function updateProgress(percent) {
+                    const fill = document.querySelector('.progress-fill');
+                    const percentText = document.querySelector('.progress-percent');
+                    const markers = document.querySelectorAll('.level-marker');
 
-        markers.forEach((marker, index) => {
-          const thresholds = [0, 25, 50, 75, 100];
-          if (percent >= thresholds[index]) {
-            marker.classList.add('active');
-          } else {
-            marker.classList.remove('active');
-          }
-        });
-      }
-    });
-    </script>
+                    fill.style.width = percent + '%';
+                    percentText.textContent = percent + '%';
+
+                    markers.forEach((marker, index) => {
+                    const thresholds = [0, 25, 50, 75, 100];
+                    if (percent >= thresholds[index]) {
+                        marker.classList.add('active');
+                    } else {
+                        marker.classList.remove('active');
+                    }
+                    });
+                }
+            });
+        </script>
+
+        <!-- switching b|n menu-items -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const navItems = document.querySelectorAll('.nav-item');
+                const contentSections = document.querySelectorAll('.content-section');
+                
+                navItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        event.preventDefault();
+                        navItems.forEach(navItem => {
+                            navItem.classList.remove('active');
+                        });
+
+                        this.classList.add('active');
+                        
+                        // Get the section
+                        const sectionId = this.getAttribute('data-section');
+                        
+                        contentSections.forEach(section => {
+                            section.classList.remove('active');
+                        });
+
+                        document.getElementById(sectionId).classList.add('active');
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

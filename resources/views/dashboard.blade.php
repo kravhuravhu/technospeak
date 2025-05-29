@@ -384,7 +384,7 @@
                 </div>
 
                 <!-- subscriptions containers -->
-                <div class="content-section subscriptions_content" id="usr_subcriptions">
+                <div class="content-section subscriptions_content" id="usr_mysubscriptions">
                     <h1>Subscriptions Here</h1>
                     <p>user plans and available plans</p>
                 </div>

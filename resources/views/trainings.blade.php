@@ -30,7 +30,7 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="">About Us</a></li>
                         <li><a href="/trainings" class="active">Trainings</a></li>
-                        <li><a href="">Pricing</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
                         <li><a href="/register">Sign Up/In</a></li>
                     </ul>
                 </div>

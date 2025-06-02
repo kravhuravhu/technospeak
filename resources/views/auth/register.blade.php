@@ -44,6 +44,11 @@
                         @error('name') <p>{{ $message }}</p> @enderror
                     </div>
                     <div class="input-icon">
+                        <i class="fa fa-user"></i>
+                        <input type="text" name="surname" placeholder="Enter your surname" value="{{ old('surname') }}" required>
+                        @error('surname') <p>{{ $message }}</p> @enderror
+                    </div>
+                    <div class="input-icon">
                         <i class="fa fa-envelope"></i>
                         <input type="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                         @error('email') <p>{{ $message }}</p> @enderror

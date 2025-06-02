@@ -127,8 +127,9 @@
                     </div>
                     <div class="welcome">
                         <div class="nname">
-                            <h1>Welcome back, Rose</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </p>
+                            <h1>Welcome back, {{ Auth::user()->name }}</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </p>
+                            <p>sed do eiusmod tempor incididunt ut labore et dolore </p>
                         </div>
                         <div>
                             <picture>
@@ -382,11 +383,139 @@
                     <h1>All Trainings</h1>
                     <p>Browse all available training materials here.</p>
                 </div>
-
+                
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
-                    <h1>Subscriptions Here</h1>
-                    <p>user plans and available plans</p>
+                    <h1>My Subscription</h1>
+                    <div class="subcription-table">
+                        <table>
+                            <thread>
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thread>
+                            <tbody id="userPlans">
+
+                            </tbody>    
+                        </table>
+                    </div>
+                    <hr class="divider" />
+                    <h2>Other Plans</h2>
+                    <div class="plans-container" id="otherPlans">
+                    </div>
+                </div>
+
+                <!-- settings containers -->
+                <div class="content-section settings_content" id="usr_settings">
+                    <div class="settings-profile">
+                        <!-- Update Profile Information -->
+                        <section class="setting-block">
+                            <h2 class="setting-title">Profile Information</h2>
+                            <p class="setting-desc">Update your account's profile information and email address.</p>
+
+                            <!-- Email verification resend -->
+                            <form method="POST" action="{{ route('verification.send') }}">
+                                @csrf
+                                <button type="submit" style="display:none;"></button>
+                            </form>
+
+                            <form method="POST" action="{{ route('profile.update') }}">
+                                @csrf
+                                @method('PATCH')
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input id="name" name="name" type="text" value="{{ old('name', auth()->user()->name) }}" required />
+                                    @error('name')<div class="error-msg">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="surname">Surname</label>
+                                    <input id="surname" name="surname" type="text" value="{{ old('surname', auth()->user()->surname) }}" required />
+                                    @error('surname')<div class="error-msg">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input id="email" name="email" type="email" value="{{ old('email', auth()->user()->email) }}" required />
+                                    @error('email')<div class="error-msg">{{ $message }}</div>@enderror
+
+                                    @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
+                                        <div class="verify-notice">
+                                            <p>Your email address is unverified.</p>
+                                            <button type="submit" formaction="{{ route('verification.send') }}">Click here to re-send the verification email.</button>
+                                        </div>
+                                    @endif
+                                </div>
+                                <button class="save-btn" type="submit">Save</button>
+                                @if (session('status') === 'profile-updated')
+                                    <p class="status-msg">Profile updated</p>
+                                @endif
+                                @if (session('status') === 'verification-link-sent')
+                                    <p class="status-msg">A new verification link has been sent to your email.</p>
+                                @endif
+
+                                @if (session('status') === 'email-already-verified')
+                                    <p class="status-msg">Your email is already verified.</p>
+                                @endif
+                            </form>
+                        </section>
+
+                        <!-- Update Password -->
+                        <section class="setting-block">
+                            <h2 class="setting-title">Update Password</h2>
+                            <p class="setting-desc">Ensure your account is using a long, random password to stay secure.</p>
+
+                            <form method="POST" action="{{ route('password.update') }}">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="form-group">
+                                <label for="current_password">Current Password</label>
+                                <input id="current_password" name="current_password" type="password" />
+                                @error('current_password', 'updatePassword')<div class="error-msg">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">New Password</label>
+                                <input id="password" name="password" type="password" />
+                                @error('password', 'updatePassword')<div class="error-msg">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password_confirmation">Confirm Password</label>
+                                <input id="password_confirmation" name="password_confirmation" type="password" />
+                                @error('password_confirmation', 'updatePassword')<div class="error-msg">{{ $message }}</div>@enderror
+                            </div>
+
+                            <button class="save-btn" type="submit">Save</button>
+
+                            @if (session('status') === 'password-updated')
+                                <p class="status-msg">New password saved.</p>
+                            @endif
+                            </form>
+                        </section>
+
+                        <!-- Delete Account -->
+                        <section class="setting-block">
+                            <h2 class="setting-title">Delete Account</h2>
+                            <p class="setting-desc">
+                            Once your account is deleted, all of its resources and data will be permanently deleted.
+                            </p>
+
+                            <form method="POST" action="{{ route('profile.destroy') }}">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="form-group">
+                                <label for="delete_password">Password</label>
+                                <input id="delete_password" name="password" type="password" placeholder="Enter your password" />
+                                @error('password', 'userDeletion')<div class="error-msg">{{ $message }}</div>@enderror
+                            </div>
+
+                            <button class="delete-btn" type="submit">Delete Account</button>
+                            </form>
+                        </section>
+                    </div>
                 </div>
             </div>
         </section>
@@ -400,7 +529,19 @@
                         </div>
                         <div class="name nt_nm">
                             <div class="cont">
-                                <p>Name Surname</p>
+                                <p>{{ Auth::user()->name }} {{ Auth::user()->surname }}</p>
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="dropdownMenu" class="dropdown hidden">
+                                <a href="" class="content-section">Profile</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit">Logout</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -507,12 +648,28 @@
             });
         </script>
 
+        <!-- pass session value to JS to remain on usr_settings -->
+        <script>
+            window.activeSection = "{{ session('section', 'usr_dashboard') }}";
+        </script>
+
         <!-- switching b|n menu-items -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const navItems = document.querySelectorAll('.nav-item');
                 const contentSections = document.querySelectorAll('.content-section');
                 
+                if (window.activeSection) {
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    contentSections.forEach(section => section.classList.remove('active'));
+
+                    const activeNav = document.querySelector(`.nav-item[data-section="${window.activeSection}"]`);
+                    if (activeNav) activeNav.classList.add('active');
+
+                    const activeSection = document.getElementById(window.activeSection);
+                    if (activeSection) activeSection.classList.add('active');
+                }
+
                 navItems.forEach(item => {
                     item.addEventListener('click', function() {
                         event.preventDefault();
@@ -534,5 +691,23 @@
                 });
             });
         </script>
+
+        <!-- log out and profile settings -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.nt_nm').on('click', function (e) {
+                    e.stopPropagation();
+                    $('#dropdownMenu').toggleClass('hidden');
+                });
+
+                $(window).on('click', function () {
+                    $('#dropdownMenu').addClass('hidden');
+                });
+            });
+        </script>
+
+        <!-- functions for only user subsciptions -->
+        <script src="/script/subscription.js"></script>
     </body>
 </html>

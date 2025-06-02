@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use App\Models\Client;
 
 class RegisteredUserController extends Controller
 {
@@ -31,19 +32,38 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'surname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:technospeak_db.clients,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $last = Client::orderBy('id', 'desc')->first();
+
+        $lastId = 0;
+        if ($last && preg_match('/^TSC(\d+)$/', $last->id, $match)) {
+            $lastId = (int)$match[1];
+        }
+
+        $newId = 'TSC' . str_pad($lastId + 1, 3, '0', STR_PAD_LEFT);
+
+        $client = new Client([
+            'id' => $newId,
             'name' => $request->name,
+            'surname' => $request->surname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'registered_date' => now()->format('Y-m-d'),
+            'registered_time' => now()->format('H:i:s'),
         ]);
 
-        event(new Registered($user));
+        $client->save();
 
-        Auth::login($user);
+        // After inserting into DB
+        $client = Client::find($newId);
+        event(new Registered($client));
+
+        // Login user
+        Auth::login($client);
 
         return redirect(route('dashboard', absolute: false));
     }

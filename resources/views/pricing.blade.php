@@ -27,11 +27,11 @@
             <div class="nav_block">
                 <div class="nav-links">
                     <ul>
-                        <li><a href="">Home</a></li>
+                        <li><a href="/">Home</a></li>
                         <li><a href="">About Us</a></li>
-                        <li><a href="">Trainings</a></li>
-                        <li><a href="" class="active">Pricing</a></li>
-                        <li><a href="">Sign Up/In</a></li>
+                        <li><a href="/trainings">Trainings</a></li>
+                        <li><a href="/pricing" class="active">Pricing</a></li>
+                        <li><a href="/register">Sign Up/In</a></li>
                     </ul>
                 </div>
             </div>

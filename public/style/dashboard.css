@@ -143,14 +143,63 @@ section.bar-lt-rt {
         }
         .name {
           margin: 0 0 0 20px;
+          cursor: pointer;
           & > .cont {
             background-color: #ffffff;
             border-radius: 15px;
             padding: 12px 18px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
             & > p {
-              font-size: 1.4em;
+              font-size: 1.2em;
               font-weight: 370;
               color: #000000;
+            }
+            & > div {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              & > svg {
+                height: 20px;
+                margin: 5px
+              }
+            }
+          }
+          & > .dropdown {
+            position: absolute;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            top: 85px;
+            right: 180px;
+            width: 150px;
+            height: fit-content;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 0.95em;
+            transition: all .3s ease-in-out;
+            z-index: 2;
+            &.hidden {
+              display: none;
+            }
+            & > a,
+            & > form > button {
+              border: none;
+              color: #000000;
+              padding:  10px;
+              text-align: left;
+              width: 100%;
+              cursor: pointer;
+              font-family: "Roboto", sans-serif;
+              font-size: 1.1em;
+              text-decoration: none;
+              &:hover {
+                background-color: #f0f0f0;
+              }
             }
           }
         }
@@ -408,14 +457,17 @@ section.bar-lt-rt {
           align-items: center;
           & > div {
             margin: 0 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             &.nname {
-              width: 55%;
+              /* width: 55%; */
               & > h1 {
                 font-size: 3.5em;
                 margin: 17px 0;
               }
               & > p {
-                margin: 17px 0;
+                margin:  0;
               }
             }
             & > picture {
@@ -613,6 +665,165 @@ section.bar-lt-rt {
       /* style for all trainings */
       &.alltrainings_content {
         background-color: red;
+      }
+
+      /* style for all trainings */
+      &.subscriptions_content {
+          padding: 20px;
+        .subcription-table table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+        
+        .subcription-table th, .subcription-table td {
+          border: 1px solid #add;
+          padding: 12px;
+          text-align: left;
+          vertical-align: top;
+        }
+        
+        .subcription-table th {
+          background-color: #f5f5f5;
+          font-weight: bold;
+        }
+        
+        .divider {
+          border-top: 2px solid #ccc;
+          margin: 30px 0;
+        }
+        
+        .plans-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+        
+        .plan-card {
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          padding: 15px;
+          width: 100%;
+          max-width: 400px;
+          background-color: #f9f9f9;
+          box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plan-card h3 {
+          margin-top: 0;
+          color: #007bff;
+        }
+        
+        .plan-card p {
+          font-size: 14px;
+        }
+        
+        .plan-card button {
+          margin-top: 10px;
+          padding: 8px 12px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        
+        .plan-card button:hover {
+          background-color: #0056b3;
+        }
+      }
+
+      &.settings_content {
+        & > .settings-profile {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+          & > .setting-block {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            & > .setting-title {
+              font-size: 2em;
+              margin-bottom: 10px;
+              color: #1d1d1d;
+            }
+            & > .setting-desc {
+              font-size: 0.95em;
+              color: #4a4a4a;
+              margin-bottom: 20px;
+            }
+            & > form {
+              & > .form-group {
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                & > label {
+                  margin-bottom: 6px;
+                  font-weight: 500;
+                  color: #000000;
+                }
+                & > input {
+                  padding: 12px;
+                  border: 3px solid rgba(56, 182, 255, 0.123);
+                  border-radius: 10px;
+                  font-size: 1em;
+                  background-color: #f1f1f1;
+                  outline: none;
+                  &:focus {
+                    border: 3px solid rgba(56, 182, 255, 0.473);
+                  }
+                }
+                & > .error-msg {
+                  font-size: 0.85em;
+                  color: red;
+                  margin-top: 4px;
+                }
+              }
+              & > .save-btn, 
+              & > .delete-btn {
+                padding: 14px 25px;
+                border-radius: 15px;
+                font-size: 1em;
+                cursor: pointer;
+                border: none;
+                &.save-btn {
+                  background-color: #38b6ff;
+                  color: white;
+                  &:hover {
+                    background-color: #2993cc;
+                  }
+                }
+                &.delete-btn {
+                  background-color: #ff3b3b;
+                  color: white;
+                  &:hover {
+                    background-color: #cc1c1c;
+                  }
+                }
+              }
+              & > .verify-notice {
+                margin-top: 10px;
+                font-size: 0.85em;
+                color: #444;
+                & > button {
+                  background: none;
+                  border: none;
+                  color: #38b6ff;
+                  text-decoration: underline;
+                  cursor: pointer;
+                  font-size: 0.9em;
+                  margin-top: 5px;
+                }
+              }
+              & > .status-msg {
+                font-size: 0.9em;
+                color: green;
+                margin-top: 10px;
+              }
+            }
+          }
+        }
       }
     }
   }

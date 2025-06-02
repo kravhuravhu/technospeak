@@ -112,6 +112,21 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'technospeak_db' => [
+            'driver' => env('DB_TS_CONNECTION', 'mysql'),
+            'host' => env('DB_TS_HOST', '127.0.0.1'),
+            'port' => env('DB_TS_PORT', '3306'),
+            'database' => env('DB_TS_DATABASE', 'forge'),
+            'username' => env('DB_TS_USERNAME', 'forge'),
+            'password' => env('DB_TS_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
     ],
 
     /*

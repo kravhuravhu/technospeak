@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechnoSpeak - Pricing</title>
+    <title>Technospeak - Pricing</title>
     <meta name="author" content="TechnoSpeak">
     <meta property="og:type" content="website">
     <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">
@@ -17,25 +17,209 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-        <section class="nav_container">
+    <section class="nav_container white_bg_nav_container">
         <nav>
             <div class="logo_container">
                 <a href="#">
-                    <img src="/images/white-no-logo.png" alt="technospeak_icon">
+                    <img src="/images/default-no-logo.png" alt="technospeak_icon">
                 </a>
+            </div>
+            <div class="menu-toggle" aria-label="Toggle navigation">
+                <div class="menu-li menu_li_white"></div>
+                <div class="menu-li menu_li_white"></div>
+                <div class="menu-li menu_li_white"></div>
             </div>
             <div class="nav_block">
                 <div class="nav-links">
                     <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="">About Us</a></li>
-                        <li><a href="/trainings">Trainings</a></li>
-                        <li><a href="/pricing" class="active">Pricing</a></li>
-                        <li><a href="/register">Sign Up/In</a></li>
+                        <li><a href="/" class="bg-wt">Home</a></li>
+                        <li><a href="" class="bg-wt">About Us</a></li>
+                        <li><a href="/trainings" class="bg-wt">Trainings</a></li>
+                        <li><a href="/pricing" class="active bg-wt">Pricing</a></li>
+                        <li><a href="/register" class="bg-wt">Sign Up/In</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
+    </section>
+
+    <section class="price_container">
+        <div class="title_container">
+            <div>
+                <h1>Subscription Plans & Pricing</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut <br>labore et dolore magna aliqua. Ut enim ad minim veniam </p>
+            </div>
+        </div>
+        <div class="plans_container">
+            <div class="container">
+                <div class="card-grid">
+                    <div class="container-grid">
+                        <div class="card_container">
+                            <div class="card">
+                                <div class="plan_title">
+                                    <h2>Tech Teasers</h2>
+                                </div>
+                                <div class="icon">
+                                    <img src="../images/icons/quality-service.png"/>
+                                </div>
+                                <div class="price">
+                                    <p>
+                                        <span>
+                                            <sup class="context">R</sup>
+                                        </span>
+                                        Free
+                                        <span class="dur">/ &nbsp&nbsp<tr>no costs</span>
+                                    </p>
+                                </div>
+                                <div class="dscpt_container">
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>No sign-up required</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Full access to all our tips and tricks videos</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Comment to connect</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bttn">
+                                    <button>SUBSCRIBE</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card_container">
+                            <div class="card">
+                                <div class="plan_title">
+                                    <h2>TechVault Access</h2>
+                                </div>
+                                <div class="icon">
+                                    <img src="../images/icons/quality-service.png"/>
+                                </div>
+                                <div class="price">
+                                    <p>
+                                        <span>
+                                            <sup class="context">R</sup>
+                                        </span>
+                                        400.00
+                                        <span class="dur">/ &nbsp&nbsp<tr>year</span>
+                                    </p>
+                                </div>
+                                <div class="dscpt_container">
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Unlimited access to all training content</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Downloadable Cheatsheets</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Walkthrough with screen grabs, mini-guides</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Categorized tech newsletters</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bttn">
+                                    <button>SUBSCRIBE</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card_container">
+                            <div class="card">
+                                <div class="plan_title">
+                                    <h2>Personal Tech Guide</h2>
+                                </div>
+                                <div class="icon">
+                                    <img src="../images/icons/quality-service.png"/>
+                                </div>
+                                <div class="price">
+                                    <p>
+                                        <span>
+                                            <sub class="sub context">from</sub>
+                                            <sup class="context">R</sup>
+                                        </span>
+                                        150
+                                        <span class="dur">/ &nbsp&nbsp<tr>hour</span>
+                                    </p>
+                                </div>
+                                <div class="dscpt_container">
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Live, personalized sessions - flexible delivery</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Step-by-step assistance, Scalable support</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Support across multiple topics</p>
+                                        </div>
+                                    </div>
+                                    <div class="dscpt">
+                                        <div class="tick">
+                                            <img src="../images/icons/quality.png"/>
+                                        </div>
+                                        <div class="dscpt-p">
+                                            <p>Students & professional rates fair pricing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bttn">
+                                    <button>REGISTER</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
 <!-- Main Content Section -->

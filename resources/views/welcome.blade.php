@@ -17,30 +17,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <section class="nav_container">
-            <nav>
-                <div class="logo_container">
-                    <a href="#">
-                        <img src="/images/white-no-logo.png" alt="technospeak_icon">
-                    </a>
-                </div>
-                <div class="menu-toggle" aria-label="Toggle navigation">
-                    <div class="menu-li"></div>
-                    <div class="menu-li"></div>
-                    <div class="menu-li"></div>
-                </div>
-                <div class="nav_block">
-                    <div class="nav-links">
-                        <ul>
-                            <li><a href="/" class="active">Home</a></li>
-                            <li><a href="">About Us</a></li>
-                            <li><a href="/trainings">Trainings</a></li>
-                            <li><a href="/pricing">Pricing</a></li>
-                            <li><a href="/register">Sign Up/In</a></li>
-                    </div>
-                </div>
-            </nav>
-        </section>
+        {{-- Include the navbar --}}
+        @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
+
         <section class="landing_container">
             <div class="main_container">
                 <div class="slider_container">

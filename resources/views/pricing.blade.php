@@ -8,6 +8,7 @@
     <meta property="og:type" content="website">
     <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">
     <link rel="stylesheet" href="style/pricing.css">
+    <link rel="stylesheet" href="style/home.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -17,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <section class="nav_container white_bg_nav_container">
+    <!-- <section class="nav_container white_bg_nav_container">
         <nav>
             <div class="logo_container">
                 <a href="#">
@@ -41,7 +42,9 @@
                 </div>
             </div>
         </nav>
-    </section>
+    </section> -->
+    {{-- Include the navbar --}}
+    @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
     <section class="price_container">
         <div class="title_container">

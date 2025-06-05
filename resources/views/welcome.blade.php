@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Technospeak Strategies - Home</title>
+        <title>Technospeak - Home</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
@@ -35,7 +35,7 @@
                             <li><a href="/" class="active">Home</a></li>
                             <li><a href="">About Us</a></li>
                             <li><a href="/trainings">Trainings</a></li>
-                            <li><a href="">Pricing</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
                             <li><a href="/register">Sign Up/In</a></li>
                     </div>
                 </div>

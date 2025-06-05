@@ -47,7 +47,9 @@ body {
     position: relative;
     padding: 10px;
     background-color: #38b6ff;
-
+    &.white_bg_nav_container {
+        background-color: #ffffff;
+    }
     & > nav {
         width: 80%;
         position: relative;
@@ -84,6 +86,9 @@ body {
                 margin: 7px 0;
                 background-color: #ededed;
                 transition: all 0.3s ease-in-out;
+                &.menu_li_white {
+                    background-color: #1a1a1a;
+                }
             }
         }
         & > .nav_block {
@@ -111,21 +116,219 @@ body {
                     align-self: center;
                     justify-self: center;
                     transition: all .3s ease-in-out;
+                    &.bg-wt {
+                        color: #1b1b1b;
+                    }
                 }
                 & > ul > li > a.active {
                     padding: 10px 25px;
                     background-color: #ffffff;
                     color: #000000;
                     border-radius: 50px;
+                    &.bg-wt.active {
+                        color: #ffffff;
+                        background-color: #38b6ff;
+                    }
                 }
                 & > ul > li > a:hover {
                     color: #ffffff94;
+                    &.bg-wt {
+                        color: var(--secondary-color);
+                    }
                 }
             }
         }
     }
 }
 
+/* price plans */ 
+section.price_container {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 100%;
+    flex: 1;
+    & > .title_container {
+        height: 350px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        background-color: #38b6ff;
+        & > div {
+            margin: -100px auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            & > h1 { 
+                font-size: 3.3em;
+                color: #f3f3f3;
+            }
+            & > p {
+                font-size: 1.2em;
+                color: #ededed;
+                margin: 0 auto;
+                text-align: center;
+            }
+        }
+    }
+    & > .plans_container {
+        width: 100%;
+        height: 550px;
+        margin: 0 auto;
+        position: relative;
+        display: flex;
+        background-color: #ffffff;
+        justify-content: center;
+        & > .container {
+            position: absolute;
+            width: 100%;
+            top: -25%;
+            margin: 0 auto;
+            & > .card-grid {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                & > .container-grid {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 20px;
+                    padding: 25px 0;
+                    & > .card_container {
+                        height: fit-content;
+                        position: relative;
+                        display: inline-block;
+                        & > .card {
+                            background: #fafafa;
+                            border-radius: 20px;
+                            width: 330px;
+                            height: 550px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            transition: all .3s ease-in-out;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            &:hover {
+                                box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
+                                transform: scale(1.05);
+                                & > .bttn {
+                                    & > button {
+                                        background-color: #38b6ff;
+                                        color: #fafafa;
+                                    }
+                                }
+                            }
+                            & > .plan_title {
+                                padding: 15px;
+                                & > h2 {
+                                    color: #38b6ff;
+                                    font-size: 1.5em;
+                                }
+                            }
+                            & > .icon {
+                                height: 80px;
+                                width: 80px;
+                                background-color: #38b6ff;
+                                border-radius: 50% 60% 40% 70% / 60% 40% 70% 50%;
+                                animation: blob 2s infinite ease-in-out;
+                                overflow: hidden;
+                                & > img {
+                                    height: 80px;
+                                    position: relative;
+                                    object-fit: cover;
+                                }
+                            }
+                            & > .price {
+                                padding: 10px 0;
+                                & > p {
+                                    font-size: 1.7em;
+                                    color: #252525;
+                                    font-weight: 600;
+                                    & > span {
+                                        & > .context {
+                                            font-family: "Schoolbell", sans-serif;
+                                            font-size: .8em;
+                                            color: #12567d;
+                                            margin: 0;
+                                            font-weight: 100;
+                                            &.sub {
+                                                font-size: .4em;
+                                            }
+                                        }
+                                    }
+                                    & > .dur {
+                                        margin: 0 10px;
+                                        font-weight: 200;
+                                        font-size: .75em;
+                                    }
+                                }
+                            }
+                            & > .dscpt_container {
+                                & > .dscpt {
+                                    display: flex;
+                                    width: 100%;
+                                    padding: 7px 30px;
+                                    flex-direction: row;
+                                    align-items: center;
+                                    justify-content: flex-start;
+                                    & > .tick {
+                                        height: 20px;
+                                        width: 20px;
+                                        & > img {
+                                            height: 20px;
+                                            object-fit: cover;
+                                            position: relative;
+                                        }
+                                    }
+                                    & > .dscpt-p {
+                                        & > p {
+                                            font-size: .9em;
+                                            color: #252525;
+                                            margin: 0 10px;
+                                        }
+                                    }
+                                }
+                            }
+                            & > .bttn {
+                                width: 100%;
+                                margin-top: auto;
+                                padding: 30px 0;
+                                & > button {
+                                    padding: 15px 30px;
+                                    border: 2px solid #38b6ff;
+                                    background-color: #ffffff;
+                                    cursor: pointer;
+                                    display: flex;
+                                    justify-self: center;
+                                    align-self: center;
+                                    color: #38b6ff;
+                                    font-weight: 600;
+                                    transition: all .3s ease-in-out;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes blob {
+    0% {
+        border-radius: 50% 60% 40% 70% / 60% 40% 70% 50%;
+    }
+    50% {
+        border-radius: 60% 40% 70% 50% / 50% 70% 40% 60%;
+    }
+    100% {
+        border-radius: 50% 60% 40% 70% / 60% 40% 70% 50%;
+    }
+}
 
 /* One-on-One Sessions CSS */
 .session-section1 {

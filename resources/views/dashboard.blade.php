@@ -386,25 +386,53 @@
                 
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
-                    <h1>My Subscription</h1>
-                    <div class="subcription-table">
-                        <table>
-                            <thread>
-                                <tr>
-                                    <th>Plan</th>
-                                    <th>Description</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thread>
-                            <tbody id="userPlans">
+                    <div class="topbar search-bar">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Search plans...">
+                    </div>
+                    
+                    <div class="welcome">
+                        <div class="nname">
+                            <h1>My Subscription Plans</h1>
+                            <p>Manage your current subscriptions and explore new opportunities</p>
+                        </div>
+                        <div class="welcome-emoji">
+                            <picture>
+                                <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4b8/512.webp" type="image/webp">
+                                <img src="../images/icons/moneygiff.gif" alt="💸"/>
+                            </picture>
+                        </div>
+                    </div>
 
-                            </tbody>    
-                        </table>
+                    <div class="current-plans">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Your Active Plans</h2>
+                                <p>These are the plans you're currently subscribed to</p>
+                            </div>
+                            <div class="card-grid" id="userPlans">
+                                <!-- Plans inserted by JavaScript -->
+                            </div>
+                        </div>
                     </div>
-                    <hr class="divider" />
-                    <h2>Other Plans</h2>
-                    <div class="plans-container" id="otherPlans">
+                    
+                    <div class="other-plans">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Available Plans</h2>
+                                <p>Upgrade your experience with these additional options</p>
+                            </div>
+                            <div class="card-grid" id="otherPlans">
+                                <!-- Other plans will be inserted here by JavaScript -->
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Resources containers -->
+                <div class="content-section resources_content" id="usr_resources">
+                    <h1>All Trainings</h1>
+                    <p>Browse all available training materials here.</p>
                 </div>
 
                 <!-- settings containers -->

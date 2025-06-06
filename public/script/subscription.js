@@ -1,34 +1,80 @@
 const allPlans = [
     {
-    id: 1,
-    title: "Plan 1 – Free Subscription",
-    description: `Free access to clickbait videos posted on our social media platforms.
-    Free subscribers can ask questions in the comment section, and we’ll provide a brief answer.`
+        id: 1,
+        title: "Free Subscription",
+        price: "Free",
+        description: "Perfect for beginners who want to explore our content",
+        features: [
+            "Access to clickbait videos on social media",
+            "Ask questions in comments",
+            "Basic community support"
+        ],
+        isCurrent: true
     },
     {
-    id: 2,
-    title: "Plan 2 – R350/yearly – Annual Subscription",
-    description: `Full access to all clickbait-style videos. Downloadable resources, including cheat sheets and guides. Monthly tech tips newsletter.`
+        id: 2,
+        title: "Annual Subscription",
+        price: "R350/year",
+        description: "Full access to all resources for committed learners",
+        features: [
+            "All clickbait-style videos",
+            "Downloadable resources",
+            "Monthly tech tips newsletter",
+            "Priority support"
+        ],
+        isCurrent: true
     },
     {
-    id: 3,
-    title: "Plan 3 – Personal Guide - R110/hour (students), R170/hour (business)",
-    description: `One-on-one sessions via video/chat. Submit requests in advance. Flexible scheduling. Additional hours available.`
+        id: 3,
+        title: "Personal Guide",
+        price: "From R110/hour",
+        description: "Personalized one-on-one sessions tailored to your needs",
+        features: [
+            "Custom video/chat sessions",
+            "Submit requests in advance",
+            "Flexible scheduling",
+            "Additional hours available"
+        ],
+        isCurrent: false
     },
     {
-    id: 4,
-    title: "Plan 4 – Formal Training - R400/students, R750/business",
-    description: `Comprehensive EUC and web development training. Includes portfolio building and instructor-led sessions.`
+        id: 4,
+        title: "Formal Training",
+        price: "From R400/course",
+        description: "Structured learning with professional instructors",
+        features: [
+            "Comprehensive EUC training",
+            "Web development courses",
+            "Portfolio building",
+            "Certificate of completion"
+        ],
+        isCurrent: false
     },
     {
-    id: 5,
-    title: "Plan 5 – Freelance Tutoring - R80/hour (students), R120/hour (business)",
-    description: `Tutoring, consultations, and task help. TechnoSpeak takes a commission from completed tasks.`
+        id: 5,
+        title: "Freelance Tutoring",
+        price: "From R80/hour",
+        description: "Get help with specific challenges or tasks",
+        features: [
+            "Tutoring and consultations",
+            "Task-specific help",
+            "Flexible payment options",
+            "Quality guaranteed"
+        ],
+        isCurrent: false
     },
     {
-    id: 6,
-    title: "Plan 6 – Task Assistance - R1000/task (students), R1750/task (business)",
-    description: `Hands-on help with tasks like coding or web development. Pay-per-task model.`
+        id: 6,
+        title: "Task Assistance",
+        price: "From R1000/task",
+        description: "Professional help with complex projects",
+        features: [
+            "Hands-on coding help",
+            "Web development support",
+            "Pay-per-task model",
+            "Fast turnaround"
+        ],
+        isCurrent: false
     }
 ];
 
@@ -36,52 +82,88 @@ const allPlans = [
 let userPlanIds = [1, 2];
 
 function renderUserPlans() {
-    const tableBody = document.getElementById("userPlans");
-    tableBody.innerHTML = "";
+    const container = document.getElementById("userPlans");
+    container.innerHTML = "";
+    
     allPlans.forEach(plan => {
-    if (userPlanIds.includes(plan.id)) {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-        <td>${plan.title}</td>
-        <td>${plan.description}</td>
-        <td><button onclick="unsubscribe(${plan.id})">Unsubscribe</button></td>
-        `;
-        tableBody.appendChild(row);
-    }
+        if (userPlanIds.includes(plan.id)) {
+            const card = document.createElement("div");
+            card.className = "plan-card current-plan";
+            card.innerHTML = `
+                <span class="plan-badge">Active</span>
+                <h3>${plan.title}</h3>
+                <div class="plan-price">${plan.price}</div>
+                <p class="plan-description">${plan.description}</p>
+                <ul class="plan-features">
+                    ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+                <div class="plan-actions">
+                    <button class="details-btn" onclick="showPlanDetails(${plan.id})">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                    <button class="unsubscribe-btn" onclick="unsubscribe(${plan.id})">
+                        <i class="fas fa-times"></i> Unsubscribe
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
     });
 }
 
 function renderOtherPlans() {
-    const otherPlansDiv = document.getElementById("otherPlans");
-    otherPlansDiv.innerHTML = "";
+    const container = document.getElementById("otherPlans");
+    container.innerHTML = "";
+    
     allPlans.forEach(plan => {
-    if (!userPlanIds.includes(plan.id)) {
-        const card = document.createElement("div");
-        card.className = "plan-card";
-        card.innerHTML = `
-        <h3>${plan.title}</h3>
-        <p>${plan.description}</p>
-        <button onclick="subscribe(${plan.id})">Register</button>
-        `;
-        otherPlansDiv.appendChild(card);
-    }
+        if (!userPlanIds.includes(plan.id)) {
+            const card = document.createElement("div");
+            card.className = "plan-card";
+            card.innerHTML = `
+                <h3>${plan.title}</h3>
+                <div class="plan-price">${plan.price}</div>
+                <p class="plan-description">${plan.description}</p>
+                <ul class="plan-features">
+                    ${plan.features.slice(0, 3).map(feature => `<li>${feature}</li>`).join('')}
+                    ${plan.features.length > 3 ? '<li>+ more benefits</li>' : ''}
+                </ul>
+                <div class="plan-actions">
+                    <button class="details-btn" onclick="showPlanDetails(${plan.id})">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                    <button class="subscribe-btn" onclick="subscribe(${plan.id})">
+                        <i class="fas fa-check"></i> Subscribe
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
     });
 }
 
-function unsubscribe(planId) {
-    userPlanIds = userPlanIds.filter(id => id !== planId);
-    renderUserPlans();
-    renderOtherPlans();
+function showPlanDetails(planId) {
+    const plan = allPlans.find(p => p.id === planId);
+    // Implement a modal or expandable section
+    alert(`Showing details for: ${plan.title}\n\n${plan.description}\n\nFeatures:\n- ${plan.features.join('\n- ')}`);
 }
 
-function subscribe(planId) {
-    if (!userPlanIds.includes(planId)) {
-    userPlanIds.push(planId);
-    renderUserPlans();
-    renderOtherPlans();
+function unsubscribe(planId) {
+    if (confirm("Are you sure you want to unsubscribe from this plan?")) {
+        userPlanIds = userPlanIds.filter(id => id !== planId);
+        renderUserPlans();
+        renderOtherPlans();
+        // Make an API call to update the subscription
     }
 }
 
-// Initial render plans
+function subscribe(planId) {
+    userPlanIds.push(planId);
+    renderUserPlans();
+    renderOtherPlans();
+    // Make an API call to update the subscription
+    alert("Subscription updated successfully!");
+}
+
+// Initial render
 renderUserPlans();
 renderOtherPlans();

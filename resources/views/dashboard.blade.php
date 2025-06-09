@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <!-- Font Awesome CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -429,12 +430,41 @@
                     </div>
                 </div>
 
-                <!-- Resources containers -->
+                <!-- resources containers -->
                 <div class="content-section resources_content" id="usr_resources">
-                    <h1>All Trainings</h1>
-                    <p>Browse all available training materials here.</p>
-                </div>
+                    <div class="topbar search-bar">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Search resources...">
+                    </div>
+                    
+                    <div class="welcome">
+                        <div class="nname">
+                            <h1>Learning Resources</h1>
+                            <p>Access valuable materials to boost your technical skills</p>
+                            <p>Upgrade your plan to unlock premium content</p>
+                        </div>
+                        <div class="welcome-emoji">
+                            <picture>
+                                <source srcset="https://i.pinimg.com/originals/a4/7b/57/a47b57e90d479592b4e8e09199105b8f.gif" type="image/webp">
+                                <img src="../images/icons/books6.gif" alt="📚"/>
+                            </picture>
+                        </div>
+                    </div>
 
+                    <div class="resources-container">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Available Resources</h2>
+                                <p>Browse through materials available with your current subscription</p>
+                            </div>
+                            
+                            <div class="resource-grid" id="resourceGrid">
+                                <!-- Resource cards will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- settings containers -->
                 <div class="content-section settings_content" id="usr_settings">
                     <div class="settings-profile">
@@ -737,5 +767,11 @@
 
         <!-- functions for only user subsciptions -->
         <script src="/script/subscription.js"></script>
+
+        <!-- Functions for resources -->
+        <script src="/script/resources.js"></script>
+
+
+
     </body>
 </html>

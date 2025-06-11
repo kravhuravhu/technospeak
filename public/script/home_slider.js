@@ -111,56 +111,60 @@ document.addEventListener("DOMContentLoaded", function () {
     const wrapper = document.querySelector(".cards-wrapper");
     const prevBtn = document.querySelector(".arrow-btn-prev");
     const nextBtn = document.querySelector(".arrow-btn-next");
-  
-    let index = 2;
-  
+    
+    const centerPosition = Math.floor(cards.length / 2);
+    let currentIndex = centerPosition;
+    
     function updateView() {
-        cards.forEach((card, i) => {
+        const card = cards[0];
+        const cardWidth = card.offsetWidth;
+        const cardMargin = window.innerWidth <= 768 ? 20 : 55;
+        const totalWidth = cardWidth + cardMargin * 2;
+        
+        // Adjust the percentage for mobile
+        const translatePercentage = window.innerWidth <= 768 ? 50 : 47.65;
+        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px))`;
+        cardsContainer.style.transform = transformValue;
+        
+        cards.forEach((card, index) => {
             card.classList.remove("prev", "next", "active");
-            if (i === index - 1) card.classList.add("prev");
-            else if (i === index + 1) card.classList.add("next");
-            else if (i === index) card.classList.add("active");
+            
+            if (index === currentIndex - 1) card.classList.add("prev");
+            else if (index === currentIndex + 1) card.classList.add("next");
+            else if (index === currentIndex) card.classList.add("active");
         });
-    
-        const cardWidth = cards[0].offsetWidth;
-        const margin = 75 * 2;
-        const scrollX = (cardWidth + margin) * index;
-        cardsContainer.style.transform = `translateX(calc(50% - ${scrollX}px))`;
-    
-        // Disable buttons if at edges
-        prevBtn.disabled = index === 0;
-        nextBtn.disabled = index === cards.length - 1;
+        
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === cards.length - 1;
     }
-  
-    function goToIndex(i) {
-        if (i < 0 || i >= cards.length) return;
-        index = i;
-        updateView();
-    }
-  
+    
+    // Handle window resize
+    window.addEventListener('resize', updateView);
+    
     prevBtn.addEventListener("click", () => {
-        if (index > 0) {
-            index--;
+        if (currentIndex > 0) {
+            currentIndex--;
             updateView();
         }
     });
-  
+    
     nextBtn.addEventListener("click", () => {
-        if (index < cards.length - 1) {
-            index++;
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
             updateView();
         }
     });
-  
+    
     // Clicking on side cards
-    cards.forEach((card, i) => {
+    cards.forEach((card, index) => {
         card.addEventListener("click", () => {
-            if (i === index - 1 || i === index + 1) {
-            goToIndex(i);
+            if (index === currentIndex - 1 || index === currentIndex + 1) {
+                currentIndex = index;
+                updateView();
             }
         });
     });
-
+    
+    // Initialize
     updateView();
 });
-  

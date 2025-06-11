@@ -108,9 +108,22 @@ body {
                     &.bg-wt {
                         color: #1b1b1b;
                     }
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -5px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 0;
+                        height: 3px;
+                        visibility: hidden;
+                        opacity: 0;
+                        background-color: #2d3748;
+                        transition: all .3s ease-in-out;
+                    }
                 }
                 & > ul > li > a.active {
-                    padding: 10px 25px;
+                    /* padding: 10px 25px;
                     background-color: #ffffff;
                     color: #000000;
                     border-radius: 50px;
@@ -120,16 +133,53 @@ body {
                     }
                     &:hover {
                         color: #000000;
+                    } */
+                    &::after {
+                        visibility: visible;
+                        opacity: 1;
+                        width: 50%;
                     }
                 }
                 & > ul > li > a:hover {
-                    color: #ffffff94;
+                    color: #ebebeb;
                     &.bg-wt {
-                        color: var(--secondary-color);
+                        color: #202020;
+                    }
+                    &::after {
+                        visibility: visible;
+                        opacity: .7;
+                        width: 50%;
+                    }
+                }
+            }
+            /* handle the name to the right if logged in */
+            & > .user-info {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                margin-left: auto;
+                font-family: 'Roboto', sans-serif;
+                & > a {
+                    font-size: 1.2em;
+                    text-decoration: none;
+                    color: #fff;
+                    font-weight: 400;
+                    padding: 15px 30px;
+                    background-color: #2d3748;
+                    color: #e2e2e2;
+                    border-radius: 30px;
+                    transition: all .3s ease-in-out;
+                    &.bg-wt {
+                        background-color: #2d3748;
+                        color: #e2e2e2;
+                    }
+                    &:hover {
+                        color: #fff;
                     }
                 }
             }
         }
+
     }
 }
 
@@ -315,11 +365,12 @@ body {
                     width: 100%;
                     display: flex;
                     justify-content: center;
+                    align-items: center;
                     & > .cards {
                         display: flex;
                         transition: transform 0.5s ease;
                         align-items: center;
-                        margin-left: -300px; /* works but dont want to use it */
+                        position: relative;
                         & > .card {
                             width: 350px;
                             height: 500px;
@@ -333,6 +384,9 @@ body {
                             justify-content: center;
                             align-items: center;
                             flex-direction: column;
+                            align-self: center;
+                            justify-items: center;
+                            flex-shrink: 0;
                             &.active {
                                 height: 550px;
                                 background-color: lightcoral;
@@ -858,11 +912,11 @@ body {
                         justify-content: space-around;
                         & > .prgrph {
                             padding: 20px;
-                            width: 150px;
+                            /* width: 150px; */
                             & > p {
                                 font-size: 1.2em;
                                 font-family: "Roboto", sans-serif;
-                                color: #000000;
+                                color: #000000;width: max-content;
                             }
                         }
                         & > .field {
@@ -982,6 +1036,7 @@ body {
 @media (max-width: 1200px) {
     .nav_container {
         & > nav {
+            flex-wrap: nowrap;
             & > .logo_container {
                 & > a {
                     & > img {
@@ -993,11 +1048,16 @@ body {
                 & > .nav-links {
                     & > ul > li,
                     & > ul > li > a {
-                        margin: 0 6.5px;
+                        margin: 0 6px;
                         font-size: 1em;
                     }
-                    & > ul > li > a.active {
-                        padding: 8px 17px;
+                }
+                /* handle the name to the right if logged in */
+                & > .user-info {
+                    & > a {
+                        font-size: 1em;
+                        padding: 8px 15px;
+                        border-radius: 15px;
                     }
                 }
             }
@@ -1012,12 +1072,97 @@ body {
             }
         }
     }
+    /* weekly session pop-up */
+    .wkly_sessions {
+        /* Semicircle */
+        padding: 20px;
+        &::before {
+            display: none;
+        }
+        & > .main_container {
+            width: 90%;
+            height: 300px;
+            /* circle */
+            &::before  {
+                width: 120px;
+                height: 120px;
+            }
+            /* parabola */
+            &::after {
+                width: 100px;
+                height: 150px;
+            }
+            & > .title_container {
+                width: 75%;
+                & > h2, 
+                & > h3 {
+                    font-size: 1.5em;
+                }
+                & > h2 {
+                    font-size: 2.7em;
+                }
+            }
+            & > .button {
+                height: auto;
+                padding: 17px 0;
+                z-index: 1;
+                width: fit-content;
+                & > a {
+                    margin: 0 auto;
+                    padding: 17px 25px;
+                    background-color: #f4f4f4;
+                    border: none;
+                    border-radius: 50px;
+                    color: #000000;
+                    font-family: "Roboto", sans-serif;
+                    font-size: 1.1em;
+                    cursor: pointer;
+                    text-decoration: none;
+                    &:hover {
+                        background-color: #f4f4f4e0;
+                    }
+                }
+            }
+        }
+    }
+    /* get in touch section */
+    .gtch {
+        & > .main_container {
+            & > .form_container {
+                flex-direction: column-reverse;
+                & > .form {
+                    width: 100%;
+                    padding: 0;
+                    & > form {
+                        & > .block {
+                            width: 90%;
+                        }
+                    }
+                }
+                & > .scl_md_container {
+                    flex-direction: row;
+                    height: fit-content;
+                    margin: 0 auto;
+                    padding: 20px;
+                    & > .md {
+                        margin: 0 15px;
+                        & > a {
+                            & > i {
+                                font-size: 30px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @media (max-width: 768px) {
     .nav_container > nav {
         flex-direction: row;
         width: 80%;
+        flex-wrap: wrap;
         & > .logo_container {
             & > a {
                 & > img {
@@ -1025,39 +1170,42 @@ body {
                 }
             }
         }
-
-        .menu-toggle {
+        & > .menu-toggle {
             display: block!important;
         }
 
-        .nav_block {
+        & > .nav_block {
             width: 100%;
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 15px 0;
-        }
+            &.active {
+                display: flex;
+            }
+            & > .nav-links {
+                & > ul {
+                    flex-direction: column;
+                    width: 100%;
+                    & > li {
+                        margin: 15px 20px;
+                        & > a {
+                            font-size: 1.1em!important;
+                            padding: 0 15px;
+                            display: block;
+                            width: 100%;
+                            text-align: center;
+                            font-weight: 400;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            & > .user-info {    
+                justify-content: center;
+                margin: 10px auto;
+            }
 
-        .nav_block.active {
-            display: flex;
-        }
-
-        .nav-links ul {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .nav-links ul li {
-            margin: 15px 20px;
-        }
-
-        .nav-links ul li a {
-            font-size: 1.1em!important;
-            padding: 15px;
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-weight: 400;
         }
     }
     .landing_container {
@@ -1115,12 +1263,11 @@ body {
                     }
                 }
             }
-            & > .main_cont {
+            /* & > .main_cont {
                 & > .container {
                     width: 100%;
                     & > .cards-wrapper {
                         & > .cards {
-                            margin-left: 100px; /* works but dont want to use it */
                             & > .card {
                                 width: 285px;
                                 margin: 0 20px;
@@ -1172,7 +1319,7 @@ body {
                         z-index: 1;
                     }
                 }
-            }
+            } */
         }
     }
     /* brief about */
@@ -1183,7 +1330,7 @@ body {
             }
             & > .image_block {
                 & > img {
-                    height: 300px;
+                    height: 250px;
                     width: fit-content;
                 }     
             }
@@ -1378,6 +1525,124 @@ body {
             }
         }
     }
+    /* weekly session pop-up */
+    .wkly_sessions {
+        padding: 70px 20px;
+        /* Semicircle */
+        &::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 90px;
+            background-color: #25f4ee;
+            border-top-left-radius: 80px;
+            border-top-right-radius: 80px;
+            bottom: 0;
+            right: 25%;
+            transform: translateY(-77.5%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        & > .main_container {
+            width: 90%;
+            height: fit-content;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* circle */
+            &::before  {
+                display: none;
+            }
+            /* parabola */
+            &::after {
+                width: 100px;
+                height: 100px;
+                right: 0;
+            }
+            & > .title_container {
+                height: auto;
+                width: fit-content;
+                margin:  0;
+                text-align: center;
+                & > h2, 
+                & > h3 {
+                    font-size: 1em;
+                }
+                & > h2 {
+                    font-size: 3em;
+                }
+            }
+            & > .button {
+                padding: 10px 20px;
+                height: 70px;
+                & > a {
+                    padding: 20px 30px;
+                }
+            }
+        }
+    }
+    /* get in touch section */
+    .gtch {
+        & > .main_container {
+            width: 100%;
+            & > .title_container {
+                & > h2 {
+                    font-size: 2.7em;
+                    &::after {
+                        height: 5px;
+                    }
+                }
+            }
+            & > .form_container {
+                flex-direction: column-reverse;
+                & > .form {
+                    width: 100%;
+                    padding: 10px;
+                    & > form {
+                        & > .block {
+                            width: 100%;
+                            margin: 15px auto;
+                            & > .prgrph {
+                                padding: 15px;
+                                & > p {
+                                    font-size: 1.1em;
+                                }
+                            }
+                            & > .field {
+                                width: 100%;
+                                height: fit-content;
+                                & > a {
+                                    padding: 15px 25px;
+                                    font-size: 1.1em;
+                                    margin: 30px auto;
+                                }
+                            }
+                        }
+                    }
+                }
+                & > .scl_md_container {
+                    height: fit-content;
+                    flex-direction: row;
+                    width: fit-content;
+                    margin: 0 auto;
+                    padding: 0;
+                    & > .md {
+                        height: 40px;
+                        width: 40px;
+                        display: flex;
+                        margin: 10px;
+                        justify-content: center;
+                        align-items: center;
+                        & > a {
+                            & > i {
+                                font-size: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* Small phones */
@@ -1388,6 +1653,70 @@ body {
 
     .logo_container img {
         height: 70px!important;
+    }
+
+    .nav_container > nav {
+        flex-direction: row;
+        width: 90%;
+        flex-wrap: wrap;
+    }
+
+    .landing_container {
+        & > .main_container {
+            & > .slider_container {
+                & > .still_block {
+                    & > .main_block {
+                        & > .slider {
+                            & > .header {
+                                & > h3{
+                                    font-size: 3em;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .about_summ {
+        & > .main_container {
+            & > .image_block {
+                & > img {
+                    height: 200px;
+                }
+            }
+        }
+    }
+    /* get in touch section */
+    .gtch {
+        & > .main_container {
+            & > .form_container {
+                & > .form {
+                    padding: 15px;
+                    & > form {
+                        & > .block {
+                            display: flex;
+                            flex-wrap: wrap;
+                            & > .prgrph {
+                                padding: 15px;
+                                & > p {
+                                    font-size: 1.1em;
+                                }
+                            }
+                            & > .field {
+                                margin: 0 auto;
+                                & > a {
+                                    padding: 15px 25px;
+                                    font-size: 1.1em;
+                                    margin: 30px auto;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -1403,5 +1732,93 @@ body {
 
     .logo_container img {
         height: 60px;
+    }
+}
+
+/* Add these media queries to your existing CSS */
+@media (max-width: 1024px) {
+    .categories_cont > .main_container {
+        width: 90%;
+    }
+    
+    .categories_cont > .main_container > .main_cont > .container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .categories_cont > .main_container > .title_container > h2 {
+        font-size: 2.5em;
+    }
+    
+    .categories_cont > .main_container > .main_cont {
+        height: 600px;
+        flex-direction: column;
+    }
+    
+    .categories_cont > .main_container > .main_cont > .container {
+        width: 100%;
+        order: 2;
+    }
+    
+    .categories_cont > .main_container > .main_cont > .control_arrows {
+        width: 100%;
+        height: auto;
+        order: 3;
+        padding: 20px 0;
+    }
+    
+    .categories_cont > .main_container > .main_cont > .control_arrows > .arrow-btn {
+        margin: 0 20px;
+    }
+    
+    .cards > .card {
+        width: 280px !important;
+        height: 420px !important;
+        margin: 0 20px !important;
+    }
+    
+    .cards > .card.active {
+        height: 460px !important;
+    }
+    
+    .cards > .card > .cr-img,
+    .cards > .card > .cr-img > img {
+        height: 180px !important;
+        width: 180px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories_cont > .main_container > .title_container > h2 {
+        font-size: 2em;
+    }
+    
+    .categories_cont > .main_container > .main_cont {
+        height: 500px;
+    }
+    
+    .cards > .card {
+        width: 220px !important;
+        height: 350px !important;
+        margin: 0 10px !important;
+    }
+    
+    .cards > .card.active {
+        height: 380px !important;
+    }
+    
+    .cards > .card > .cr-img,
+    .cards > .card > .cr-img > img {
+        height: 140px !important;
+        width: 140px !important;
+    }
+    
+    .cards > .card > .st_title_container > h3 {
+        font-size: 1.3em !important;
+    }
+    
+    .cards > .card > .st_dscrpt > p {
+        font-size: 1em !important;
     }
 }

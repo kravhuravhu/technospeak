@@ -6,15 +6,8 @@ const allResources = [
         title: "Basic Technical Guides",
         category: "Free Resources",
         description: "Essential guides for beginners covering fundamental concepts",
-        features: [
-            "Basic programming concepts",
-            "Getting started tutorials",
-            "Common terminology",
-            "Simple troubleshooting"
-        ],
         thumbnail: "../images/freeResources2.png",
         type: "PDF Guides",
-        length: "15 pages",
         requiredPlan: 1,
         locked: false
     },
@@ -23,15 +16,9 @@ const allResources = [
         title: "Advanced Scripting Cheat Sheets",
         category: "Annual Subscription",
         description: "Comprehensive collection of scripting shortcuts and examples",
-        features: [
-            "Bash/PowerShell shortcuts",
-            "Python one-liners",
-            "Regular expressions guide",
-            "CLI productivity tips"
-        ],
+
         thumbnail: "../images/cheatsheets.png",
         type: "Cheat Sheets",
-        length: "30+ sheets",
         requiredPlan: 2,
         locked: true
     },
@@ -40,15 +27,8 @@ const allResources = [
         title: "One-on-One Session Notes",
         category: "Personal Guide",
         description: "Personalised notes from your coaching sessions",
-        features: [
-            "Custom learning path",
-            "Personalised feedback",
-            "Direct mentor access",
-            "Progress tracking"
-        ],
         thumbnail: "../images/oneOnOnesessions2.png",
         type: "Session Notes",
-        length: "Custom",
         requiredPlan: 3,
         locked: true
     },
@@ -57,15 +37,8 @@ const allResources = [
         title: "Web Development Handbook",
         category: "Formal Training",
         description: "Complete guide to modern web development practices",
-        features: [
-            "HTML/CSS/JS deep dive",
-            "Framework comparisons",
-            "Performance optimisation",
-            "Security best practices"
-        ],
         thumbnail: "../images/formalTraining.png",
         type: "Handbook",
-        length: "120 pages",
         requiredPlan: 4,
         locked: true
     },
@@ -74,15 +47,8 @@ const allResources = [
         title: "Group Session Recordings",
         category: "Group Sessions",
         description: "Access all past group session recordings and materials",
-        features: [
-            "Weekly expert workshops",
-            "Q&A session archives",
-            "Collaborative projects",
-            "Community resources"
-        ],
         thumbnail: "../images/groupSessions.jpg",
         type: "Videos",
-        length: "10+ hours",
         requiredPlan: 5,
         locked: true
     },
@@ -91,29 +57,22 @@ const allResources = [
         title: "Troubleshooting Templates",
         category: "Annual Subscription",
         description: "Ready-to-use templates for common technical issues",
-        features: [
-            "Error diagnosis flowcharts",
-            "Debugging checklists",
-            "Incident response templates",
-            "Root cause analysis guides"
-        ],
         thumbnail: "../images/annualSubscrioption2.png",
         type: "Templates",
-        length: "25 templates",
         requiredPlan: 2,
         locked: true
     }
 ];
 
 // User current plan IDs (would come from backend)
-let userPlanIds = [1, 2]; // User has Free and Annual Subscription
+let userResourceIds = [1, 2]; // User has Free and Annual Subscription
 
 function renderResources() {
     const container = document.getElementById('resourceGrid');
     container.innerHTML = '';
     
     allResources.forEach(resource => {
-        const isLocked = !userPlanIds.includes(resource.requiredPlan);
+        const isLocked = !userResourceIds.includes(resource.requiredPlan);
         
         const card = document.createElement('div');
         card.className = `resource-card ${isLocked ? 'locked' : ''}`;

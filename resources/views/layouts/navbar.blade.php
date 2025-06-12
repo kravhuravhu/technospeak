@@ -17,10 +17,27 @@
                     <li><a href="/about" class="{{ request()->is('about') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">About Us</a></li>
                     <li><a href="/trainings" class="{{ request()->is('trainings') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Trainings</a></li>
                     <li><a href="/pricing" class="{{ request()->is('pricing') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Pricing</a></li>
-                    <li><a href="/register" class="{{ request()->is('register') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Sign Up/In</a></li>
+                    @unless(Auth::check())
+                        <li><a href="/register" class="{{ request()->is('register') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Sign Up/In</a></li>
+                    @endunless
                 </ul>
             </div>
+            @if(Auth::check())
+                <div class="user-info">
+                    <a href="/dashboard" class="active {{ $whiteBg ? 'bg-wt' : '' }}">
+                        {{ Auth::user()->name }} {{ Auth::user()->surname }}
+                    </a>
+                </div>
+            @endif
         </div>
+
+        <!-- @if(Auth::check())
+            <div class="user-info">
+                <a href="/dashboard" class="active {{ $whiteBg ? 'bg-wt' : '' }}">
+                    {{ Auth::user()->name }} {{ Auth::user()->surname }}
+                </a>
+            </div>
+        @endif -->
     </nav>
 </section>
 

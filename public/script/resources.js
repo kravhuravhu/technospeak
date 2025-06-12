@@ -1,4 +1,3 @@
-
 // Resource data with features
 const allResources = [
     {
@@ -9,7 +8,7 @@ const allResources = [
         thumbnail: "../images/freeResources2.png",
         type: "PDF Guides",
         requiredPlan: 1,
-        locked: false
+        locked: true
     },
     {
         id: 2,

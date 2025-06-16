@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Adjust the percentage for mobile
         const translatePercentage = window.innerWidth <= 768 ? 50 : 47.65;
-        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px))`;
+        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 20px))`;
         cardsContainer.style.transform = transformValue;
         
         cards.forEach((card, index) => {

@@ -381,8 +381,80 @@
 
                 <!-- trainings containers -->
                 <div class="content-section alltrainings_content" id="usr_alltrainings">
-                    <h1>All Trainings</h1>
-                    <p>Browse all available training materials here.</p>
+                    <!-- Free Trainings Section -->
+                    <div class="rcmmnd_trngs ln_rcmm">
+                        <div class="container">
+                            <div class="title">
+                                <h1>Free Trainings</h1>
+                            </div>
+                            <div class="card-grid thn_grid_cd" id="free-trainings">
+                                <!-- Free training cards will be inserted here by JavaScript -->
+                            </div>
+                            <div class="card-grid thn_grid_cd hidden" id="more-free-trainings">
+                                <!-- Additional free training cards will be inserted here by JavaScript -->
+                            </div>
+                            <button class="toggle-btn" id="toggle-free">More Free Trainings</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Paid Trainings Section -->
+                    <div class="rcmmnd_trngs ln_rcmm">
+                        <div class="container">
+                            <div class="title">
+                                <h1>Premium Trainings</h1>
+                            </div>
+                            <div class="card-grid thn_grid_cd" id="paid-trainings">
+                                <!-- Paid training cards will be inserted here by JavaScript -->
+                            </div>
+                            <div class="card-grid thn_grid_cd hidden" id="more-paid-trainings">
+                                <!-- Additional paid training cards will be inserted here by JavaScript -->
+                            </div>
+                            <button class="toggle-btn paid-btn" id="toggle-paid">More Trainings</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal for Training Details -->
+                    <div id="training-modal" class="modal">
+                        <div class="modal-content">
+                            <span class="close-btn">&times;</span>
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="modal-title">Training Title</h2>
+                                <div class="modal-price" id="modal-price">Free</div>
+                            </div>
+                            <img src="" alt="Training Image" class="modal-image" id="modal-image">
+                            <div class="modal-description" id="modal-description">
+                                Detailed description of the training will appear here.
+                            </div>
+                            <div class="modal-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label"><i class="fas fa-stopwatch"></i> Duration:</span>
+                                    <span id="modal-duration">4 weeks</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label"><i class="fas fa-chart-line"></i> Level:</span>
+                                    <span id="modal-level">Beginner</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label"><i class="fas fa-user-tie"></i> Instructor:</span>
+                                    <span id="modal-instructor">John Doe</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label"><i class="fas fa-tag"></i> Category:</span>
+                                    <span id="modal-category">Business</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Episode List Section -->
+                            <div class="episodes-container">
+                                <h3 class="episodes-title"><i class="fas fa-list-ol"></i> Training Episodes</h3>
+                                <ul class="episode-list" id="episode-list">
+                                    <!-- Episode items will be inserted here by JavaScript -->
+                                </ul>
+                            </div>
+                            
+                            <a href="#" class="enroll-btn" id="enroll-btn">Enroll Now</a>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- subscriptions containers -->
@@ -758,7 +830,8 @@
         <!-- Functions for resources -->
         <script src="/script/resources.js"></script>
 
-
+        <!-- Functions for free and paid trainigs -->
+        <script src="/script/dash_trainings.js"></script>
 
     </body>
 </html>

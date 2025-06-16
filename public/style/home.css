@@ -1263,13 +1263,13 @@ body {
                     }
                 }
             }
-            /* & > .main_cont {
+             & > .main_cont {
                 & > .container {
                     width: 100%;
                     & > .cards-wrapper {
                         & > .cards {
                             & > .card {
-                                width: 285px;
+                                width: 280px;
                                 margin: 0 20px;
                                 &.active {
                                     height: 500px;
@@ -1319,7 +1319,7 @@ body {
                         z-index: 1;
                     }
                 }
-            } */
+            } 
         }
     }
     /* brief about */
@@ -1652,7 +1652,7 @@ body {
     }
 
     .logo_container img {
-        height: 70px!important;
+        height: 50px!important;
     }
 
     .nav_container > nav {
@@ -1660,16 +1660,28 @@ body {
         width: 90%;
         flex-wrap: wrap;
     }
+    .nav_container {
+        & > nav {
+            & > .menu-toggle {
+                & > .menu-li {
+                    width: 15px;
+                    height: 2px;
+                }
+            }
+        }
+    }
 
     .landing_container {
         & > .main_container {
             & > .slider_container {
+                width: 95%;
                 & > .still_block {
                     & > .main_block {
                         & > .slider {
                             & > .header {
+                                margin: 5px 0;
                                 & > h3{
-                                    font-size: 3em;
+                                    font-size: 2.5em;
                                 }
                             }
                         }
@@ -1678,12 +1690,169 @@ body {
             }
         }
     }
+    /* service categories */
+    .categories_cont {
+        & > .main_container {
+            width: 95%;
+            & > .title_container {
+                & > h2 {
+                    font-size: 2em;
+                    &::after {
+                        height: 2.5px;
+                    }
+                }
+            }
+             & > .main_cont {
+                height: 550px;
+                & > .container {
+                    padding: 10px 5px;
+                    & > .cards-wrapper {
+                        & > .cards {
+                            & > .card {
+                                width: 230px;
+                                height: 370px;
+                                & > .cr-img {
+                                    height: 150px;
+                                    width: 150px;
+                                    & > img {
+                                        height: 150px;
+                                        width: 150px;
+                                    }
+                                }
+                                & > .st_title_container {
+                                    width: 100%;
+                                    & > h3 {
+                                        font-size: 1.4em;
+                                    }
+                                }
+                                & > .st_dscrpt {
+                                    & > p {
+                                        font-size: 1em;
+                                    }
+                                }
+                                &.active {
+                                    height: 400px;
+                                }
+                            }
+                        }
+                    }      
+                }
+                & > .control_arrows {
+                    & > .arrow-btn {
+                        padding: 1px 5px;
+                        font-size: 1rem;
+                    }
+                }
+            } 
+        }
+    }
 
     .about_summ {
+        padding: 0;
         & > .main_container {
+            width: 100%;
             & > .image_block {
+                width: 100%;
                 & > img {
-                    height: 200px;
+                    height: 230px;
+                    margin: 0 auto;
+                }
+            }
+            & > .about_brief {
+                & > .title_container {
+                    & > h2 {
+                        font-size: 2em;
+                        &::after {
+                            height: 3.5px;
+                        }
+                    }
+                }
+                & > .dscpt {
+                    & > p {
+                        font-size: 1em;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+
+    /* recent videos */
+    .rcnt_vd {
+        padding: 0;
+        & > .main_container {
+            width: 95%;
+            & > .title_container {
+                & > h2 {
+                    font-size: 2em;
+                    &::after {
+                        height: 3.5px;
+                    }
+                }
+            }
+            & > .container {
+                & > .block {
+                    .fr_img {
+                        & > .img_container {
+                            & > .trns {
+                                padding: 5px 10px;
+                                & > .logo {
+                                    & > img {
+                                        height: 40px;
+                                    }
+                                }
+                                & > .ctchprs {
+                                    & > h3 {
+                                        font-size: .9em;
+                                        margin: 10px 0;
+                                    }
+                                }
+                                & > .bttn {
+                                    height: fit-content;
+                                    & > a {
+                                        padding: 10px 15px;
+                                        font-size: .8em;
+                                    }
+                                }
+                            }
+                        }
+                        & > .caption {
+                            padding: 0 7px;
+                            & > .ctgry_dur {
+                                & > .ctgry {
+                                    & > p {
+                                        font-size: .8em;
+                                    }
+                                }
+                                & > .dur {
+                                    & > p {
+                                        font-size: .8em;
+                                    }
+                                }
+                            }
+                            & > .trainer {
+                                & > p {
+                                    font-size: .8em;
+                                }
+                            }
+                        }
+                    }
+                }              
+            }
+        }
+    }
+    /* weekly session pop-up */
+    .wkly_sessions {
+        & > .main_container {
+            width: 95%;
+            & > .title_container {
+                & > h2 {
+                    font-size: 2.5em;
+                }
+            }
+            & > .button {
+                & > a {
+                    padding: 15px 25px;
                 }
             }
         }
@@ -1692,8 +1861,9 @@ body {
     .gtch {
         & > .main_container {
             & > .form_container {
+                padding: 0;
                 & > .form {
-                    padding: 15px;
+                    padding: 0;
                     & > form {
                         & > .block {
                             display: flex;
@@ -1711,10 +1881,21 @@ body {
                                     font-size: 1.1em;
                                     margin: 30px auto;
                                 }
+                                & > input[type="text"] {
+                                    height: 40px;
+                                }
                             }
                         }
                     }
                 }
+            }
+            & > .title_container {
+                & > h2 {
+                    font-size: 2em;
+                }
+            }
+            & > .button {
+                padding: 5px 15px;
             }
         }
     }
@@ -1732,93 +1913,5 @@ body {
 
     .logo_container img {
         height: 60px;
-    }
-}
-
-/* Add these media queries to your existing CSS */
-@media (max-width: 1024px) {
-    .categories_cont > .main_container {
-        width: 90%;
-    }
-    
-    .categories_cont > .main_container > .main_cont > .container {
-        width: 80%;
-    }
-}
-
-@media (max-width: 768px) {
-    .categories_cont > .main_container > .title_container > h2 {
-        font-size: 2.5em;
-    }
-    
-    .categories_cont > .main_container > .main_cont {
-        height: 600px;
-        flex-direction: column;
-    }
-    
-    .categories_cont > .main_container > .main_cont > .container {
-        width: 100%;
-        order: 2;
-    }
-    
-    .categories_cont > .main_container > .main_cont > .control_arrows {
-        width: 100%;
-        height: auto;
-        order: 3;
-        padding: 20px 0;
-    }
-    
-    .categories_cont > .main_container > .main_cont > .control_arrows > .arrow-btn {
-        margin: 0 20px;
-    }
-    
-    .cards > .card {
-        width: 280px !important;
-        height: 420px !important;
-        margin: 0 20px !important;
-    }
-    
-    .cards > .card.active {
-        height: 460px !important;
-    }
-    
-    .cards > .card > .cr-img,
-    .cards > .card > .cr-img > img {
-        height: 180px !important;
-        width: 180px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .categories_cont > .main_container > .title_container > h2 {
-        font-size: 2em;
-    }
-    
-    .categories_cont > .main_container > .main_cont {
-        height: 500px;
-    }
-    
-    .cards > .card {
-        width: 220px !important;
-        height: 350px !important;
-        margin: 0 10px !important;
-    }
-    
-    .cards > .card.active {
-        height: 380px !important;
-    }
-    
-    .cards > .card > .cr-img,
-    .cards > .card > .cr-img > img {
-        height: 140px !important;
-        width: 140px !important;
-    }
-    
-    .cards > .card > .st_title_container > h3 {
-        font-size: 1.3em !important;
-    }
-    
-    .cards > .card > .st_dscrpt > p {
-        font-size: 1em !important;
     }
 }

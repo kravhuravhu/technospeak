@@ -391,19 +391,6 @@
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Search plans...">
                     </div>
-                    
-                    <div class="welcome">
-                        <div class="nname">
-                            <h1>My Subscription Plans</h1>
-                            <p>Manage your current subscriptions and explore new opportunities</p>
-                        </div>
-                        <div class="welcome-emoji">
-                            <picture>
-                                <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4b8/512.webp" type="image/webp">
-                                <img src="../images/icons/moneygiff.gif" alt="💸"/>
-                            </picture>
-                        </div>
-                    </div>
 
                     <div class="current-plans">
                         <div class="container">

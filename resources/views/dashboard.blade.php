@@ -491,25 +491,6 @@
 
                 <!-- resources containers -->
                 <div class="content-section resources_content" id="usr_resources">
-                    <div class="topbar search-bar">
-                        <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Search resources...">
-                    </div>
-                    
-                    <div class="welcome">
-                        <div class="nname">
-                            <h1>Learning Resources</h1>
-                            <p>Access valuable materials to boost your technical skills</p>
-                            <p>Upgrade your plan to unlock premium content</p>
-                        </div>
-                        <div class="welcome-emoji">
-                            <picture>
-                                <source srcset="https://i.pinimg.com/originals/a4/7b/57/a47b57e90d479592b4e8e09199105b8f.gif" type="image/webp">
-                                <img src="../images/icons/books6.gif" alt="📚"/>
-                            </picture>
-                        </div>
-                    </div>
-
                     <div class="resources-container">
                         <div class="container">
                             <div class="title">

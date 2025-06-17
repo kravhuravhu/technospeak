@@ -1294,103 +1294,10 @@ section.bar-lt-rt {
       /* style for resources section */
       &.resources_content {
           padding: 20px;
-          
-          /* Search bar styling */
-          .topbar.search-bar {
-              position: relative;
-              margin-bottom: 30px;
-              max-width: 500px;
-              
-              .search-icon {
-                  position: absolute;
-                  left: 15px;
-                  top: 50%;
-                  transform: translateY(-50%);
-                  color: #636e72;
-                  font-size: 1.1em;
-              }
-              
-              input {
-                  width: 100%;
-                  padding: 12px 20px 12px 45px;
-                  border-radius: 30px;
-                  border: 1px solid #dfe6e9;
-                  background: #ffffff;
-                  font-size: 1em;
-                  color: #2d3436;
-                  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                  transition: all 0.3s ease;
-                  
-                  &:focus {
-                      outline: none;
-                      border-color: #38b6ff;
-                      box-shadow: 0 2px 12px rgba(108, 92, 231, 0.2);
-                  }
-                  
-                  &::placeholder {
-                      color: #b2bec3;
-                  }
-              }
-          }
-          
-          /* Welcome section styling */
-          & > .welcome {
-              background-color: #38b6ff;
-              border-radius: 15px;
-              padding: 30px;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 40px;
-              color: white;
-              box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
-              
-              .nname {
-                  h1 {
-                      font-size: 2.2em;
-                      margin: 0 0 10px 0;
-                      font-weight: 700;
-                  }
-                  
-                  p {
-                      margin: 8px 0;
-                      font-size: 1em;
-                      opacity: 0.9;
-                      
-                      &:last-child {
-                          font-weight: 500;
-                          color: #ffeaa7;
-                      }
-                  }
-              }
-              
-              .welcome-emoji {
-                  margin-left: 20px;
-                  
-                  > picture > img {
-                      height: 120px;
-                      width: auto;
-                      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-                  }
-              }
-              
-              @media (max-width: 768px) {
-                  flex-direction: column;
-                  text-align: center;
-                  
-                  .welcome-emoji {
-                      margin: 20px 0 0 0;
-                      
-                      > picture > img {
-                          height: 100px;
-                      }
-                  }
-              }
-          }
   
           /* Resources Container */
           .resources-container {
-              margin: 40px 0;
+              margin: 0;
               
               .container {
                   .title {

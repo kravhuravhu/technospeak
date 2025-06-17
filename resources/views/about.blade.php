@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Technospeak - Trainings</title>
+        <title>Technospeak - About us</title>
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
         <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">
@@ -21,7 +21,6 @@
     <body>
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
-
 
         <main>
         <!-- Hero Video Section -->
@@ -50,6 +49,48 @@
                     <div class="icon"><i class="fas fa-bullseye"></i></div>
                     <h2>Our Mission</h2>
                     <p>To demystify technology through hands-on training, personalized support, and community-driven learning experiences.</p>
+                </div>
+            </div>
+        </section>
+
+                <!-- Values Section -->
+        <section class="values-section">
+            <div class="section-header">
+                <h2>Our Core Values</h2>
+                <p>The principles that guide everything we do</p>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Empowerment</h3>
+                    <p>We believe in equipping people with practical skills that create real opportunities.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovation</h3>
+                    <p>We constantly evolve our methods to stay relevant in a changing tech landscape.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Community</h3>
+                    <p>We foster supportive networks where learners help each other grow.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Excellence</h3>
+                    <p>We maintain high standards in all our training and support services.</p>
                 </div>
             </div>
         </section>
@@ -211,49 +252,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Values Section -->
-        <section class="values-section">
-            <div class="section-header">
-                <h2>Our Core Values</h2>
-                <p>The principles that guide everything we do</p>
-            </div>
-            
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-hands-helping"></i>
-                    </div>
-                    <h3>Empowerment</h3>
-                    <p>We believe in equipping people with practical skills that create real opportunities.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Innovation</h3>
-                    <p>We constantly evolve our methods to stay relevant in a changing tech landscape.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>Community</h3>
-                    <p>We foster supportive networks where learners help each other grow.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Excellence</h3>
-                    <p>We maintain high standards in all our training and support services.</p>
-                </div>
-            </div>
-        </section>
-        
 
         <!-- Footer Section -->
         <footer class="footer">

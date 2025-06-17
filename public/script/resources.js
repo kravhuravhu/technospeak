@@ -85,11 +85,7 @@ function renderResources() {
                 <span class="resource-category">${resource.category}</span>
                 <h3>${resource.title}</h3>
                 <p>${resource.description}</p>
-                
-                <ul class="resource-features">
-                    ${resource.features.map(feature => `<li>${feature}</li>`).join('')}
-                </ul>
-                
+
                 <div class="resource-meta">
                     <span><i class="fas fa-file-alt"></i> ${resource.type}</span>
                     <span><i class="fas fa-ruler"></i> ${resource.length}</span>

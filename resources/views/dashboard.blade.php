@@ -47,13 +47,13 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item" data-section="usr_qasessions">
+                        <div class="nav-item" data-section="usr_shareIssue">
                             <a href="">
                             <div class="icon">
-                                <i class="fa-solid fa-person-circle-question"></i>
+                                <i class="fa-solid fa-bug"></i>
                             </div>
                             <div class="title">
-                                <span>Q/A Sessions Recap</span>
+                                <span>Share Your Issue</span>
                             </div>
                             </a>
                         </div>
@@ -77,13 +77,13 @@
                             </div>
                             </a>
                         </div>                                                                                                                                                                                                        
-                        <div class="nav-item" data-section="usr_tsassistance">
+                        <div class="nav-item" data-section="usr_techCoach">
                             <a href="">
                             <div class="icon">
-                                <i class="fa-solid fa-handshake-angle"></i>
+                                <i class="fa-solid fa-person-chalkboard"></i>
                             </div>
                             <div class="title">
-                                <span>Task Assistance</span>
+                                <span>Tech Coach</span>
                             </div>
                             </a>
                         </div>
@@ -663,6 +663,135 @@
                     </div>
                 </div>
 
+                <!-- Share Your Issue Section -->
+                <div class="content-section shareIssue_content" id="usr_shareIssue">
+                    <div class="issue-header">
+                        <div class="issue-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38b6ff">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        </div>
+                        <div class="issue-title">
+                        <h2>Tech Troubles? We've Got Your Back!</h2>
+                        <p>Share your tech challenge and we'll create a personalised solution just for you.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="issue-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Describe Your Issue</h3>
+                                <p>Tell us what's happening in as much detail as possible</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>We Analyse & Respond</h3>
+                                <p>Our experts review and prepare a customised solution</p>
+                        </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Receive Your Solution</h3>
+                                <p>Get a video tutorial, step-by-step guide, or personal session</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="issueForm" class="issue-form">
+                        <div class="form-group">
+                            <label for="issueTitle">What's the main problem?</label>
+                            <input type="text" id="issueTitle" placeholder="E.g., 'Excel formulas not working'" required>
+                            <div class="input-icon">
+                                <i class="fas fa-heading"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="issueDescription">Tell us more details</label>
+                            <textarea id="issueDescription" rows="5" placeholder="Describe what's happening, any error messages you see, and what you've tried so far..." required></textarea>
+                            <div class="input-icon">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="issueCategory">What category does this fall under?</label>
+                            <div class="select-wrapper">
+                                <select id="issueCategory" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="microsoft">Microsoft Products (Word, Excel, etc.)</option>
+                                <option value="google">Google Workspace</option>
+                                <option value="canva">Canva Design</option>
+                                <option value="system">Computer/System Issues</option>
+                                <option value="general">General Tech Problem</option>
+                                <option value="other">Other</option>
+                                </select>
+                                <div class="select-icon">
+                                <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="urgency">How urgent is this?</label>
+                            <div class="urgency-levels">
+                                <input type="radio" name="urgency" id="low" value="low" checked>
+                                <label for="low" class="urgency-label">
+                                <i class="far fa-clock"></i>
+                                <span>Low (Whenever you can)</span>
+                                </label>
+                                
+                                <input type="radio" name="urgency" id="medium" value="medium">
+                                <label for="medium" class="urgency-label">
+                                <i class="fas fa-exclamation"></i>
+                                <span>Medium (Need help soon)</span>
+                                </label>
+                                
+                                <input type="radio" name="urgency" id="high" value="high">
+                                <label for="high" class="urgency-label">
+                                <i class="fas fa-fire"></i>
+                                <span>High (Critical issue!)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-footer">
+                        <button type="submit" class="submit-btn">
+                            <span>Get Help Now</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <p class="assurance">
+                            <i class="fas fa-shield-alt"></i> Your issue will be kept confidential and addressed by our certified experts
+                        </p>
+                        </div>
+                    </form>
+                    
+                    <div id="confirmation" class="confirmation-message">
+                        <div class="confirmation-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4CAF50">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        </div>
+                        <h3>Help is on the way!</h3>
+                        <p>We've received your issue and our team is preparing your personalised solution.</p>
+                        <div class="next-steps">
+                        <div class="next-step">
+                            <i class="fas fa-envelope"></i>
+                            <span>Check your email for confirmation</span>
+                        </div>
+                        <div class="next-step">
+                            <i class="fas fa-clock"></i>
+                            <span>Typical response time: 24-48 hours</span>
+                        </div>
+                        </div>
+                        <button class="back-btn">Report Another Issue</button>
+                    </div>
+                </div>               
+
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
                     <div class="topbar search-bar">
@@ -709,6 +838,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Tech Coach containers -->
+                <div class="content-section techCoach_content" id="usr_techCoach">
+
                 </div>
                 
                 <!-- settings containers -->
@@ -1017,6 +1151,9 @@
                 });
             });
         </script>
+
+        <!-- Function for share your issue section -->
+        <script src="/script/dashboard.js"></script>
 
         <!-- functions for only user subsciptions -->
         <script src="/script/subscription.js"></script>

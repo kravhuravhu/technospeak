@@ -23,74 +23,37 @@
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
 
         <main>
-        <!-- Hero Video Section -->
-        <section class="video-hero">
-            <div class="video-container">
-                <!-- <video autoplay muted loop playsinline>
-                    <source src="video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> -->
-                <img src="../images/techBackground.jpg"/>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <img src="../images/techBackground.jpg" alt="Technology background"/>
                 <div class="overlay"></div>
-                <div class="content">
+                <div class="hero-content">
                     <h1>Empowering Through Technology</h1>
                     <p>Discover our mission to make tech accessible for everyone</p>
+                    <a href="#vision-mission" class="cta-button">Learn More</a>
                 </div>
+            </div>
+        </section>
+
+        <!-- Vision & Mission Section -->
+        <section id="vision-mission" class="vision-mission-section">
+            <div class="section-header">
+                <h2>Our Purpose</h2>
+                <p>Driving technological empowerment across Africa</p>
             </div>
             
             <div class="vision-mission-cards">
                 <div class="vision-card card">
                     <div class="icon"><i class="fas fa-eye"></i></div>
-                    <h2>Our Vision</h2>
+                    <h3>Our Vision</h3>
                     <p>To become Africa's leading provider of accessible, practical technology education that transforms lives and businesses.</p>
                 </div>
                 
                 <div class="mission-card card">
                     <div class="icon"><i class="fas fa-bullseye"></i></div>
-                    <h2>Our Mission</h2>
-                    <p>To demystify technology through hands-on training, personalized support, and community-driven learning experiences.</p>
-                </div>
-            </div>
-        </section>
-
-                <!-- Values Section -->
-        <section class="values-section">
-            <div class="section-header">
-                <h2>Our Core Values</h2>
-                <p>The principles that guide everything we do</p>
-            </div>
-            
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-hands-helping"></i>
-                    </div>
-                    <h3>Empowerment</h3>
-                    <p>We believe in equipping people with practical skills that create real opportunities.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Innovation</h3>
-                    <p>We constantly evolve our methods to stay relevant in a changing tech landscape.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>Community</h3>
-                    <p>We foster supportive networks where learners help each other grow.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Excellence</h3>
-                    <p>We maintain high standards in all our training and support services.</p>
+                    <h3>Our Mission</h3>
+                    <p>To demystify technology through hands-on training, personalised support, and community-driven learning experiences.</p>
                 </div>
             </div>
         </section>
@@ -160,42 +123,42 @@
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/Norris.jpg" alt="Team1" class="team-image">
                         <h3 class="name">Norris Dzotizeyi</h3>
-                        <i class="description">Mentor <br>IT (Information Technology): <br>Computer Technician <br>IT & Development Team</i>
+                        <i class="description">TS - Trainer & IT Team</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/omega.jpg" alt="Team2" class="team-image">
                         <h3 class="name">Nkosingiphile Omega Sithebe</h3>
-                        <i class="description">IT (Information Technology): <br>Software Engineer <br>Project Manager, Development Team, Content Creation</i>
+                        <i class="description">TS - Project Manager</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/hloks.jpeg" alt="Team3" class="team-image">
                         <h3 class="name">Lehlogonolo Chauke</h3>
-                        <i class="description">IT (Information Technology): <br> Software Engineer <br>Content Creation, Editing Team</i>
+                        <i class="description">TS - Content Creation</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/rose.jpeg" alt="Team4" class="team-image">
                         <h3 class="name">Rose Tebogo Ndhlovu</h3>
-                        <i class="description">IT (Information Technology): <br> System Development <br>Marketing Team</i>
+                        <i class="description">TS - Marketing Team</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/zinhle.jpeg" alt="Team5" class="team-image">
                         <h3 class="name">Zinhle Bridgette Ngobeni</h3>
-                        <i class="description">IT (Information Technology): <br> Business Analyst <br>Marketing Team</i>
+                        <i class="description">TS - Marketing Team</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/junior.jpg" alt="Khuliso J. Ravhuravhu" class="team-image">
                         <h3 class="name">Khuliso J. Ravhuravhu</h3>
-                        <i class="description">TS Business Manager</i>
+                        <i class="description">TS - Business Manager</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/phuti.jpeg" alt="Team7" class="team-image">
                         <h3 class="name">Phuti Palesa Rammutla</h3>
-                        <i class="description">IT (Information Technology): <br>Computer Scientist & Google IT Support <br>Critical Analysis & Sales Team</i>
+                        <i class="description">TS - Analysis & Sales Team</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/faith.jpeg" alt="Team10" class="team-image">
                         <h3 class="name">Faith Maswangayi</h3>
-                        <i class="description">IT (Information Technology): <br> Software Engineer <br>Sales Team</i>
+                        <i class="description">TS - Sales Team</i>
                     </li>
                 </ul>
 

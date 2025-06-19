@@ -183,9 +183,9 @@
                         <i class="description">IT (Information Technology): <br> Business Analyst <br>Marketing Team</i>
                     </li>
                     <li class="team swiper-slide">
-                        <img src="images/tsTeam/junior.jpeg" alt="Team6" class="team-image">
-                        <h3 class="name">Khuliso Junior Ravhuravh</h3>
-                        <i class="description">IT (Information Technology): <br> Software Development and  Operations (DevOps) <br>Business Manager, Development Team, Content Creation</i>
+                        <img src="images/tsTeam/junior.jpg" alt="Khuliso J. Ravhuravhu" class="team-image">
+                        <h3 class="name">Khuliso J. Ravhuravhu</h3>
+                        <i class="description">TS Business Manager</i>
                     </li>
                     <li class="team swiper-slide">
                         <img src="images/tsTeam/phuti.jpeg" alt="Team7" class="team-image">

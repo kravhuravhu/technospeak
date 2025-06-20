@@ -20,7 +20,7 @@
     </head>
     <body>
         {{-- Include the navbar --}}
-        @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
+        @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
         <main>
         <!-- Hero Section -->

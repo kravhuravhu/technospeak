@@ -43,7 +43,7 @@
                                 <i class="fa-solid fa-computer"></i>
                             </div>
                             <div class="title">
-                                <span>All Trainings</span>
+                                <span>Training Library</span>
                             </div>
                             </a>
                         </div>
@@ -53,7 +53,7 @@
                                 <i class="fa-solid fa-bug"></i>
                             </div>
                             <div class="title">
-                                <span>Share Your Issue</span>
+                                <span>Get Help</span>
                             </div>
                             </a>
                         </div>
@@ -83,17 +83,17 @@
                                 <i class="fa-solid fa-person-chalkboard"></i>
                             </div>
                             <div class="title">
-                                <span>Tech Coach</span>
+                                <span>Coaching</span>
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item" data-section="usr_hlpcenter">
+                        <div class="nav-item" data-section="usr_support">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-circle-info"></i>
                             </div>
                             <div class="title">
-                                <span>Help Center</span>
+                                <span>Support</span>
                             </div>
                             </a>
                         </div>
@@ -110,10 +110,16 @@
                     </div>
                 </div>
             </div>
-            <div class="promo">
-                <div>
-                    <p>Something about cheatsheet? well ipsum dolor sit amet consectetur</p>
-                    <button>Upgrade Now</button>
+            <div class="promo ">
+                <div class="rightbar_nav">
+                    <div class="txt_btn" id="txt_btn_rm">
+                        <p>Something about cheatsheet? well ipsum dolor sit amet consectetur</p>
+                        <button>Upgrade Now</button>
+                    </div>
+                    <div class="profile_cont_rt_bar" id="profile_tag">
+                        {{-- Include the right bar profile tag --}}
+                       @include('layouts.profileTag', ['showDropdown' => false])
+                    </div>
                 </div>
             </div>
         </section>
@@ -393,7 +399,7 @@
                                     data-training-type="free"
                                     data-title="Introduction to Digital Marketing"
                                     data-description="Learn the fundamentals of digital marketing including SEO, social media, and content marketing. This comprehensive course will take you from beginner to confident practitioner with hands-on projects and real-world examples."
-                                    data-image="/images/teams/group_lab.jpeg"
+                                    data-image="/images/thumbnails/Whisk_e3ccd6591e.jpg"
                                     data-duration="4 weeks"
                                     data-level="Beginner"
                                     data-instructor="Sarah Johnson"
@@ -412,12 +418,12 @@
                                     <div class="card rcmmd_cd">
                                         <div class="thmbnail thn_rcmm">
                                             <div class="trnsprnt thmb_img">
-                                                <img src="/images/teams/group_lab.jpeg" alt="Introduction to Digital Marketing">
+                                                <img src="/images/thumbnails/Whisk_e3ccd6591e.jpg" alt="Introduction to Digital Marketing">
                                             </div>
                                         </div>
                                         <div class="details thmb_dt">
                                             <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Introduction to Digital Marketing</h1>
+                                                <h1 class="thmb_h1">Digital Marketing</h1>
                                             </div>
                                             <div class="ctprs content thmb_cnt">
                                                 <p class="thmb_ct">Learn the fundamentals of digital marketing including SEO, social media, and content marketing. This comprehensive course will take you from beginner to confident practitioner with hands-on projects and real-world examples....</p>
@@ -438,32 +444,30 @@
                                         </div>
                                     </div>
                                 </a>
-                                
-                                <!-- Free training card 2 -->
                                 <a href="#" class="training-card" 
-                                data-training-type="free"
-                                data-title="Python for Beginners"
-                                data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                data-image="https://source.unsplash.com/random/400x300/?python,code"
-                                data-duration="6 weeks"
-                                data-level="Beginner"
-                                data-instructor="Michael Chen"
-                                data-category="Programming"
-                                data-episodes='[
-                                    {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                    {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                    {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                    {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                    {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                    {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                    {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                    {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                ]'
-                                data-time="5h 30min">
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
                                     <div class="card rcmmd_cd">
                                         <div class="thmbnail thn_rcmm">
                                             <div class="trnsprnt thmb_img">
-                                                <img src="https://source.unsplash.com/random/400x300/?python,code" alt="Python for Beginners">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
                                             </div>
                                         </div>
                                         <div class="details thmb_dt">
@@ -508,106 +512,106 @@
                             <div class="card-grid thn_grid_cd" id="paid-trainings">
                                 <!-- Paid training card 1 -->
                                 <a href="#" class="training-card" 
-                                data-training-type="paid"
-                                data-title="Advanced Data Science"
-                                data-description="Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio."
-                                data-image="https://source.unsplash.com/random/400x300/?data,science"
-                                data-duration="10 weeks"
-                                data-level="Advanced"
-                                data-instructor="Dr. Alan Turing"
-                                data-category="Data Science"
-                                data-price="$199"
-                                data-episodes='[
-                                    {"number":1,"name":"Advanced Pandas Techniques","duration":"35 min"},
-                                    {"number":2,"name":"Data Visualization with Seaborn","duration":"40 min"},
-                                    {"number":3,"name":"Statistical Analysis Fundamentals","duration":"45 min"},
-                                    {"number":4,"name":"Machine Learning Introduction","duration":"50 min"},
-                                    {"number":5,"name":"Supervised Learning Algorithms","duration":"55 min"},
-                                    {"number":6,"name":"Unsupervised Learning Techniques","duration":"45 min"},
-                                    {"number":7,"name":"Neural Networks Basics","duration":"60 min"},
-                                    {"number":8,"name":"Model Evaluation Methods","duration":"40 min"}
-                                ]'
-                                data-time="15h 20min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="https://source.unsplash.com/random/400x300/?data,science" alt="Advanced Data Science">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Advanced Data Science</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>15h 20min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
+                                    data-training-type="paid"
+                                    data-title="Advanced Data Science"
+                                    data-description="Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio."
+                                    data-image="https://source.unsplash.com/random/400x300/?data,science"
+                                    data-duration="10 weeks"
+                                    data-level="Advanced"
+                                    data-instructor="Dr. Alan Turing"
+                                    data-category="Data Science"
+                                    data-price="$199"
+                                    data-episodes='[
+                                        {"number":1,"name":"Advanced Pandas Techniques","duration":"35 min"},
+                                        {"number":2,"name":"Data Visualization with Seaborn","duration":"40 min"},
+                                        {"number":3,"name":"Statistical Analysis Fundamentals","duration":"45 min"},
+                                        {"number":4,"name":"Machine Learning Introduction","duration":"50 min"},
+                                        {"number":5,"name":"Supervised Learning Algorithms","duration":"55 min"},
+                                        {"number":6,"name":"Unsupervised Learning Techniques","duration":"45 min"},
+                                        {"number":7,"name":"Neural Networks Basics","duration":"60 min"},
+                                        {"number":8,"name":"Model Evaluation Methods","duration":"40 min"}
+                                    ]'
+                                    data-time="15h 20min">
+                                        <div class="card rcmmd_cd">
+                                            <div class="thmbnail thn_rcmm">
+                                                <div class="trnsprnt thmb_img">
+                                                    <img src="https://source.unsplash.com/random/400x300/?data,science" alt="Advanced Data Science">
                                                 </div>
                                             </div>
-                                            <div class="thmb_enrll content">
-                                                <label>$199</label>
+                                            <div class="details thmb_dt">
+                                                <div class="title content thmb_cnt">
+                                                    <h1 class="thmb_h1">Advanced Data Science</h1>
+                                                </div>
+                                                <div class="ctprs content thmb_cnt">
+                                                    <p class="thmb_ct">Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio....</p>
+                                                </div>
+                                                <div class="thmb_dur_ep_container content thmb_cnt">
+                                                    <div class="cont left-side">
+                                                        <i class="fa-solid fa-stopwatch"></i>
+                                                        <span>15h 20min</span>
+                                                    </div>
+                                                    <div class="cont right-side">
+                                                        <i class="fa-solid fa-video"></i>
+                                                        <span>8 Episodes</span>
+                                                    </div>
+                                                </div>
+                                                <div class="thmb_enrll content">
+                                                    <label>$199</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </a>
                                 
                                 <!-- Paid training card 2 -->
                                 <a href="#" class="training-card" 
-                                data-training-type="paid"
-                                data-title="Complete Web Development Bootcamp"
-                                data-description="Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio."
-                                data-image="https://source.unsplash.com/random/400x300/?web,development"
-                                data-duration="12 weeks"
-                                data-level="Intermediate"
-                                data-instructor="Angela Yu"
-                                data-category="Web Development"
-                                data-price="$249"
-                                data-episodes='[
-                                    {"number":1,"name":"HTML5 Fundamentals","duration":"30 min"},
-                                    {"number":2,"name":"CSS3 and Responsive Design","duration":"45 min"},
-                                    {"number":3,"name":"JavaScript Basics","duration":"50 min"},
-                                    {"number":4,"name":"DOM Manipulation","duration":"40 min"},
-                                    {"number":5,"name":"React Introduction","duration":"55 min"},
-                                    {"number":6,"name":"Node.js and Express","duration":"60 min"},
-                                    {"number":7,"name":"MongoDB and Databases","duration":"45 min"},
-                                    {"number":8,"name":"Building RESTful APIs","duration":"50 min"}
-                                ]'
-                                data-time="20h 45min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="https://source.unsplash.com/random/400x300/?web,development" alt="Complete Web Development Bootcamp">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Complete Web Development Bootcamp</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>20h 45min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
+                                    data-training-type="paid"
+                                    data-title="Complete Web Development Bootcamp"
+                                    data-description="Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio."
+                                    data-image="https://source.unsplash.com/random/400x300/?web,development"
+                                    data-duration="12 weeks"
+                                    data-level="Intermediate"
+                                    data-instructor="Angela Yu"
+                                    data-category="Web Development"
+                                    data-price="$249"
+                                    data-episodes='[
+                                        {"number":1,"name":"HTML5 Fundamentals","duration":"30 min"},
+                                        {"number":2,"name":"CSS3 and Responsive Design","duration":"45 min"},
+                                        {"number":3,"name":"JavaScript Basics","duration":"50 min"},
+                                        {"number":4,"name":"DOM Manipulation","duration":"40 min"},
+                                        {"number":5,"name":"React Introduction","duration":"55 min"},
+                                        {"number":6,"name":"Node.js and Express","duration":"60 min"},
+                                        {"number":7,"name":"MongoDB and Databases","duration":"45 min"},
+                                        {"number":8,"name":"Building RESTful APIs","duration":"50 min"}
+                                    ]'
+                                    data-time="20h 45min">
+                                        <div class="card rcmmd_cd">
+                                            <div class="thmbnail thn_rcmm">
+                                                <div class="trnsprnt thmb_img">
+                                                    <img src="https://source.unsplash.com/random/400x300/?web,development" alt="Complete Web Development Bootcamp">
                                                 </div>
                                             </div>
-                                            <div class="thmb_enrll content">
-                                                <label>$249</label>
+                                            <div class="details thmb_dt">
+                                                <div class="title content thmb_cnt">
+                                                    <h1 class="thmb_h1">Complete Web Development Bootcamp</h1>
+                                                </div>
+                                                <div class="ctprs content thmb_cnt">
+                                                    <p class="thmb_ct">Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio....</p>
+                                                </div>
+                                                <div class="thmb_dur_ep_container content thmb_cnt">
+                                                    <div class="cont left-side">
+                                                        <i class="fa-solid fa-stopwatch"></i>
+                                                        <span>20h 45min</span>
+                                                    </div>
+                                                    <div class="cont right-side">
+                                                        <i class="fa-solid fa-video"></i>
+                                                        <span>8 Episodes</span>
+                                                    </div>
+                                                </div>
+                                                <div class="thmb_enrll content">
+                                                    <label>$249</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </a>
                             </div>
                             
@@ -842,9 +846,282 @@
 
                 <!-- Tech Coach containers -->
                 <div class="content-section techCoach_content" id="usr_techCoach">
-
+                     <!-- coming up ... -->               
                 </div>
-                
+
+                <!-- Support Section -->
+                <div class="content-section support_content" id="usr_support">
+                    <div class="support-container">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Support Center</h2>
+                                <p>Find answers to common questions or contact our support team</p>
+                            </div>
+                            <!-- Enhanced FAQ Section -->
+                            <div class="faq-section">
+                                <div class="section-header">
+                                    <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                                    <div class="faq-filter">
+                                        <input type="text" placeholder="Filter questions..." id="faqFilter">
+                                        <i class="fas fa-filter"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="faq-tabs">
+                                    <button class="faq-tab active" data-category="all">All</button>
+                                    <button class="faq-tab" data-category="general">General</button>
+                                    <button class="faq-tab" data-category="account">Account</button>
+                                    <button class="faq-tab" data-category="billing">Billing</button>
+                                    <button class="faq-tab" data-category="technical">Technical</button>
+                                </div>
+                                
+                                <div class="faq-accordion">
+                                    <div class="faq-category" data-category="general">
+                                        <div class="faq-item">
+                                            <button class="faq-question">
+                                                <span class="question-text">How do I reset my password?</span>
+                                                <span class="faq-meta">Account</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div class="faq-answer">
+                                                <p>To reset your password:</p>
+                                                <ol>
+                                                    <li>Go to the Settings page from your dashboard</li>
+                                                    <li>Click on "Update Password" in the left menu</li>
+                                                    <li>Enter your current password</li>
+                                                    <li>Enter your new password twice to confirm</li>
+                                                    <li>Click "Save" to update your password</li>
+                                                </ol>
+                                                <p>If you've forgotten your password, you can use the "Forgot Password" link on the login page to reset it via email.</p>
+                                                <div class="faq-helpful">
+                                                    <span>Was this helpful?</span>
+                                                    <button class="helpful-btn yes">Yes</button>
+                                                    <button class="helpful-btn no">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="faq-item">
+                                            <button class="faq-question">
+                                                <span class="question-text">Where can I find my enrolled trainings?</span>
+                                                <span class="faq-meta">Trainings</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div class="faq-answer">
+                                                <p>All your enrolled trainings are available in two places:</p>
+                                                <ul>
+                                                    <li><strong>Dashboard:</strong> Your most recent trainings appear in the "My Trainings" section</li>
+                                                    <li><strong>All Trainings Page:</strong> Enrolled courses are marked with a green "Enrolled" badge</li>
+                                                </ul>
+                                                <p>You can also filter the All Trainings page to show only your enrolled courses using the "My Courses" filter.</p>
+                                                <div class="faq-helpful">
+                                                    <span>Was this helpful?</span>
+                                                    <button class="helpful-btn yes">Yes</button>
+                                                    <button class="helpful-btn no">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="faq-category hidden" data-category="account">
+                                        <div class="faq-item">
+                                            <button class="faq-question">
+                                                <span class="question-text">How can I update my email address?</span>
+                                                <span class="faq-meta">Account</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div class="faq-answer">
+                                                <p>To update your email:</p>
+                                                <ol>
+                                                    <li>Navigate to your account settings</li>
+                                                    <li>Click on "Edit Profile"</li>
+                                                    <li>Change the email field and save your changes</li>
+                                                    <li>Check your new email for a confirmation message</li>
+                                                </ol>
+                                                <div class="faq-helpful">
+                                                    <span>Was this helpful?</span>
+                                                    <button class="helpful-btn yes">Yes</button>
+                                                    <button class="helpful-btn no">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="faq-category hidden" data-category="billing">
+                                        <div class="faq-item">
+                                            <button class="faq-question">
+                                                <span class="question-text">Where can I download my invoices?</span>
+                                                <span class="faq-meta">Billing</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div class="faq-answer">
+                                                <p>To access invoices:</p>
+                                                <ul>
+                                                    <li>Go to the "Billing" section in your account settings</li>
+                                                    <li>Click on the "Invoices" tab</li>
+                                                    <li>Download any invoice as a PDF by clicking the download icon</li>
+                                                </ul>
+                                                <div class="faq-helpful">
+                                                    <span>Was this helpful?</span>
+                                                    <button class="helpful-btn yes">Yes</button>
+                                                    <button class="helpful-btn no">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="faq-category hidden" data-category="technical">
+                                        <div class="faq-item">
+                                            <button class="faq-question">
+                                                <span class="question-text">Why isn't the video loading?</span>
+                                                <span class="faq-meta">Technical</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div class="faq-answer">
+                                                <p>Try the following steps:</p>
+                                                <ul>
+                                                    <li>Refresh the page</li>
+                                                    <li>Clear your browser cache and cookies</li>
+                                                    <li>Try a different browser or device</li>
+                                                    <li>Ensure you're not behind a VPN or firewall blocking video traffic</li>
+                                                </ul>
+                                                <p>If the issue continues, please contact our technical support team.</p>
+                                                <div class="faq-helpful">
+                                                    <span>Was this helpful?</span>
+                                                    <button class="helpful-btn yes">Yes</button>
+                                                    <button class="helpful-btn no">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="faq-footer">
+                                    <p>Still have questions? <a href="#contact">Contact our support team</a> for personalized help.</p>
+                                </div>
+                            </div>
+
+                            <!-- Contact Support Section -->
+                            <div class="contact-section">
+                                <h2><i class="fas fa-headset"></i> Contact Support</h2>
+                                <div class="contact-options">
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <h4>Email Us</h4>
+                                        <p>Send us an email & we'll respond within 24 hours</p>
+                                        <a href="mailto:support@yourdomain.com" class="contact-btn">Email Support</a>
+                                    </div>
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </div>
+                                        <h4>Call Us</h4>
+                                        <p>Speak directly with a support representative</p>
+                                        <a href="tel:+1234567890" class="contact-btn">+1 (234) 567-890</a>
+                                    </div>
+                                    <div class="contact-card">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-comment-dots"></i>
+                                        </div>
+                                        <h4>Live Chat</h4>
+                                        <p>Chat with us in real-time during business hours</p>
+                                        <button class="contact-btn" id="liveChatBtn">Start Live Chat</button>
+                                    </div>
+                                </div>
+                                <!-- Contact Form -->
+                                <div class="support-form" id="contact">
+                                    <h4>Send us a message</h4>
+                                    <form id="supportForm" class="supportForm">
+                                        <div class="form-group">
+                                            <label for="supportSubject">Subject:</label>
+                                            <input type="text" id="supportSubject" placeholder="What's this about?" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="supportMessage">Message:</label>
+                                            <textarea id="supportMessage" rows="5" placeholder="Describe your issue in detail..." required></textarea>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="supportPriority">Priority:</label>
+                                            <select id="supportPriority">
+                                                <option value="low">Low - General question</option>
+                                                <option value="medium" selected>Medium - Need help</option>
+                                                <option value="high">High - Urgent issue</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <button type="submit" class="submit-btn">
+                                            <i class="fas fa-paper-plane"></i> Send Message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Support Status Section -->
+                            <div class="status-section">
+                                <h2><i class="fas fa-heartbeat"></i> System Status</h2>
+                                <p>Check the current status of our platform and services</p>
+                                <div class="status-grid">
+                                    <div class="status-item operational">
+                                        <div class="status-icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="status-info">
+                                            <h3>Website</h3>
+                                            <p>All systems operational</p>
+                                        </div>
+                                    </div>
+                                    <div class="status-item operational">
+                                        <div class="status-icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="status-info">
+                                            <h3>Training Platform</h3>
+                                            <p>All systems operational</p>
+                                        </div>
+                                    </div>
+                                    <div class="status-item maintenance">
+                                        <div class="status-icon">
+                                            <i class="fas fa-tools"></i>
+                                        </div>
+                                        <div class="status-info">
+                                            <h3>Mobile App</h3>
+                                            <p>Coming soon...</p>
+                                        </div>
+                                    </div>
+                                    <div class="status-item outage">
+                                        <div class="status-icon">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="status-info">
+                                            <h3>Payment System</h3>
+                                            <p>All systems operational</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="status-history">
+                                    <h3>Recent Incidents</h3>
+                                    <div class="incident">
+                                        <div class="incident-date">May 15, 2025</div>
+                                        <div class="incident-details">
+                                            <h4>Video Playback Issues</h4>
+                                            <p class="incident-status resolved">Resolved</p>
+                                            <p class="incident-desc">Some users reported intermittent video playback errors. The issue has been identified and fixed.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="incident">
+                                        <div class="incident-date">May 10, 2025</div>
+                                        <div class="incident-details">
+                                            <h4>Scheduled Maintenance</h4>
+                                            <p class="incident-status maintenance">Completed</p>
+                                            <p class="incident-desc">We performed scheduled maintenance to improve system performance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- settings containers -->
                 <div class="content-section settings_content" id="usr_settings">
                     <div class="settings-profile">
@@ -958,31 +1235,12 @@
             </div>
         </section>
 
-        <section class="rightbar bar-lt-rt rt-bar">
+        <section class="rightbar bar-lt-rt rt-bar" id="rightbar-container">
             <div class="main_container">
                 <div class="right-bar">
-                    <div class="ntfc_name">
-                        <div class="ntfc nt_nm">
-                            <i class="fa-solid fa-bell"></i>
-                        </div>
-                        <div class="name nt_nm">
-                            <div class="cont">
-                                <p>{{ Auth::user()->name }} {{ Auth::user()->surname }}</p>
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div id="dropdownMenu" class="dropdown hidden">
-                                <a href="" class="content-section">Profile</a>
-                                <form id="logoutForm" method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit">Logout</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    {{-- Include the right bar profile tag --}}
+                    @include('layouts.profileTag', ['showDropdown' => true])
+
                     <div class="progress_box">
                         <div class="progress-container">
                             <div class="progress-header">
@@ -1087,13 +1345,9 @@
         </script>
 
         <!-- pass session value to JS to remain on usr_settings -->
-        <!-- <script>
-            window.activeSection = "{{ session('section', 'usr_dashboard') }}";
-        </script> -->
         <script>
             window.activeSection = localStorage.getItem('activeSection') || 'usr_dashboard';
         </script>
-
 
         <!-- switching b|n menu-items -->
         <script>
@@ -1109,7 +1363,25 @@
                     if (activeNav) activeNav.classList.add('active');
 
                     const activeSection = document.getElementById(window.activeSection);
-                    if (activeSection) activeSection.classList.add('active');
+
+                    if (activeSection) {
+                        activeSection.classList.add('active');
+
+                        const rightbar = document.getElementById('rightbar-container');
+                        const profile_tag = document.getElementById('profile_tag');
+                        const txt_btn_rm = document.getElementById('txt_btn_rm');
+                        if (rightbar) {
+                            if (window.activeSection === 'usr_alltrainings') {
+                                rightbar.style.display = 'none';
+                                profile_tag.style.display = 'block';
+                                txt_btn_rm.style.display = 'none';
+                            } else {
+                                rightbar.style.display = 'block';
+                                profile_tag.style.display = 'none';
+                                txt_btn_rm.style.display = 'flex';
+                            }
+                        }
+                    }
                 }
 
                 navItems.forEach(item => {
@@ -1121,17 +1393,31 @@
 
                         this.classList.add('active');
                         
-                        // Get the section
                         const sectionId = this.getAttribute('data-section');
-
-                        // Store active section in localStorage
                         localStorage.setItem('activeSection', sectionId);
-                        
+
                         contentSections.forEach(section => {
                             section.classList.remove('active');
                         });
 
                         document.getElementById(sectionId).classList.add('active');
+
+                        // rightbar, profile_tag, txt_btn_rm toggle
+                        const rightbar = document.getElementById('rightbar-container');
+                        const profile_tag = document.getElementById('profile_tag');
+                        const txt_btn_rm = document.getElementById('txt_btn_rm');
+
+                        if (rightbar) {
+                            if (sectionId === 'usr_alltrainings') {
+                                rightbar.style.display = 'none';
+                                profile_tag.style.display = 'block';
+                                txt_btn_rm.style.display = 'none';
+                            } else {
+                                rightbar.style.display = 'block';
+                                profile_tag.style.display = 'none';
+                                txt_btn_rm.style.display = 'flex';
+                            }
+                        }
                     });
                 });
             });

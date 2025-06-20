@@ -120,12 +120,6 @@ function showUpgradeOptions(planId) {
 // Initialize resources when page loads
 document.addEventListener('DOMContentLoaded', function() {
     renderResources();
-    
-    // Search functionality
-    document.querySelector('.resources_content .search-bar input').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        filterResources(searchTerm);
-    });
 });
 
 function filterResources(searchTerm) {

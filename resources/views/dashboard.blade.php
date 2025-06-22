@@ -846,7 +846,104 @@
 
                 <!-- Tech Coach containers -->
                 <div class="content-section techCoach_content" id="usr_techCoach">
-                     <!-- coming up ... -->               
+                    <div class="coach-header">
+                        <div class="coach-avatar">
+                            <img src="images/tsTeam/Norris.jpg" alt="Your Tech Coach">
+                        </div>
+                        <div class="coach-intro">
+                            <h2>Meet Your Personal Tech Coach</h2>
+                            <p class="coach-tagline">Your dedicated guide to tech mastery and problem-solving</p>
+                            <div class="coach-bio">
+                                <p><strong>Coach Norris</strong>, Velisa Africa facilitator with 5+ years experience helping professionals succeed with technology.</p>
+                            </div>
+                        </div>
+                    </div>     
+                    
+                    <div class="coach-features">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Personalised Learning Path</h3>
+                                <p>Customised recommendations based on your skills and goals</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>1-on-1 Video Sessions</h3>
+                                <p>Get direct help with your specific challenges</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Progress Tracking</h3>
+                                <p>Monitor your improvement with regular checkpoints</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="coach-recommendations">
+                        <h3 class="recommendations-title">Your Personalised Recommendations</h3>
+                        
+                        <div class="recommendation-card priority">
+                        <div class="recommendation-badge">Priority</div>
+                        <div class="recommendation-content">
+                            <h4><i class="fas fa-star"></i> Mastering Excel Shortcuts</h4>
+                            <p class="recommendation-desc">Boost your productivity with these essential keyboard tips that will save you hours each week.</p>
+                            <div class="recommendation-meta">
+                            <span class="duration"><i class="far fa-clock"></i> 25 min</span>
+                            <span class="difficulty"><i class="fas fa-bolt"></i> Beginner</span>
+                            </div>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                        </div>
+                        
+                        <div class="recommendation-card">
+                        <div class="recommendation-content">
+                            <h4><i class="fas fa-users"></i> Google Docs Collaboration</h4>
+                            <p class="recommendation-desc">Live training on June 18 at 10AM - Learn real-time collaboration techniques with your team.</p>
+                            <div class="recommendation-meta">
+                            <span class="date"><i class="far fa-calendar-alt"></i> June 18, 10AM</span>
+                            <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
+                            </div>
+                            <button class="rsvp-btn">RSVP Now</button>
+                        </div>
+                        </div>
+                        
+                        <div class="recommendation-card">
+                        <div class="recommendation-content">
+                            <h4><i class="fas fa-laptop-medical"></i> Fixing Common Laptop Errors</h4>
+                            <p class="recommendation-desc">New video tutorial covering the top 5 laptop issues our students face and how to solve them.</p>
+                            <div class="recommendation-meta">
+                            <span class="duration"><i class="far fa-clock"></i> 42 min</span>
+                            <span class="new-badge">New!</span>
+                            </div>
+                            <button class="watch-btn">Watch Now</button>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="coach-cta2">
+                        <h3>Ready for Personalised Guidance?</h3>
+                        <p>Schedule a 1-on-1 session with your Tech Coach to get direct help with your specific challenges.</p>
+                        <button class="schedule-btn2">
+                        <i class="fas fa-calendar-check"></i> Schedule Session
+                        </button>
+                        <p class="assurance2">
+                        <i class="fas fa-shield-alt"></i> All sessions are confidential and tailored to your needs
+                        </p>
+                    </div>
+                    </div> -->
+
                 </div>
 
                 <!-- Support Section -->

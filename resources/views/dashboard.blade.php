@@ -394,7 +394,6 @@
                                 <h1>Free Trainings</h1>
                             </div>
                             <div class="card-grid thn_grid_cd" id="free-trainings">
-                                <!-- Free training card 1 -->
                                 <a href="#" class="training-card" 
                                     data-training-type="free"
                                     data-title="Introduction to Digital Marketing"
@@ -493,10 +492,303 @@
                                         </div>
                                     </div>
                                 </a>
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                             
                             <div class="card-grid thn_grid_cd hidden" id="more-free-trainings">
-                                <!-- Additional free training cards would go here -->
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="training-card" 
+                                    data-training-type="free"
+                                    data-title="Python for Beginners"
+                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
+                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
+                                    data-duration="6 weeks"
+                                    data-level="Beginner"
+                                    data-instructor="Michael Chen"
+                                    data-category="Programming"
+                                    data-episodes='[
+                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
+                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
+                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
+                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
+                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
+                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
+                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
+                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
+                                    ]'
+                                    data-time="5h 30min">
+                                    <div class="card rcmmd_cd">
+                                        <div class="thmbnail thn_rcmm">
+                                            <div class="trnsprnt thmb_img">
+                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
+                                            </div>
+                                        </div>
+                                        <div class="details thmb_dt">
+                                            <div class="title content thmb_cnt">
+                                                <h1 class="thmb_h1">Python for Beginners</h1>
+                                            </div>
+                                            <div class="ctprs content thmb_cnt">
+                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
+                                            </div>
+                                            <div class="thmb_dur_ep_container content thmb_cnt">
+                                                <div class="cont left-side">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                    <span>5h 30min</span>
+                                                </div>
+                                                <div class="cont right-side">
+                                                    <i class="fa-solid fa-video"></i>
+                                                    <span>8 Episodes</span>
+                                                </div>
+                                            </div>
+                                            <div class="thmb_enrll content">
+                                                <label>Enroll Free</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                             
                             <button class="toggle-btn" id="toggle-free">More Free Trainings</button>

@@ -159,12 +159,9 @@ body {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-.vision-card {
-    border-top: 5px solid #38b6ff;
-}
-
+.vision-card,
 .mission-card {
-    border-top: 5px solid #ff6b6b;
+    border-top: 5px solid #38b6ff;
 }
 
 .card .icon {
@@ -349,9 +346,9 @@ body {
 
 /* Team Section */
 .team-section {
-    padding: 100px 20px;
-    background-color: #38b6ff;
-    color: white;
+    padding: 20px;
+    background-color: #ffffff;
+    color: #2d3748;
     text-align: center;
 }
 
@@ -420,7 +417,7 @@ body {
 /* Testimonials Section */
 .testimonials-section {
     padding: 100px 20px;
-    background-color: #f8fafc;
+    background-color: #9bdaff;
     text-align: center;
 }
 

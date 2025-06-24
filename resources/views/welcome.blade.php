@@ -101,21 +101,70 @@
                     <div class="container">
                         <div class="cards-wrapper">
                             <div class="cards">
-                                <button class="card card1"></button>
-                                <button class="card card2"></button>
+                                <!-- Card 1: Creative Tools & AI -->
+                                <button class="card card1">
+                                    <div class="cr-img">
+                                        <img src="../images/image5-min-1.png"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Creative Tools & AI</h3>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Learn how to create stunning designs, videos, and content using tools like Canva, Photoshop, and beginner AI apps. Ideal for content creators, students, and small businesses.</p>
+                                    </div>
+                                </button>
+
+                                <!-- Card 2: ICT Office Administration -->
+                                <button class="card card2">
+                                    <div class="cr-img">
+                                        <img src="../images/image5-min-1.png"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>ICT Office Administration</h3>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Master everyday office tools like Microsoft Office and Google Workspace. Perfect for job readiness, admin tasks, and school assignments.</p>
+                                    </div>
+                                </button>
+
+                                <!-- Card 3: Technical Support Services -->
                                 <button class="card card3">
                                     <div class="cr-img">
                                         <img src="../images/image5-min-1.png"/>
                                     </div>
                                     <div class="st_title_container">
-                                        <h3>IT Support Troubleshooting</h3>
+                                        <h3>Technical Support Services</h3>
                                     </div>
                                     <div class="st_dscrpt">
-                                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. consectetur adipiscing elit, sed do eiusmod</p>
+                                        <p>Get help with software installation, system cleanup, device setup, and other common tech problems. Support tailored for home users, students, and small offices.</p>
                                     </div>
                                 </button>
-                                <button class="card card4"></button>
-                                <button class="card card5"></button>
+
+                                <!-- Card 4: Programming & EUC -->
+                                <button class="card card4">
+                                    <div class="cr-img">
+                                        <img src="../images/image5-min-1.png"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Programming & End-User Computing (EUC)</h3>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Learn to code using Python, HTML, JavaScript, and more. Includes web/app development and computing essentials for students, freelancers, and aspiring developers.</p>
+                                    </div>
+                                </button>
+
+                                <!-- Card 5: Networking & Internet Basics -->
+                                <button class="card card5">
+                                    <div class="cr-img">
+                                        <img src="../images/image5-min-1.png"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Networking & Internet Basics</h3>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Understand how to set up home or office Wi-Fi, configure routers, manage IP settings, and secure your internet connection with basic network skills.</p>
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </div>

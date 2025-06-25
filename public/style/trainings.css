@@ -1365,16 +1365,21 @@ body {
 
 @media (max-width: 768px) {
     .footer-contact {
-        padding: 15px;
+        text-align: center;
     }
-    
+
+    .contact-title:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
     .contact-item {
-        flex-direction: column;
-        gap: 6px;
+        flex-direction: row;
+        align-items: flex-start;
     }
-    
+
     .working-hours {
-        margin-left: 32px;
+        margin-left: 0;
     }
 }
 
@@ -1446,6 +1451,11 @@ body {
     .newsletter-form {
         width: 100%;
         max-width: 350px;
+    }
+
+    .footer-bottom {
+        align-items: center;
+        text-align: center;
     }
 }
 

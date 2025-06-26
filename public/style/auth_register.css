@@ -60,12 +60,12 @@ body {
                 width: 100%;
                 position: absolute;
                 top: 0;
-                padding: 0 25px;
+                padding: 5px 10px;
                 z-index: 1;
                 & > a {
                     text-decoration: none;
                     & > img {
-                        height: 100px;
+                        height: 50px;
                         position: relative;
                         object-fit: cover;
                     }
@@ -320,10 +320,10 @@ body {
             & > .welcome_ {
                 width: 35%;
                 & > .logo_container {
-                    padding: 0 15px;
+                    padding: 5px 15px;
                     & > a {
                         & > img {
-                            height: 75px;
+                            height: 40px;
                         }
                     }
                 }

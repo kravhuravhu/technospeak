@@ -44,6 +44,39 @@
                 toggle.classList.toggle('open'); 
             });
         }
+
+        document.addEventListener('click', function (e) {
+            if (!navBlock.contains(e.target) && !toggle.contains(e.target)) {
+                navBlock.classList.remove('active');
+                toggle.classList.remove('open');
+            }
+        });
+
+        /* sticky nav */
+        const navContainer = document.querySelector('.nav_container');
+        const nav = navContainer.querySelector('nav');
+
+        let navHeight = nav.offsetHeight;
+
+        window.addEventListener('scroll', function () {
+            const scrollY = window.scrollY;
+
+            if (scrollY > 0) {
+            navContainer.classList.add('scrolled');
+            } else {
+            navContainer.classList.remove('scrolled');
+            }
+            if (scrollY >= navHeight) {
+            navContainer.classList.add('sticky');
+            } else {
+            navContainer.classList.remove('sticky');
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            navHeight = nav.offsetHeight;
+        });
+
     });
 </script>
 

@@ -3,23 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class Client extends Authenticatable implements MustVerifyEmail
+class Client extends Authenticatable
 {
-    use Notifiable;
-    protected $connection = 'technospeak_db';
-    protected $table = 'clients';
+    use HasFactory, Notifiable;
+
     protected $primaryKey = 'id';
     public $incrementing = false;
-    public $timestamps = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'name', 'surname', 'email', 'password',
-        'subscription_id', 'preferred_category_id',
-        'registered_date', 'registered_time',
-        'remember_token', 'email_verified_at'
+        'id',
+        'name',
+        'surname',
+        'email',
+        'password',
+        'preferred_category_id',
+        'subscription_type',
+        'subscription_expiry',
+        'registered_date',
+        'registered_time',
+        'remember_token',
+        'email_verified_at'
     ];
 
     protected $hidden = [
@@ -29,5 +36,42 @@ class Client extends Authenticatable implements MustVerifyEmail
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'subscription_expiry' => 'date',
+        'registered_date' => 'date'
     ];
+
+    public function preferredCategory()
+    {
+        return $this->belongsTo(CourseCategory::class, 'preferred_category_id');
+    }
+
+    public function courseSubscriptions()
+    {
+        return $this->hasMany(ClientCourseSubscription::class);
+    }
+
+    public function trainingRegistrations()
+    {
+        return $this->hasMany(TrainingRegistration::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->surname}";
+    }
+
+    public function getRegisteredAtAttribute()
+    {
+        return "{$this->registered_date} {$this->registered_time}";
+    }
+
+    public function isSubscribedTo($courseId)
+    {
+        return $this->courseSubscriptions()->where('course_id', $courseId)->exists();
+    }
 }

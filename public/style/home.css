@@ -1,13 +1,13 @@
 *,
 html,
 body {
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-  box-sizing: border-box;
-  position: relative;
-  font-family: 'Roboto', sans-serif;
-  transition: all .3s ease;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    position: relative;
+    font-family: 'Roboto', sans-serif;
+    transition: all .3s ease;
 }
 
 /* nav bar section */
@@ -16,6 +16,41 @@ body {
     position: relative;
     padding: 10px;
     background-color: #38b6ff;
+    transition: all 0.3s ease-in-out;
+    &.sticky {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+        & > nav {
+            & > .logo_container {
+                padding: 1px 0;
+                & > a {
+                    display: flex;
+                    align-items: center;
+                    & > img {
+                        height: 40px;
+                    }
+                }
+            }
+            & > .nav_block {
+                & > .nav-links {
+                    & > ul > li, 
+                    & > ul > li > a {
+                        &::after {
+                            bottom: -3.5px!important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.scrolled:not(.sticky) {
+        transform: translateY(-100%);
+    }
     &.white_bg_nav_container {
         background-color: #ffffff;
     }
@@ -30,10 +65,14 @@ body {
             height: fit-content;
             width: fit-content;
             position: relative;
-            & a {
+            padding: 15px 0;
+            & > a {
                 text-decoration: none; 
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 & > img {
-                    height: 100px;
+                    height: 60px;
                     position: relative;
                     object-fit: contain;
                 }
@@ -989,6 +1028,9 @@ body {
     }
 }
 
+/* footer section */
+/* applied form global CSS - footer.css */
+
 /* mobile responses */
 @media (max-width: 1770px) {
     .nav_container > nav {
@@ -1003,7 +1045,7 @@ body {
             & > .logo_container {
                 & > a {
                     & > img {
-                        height: 80px;
+                        height: 40px;
                     }
                 }
             }
@@ -1034,12 +1076,23 @@ body {
 
 @media (max-width: 1200px) {
     .nav_container {
+        &.sticky {
+            & > nav {
+                & > .logo_container {
+                    & > a {
+                        & > img {
+                            height: 30px;
+                        }
+                    }
+                }
+            }
+        }
         & > nav {
             flex-wrap: nowrap;
             & > .logo_container {
                 & > a {
                     & > img {
-                        height: 70px;
+                        height: 30px;
                     }
                 }
             }
@@ -1165,7 +1218,7 @@ body {
         & > .logo_container {
             & > a {
                 & > img {
-                    height: 80px;
+                    height: 40px;
                 }
             }
         }
@@ -1651,7 +1704,7 @@ body {
     }
 
     .logo_container img {
-        height: 50px!important;
+        height: 30px!important;
     }
 
     .nav_container > nav {
@@ -1914,3 +1967,4 @@ body {
         height: 60px;
     }
 }
+

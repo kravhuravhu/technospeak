@@ -3,21 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Course;
 use App\Models\Episode;
 use Illuminate\Http\Request;
 
 class EpisodeController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function index(Course $course)
     {
         $episodes = $course->episodes()->latest()->paginate(10);
-        return view('admin.episodes.index', compact('course', 'episodes'));
+        return view('content-manager.episodes.index', compact('course', 'episodes'));
     }
 
     public function create(Course $course)
     {
-        return view('admin.episodes.create', compact('course'));
+        return view('content-manager.episodes.create', compact('course'));
     }
 
     public function store(Request $request, Course $course)
@@ -39,12 +45,12 @@ class EpisodeController extends Controller
 
     public function show(Course $course, Episode $episode)
     {
-        return view('admin.episodes.show', compact('course', 'episode'));
+        return view('content-manager.episodes.show', compact('course', 'episode'));
     }
 
     public function edit(Course $course, Episode $episode)
     {
-        return view('admin.episodes.edit', compact('course', 'episode'));
+        return view('content-manager.episodes.edit', compact('course', 'episode'));
     }
 
     public function update(Request $request, Course $course, Episode $episode)

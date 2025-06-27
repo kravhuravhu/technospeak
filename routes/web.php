@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\EpisodeController;
 use App\Http\Controllers\Admin\PaymentsController;
+use App\Http\Controllers\Admin\TrainingSessionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminAuth;
@@ -52,7 +53,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// --- admin routes merged ---
+// --- admin routes ---
 
 Route::prefix('content')->name('content-manager.')->group(function() {
     Route::get('login', [AdminAuthController::class, 'showLogin'])->name('login');
@@ -85,7 +86,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
 
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 
 });

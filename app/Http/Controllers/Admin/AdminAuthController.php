@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function showLogin()
     {
         return view('content-manager.auth.login');
@@ -21,8 +26,17 @@ class AdminAuthController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
+             Auth::shouldUse('admin');
             $request->session()->regenerate();
             return redirect()->intended(route('content-manager.admin'));
+        }
+        if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
+            Auth::shouldUse('admin');
+            $request->session()->regenerate();
+
+            $request->session()->forget('url.intended');
+
+            return redirect()->route('content-manager.admin');
         }
 
         return back()->withErrors([

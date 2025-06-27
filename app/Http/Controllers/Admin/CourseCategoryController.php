@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\CourseCategory;
 use Illuminate\Http\Request;
 
 class CourseCategoryController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function index()
     {
         $categories = CourseCategory::withCount('courses')

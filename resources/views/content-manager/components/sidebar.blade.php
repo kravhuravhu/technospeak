@@ -44,10 +44,14 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('content-manager.logout') }}">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
+            <form action="{{ route('content-manager.logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </li>
+
     </ul>
 </div>

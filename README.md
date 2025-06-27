@@ -1,6 +1,6 @@
 <div align="center">
   <p>
-    <a href="https://technospeak.com" target="_blank">
+    <a href="https://www.technospeak.co.za" target="_blank">
       <img src="public/images/default.png" width="400" alt="Technospeak Logo">
     </a>
   </p>

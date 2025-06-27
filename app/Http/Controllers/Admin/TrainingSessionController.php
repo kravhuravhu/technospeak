@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\TrainingSession;
 use App\Models\TrainingType;
+use App\Models\Instructor;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class TrainingSessionController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function index()
     {
         $sessions = TrainingSession::with(['type', 'instructor'])
@@ -23,7 +30,8 @@ class TrainingSessionController extends Controller
     public function create()
     {
         $types = TrainingType::all();
-        $instructors = Client::where('is_instructor', true)->get();
+        // $instructors = Client::where('is_instructor', true)->get();
+        $instructors = Instructor::all();
 
         return view('content-manager.trainings.create', compact('types', 'instructors'));
     }

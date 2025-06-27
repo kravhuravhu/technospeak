@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function index()
     {
         $payments = Payment::with(['client', 'course'])->latest()->paginate(10);

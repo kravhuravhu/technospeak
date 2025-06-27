@@ -20,22 +20,6 @@
                 @error('password') <p>{{ $message }}</p> @enderror
             </div>
 
-            <div class="input-icon">
-                <div class="container-rm-fgp">
-                    <div class="rm block mt-4">
-                        <label for="remember_me" class="inline-flex items-center">
-                            <input id="remember_me" type="checkbox" name="remember">
-                            <span class="ml-2 text-sm">Remember me</span>
-                        </label>
-                    </div>
-                    <div class="fgp">
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}">Forgot your password?</a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
             <button type="submit">Login</button>
         </form>
     </div>

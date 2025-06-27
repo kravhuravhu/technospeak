@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Models\Course;
 use App\Models\CourseCategory;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function index()
     {
         $courses = Course::with('category')->latest()->paginate(10);

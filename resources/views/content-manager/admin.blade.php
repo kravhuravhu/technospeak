@@ -6,11 +6,11 @@
 <div class="admin-header">
     <div class="page-title">
         <h1>Dashboard</h1>
-        <p>Welcome back, {{ Auth::user()->name }}</p>
+        <p>Welcome back, {{ Auth::guard('admin')->user()->name }}</p>
     </div>
     <div class="user-menu">
         <div class="user-info">
-            <h4>{{ Auth::user()->name }}</h4>
+            <h4>{{ Auth::guard('admin')->user()->name }}</h4>
             <p>Admin</p>
         </div>
         <img src="{{ Auth::user()->avatar ?? asset('images/default-avatar.png') }}" alt="User Avatar">

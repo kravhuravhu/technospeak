@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Course;
 use App\Models\Client;
 use App\Models\Payment;
@@ -11,6 +12,11 @@ use App\Models\TrainingSession;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('admin');
+    }
+
     public function admin()
     {
         $stats = [

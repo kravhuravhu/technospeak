@@ -61,7 +61,8 @@ body {
     padding: 1rem 0;
 }
 
-.sidebar-menu li a {
+.sidebar-menu li a,
+.lg-out-button .bttn {
     display: flex;
     align-items: center;
     padding: 0.85rem 1.5rem;
@@ -69,15 +70,18 @@ body {
     text-decoration: none;
     transition: all 0.3s;
     font-size: 0.95rem;
+    background-color: red;
 }
 
 .sidebar-menu li a:hover, 
-.sidebar-menu li a.active {
+.sidebar-menu li a.active,
+.lg-out-button:hover {
     background-color: rgba(255,255,255,0.1);
     color: white;
 }
 
-.sidebar-menu li a i {
+.sidebar-menu li a i,
+.lg-out-button > button > i {
     margin-right: 0.75rem;
     width: 20px;
     text-align: center;
@@ -126,6 +130,7 @@ body {
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    color: var(--darkBlue)
 }
 
 .user-info {

@@ -13,7 +13,7 @@
             <h4>{{ Auth::guard('admin')->user()->name }}</h4>
             <p>Admin</p>
         </div>
-        <img src="{{ Auth::user()->avatar ?? asset('images/default-avatar.png') }}" alt="User Avatar">
+        <img src="{{ Auth::user()->avatar ?? asset('images/icons/circle-user-solid.svg') }}" alt="User Avatar">
     </div>
 </div>
 

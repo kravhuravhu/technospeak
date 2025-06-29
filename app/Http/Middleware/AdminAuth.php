@@ -14,6 +14,8 @@ class AdminAuth
             return redirect()->route('content-manager.login');
         }
 
+        Auth::shouldUse('admin');
+
         return $next($request);
     }
 }

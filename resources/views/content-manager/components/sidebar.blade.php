@@ -17,7 +17,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('content-manager.clients.index') }}" class="{{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+            <a href="{{ route('content-manager.clients.clients') }}" class="{{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Clients</span>
             </a>
@@ -44,9 +44,9 @@
             </a>
         </li>
         <li>
-            <form action="{{ route('content-manager.logout') }}" method="POST" style="display: inline;">
+            <form action="{{ route('content-manager.logout') }}" method="POST" style="display: inline;" class="lg-out-button">
                 @csrf
-                <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                <button class="bttn logout-button" type="submit">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </button>

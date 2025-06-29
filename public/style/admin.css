@@ -61,7 +61,8 @@ body {
     padding: 1rem 0;
 }
 
-.sidebar-menu li a {
+.sidebar-menu li a,
+.lg-out-button > .bttn {
     display: flex;
     align-items: center;
     padding: 0.85rem 1.5rem;
@@ -71,13 +72,24 @@ body {
     font-size: 0.95rem;
 }
 
+.lg-out-button {
+    .bttn {
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        background-color: unset;
+    }
+}
+
 .sidebar-menu li a:hover, 
-.sidebar-menu li a.active {
+.sidebar-menu li a.active,
+li > .lg-out-button > button:hover {
     background-color: rgba(255,255,255,0.1);
     color: white;
 }
 
-.sidebar-menu li a i {
+.sidebar-menu li a i,
+.lg-out-button > button > i {
     margin-right: 0.75rem;
     width: 20px;
     text-align: center;
@@ -126,6 +138,10 @@ body {
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    color: var(--darkBlue)
+}
+.user-menu > .search-box {
+    display: flex;
 }
 
 .user-info {
@@ -226,8 +242,8 @@ body {
 
 .btn {
     padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
+    border-radius: 20px;
+    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
@@ -244,6 +260,8 @@ body {
 .btn-primary {
     background-color: var(--skBlue);
     color: white;
+    margin: 10px 0;
+    padding: 13px 27px;
 }
 
 .btn-primary:hover {
@@ -377,18 +395,27 @@ tr:hover {
 .form-label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--textDark);
+    font-weight: 450;
+    font-size: 1rem;
+    color: var(--skBlue);
 }
 
 .form-control {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
+    border: 2px solid rgba(56, 182, 255, 0.2);;
     border-radius: 8px;
     font-size: 1rem;
-    transition: all 0.3s;
+    font-family: "Roboto", sans-serif;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    &::placeholder {
+        color: #1d1d1d;
+        font-size: .9em;
+    }
+    &:focus {
+        box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.2);
+    }
 }
 
 .form-control:focus {
@@ -411,6 +438,8 @@ textarea.form-control {
 .form-row .form-group {
     flex: 1;
     margin-bottom: 0;
+    margin: 10px 0;
+    color: var(--textDark);
 }
 
 /* Responsive */

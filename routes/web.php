@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\EpisodeController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\TrainingSessionController;
@@ -13,7 +14,7 @@ use App\Http\Middleware\AdminAuth;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PreferenceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,6 +35,14 @@ Route::get('/pricing', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
+    Route::get('/skip-onboarding', function () {
+        session(['skipped_preference' => true, 'skipped_userType' => true]);
+        return redirect()->back();
+    })->name('skipOnboarding');
+});
 
 Route::post('/email/verify/send', function (Request $request) {
     if ($request->user()->hasVerifiedEmail()) {
@@ -71,11 +80,22 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::resource('categories', CourseCategoryController::class)->except(['show']);
 
         // Clients
-        Route::resource('clients', ClientController::class);
-
+        Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)
+            ->names([
+                'index' => 'clients.clients',
+                'create' => 'clients.create',
+                'store' => 'clients.store',
+                'show' => 'clients.show',
+                'edit' => 'clients.edit',
+                'update' => 'clients.update',
+                'destroy' => 'clients.destroy'
+            ]);
+        Route::post('clients/{client}/enroll-course', [ClientController::class, 'enrollCourse'])->name('clients.enroll-course');
+        Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
+        
         // Payments
-        Route::resource('payments', PaymentController::class);
-        Route::post('payments/{payment}/approve', [PaymentController::class, 'approve'])->name('payments.approve');
+        Route::resource('payments', PaymentsController::class);
+        Route::post('payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('payments.approve');
 
         // trainings
         Route::resource('trainings', TrainingSessionController::class);

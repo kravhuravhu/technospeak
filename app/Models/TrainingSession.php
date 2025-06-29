@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,7 @@ class TrainingSession extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'type_id',
         'title',
         'description',
@@ -17,7 +19,8 @@ class TrainingSession extends Model
         'scheduled_at',
         'duration_minutes',
         'price',
-        'max_participants'
+        'max_participants',
+        'created_at'
     ];
 
     protected $casts = [
@@ -52,5 +55,10 @@ class TrainingSession extends Model
     {
         return $this->max_participants && 
                $this->registrations()->count() >= $this->max_participants;
+    }
+
+    public function scopeUpcoming(Builder $query): void
+    {
+        $query->where('scheduled_at', '>', now());
     }
 }

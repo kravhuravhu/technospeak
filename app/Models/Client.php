@@ -10,6 +10,7 @@ class Client extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public $timestamps = false;
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -26,7 +27,8 @@ class Client extends Authenticatable
         'registered_date',
         'registered_time',
         'remember_token',
-        'email_verified_at'
+        'email_verified_at',
+        'userType'
     ];
 
     protected $hidden = [
@@ -39,6 +41,16 @@ class Client extends Authenticatable
         'subscription_expiry' => 'date',
         'registered_date' => 'date'
     ];
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucfirst(strtolower($value));
+    }
+
+    public function setSurnameAttribute($value)
+    {
+        $this->attributes['surname'] = ucfirst(strtolower($value));
+    }
 
     public function preferredCategory()
     {

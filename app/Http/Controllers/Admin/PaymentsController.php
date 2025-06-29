@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
-class PaymentController extends Controller
+class PaymentsController extends Controller
 {
     public function __construct()
     {

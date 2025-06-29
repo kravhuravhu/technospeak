@@ -70,7 +70,7 @@
                 <h3>Recent Clients</h3>
             </div>
             <div class="table-actions">
-                <a href="{{ route('content-manager.clients.index') }}" class="btn btn-outline">
+                <a href="{{ route('content-manager.clients.clients') }}" class="btn btn-outline">
                     View All
                 </a>
             </div>

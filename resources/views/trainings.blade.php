@@ -43,10 +43,6 @@
                         <div class="video-description">
                             <p>Video desciption here.. We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
                         </div>
-                        <div class="video-actions">
-                            <button class="btn like-btn"><i class="far fa-thumbs-up"></i> Like</button>
-                            <button class="btn share-btn"><i class="fas fa-share"></i> Share</button>
-                        </div>
                     </div>
                 </div>
 
@@ -62,7 +58,6 @@
                                     <h4>AI Learning Fundamentals</h4>
                                     <p class="duration">Duration: 12:30 min</p>
                                     <p class="description">We use AI to help you create a personalized plan</p>
-                                    <p class="price">Price: <span>R120</span> (Once off)</p>
                                 </div>
                             </div>
                             <div class="video-item">
@@ -73,7 +68,6 @@
                                     <h4>Personalized Learning Plans</h4>
                                     <p class="duration">Duration: 25:15 min</p>
                                     <p class="description">We use AI to help you create a personalized plan</p>
-                                    <p class="price">Price: <span>R150</span> (Once off)</p>
                                 </div>
                             </div>
                             <div class="video-item">
@@ -84,7 +78,6 @@
                                     <h4>Advanced AI Techniques</h4>
                                     <p class="duration">Duration: 18:42 min</p>
                                     <p class="description">We use AI to help you create a personalized plan</p>
-                                    <p class="price">Price: <span>R200</span> (Once off)</p>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +93,6 @@
                                 <h4>Complete AI Learning Course</h4>
                                 <p class="duration">Duration: 2 hours</p>
                                 <p class="description">Comprehensive course covering all AI learning techniques</p>
-                                <p class="price">Price: <span>R350</span> (Once off)</p>
                                 <button class="btn enroll-btn">Enroll Now</button>
                             </div>
                         </div>

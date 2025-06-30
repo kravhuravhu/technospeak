@@ -22,6 +22,7 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
 
+        <!-- Landing page container -->
         <section class="landing_container">
             <div class="main_container">
                 <div class="slider_container">
@@ -29,53 +30,65 @@
                         <div class="main_block">
                             <div class="slider">
                                 <div class="header">
-                                    <h3 id="animated_header">Add a header</h3>
+                                    <h3 id="animated_header">Transform Your Digital Future</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>Step into the next era of technological innovation with our cutting-edge solutions. 
+                                        We bridge the gap between complex tech and real-world applications, delivering seamless experiences 
+                                        that propel businesses forward. Our expert team crafts tailored systems designed to scale with your 
+                                        ambitions while maintaining ironclad security.</p>
                                 </div>
                                 <div class="cta">
                                     <a href="">
-                                        <div>Click here</div>
+                                        <div>Explore Solutions</div>
                                     </a>
                                 </div>
                             </div>
                             <div class="slider">
                                 <div class="header">
-                                    <h3>Add a header5</h3>
+                                    <h3>AI-Powered Business Revolution</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>Harness the transformative power of artificial intelligence without the complexity. Our intuitive 
+                                        platforms integrate machine learning into your daily operations, automating workflows, predicting 
+                                        trends, and unlocking hidden opportunities. From chatbots to data analytics, we make enterprise-grade 
+                                        AI accessible.</p>
                                 </div>
                                 <div class="cta">
                                     <a href="">
-                                        <div>Register now</div>
+                                        <div>Schedule Demo</div>
                                     </a>
                                 </div>
                             </div>
                             <div class="slider">
                                 <div class="header">
-                                    <h3>Add a header2</h3>
+                                    <h3>Cloud Infrastructure Reimagined</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>Experience cloud computing without compromises. Our hybrid-cloud architectures deliver blistering 
+                                        performance with military-grade security. Whether you're migrating legacy systems or building 
+                                        cloud-native applications, we provide the perfect balance of flexibility, reliability, and 
+                                        cost-efficiency.</p>
                                 </div>
                                 <div class="cta">
                                     <a href="">
-                                        <div>Discover more</div>
+                                        <div>View Case Studies</div>
                                     </a>
                                 </div>
                             </div>
                             <div class="slider">
                                 <div class="header">
-                                    <h3>Add a header3</h3>
+                                    <h3>24/7 Cybersecurity Shield</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>Sleep soundly knowing your digital assets are protected by our multi-layered defense systems. 
+                                        Real-time threat detection, automated vulnerability patching, and white-hat penetration testing 
+                                        create an impenetrable security posture. We don't just respond to threats - we anticipate and 
+                                        neutralize them.</p>
                                 </div>
                                 <div class="cta">
                                     <a href="">
-                                        <div>Check it out</div>
+                                        <div>Get Protected</div>
                                     </a>
                                 </div>
                             </div>
@@ -91,6 +104,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Services category section -->
         <section class="categories_cont">
             <div class="main_container">
                 <div class="title_container">
@@ -176,6 +191,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- About Us section -->
         <section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
@@ -186,7 +203,11 @@
                         <h2>About Us</h2>
                     </div>
                     <div class="dscpt">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>At <strong>TechnoSpeak</strong>, we turn tech confusion into confidence. We empowered 
+                        individuals and businesses with practical, jargon-free technology training and support. Our 
+                        approach blends hands-on learning with real-world applications—whether you're mastering creative 
+                        tools, troubleshooting devices, or building cloud solutions. Think of us as your personal tech 
+                        translators, here to make technology work <em>for</em> you, not against you.</p>
                     </div>
                     <div class="bttn">
                         <a href="/about">Read More</a>
@@ -194,6 +215,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Recent trainings section -->
         <section class="rcnt_vd">
             <div class="main_container">
                 <div class="title_container">
@@ -389,6 +412,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Weekly Q/A sessions section -->
         <section class="wkly_sessions">
             <div class="main_container">
                 <div class="title_container">
@@ -400,6 +425,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Get in touch section -->
         <section class="gtch">
             <div class="main_container">
                 <div class="title_container">
@@ -459,9 +486,12 @@
                 </div>
             </div>
         </section>
+
         <!-- Footer Section -->
         {{-- Include the footer --}}
         @include('layouts.footer')
     </body>
+
     <script src="script/home_slider.js"></script>
+    
 </html>

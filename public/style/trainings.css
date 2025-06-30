@@ -116,8 +116,6 @@ body {
     color: var(--text-color);
     line-height: 1.6;
     margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .video-actions {
@@ -143,11 +141,6 @@ body {
 
 .btn:hover {
     background-color: var(--liGrey2-color);
-}
-
-.like-btn.active {
-    background-color: var(--primary-color);
-    color: var(--white-color);
 }
 
 /* Sidebar Styles */

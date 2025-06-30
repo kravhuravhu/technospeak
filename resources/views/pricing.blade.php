@@ -26,13 +26,14 @@
             <div class="title_container">
                 <div>
                     <h1>Subscription Plans & Pricing</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut <br>labore et dolore magna aliqua. Ut enim ad minim veniam </p>
+                    <p>Choose the perfect plan for your tech learning journey. From free access to premium personalised support, we have options for everyone.</p>
                 </div>
             </div>
             <div class="plans_container">
                 <div class="container">
                     <div class="card-grid">
                         <div class="container-grid">
+                            <!-- Plan 1 -->
                             <div class="card_container">
                                 <div class="card">
                                     <div class="plan_title">
@@ -47,7 +48,7 @@
                                                 <sup class="context">R</sup>
                                             </span>
                                             Free
-                                            <span class="dur">/ &nbsp&nbsp<tr>no costs</span>
+                                            <span class="dur">/ always</span>
                                         </p>
                                     </div>
                                     <div class="dscpt_container">
@@ -56,7 +57,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>No sign-up required</p>
+                                                <p>Access to social media videos</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -64,7 +65,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Full access to all our tips and tricks videos</p>
+                                                <p>Comment section Q&A</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -72,17 +73,19 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Comment to connect</p>
+                                                <p>Links to full content</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="bttn">
-                                        <button>SUBSCRIBE</button>
+                                        <button>GET STARTED</button>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Plan 2 -->
                             <div class="card_container">
-                                <div class="card">
+                                <div class="card highlight">
                                     <div class="plan_title">
                                         <h2>TechVault Access</h2>
                                     </div>
@@ -94,9 +97,10 @@
                                             <span>
                                                 <sup class="context">R</sup>
                                             </span>
-                                            400.00
-                                            <span class="dur">/ &nbsp&nbsp<tr>year</span>
+                                            400
+                                            <span class="dur">/ year</span>
                                         </p>
+                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R430 for business)</p>
                                     </div>
                                     <div class="dscpt_container">
                                         <div class="dscpt">
@@ -104,7 +108,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Unlimited access to all training content</p>
+                                                <p>Full video access</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -112,7 +116,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Downloadable Cheatsheets</p>
+                                                <p>Downloadable resources</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -120,7 +124,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Walkthrough with screen grabs, mini-guides</p>
+                                                <p>Monthly tech newsletters</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -128,7 +132,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Categorized tech newsletters</p>
+                                                <p>Cheatsheets & guides</p>
                                             </div>
                                         </div>
                                     </div>
@@ -137,10 +141,12 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Plan 3 -->
                             <div class="card_container">
                                 <div class="card">
                                     <div class="plan_title">
-                                        <h2>Personal Tech Guide</h2>
+                                        <h2>Personal Guide</h2>
                                     </div>
                                     <div class="icon">
                                         <img src="../images/icons/quality-service.png"/>
@@ -151,8 +157,185 @@
                                                 <sub class="sub context">from</sub>
                                                 <sup class="context">R</sup>
                                             </span>
-                                            150
-                                            <span class="dur">/ &nbsp&nbsp<tr>hour</span>
+                                            110
+                                            <span class="dur">/ hour</span>
+                                        </p>
+                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R210/hr for business)</p>
+                                    </div>
+                                    <div class="dscpt_container">
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Live personalised sessions</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Flexible scheduling</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Video call or chat options</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Additional hours available</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>BOOK NOW</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Plan 4 -->
+                            <div class="card_container">
+                                <div class="card">
+                                    <div class="plan_title">
+                                        <h2>Formal Training</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <img src="../images/icons/quality-service.png"/>
+                                    </div>
+                                    <div class="price">
+                                        <p>
+                                            <span>
+                                                <sup class="context">R</sup>
+                                            </span>
+                                            2,500
+                                            <span class="dur">/ course</span>
+                                        </p>
+                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R3,500 for business)</p>
+                                    </div>
+                                    <div class="dscpt_container">
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>40-hour comprehensive training</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>EUC & web development</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Portfolio building support</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Professional certification</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>ENROLL NOW</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Plan 5 -->
+                            <div class="card_container">
+                                <div class="card">
+                                    <div class="plan_title">
+                                        <h2>Task Assistance</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <img src="../images/icons/quality-service.png"/>
+                                    </div>
+                                    <div class="price">
+                                        <p>
+                                            <span>
+                                                <sup class="context">R</sup>
+                                            </span>
+                                            100
+                                            <span class="dur">/ hour</span>
+                                        </p>
+                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R250/hr for business)</p>
+                                    </div>
+                                    <div class="dscpt_container">
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Hands-on task completion</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Coding & development</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>System configurations</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Tech-related solutions</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>REQUEST HELP</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Plan 6 -->
+                            <div class="card_container">
+                                <div class="card">
+                                    <div class="plan_title">
+                                        <h2>Group Q&A</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <img src="../images/icons/quality-service.png"/>
+                                    </div>
+                                    <div class="price">
+                                        <p>
+                                            <span>
+                                                <sup class="context">R</sup>
+                                            </span>
+                                            Free
+                                            <span class="dur">/ session</span>
                                         </p>
                                     </div>
                                     <div class="dscpt_container">
@@ -161,7 +344,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Live, personalized sessions - flexible delivery</p>
+                                                <p>Live Q&A sessions</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -169,7 +352,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Step-by-step assistance, Scalable support</p>
+                                                <p>Immediate feedback</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -177,7 +360,7 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Support across multiple topics</p>
+                                                <p>Submit questions via chat</p>
                                             </div>
                                         </div>
                                         <div class="dscpt">
@@ -185,15 +368,79 @@
                                                 <img src="../images/icons/quality.png"/>
                                             </div>
                                             <div class="dscpt-p">
-                                                <p>Students & professional rates fair pricing</p>
+                                                <p>Various tech topics covered</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="bttn">
-                                        <button>REGISTER</button>
+                                        <button>JOIN NOW</button>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Plan 7 -->
+                            <div class="card_container">
+                                <div class="card">
+                                    <div class="plan_title">
+                                        <h2>Resp Consultation</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <img src="../images/icons/quality-service.png"/>
+                                    </div>
+                                    <div class="price">
+                                        <p>
+                                            <span>
+                                                <sup class="context">R</sup>
+                                            </span>
+                                            130
+                                            <span class="dur">/ hour</span>
+                                        </p>
+                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R300/hr for business)</p>
+                                    </div>
+                                    <div class="dscpt_container">
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Detailed response to comments</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Programming support</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Cybersecurity guidance</p>
+                                            </div>
+                                        </div>
+                                        <div class="dscpt">
+                                            <div class="tick">
+                                                <img src="../images/icons/quality.png"/>
+                                            </div>
+                                            <div class="dscpt-p">
+                                                <p>Skill-building sessions</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bttn">
+                                        <button>LEARN MORE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-controls">
+                            <button class="arrow-btn arrow-btn-prev" tabindex="0">←</button>
+                            <button class="arrow-btn arrow-btn-next" tabindex="0">→</button>
                         </div>
                     </div>
                 </div>
@@ -233,7 +480,7 @@
                         <div class="section-badge1">
                             <span>Premium Service</span>
                         </div>
-                        <h2>Personalized One-on-One Sessions</h2>
+                        <h2>Personalised One-on-One Sessions</h2>
                         <p class="session-description1">
                             Get dedicated, customized learning with our expert instructors. Our one-on-one sessions provide:
                         </p>
@@ -265,7 +512,7 @@
                                 </svg>
                                 <div>
                                     <span class="meta-label1">Starting from</span>
-                                    <span class="meta-value1">R499/session</span>
+                                    <span class="meta-value1">R110/hour (R210 for business)</span>
                                 </div>
                             </div>
                             <div class="meta-item1">
@@ -302,7 +549,7 @@
                         <div class="card-badge">
                             <span>Interactive Learning</span>
                         </div>
-                        <h2>Join Our Live Expert Sessions</h2>
+                        <h2>Join Our Live Q&A Sessions</h2>
                         <p class="card-description">
                             Experience real-time learning with industry professionals. Our live sessions offer:
                         </p>
@@ -334,7 +581,7 @@
                                 </svg>
                                 <div>
                                     <span class="detail-label">Starting from</span>
-                                    <span class="detail-value">R299/session</span>
+                                    <span class="detail-value">Free/session</span>
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -449,5 +696,43 @@
             }
             }
         </script>
+
+        <!-- Pricing section sliders script -->
+         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container-grid');
+            const prevBtn = document.querySelector('.arrow-btn-prev');
+            const nextBtn = document.querySelector('.arrow-btn-next');
+            
+            let scrollAmount = 0;
+            const scrollStep = 350 + 30; // card width + gap
+            
+            prevBtn.addEventListener('click', () => {
+                scrollAmount = Math.max(0, scrollAmount - scrollStep);
+                container.scrollTo({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                scrollAmount = Math.min(
+                    container.scrollWidth - container.clientWidth,
+                    scrollAmount + scrollStep
+                );
+                container.scrollTo({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Disable buttons when at extremes
+            container.addEventListener('scroll', () => {
+                prevBtn.disabled = container.scrollLeft === 0;
+                nextBtn.disabled = container.scrollLeft >= 
+                    container.scrollWidth - container.clientWidth - 1;
+            });
+        });
+         </script>
     </body>
 </html>

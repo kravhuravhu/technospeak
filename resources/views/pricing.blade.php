@@ -23,424 +23,347 @@
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
         <section class="price_container">
-            <div class="title_container">
-                <div>
-                    <h1>Subscription Plans & Pricing</h1>
-                    <p>Choose the perfect plan for your tech learning journey. From free access to premium personalised support, we have options for everyone.</p>
+            <div class="main-container">
+                <div class="title_container">
+                    <div>
+                        <h1>Subscription Plans & Pricing</h1>
+                        <p>Choose the perfect plan for your tech learning journey. From free access to premium personalised support, we have options for everyone.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="plans_container">
-                <div class="container">
-                    <div class="card-grid">
-                        <div class="container-grid">
-                            <!-- Plan 1 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Tech Teasers</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            Free
-                                            <span class="dur">/ always</span>
-                                        </p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
+                <div class="plans_container">
+                    <div class="container">
+                        <div class="card-grid">
+                            <div class="container-grid">
+                                <!-- Plan 1 -->
+                                <div class="card_container">
+                                    <div class="card">
+                                        <div class="plan_title">
+                                            <h2>Tech Teasers</h2>
+                                        </div>
+                                        <div class="icon">
+                                            <img src="../images/icons/quality-service.png"/>
+                                        </div>
+                                        <div class="price">
+                                            <p>
+                                                <span>
+                                                    <sup class="context">R</sup>
+                                                </span>
+                                                Free
+                                                <span class="dur">/ always</span>
+                                            </p>
+                                        </div>
+                                        <div class="dscpt_container">
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Access to social media videos</p>
+                                                </div>
                                             </div>
-                                            <div class="dscpt-p">
-                                                <p>Access to social media videos</p>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Comment section Q&A</p>
+                                                </div>
+                                            </div>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Links to full content</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
+                                        <div class="bttn">
+                                            <button>GET STARTED</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 2 -->
+                                <div class="card_container">
+                                    <div class="card highlight">
+                                        <div class="plan_title">
+                                            <h2>TechVault Access</h2>
+                                        </div>
+                                        <div class="icon">
+                                            <img src="../images/icons/quality-service.png"/>
+                                        </div>
+                                        <div class="price">
+                                            <p>
+                                                <span>
+                                                    <sub class="sub context">from</sub>
+                                                    <sup class="context">R</sup>
+                                                </span>
+                                                400
+                                                <span class="dur">/ year</span>
+                                            </p>
+                                            <!-- <p style="font-size:0.8em;color:#666;margin-top:5px;">(R430 for business)</p> -->
+                                        </div>
+                                        <div class="dscpt_container">
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Full video access</p>
+                                                </div>
                                             </div>
-                                            <div class="dscpt-p">
-                                                <p>Comment section Q&A</p>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Downloadable resources</p>
+                                                </div>
+                                            </div>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Monthly tech newsletters</p>
+                                                </div>
+                                            </div>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Cheatsheets & guides</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
+                                        <div class="bttn">
+                                            <button>SUBSCRIBE</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 3 -->
+                                <div class="card_container">
+                                    <div class="card">
+                                        <div class="plan_title">
+                                            <h2>Formal Training</h2>
+                                        </div>
+                                        <div class="icon">
+                                            <img src="../images/icons/quality-service.png"/>
+                                        </div>
+                                        <div class="price">
+                                            <p>
+                                                <span>
+                                                    <sup class="context">R</sup>
+                                                </span>
+                                                2,500
+                                                <span class="dur">/ course</span>
+                                            </p>
+                                            <!-- <p style="font-size:0.8em;color:#666;margin-top:5px;">(R3,500 for business)</p> -->
+                                        </div>
+                                        <div class="dscpt_container">
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>40-hour comprehensive training</p>
+                                                </div>
                                             </div>
-                                            <div class="dscpt-p">
-                                                <p>Links to full content</p>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>EUC & web development</p>
+                                                </div>
+                                            </div>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Portfolio building support</p>
+                                                </div>
+                                            </div>
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png"/>
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Professional certification</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="bttn">
+                                            <button>ENROLL NOW</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal Guide & Task Assistance -->
+                                <div class="card_container row2 centered-row">
+                                    <div class="card">
+                                        <div class="plan_title">
+                                            <h2>Help On Demand</h2>
+                                        </div>
+                                        <div class="icon">
+                                            <img src="../images/icons/quality-service.png" />
+                                        </div>
+                                        <div class="price">
+                                            <p>
+                                                <span><sub class="sub context">from</sub><sup class="context">R</sup></span> 100
+                                                <span class="dur">per hour</span>
+                                            </p>
+                                        </div>
+                                        <div class="dscpt_container">
+                                            <div class="dscpt">
+                                                <div class="tick"><img src="../images/icons/quality.png" /></div>
+                                                <div class="dscpt-p"><p>Live sessions or task completion</p></div>
+                                            </div>
+                                        </div>
+                                        <div class="bttn">
+                                            <button onclick="openModal('modal-guide')">Personal Guide</button>
+                                            <button onclick="openModal('modal-task')">Task Assistance</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal: Personal Guide -->
+                                    <div id="modal-guide" class="modal" onclick="closeModal(event, 'modal-guide')">
+                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                            <div class="plan_title">
+                                                <h2>Personal Guide</h2>
+                                            </div>
+                                            <div class="icon">
+                                                <img src="../images/icons/quality-service.png" />
+                                            </div>
+                                            <div class="price">
+                                                <p><span><sub class="sub context">from</sub><sup class="context">R</sup></span> 110 <span class="dur">/ hour</span></p>
+                                            </div>
+                                            <div class="dscpt_container">
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live personalised sessions</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Flexible scheduling</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Video call or chat options</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Additional hours available</p></div></div>
+                                            </div>
+                                            <div class="bttn">
+                                                <button>BOOK NOW</button>
+                                                <button onclick="document.getElementById('modal-guide').style.display='none'">Close</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="bttn">
-                                        <button>GET STARTED</button>
+
+                                    <!-- Modal: Task Assistance -->
+                                    <div id="modal-task" class="modal" onclick="closeModal(event, 'modal-task')">
+                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                            <div class="plan_title">
+                                                <h2>Task Assistance</h2>
+                                            </div>
+                                            <div class="icon">
+                                                <img src="../images/icons/quality-service.png" />
+                                            </div>
+                                            <div class="price">
+                                                <p><span><sup class="context">R</sup></span> 100 <span class="dur">/ hour</span></p>
+                                            </div>
+                                            <div class="dscpt_container">
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Hands-on task completion</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Coding & development</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>System configurations</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Tech-related solutions</p></div></div>
+                                            </div>
+                                            <div class="bttn">
+                                                <button>REQUEST HELP</button>
+                                                <button onclick="document.getElementById('modal-task').style.display='none'">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CGroup Session -->
+                                <div class="card_container row2 centered-row">
+                                    <div class="card">
+                                        <div class="plan_title">
+                                            <h2>Group Session</h2>
+                                        </div>
+                                        <div class="icon">
+                                            <img src="../images/icons/quality-service.png" />
+                                        </div>
+                                        <div class="price">
+                                            <p>
+                                                <span>
+                                                    <sub class="sub context">from</sub>
+                                                    <sup class="context">R</sup>
+                                                </span>
+                                                130
+                                                <span class="dur">per session / hour</span>
+                                            </p>
+                                        </div>
+                                        <div class="dscpt_container">
+                                            <div class="dscpt">
+                                                <div class="tick">
+                                                    <img src="../images/icons/quality.png" />
+                                                </div>
+                                                <div class="dscpt-p">
+                                                    <p>Live Q&A and Consultation options</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="bttn">
+                                            <button onclick="openModal('modal-qa')">Group Q/A</button>
+                                            <button onclick="openModal('modal-consult')">Consultation</button>
+                                        </div>
+                                    </div>
+                                    <!-- Modal: Group Q/A -->
+                                    <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
+                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                            <div class="plan_title">
+                                                <h2>Group Q/A</h2>
+                                            </div>
+                                            <div class="icon">
+                                                <img src="../images/icons/quality-service.png" />
+                                            </div>
+                                            <div class="price">
+                                                <p><span><sup class="context">R</sup></span> Free <span class="dur">/ session</span></p>
+                                            </div>
+                                            <div class="dscpt_container">
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live Q&A sessions</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Immediate feedback</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Submit questions via chat</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Various tech topics covered</p></div></div>
+                                            </div>
+                                            <div class="bttn">
+                                                <button>Register</button>
+                                                <button onclick="document.getElementById('modal-qa').style.display='none'">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Modal: Consultation -->
+                                    <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
+                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                            <div class="plan_title">
+                                                <h2>Consultation</h2>
+                                            </div>
+                                            <div class="icon">
+                                                <img src="../images/icons/quality-service.png" />
+                                            </div>
+                                            <div class="price">
+                                                <p><span><sup class="context">R</sup></span> 130 <span class="dur">/ hour</span></p>
+                                            </div>
+                                            <div class="dscpt_container">
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Detailed response to comments</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Programming support</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Cybersecurity guidance</p></div></div>
+                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Skill-building sessions</p></div></div>
+                                            </div>
+                                            <div class="bttn">
+                                                <button>Register</button>
+                                                <button onclick="document.getElementById('modal-consult').style.display='none'">Close</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Plan 2 -->
-                            <div class="card_container">
-                                <div class="card highlight">
-                                    <div class="plan_title">
-                                        <h2>TechVault Access</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            400
-                                            <span class="dur">/ year</span>
-                                        </p>
-                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R430 for business)</p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Full video access</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Downloadable resources</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Monthly tech newsletters</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Cheatsheets & guides</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>SUBSCRIBE</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Plan 3 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Personal Guide</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sub class="sub context">from</sub>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            110
-                                            <span class="dur">/ hour</span>
-                                        </p>
-                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R210/hr for business)</p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Live personalised sessions</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Flexible scheduling</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Video call or chat options</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Additional hours available</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>BOOK NOW</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Plan 4 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Formal Training</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            2,500
-                                            <span class="dur">/ course</span>
-                                        </p>
-                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R3,500 for business)</p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>40-hour comprehensive training</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>EUC & web development</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Portfolio building support</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Professional certification</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>ENROLL NOW</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Plan 5 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Task Assistance</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            100
-                                            <span class="dur">/ hour</span>
-                                        </p>
-                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R250/hr for business)</p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Hands-on task completion</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Coding & development</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>System configurations</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Tech-related solutions</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>REQUEST HELP</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Plan 6 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Group Q&A</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            Free
-                                            <span class="dur">/ session</span>
-                                        </p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Live Q&A sessions</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Immediate feedback</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Submit questions via chat</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Various tech topics covered</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>JOIN NOW</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Plan 7 -->
-                            <div class="card_container">
-                                <div class="card">
-                                    <div class="plan_title">
-                                        <h2>Resp Consultation</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <img src="../images/icons/quality-service.png"/>
-                                    </div>
-                                    <div class="price">
-                                        <p>
-                                            <span>
-                                                <sup class="context">R</sup>
-                                            </span>
-                                            130
-                                            <span class="dur">/ hour</span>
-                                        </p>
-                                        <p style="font-size:0.8em;color:#666;margin-top:5px;">(R300/hr for business)</p>
-                                    </div>
-                                    <div class="dscpt_container">
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Detailed response to comments</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Programming support</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Cybersecurity guidance</p>
-                                            </div>
-                                        </div>
-                                        <div class="dscpt">
-                                            <div class="tick">
-                                                <img src="../images/icons/quality.png"/>
-                                            </div>
-                                            <div class="dscpt-p">
-                                                <p>Skill-building sessions</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bttn">
-                                        <button>LEARN MORE</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="slider-controls">
-                            <button class="arrow-btn arrow-btn-prev" tabindex="0">←</button>
-                            <button class="arrow-btn arrow-btn-next" tabindex="0">→</button>
                         </div>
                     </div>
                 </div>
@@ -697,42 +620,16 @@
             }
         </script>
 
-        <!-- Pricing section sliders script -->
-         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            const container = document.querySelector('.container-grid');
-            const prevBtn = document.querySelector('.arrow-btn-prev');
-            const nextBtn = document.querySelector('.arrow-btn-next');
-            
-            let scrollAmount = 0;
-            const scrollStep = 350 + 30; // card width + gap
-            
-            prevBtn.addEventListener('click', () => {
-                scrollAmount = Math.max(0, scrollAmount - scrollStep);
-                container.scrollTo({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-            
-            nextBtn.addEventListener('click', () => {
-                scrollAmount = Math.min(
-                    container.scrollWidth - container.clientWidth,
-                    scrollAmount + scrollStep
-                );
-                container.scrollTo({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Disable buttons when at extremes
-            container.addEventListener('scroll', () => {
-                prevBtn.disabled = container.scrollLeft === 0;
-                nextBtn.disabled = container.scrollLeft >= 
-                    container.scrollWidth - container.clientWidth - 1;
-            });
-        });
-         </script>
+        <!-- Price modals -->
+        <script>
+            function closeModal(e, id) {
+                if (e.target.id === id) {
+                    document.getElementById(id).style.display = 'none';
+                }
+            }
+            function openModal(id) {
+                document.getElementById(id).style.display = 'flex';
+            }
+        </script>
     </body>
 </html>

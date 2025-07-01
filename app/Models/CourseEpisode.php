@@ -9,34 +9,29 @@ class CourseEpisode extends Model
 {
     use HasFactory;
 
+    public $timestamps = false; 
+    protected $table = 'course_episodes';
+
     protected $fillable = [
         'course_id',
         'title',
         'description',
         'episode_number',
         'duration',
-        'video_url'
+        'video_url',
+        'is_free'
     ];
 
     protected $casts = [
         'duration' => 'integer',
         'episode_number' => 'integer',
+        'is_free' => 'boolean',
         'created_at' => 'datetime'
     ];
 
     public function course()
     {
         return $this->belongsTo(Course::class);
-    }
-
-    public function subscriptions()
-    {
-        return $this->hasMany(ClientCourseSubscription::class, 'current_episode_id');
-    }
-
-    public function progress()
-    {
-        return $this->hasMany(EpisodeProgress::class);
     }
 
     public function getDurationFormattedAttribute()

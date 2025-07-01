@@ -203,7 +203,7 @@
                         <h2>About Us</h2>
                     </div>
                     <div class="dscpt">
-                        <p>At <strong>TechnoSpeak</strong>, we turn tech confusion into confidence. We empowered 
+                        <p>At <strong>Technospeak</strong>, we turn tech confusion into confidence. We empowered 
                         individuals and businesses with practical, jargon-free technology training and support. Our 
                         approach blends hands-on learning with real-world applications—whether you're mastering creative 
                         tools, troubleshooting devices, or building cloud solutions. Think of us as your personal tech 

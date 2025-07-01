@@ -53,7 +53,7 @@
                         <img src="{{ $client->avatar ?? asset('images/icons/circle-user-solid.svg') }}" 
                              alt="{{ $client->name }}" 
                              style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;opacity: .75;filter:brightness(50%);">
-                        {{ $client->name }}
+                        {{ $client->surname }}, {{ $client->name }}
                     </div>
                 </td>
                 <td>{{ $client->email }}</td>

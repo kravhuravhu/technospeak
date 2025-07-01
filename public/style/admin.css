@@ -241,12 +241,14 @@ li > .lg-out-button > button:hover {
 }
 
 .btn {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem!important;
     border-radius: 20px;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.3s;
+    margin: 0 5px;
     border: none;
     display: inline-flex;
     align-items: center;
@@ -440,6 +442,25 @@ textarea.form-control {
     margin-bottom: 0;
     margin: 10px 0;
     color: var(--textDark);
+    & > p > span {
+        display: inline-flex;
+        justify-content: unset;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        & > .status-badge {
+            background-color: unset;
+            font-size: .65rem;
+            padding: 0;
+            margin: 0;
+            &.status-active { 
+                color: var(--success);
+            }
+            &.status-inactive {
+                color: var(--danger);
+            }
+        }
+    }
 }
 
 /* Responsive */

@@ -93,7 +93,11 @@
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->registered_date->format('M d, Y') }}</td>
                     <td>
-                        <span class="status-badge status-active">Active</span>
+                        @if($client->email_verified_at)
+                            <span class="status-badge status-active">Active</span>
+                        @else
+                            <span class="status-badge status-inactive">Inactive</span>
+                        @endif
                     </td>
                     <td>
                         <a href="{{ route('content-manager.clients.show', $client->id) }}" class="btn btn-outline btn-sm">

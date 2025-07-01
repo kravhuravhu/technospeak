@@ -12,6 +12,13 @@
         <a href="{{ route('content-manager.clients.edit', $client) }}" class="btn btn-primary">
             <i class="fas fa-edit"></i> Edit Client
         </a>
+        <form action="{{ route('content-manager.clients.destroy', $client->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                <i class="fas fa-trash"></i> Delete Client
+            </button>
+        </form>
     </div>
 </div>
 
@@ -22,7 +29,15 @@
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <p>{{ $client->email }}</p>
+                <p>{{ $client->email }}
+                    <span>&nbsp•&nbsp
+                    @if($client->email_verified_at)
+                        <span class="status-badge status-active"><i>&nbspVerified</i></span>
+                    @else
+                        <span class="status-badge status-inactive"><i>Not Verified</i></span>
+                    @endif
+                    </span>
+                </p>
             </div>
             
             <div class="form-group">

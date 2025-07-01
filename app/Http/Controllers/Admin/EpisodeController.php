@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use App\Models\Course;
-use App\Models\Episode;
+use App\Models\CourseEpisode;
 use Illuminate\Http\Request;
 
 class EpisodeController extends Controller
@@ -17,7 +18,7 @@ class EpisodeController extends Controller
 
     public function index(Course $course)
     {
-        $episodes = $course->episodes()->latest()->paginate(10);
+        $episodes = $course->episodes()->orderBy('episode_number')->paginate(10);
         return view('content-manager.episodes.index', compact('course', 'episodes'));
     }
 
@@ -28,40 +29,60 @@ class EpisodeController extends Controller
 
     public function store(Request $request, Course $course)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'video_url' => 'required|url',
-            'duration' => 'required|integer|min:1',
-            'is_free' => 'boolean',
-            'order' => 'required|integer|min:1',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'video_url' => 'required|url',
+                'duration' => 'required|integer|min:1',
+                'episode_number' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    'max:'.$course->noEpisodes,
+                    Rule::unique('course_episodes')->where(function ($query) use ($course) {
+                        return $query->where('course_id', $course->id);
+                    })
+                ],
+                'is_free' => 'sometimes|boolean',
+            ]);
 
-        $course->episodes()->create($validated);
+            $episode = $course->episodes()->create($validated);
 
-        return redirect()->route('content-manager.courses.episodes.index', $course)
-            ->with('success', 'Episode created successfully!');
+            return response()->json([
+                'success' => true,
+                'episode' => $episode,
+                'message' => 'Episode added successfully'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ], 500);
+        }
     }
-
-    public function show(Course $course, Episode $episode)
-    {
-        return view('content-manager.episodes.show', compact('course', 'episode'));
-    }
-
-    public function edit(Course $course, Episode $episode)
+    
+    public function edit(Course $course, CourseEpisode $episode)
     {
         return view('content-manager.episodes.edit', compact('course', 'episode'));
     }
 
-    public function update(Request $request, Course $course, Episode $episode)
+    public function update(Request $request, Course $course, CourseEpisode $episode)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'video_url' => 'required|url',
             'duration' => 'required|integer|min:1',
+            'episode_number' => 'required|integer|min:1|max:'.$course->noEpisodes,
             'is_free' => 'boolean',
-            'order' => 'required|integer|min:1',
         ]);
 
         $episode->update($validated);
@@ -70,7 +91,7 @@ class EpisodeController extends Controller
             ->with('success', 'Episode updated successfully!');
     }
 
-    public function destroy(Course $course, Episode $episode)
+    public function destroy(Course $course, CourseEpisode $episode)
     {
         $episode->delete();
 

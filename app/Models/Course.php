@@ -12,24 +12,34 @@ class Course extends Model
     protected $fillable = [
         'title',
         'category_id',
+        'instructor_id',
         'description',
-        'instructor',
+        'catch_phrase',
         'plan_type',
         'price',
         'thumbnail',
+        'software_app_icon',
         'level',
-        'total_duration'
+        'total_duration',
+        'noEpisodes',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'total_duration' => 'integer',
+        'noEpisodes' => 'integer',
+        'is_active' => 'boolean',
         'created_at' => 'datetime'
     ];
 
     public function category()
     {
-        return $this->belongsTo(CourseCategory::class, 'category_id');
+        return $this->belongsTo(CourseCategory::class);
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class);
     }
 
     public function episodes()
@@ -37,14 +47,25 @@ class Course extends Model
         return $this->hasMany(CourseEpisode::class);
     }
 
-    public function subscriptions()
+    public function getFormattedPriceAttribute()
     {
-        return $this->hasMany(ClientCourseSubscription::class);
+        return $this->plan_type === 'paid' ? '$' . number_format($this->price, 2) : 'Free';
     }
 
-    public function getThumbnailUrlAttribute()
+    public function getFormattedDurationAttribute()
     {
-        return $this->thumbnail ? asset('storage/'.$this->thumbnail) : asset('images/default-course.png');
+        $hours = floor($this->total_duration / 60);
+        $minutes = $this->total_duration % 60;
+        
+        if ($hours > 0) {
+            return sprintf('%dh %02dm', $hours, $minutes);
+        }
+        return sprintf('%dm', $minutes);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 
     public function scopePaid($query)

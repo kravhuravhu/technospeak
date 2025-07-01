@@ -653,16 +653,13 @@ body {
     height: auto;
     padding: 50px 0;
     background: linear-gradient(to bottom, #ffffff 0%, #f8faff 100%);
-    
     & > .main_container {
         width: 85%; 
-        margin: 0 auto;
-        
+        margin: 0 auto;   
         & > .title_container {
             width: auto;
             padding: 20px;
-            margin-bottom: 20px;
-            
+            margin-bottom: 20px;      
             & > h2 {
                 font-size: 3.5em;
                 font-family: 'Roboto', sans-serif;
@@ -671,7 +668,6 @@ body {
                 font-weight: 700;
                 position: relative;
                 letter-spacing: -1px;
-                
                 &::after {
                     content: '';
                     position: absolute;
@@ -685,7 +681,7 @@ body {
                 }
             }
         }
-        
+
         & > .container {
             padding: 20px 0;
             height: auto;
@@ -694,17 +690,14 @@ body {
             flex-wrap: wrap;
             justify-content: center;
             gap: 25px; 
-            
             & > .block {
                 flex: 1 1 350px;
                 max-width: 380px;
                 display: flex;
                 transition: transform 0.3s ease;
-                
                 &:hover {
                     transform: translateY(-5px);
                 }
-                
                 .fr_img {
                     position: relative;
                     width: 100%;
@@ -714,15 +707,12 @@ body {
                     overflow: hidden;
                     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
                     transition: all 0.3s ease;
-                    
                     &:hover {
                         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
                         border-color: #38b6ff;
-                        
                         & > .img_container > img {
                             transform: scale(1.1);
                         }
-                        
                         & > .img_container .trns {
                             background: rgba(0, 0, 0, 0.75);
                             
@@ -731,7 +721,7 @@ body {
                             }
                         }
                     }
-                    
+
                     & > .img_container {     
                         overflow: hidden;
                         height: 250px; 

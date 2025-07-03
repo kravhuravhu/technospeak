@@ -16,7 +16,6 @@ class Course extends Model
         'description',
         'catch_phrase',
         'plan_type',
-        'price',
         'thumbnail',
         'software_app_icon',
         'level',

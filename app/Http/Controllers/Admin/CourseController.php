@@ -36,26 +36,78 @@ class CourseController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        \Log::info('Course creation started', ['request' => $request->all()]);
+
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:course_categories,id',
             'instructor_id' => 'required|exists:instructors,id',
             'description' => 'required|string',
             'catch_phrase' => 'required|string|max:90',
             'plan_type' => 'required|in:free,paid',
-            'price' => 'required_if:plan_type,paid|numeric|min:0',
             'level' => 'required|in:beginner,intermediate,advanced,expert,all levels',
             'thumbnail' => 'required|url',
             'software_app_icon' => 'required|url',
-            'total_duration' => 'required|integer|min:1',
             'noEpisodes' => 'required|integer|min:1',
-            'is_active' => 'boolean',
+            'total_duration' => 'required|integer|min:1',
+            'episodes' => 'required|array|min:1',
+            'episodes.*.title' => 'required|string|max:255',
+            'episodes.*.description' => 'required|string',
+            'episodes.*.video_url' => 'required|url',
+            'episodes.*.duration' => 'required|string',
+            'episodes.*.episode_number' => 'required|integer|min:1',
         ]);
 
-        Course::create($validated);
+        \DB::beginTransaction();
+        try {
+            \Log::debug('Creating course with data:', $validatedData);
+            
+            $course = Course::create([
+                'title' => $validatedData['title'],
+                'category_id' => $validatedData['category_id'],
+                'instructor_id' => $validatedData['instructor_id'],
+                'description' => $validatedData['description'],
+                'catch_phrase' => $validatedData['catch_phrase'],
+                'plan_type' => $validatedData['plan_type'],
+                'level' => $validatedData['level'],
+                'thumbnail' => $validatedData['thumbnail'],
+                'software_app_icon' => $validatedData['software_app_icon'],
+                'total_duration' => $validatedData['total_duration'],
+                'noEpisodes' => $validatedData['noEpisodes'],
+            ]);
 
-        return redirect()->route('content-manager.courses.index')
-            ->with('success', 'Course created successfully!');
+            \Log::info('Course created', ['course_id' => $course->id]);
+
+            foreach ($validatedData['episodes'] as $episodeData) {
+                $durationInMinutes = ceil((int)explode(':', $episodeData['duration'])[0] * 60 + (int)explode(':', $episodeData['duration'])[1]) / 60;
+                
+                $episode = $course->episodes()->create([
+                    'title' => $episodeData['title'],
+                    'description' => $episodeData['description'],
+                    'episode_number' => $episodeData['episode_number'],
+                    'duration' => $durationInMinutes,
+                    'video_url' => $episodeData['video_url'],
+                ]);
+                
+                \Log::debug('Episode created', ['episode_id' => $episode->id]);
+            }
+
+            \DB::commit();
+            
+            \Log::info('Course creation completed successfully');
+            
+            return redirect()->route('content-manager.courses.index')
+                ->with('success', 'Course created successfully!');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Course creation failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withInput()
+                ->with('error', 'Failed to create course. Error: ' . $e->getMessage());
+        }
     }
 
     public function show(Course $course)
@@ -79,15 +131,14 @@ class CourseController extends Controller
             'description' => 'required|string',
             'catch_phrase' => 'required|string|max:90',
             'plan_type' => 'required|in:free,paid',
-            'price' => 'required_if:plan_type,paid|numeric|min:0',
             'level' => 'required|in:beginner,intermediate,advanced,expert,all levels',
             'thumbnail' => 'required|url',
             'software_app_icon' => 'required|url',
             'total_duration' => 'required|integer|min:1',
             'noEpisodes' => 'required|integer|min:1',
             'is_active' => 'boolean',
-        ]);
-
+        ]); 
+        
         $course->update($validated);
 
         return redirect()->route('content-manager.courses.index')

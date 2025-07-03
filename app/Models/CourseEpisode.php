@@ -18,8 +18,7 @@ class CourseEpisode extends Model
         'description',
         'episode_number',
         'duration',
-        'video_url',
-        'is_free'
+        'video_url'
     ];
 
     protected $casts = [

@@ -62,9 +62,9 @@
                         <a href="{{ route('content-manager.courses.edit', $course->id) }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-eye"></i>
+                         </a>
                         <form action="{{ route('content-manager.courses.destroy', $course->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')

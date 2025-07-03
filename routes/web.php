@@ -15,10 +15,14 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\WelcomeController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// add courses variable to home page
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('/about', function () {
     return view('about');

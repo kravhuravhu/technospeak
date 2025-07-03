@@ -37,7 +37,7 @@
     <div class="form-group">
         <label for="catch_phrase" class="form-label">Catch Phrase (Max 90 chars)</label>
         <input type="text" id="catch_phrase" name="catch_phrase" class="form-control" 
-            value="{{ old('catch_phrase', $course->catch_phrase ?? '') }}" maxlength="90" required>
+            value="{{ old('catch_phrase', $course->catch_phrase ?? '') }}" minLength="50" maxlength="90" required>
         @error('catch_phrase')
             <div class="error-message">{{ $message }}</div>
         @enderror

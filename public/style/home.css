@@ -690,6 +690,8 @@ body {
             flex-wrap: wrap;
             justify-content: center;
             gap: 25px; 
+            max-width: calc(3 * 380px + 2 * 25px);
+            margin: 0 auto;
             & > .block {
                 flex: 1 1 350px;
                 max-width: 380px;
@@ -724,39 +726,35 @@ body {
 
                     & > .img_container {     
                         overflow: hidden;
-                        height: 250px; 
-                        
+                        height: 238px; 
                         & > img {
                             width: 100%;
                             height: 100%;
                             object-fit: cover;
                             display: block;
                             transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-                        }
-                        
+                        }                 
                         & > .trns {
                             position: absolute;
                             top: 0;
                             left: 0;
                             width: 100%;
                             height: 100%;
-                            background: rgba(0, 0, 0, 0.7);
+                            background: rgba(0, 0, 0, 0.4);
                             display: flex;
                             flex-direction: column;
-                            justify-content: center;
+                            justify-content: space-between;
                             align-items: center;
                             color: #fff;
-                            padding: 20px;
+                            padding: 10px;
                             transition: all 0.3s ease;
-                            
                             & > .logo {
                                 height: fit-content;
                                 width: 100%;
                                 position: relative;
                                 display: flex;
                                 justify-content: flex-end;
-                                margin-bottom: 15px;
-                                
+                                align-items: center;
                                 & > img {
                                     position: relative;
                                     object-fit: cover;
@@ -773,15 +771,20 @@ body {
                                 width: 100%;
                                 position: relative;
                                 display: flex;
+                                justify-content: center;
                                 align-items: center;
-                                margin-bottom: 20px;
-                                
                                 & > h3 {
                                     font-family: 'Roboto', sans-serif;
                                     font-size: 1.4em;
                                     font-weight: 600;
                                     line-height: 1.4;
                                     text-align: center;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    display: -webkit-box;
+                                    -webkit-box-orient: vertical;
+                                    line-clamp: 2;
+                                    -webkit-line-clamp: 2;
                                 }
                             }
                             
@@ -1547,7 +1550,6 @@ body {
                         width: 100%;
                         height: 100%;
                         background-color: #f4f4f4;
-                        border: 2.5px solid #38b6ff;
                         & > .img_container {     
                             overflow: hidden;           
                             & > img {
@@ -1577,11 +1579,12 @@ body {
                                     width: 100%;
                                     position: relative;
                                     display: flex;
-                                    justify-content: flex-end;
+                                    top: 0;
                                     & > img {
                                         position: relative;
                                         object-fit: cover;
                                         height: 60px;
+                                        width: 60px;
                                         border-radius: 50px;
                                     }
                                 }
@@ -1590,18 +1593,15 @@ body {
                                     width: 100%;
                                     position: relative;
                                     display: flex;
-                                    align-items: flex-end;
                                     & > h3 {
                                         font-family: 'Roboto', sans-serif;
                                         font-size: 1.3em;
                                     }
                                 }
                                 & > .bttn {
-                                    height: 80px;
                                     width: 100%;
                                     position: relative;
                                     display: flex;
-                                    align-items: flex-end;
                                     & > a {
                                         padding: 15px 20px;
                                         background-color: #38b6ff;
@@ -1953,18 +1953,25 @@ body {
             }
             & > .container {
                 & > .block {
+                    flex: 1 1 300px;
+                    max-width: 320px;
                     .fr_img {
                         & > .img_container {
+                            height: fit-content;
+                            & > img {
+                                height: 190px;
+                            }
                             & > .trns {
-                                padding: 5px 10px;
+                                padding: 15px;
                                 & > .logo {
                                     & > img {
-                                        height: 40px;
+                                        height: 50px;
+                                        width: 50px;
                                     }
                                 }
                                 & > .ctchprs {
                                     & > h3 {
-                                        font-size: .9em;
+                                        font-size: 1em;
                                         margin: 10px 0;
                                     }
                                 }
@@ -1972,7 +1979,7 @@ body {
                                     height: fit-content;
                                     & > a {
                                         padding: 10px 15px;
-                                        font-size: .8em;
+                                        font-size: .9em;
                                     }
                                 }
                             }
@@ -1982,18 +1989,18 @@ body {
                             & > .ctgry_dur {
                                 & > .ctgry {
                                     & > p {
-                                        font-size: .8em;
+                                        font-size: .9em;
                                     }
                                 }
                                 & > .dur {
                                     & > p {
-                                        font-size: .8em;
+                                        font-size: .9em;
                                     }
                                 }
                             }
                             & > .trainer {
                                 & > p {
-                                    font-size: .8em;
+                                    font-size: .9em;
                                 }
                             }
                         }
@@ -2074,6 +2081,15 @@ body {
 
     .logo_container img {
         height: 60px;
+    }
+    .about_summ {
+        & > .main_container {
+            & > .image_block {
+                & > img {
+                    height: 170px;
+                }
+            }
+        }
     }
 }
 

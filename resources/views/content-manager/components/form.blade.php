@@ -71,16 +71,19 @@
             <img id="iconPreview" src="" alt="Icon Preview" style="margin-top: 0.5rem; max-width: 48px; display: none; border-radius: 4px; border: 1px solid #ccc;">
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group">
-            <label for="total_episodes" class="form-label">Total Episodes</label>
-            <input type="number" id="total_episodes" name="noEpisodes" class="form-control" value="0" readonly>
-        </div>
-        <div class="form-group">
-            <label for="total_duration" class="form-label">Total Duration (minutes)</label>
-            <input type="number" id="total_duration" name="total_duration" class="form-control" value="0" readonly>
+<div class="form-row">
+    <div class="form-group">
+        <label for="total_episodes" class="form-label">Total Episodes</label>
+        <input type="number" id="total_episodes" name="noEpisodes" class="form-control" value="0" readonly>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Total Duration</label>
+        <input type="hidden" id="total_duration_seconds" name="total_duration" value="0">
+        <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
+            <span id="total_duration_display">0 seconds</span>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Episodes Section -->
@@ -166,29 +169,29 @@
                     checkDuplicateTitles();
                 }
             });
-// Update the video duration handler:
-document.addEventListener('change', function(e) {
-    if (!e.target.classList.contains('episode-video-url')) return;
+            // Update the video duration handler:
+            document.addEventListener('change', function(e) {
+                if (!e.target.classList.contains('episode-video-url')) return;
 
-    const videoUrl = e.target.value;
-    const episodeForm = e.target.closest('.episode-form');
-    const durationField = episodeForm.querySelector('.episode-duration');
+                const videoUrl = e.target.value;
+                const episodeForm = e.target.closest('.episode-form');
+                const durationField = episodeForm.querySelector('.episode-duration');
 
-    if (!durationField || !videoUrl) return;
+                if (!durationField || !videoUrl) return;
 
-    durationField.value = 'Calculating...';
+                durationField.value = 'Calculating...';
 
-    getVideoDurationFromUrl(videoUrl, function(duration) {
-        if (duration) {
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            durationField.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            updateEpisodeStats();
-        } else {
-            durationField.value = '0:00';
-        }
-    });
-});
+                getVideoDurationFromUrl(videoUrl, function(duration) {
+                    if (duration) {
+                        const minutes = Math.floor(duration / 60);
+                        const seconds = Math.floor(duration % 60);
+                        durationField.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        updateEpisodeStats();
+                    } else {
+                        durationField.value = '0:00';
+                    }
+                });
+            });
         }
 
         function initImagePreview() {
@@ -241,7 +244,6 @@ document.addEventListener('change', function(e) {
             }
         }
 
-        // In your form's JavaScript, update the addEpisode function:
         function addEpisode() {
             episodeCount++;
             
@@ -286,43 +288,54 @@ document.addEventListener('change', function(e) {
                 }
             });
         }
-// Update the updateEpisodeStats function
-function updateEpisodeStats() {
-    const forms = document.querySelectorAll('.episode-form');
-    const totalEpisodes = forms.length;
-    let totalSeconds = 0;
 
-    forms.forEach(form => {
-        const durField = form.querySelector('.episode-duration');
-        if (!durField) return;
+        function updateEpisodeStats() {
+            const forms = document.querySelectorAll('.episode-form');
+            const totalEpisodes = forms.length;
+            let totalSeconds = 0;
 
-        const value = durField.value.trim();
-        
-        if (value.includes(':')) {
-            const parts = value.split(':').map(Number);
-            if (parts.length === 2) {
-                // Convert MM:SS to total seconds
-                totalSeconds += (parts[0] * 60) + parts[1];
-            }
+            forms.forEach(form => {
+                const durField = form.querySelector('.episode-duration');
+                if (!durField) return;
+
+                const value = durField.value.trim();
+                
+                if (value.includes(':')) {
+                    const parts = value.split(':').map(Number);
+                    if (parts.length === 2) {
+                        // Convert MM:SS to total seconds
+                        totalSeconds += (parts[0] * 60) + parts[1];
+                    }
+                }
+            });
+
+            document.getElementById('total_episodes').value = totalEpisodes;
+            
+            document.getElementById('total_duration_seconds').value = totalSeconds;
+            
+            document.getElementById('total_duration_display').textContent = formatDurationForDisplay(totalSeconds);
         }
-    });
 
-    // Update total episodes (make sure this is a readonly input, not disabled)
-    document.getElementById('total_episodes').value = totalEpisodes;
-    
-    // Calculate total minutes (rounded up)
-    const totalMinutes = Math.ceil(totalSeconds / 60);
-    
-    // Update total duration (in minutes)
-    document.getElementById('total_duration').value = totalMinutes;
-}
+        // format duration display
+        function formatDurationForDisplay(totalSeconds) {
+            totalSeconds = Math.floor(totalSeconds);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            
+            let parts = [];
+            if (h > 0) parts.push(`${h}h`);
+            if (m > 0) parts.push(`${m}m`);
+            if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+            
+            return parts.join(' ');
+        }
 
-        // In your duration calculation code:
         function formatDuration(totalSeconds) {
             totalSeconds = Math.floor(totalSeconds);
             const m = Math.floor(totalSeconds / 60);
             const s = totalSeconds % 60;
-            return `${m}:${s.toString().padStart(2, '0')}`; // Format as MM:SS
+            return `${m}:${s.toString().padStart(2, '0')}`;
         }
 
         function bindDurationInput() {

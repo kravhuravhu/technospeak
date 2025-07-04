@@ -51,9 +51,8 @@ section.price_container {
     width: 100%;
     flex: 1;
     height: fit-content;
-    background: linear-gradient(to bottom, #38b6ff 0%, #f8faff 100%);
+    background: linear-gradient(to bottom, #38b6ff 0%, #f8faff 80%);
     position: relative;
-    
     & > .main-container {
         & > .title_container {
             padding: 70px 0;
@@ -84,52 +83,79 @@ section.price_container {
                 }
             }
         }
-        
         & > .plans_container {
             width: 100%;
             margin: 0 auto;
             position: relative;
             display: flex;
             justify-content: center;
-            
             & > .container {
                 position: relative;
                 width: fit-content;
                 margin: 0 auto;
-                
                 & > .card-grid {
                     display: flex;
                     flex: 1;
                     flex-direction: column;
-                    
                     & > .container-grid {
                         width: 100%;
                         display: grid;
                         grid-template-columns: repeat(3, minmax(250px, 1fr));
                         justify-items: center;
+                        align-items: center;
                         gap: 20px;
                         padding: 25px 0;
-                        
-                        & > .card_container {
+                        .row2-container {
+                            grid-column: 1 / -1;
+                            display: flex;
+                            justify-content: center;
+                            gap: 40px;
+                            width: 100%;
+                            flex-wrap: wrap;
+                            margin-top: 20px;
+                        }
+                        & > .card_container, .row2-container > .card_container {
                             height: fit-content;
                             position: relative;
                             display: inline-block;
-                            
+                            &.row2 {
+                                margin: 0;
+                            }
                             & > .card {
                                 background: #fafafa;
                                 border-radius: 20px;
-                                width: 330px;
-                                height: 500px;
+                                width: 310px;
+                                height: 450px;
                                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                                 transition: all .3s ease-in-out;
                                 display: flex;
                                 flex-direction: column;
                                 align-items: center;
-                                
+                                &.card-2 {
+                                    height: 550px;
+                                    width: 330px;
+                                    overflow: hidden;
+                                    &::after {
+                                        content: 'Popular';
+                                        position: absolute;
+                                        top: 16px;
+                                        right: -40px;
+                                        background-color: var(--skBlue-color);
+                                        color: var(--white-color);
+                                        padding: 5px 50px;
+                                        font-size: 0.8rem;
+                                        font-weight: 600;
+                                        transform: rotate(45deg);
+                                        z-index: 1;
+                                    }
+                                }
+                                .row2 & {
+                                    height: 300px;
+                                    width: 400px;
+                                }
                                 &:hover {
                                     box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
                                     transform: scale(1.05);
-                                    
                                     & > .bttn {
                                         & > button {
                                             background-color: #38b6ff;
@@ -137,7 +163,6 @@ section.price_container {
                                         }
                                     }
                                 }
-                                
                                 & > .plan_title {
                                     padding: 15px;
                                     
@@ -146,7 +171,6 @@ section.price_container {
                                         font-size: 1.5em;
                                     }
                                 }
-                                
                                 & > .icon {
                                     height: 80px;
                                     width: 80px;
@@ -161,7 +185,6 @@ section.price_container {
                                         object-fit: cover;
                                     }
                                 }
-                                
                                 & > .price {
                                     padding: 10px 0;
                                     
@@ -191,7 +214,6 @@ section.price_container {
                                         }
                                     }
                                 }
-                                
                                 & > .dscpt_container {
                                     & > .dscpt {
                                         display: flex;
@@ -221,14 +243,12 @@ section.price_container {
                                         }
                                     }
                                 }
-                                
                                 & > .bttn {
                                     width: 100%;
                                     margin-top: auto;
-                                    padding: 10px 0;
+                                    padding: 25px 0;
                                     display: flex;
                                     flex-wrap: wrap;
-                                    
                                     & > button {
                                         padding: 15px 30px;
                                         border: 2px solid #38b6ff;
@@ -243,7 +263,6 @@ section.price_container {
                                     }
                                 }
                             }
-                            
                             & > .modal {
                                 display: none;
                                 position: fixed;
@@ -391,24 +410,19 @@ section.price_container {
                             flex-wrap: wrap;
                             width: 100%;
                             padding: 25px 0;
-                            
                             & > .card_container.row2 {
                                 flex: 0 1 400px;
                                 height: fit-content;
-                                
                                 & > .card {
                                     height: 300px;
                                     width: 100%;
-                                    
                                     &:hover {
                                         transform: scale(1.03);
                                     }
-                                    
                                     & > .bttn {
                                         display: flex;
                                         gap: 10px;
                                         justify-content: center;
-                                        
                                         & > button {
                                             padding: 12px 20px;
                                             margin: 0;
@@ -459,7 +473,14 @@ section.price_container {
                                     grid-column: span 1;
                                 }
                             }
-                            
+                            & > .card_container, .row2-container > .card_container {
+                                & > .card {
+                                    &.card-2 {
+                                        height: 450px;
+                                        width: 310px;
+                                    }
+                                }
+                            }
                             & > .bottom-row {
                                 flex-direction: column;
                                 align-items: center;
@@ -495,34 +516,71 @@ section.price_container {
                     }
                 }
             }
-            
             & > .plans_container {
                 height: auto;
                 padding-bottom: 30px;
-                
                 & > .container {
                     & > .card-grid {
                         & > .container-grid {
                             grid-template-columns: 1fr;
                             padding-left: 20px;
                             padding-right: 20px;
-                            
                             & > .card_container {
                                 width: 100%;
-                                
                                 & > .card {
                                     width: 100%;
                                     max-width: 330px;
                                     margin: 0 auto;
+                                    height: fit-content;
+                                    .row2 & {
+                                        width: 330px;
+                                    }
                                 }
                             }
-                            
-                            & > .bottom-row {
-                                & > .card_container.row2 {
-                                    width: 100%;
-                                    
-                                    & > .card {
-                                        max-width: 330px;
+                            & > .card_container, .row2-container > .card_container {
+                                & > .card {
+                                    height: fit-content;
+                                    .row2 & {
+                                        width: 330px;
+                                    }
+                                    & > .bttn {
+                                        & > button {
+                                            padding: 15px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width: 480px) {
+    section.price_container {
+        & > .main-container {
+            & > .plans_container {
+                & > .container {
+                    & > .card-grid {
+                        & > .container-grid {
+                            & > .card_container {
+                                & > .card {
+                                    max-width: 300px;
+                                    .row2 & {
+                                        width: 300px;
+                                    }
+                                }
+                            }
+                            & > .card_container, .row2-container > .card_container {
+                                & > .card {
+                                    .row2 & {
+                                        width: 300px;
+                                    }
+                                    & > .bttn {
+                                        & > button {
+                                            padding: 10px;
+                                        }
                                     }
                                 }
                             }

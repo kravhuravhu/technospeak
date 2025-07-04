@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('style/auth_register.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('style/home.css') }}" type="text/css" />
-    <link rel="icon" href="../images/default-no-logo.png"/>
+    <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>

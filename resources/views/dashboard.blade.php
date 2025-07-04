@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="IMAGES/icon.png" type="image/x-icon">
+        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
         <link rel="stylesheet" href="style/dashboard.css">
         <link rel="stylesheet" href="style/footer.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,6 +22,8 @@
         @include('components.preference-popup', [
             'categories' => \App\Models\CourseCategory::all()
         ])
+
+        @include('components.pop-up')
 
         <section class="sidebar bar-lt-rt">
             <div class="main_container">
@@ -1095,11 +1097,6 @@
 
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
-                    <div class="topbar search-bar">
-                        <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Search plans...">
-                    </div>
-
                     <div class="current-plans">
                         <div class="container">
                             <div class="title">
@@ -1846,5 +1843,8 @@
 
         <!-- logout session -->
         <script src="/script/logout_session.js"></script>
+
+        <!-- pop-up general -->
+        <script src="/script/pop-up.js"></script>
     </body>
 </html>

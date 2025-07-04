@@ -378,7 +378,7 @@ body {
             & > h2 {
                 font-size: 3.5em;
                 font-family: 'Roboto', sans-serif;
-                color: #333;
+                color: var(--darkBlue-color);
                 text-align: center;
                 font-weight: 700;
                 letter-spacing: -1px;
@@ -593,7 +593,7 @@ body {
                     position: relative;
                     font-size: 3.5em;
                     font-family: 'Roboto', sans-serif;
-                    color: #000000;
+                    color: var(--darkBlue-color);
                     text-align: center;
                     &::after {
                         content: '';
@@ -681,7 +681,6 @@ body {
                 }
             }
         }
-
         & > .container {
             padding: 20px 0;
             height: auto;
@@ -830,17 +829,14 @@ body {
                             flex-direction: row;
                             position: relative;
                             padding: 5px 0;
-                            
+                            justify-content: space-between;
                             & > .ctgry {
-                                width: 50%;
-                                
                                 & > p {
                                     text-align: start;
                                     color: #333;
                                     font-size: 1em;
                                     font-family: 'Roboto', sans-serif;
                                     font-weight: 500;
-                                    
                                     & > i {
                                         font-weight: 400;
                                         color: #666;
@@ -849,15 +845,12 @@ body {
                             }
                             
                             & > .dur {
-                                width: 50%;
-                                
                                 & > p {
                                     text-align: end;
                                     color: #333;
                                     font-size: 1em;
                                     font-family: 'Roboto', sans-serif;
                                     font-weight: 500;
-                                    
                                     & > i {
                                         font-weight: 400;
                                         color: #666;
@@ -886,6 +879,28 @@ body {
                     }
                 }
             }              
+        }
+        & > .view-more-container {
+            text-align: center;
+            margin-top: 20px;
+            & > .view-more-btn {
+                padding: 12px 30px;
+                background-color: #38b6ff;
+                color: #ffffff;
+                border: none;
+                font-size: 1.1em;
+                font-family: 'Roboto', sans-serif;
+                border-radius: 50px;
+                cursor: pointer;
+                text-decoration: none;
+                box-shadow: 0 3px 10px rgba(56, 182, 255, 0.3);
+                transition: all 0.3s ease;
+                &:hover {
+                    background-color: #2a8fd6;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(56, 182, 255, 0.4);
+                }
+            }
         }
     }
 }
@@ -973,7 +988,7 @@ body {
             & > h3 {
                 font-size: 2em;
                 font-family: "Roboto", sans-serif;
-                color: #1d1d1d;
+                color: var(--darkBlue-color);
                 margin: 15px;
             }
             & > h2 {
@@ -1027,7 +1042,7 @@ body {
             & > h2 {
                 font-size: 3.5em;
                 font-family: 'Roboto', sans-serif;
-                color: #000000;
+                color: var(--darkBlue-color);
                 text-align: center;
                 &::after {
                     content: '';

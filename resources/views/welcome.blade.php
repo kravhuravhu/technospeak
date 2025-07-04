@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="IMAGES/icon.png" type="image/x-icon">
+        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
         <link rel="stylesheet" href="style/home.css">
         <link rel="stylesheet" href="style/about.css">
         <link rel="stylesheet" href="style/footer.css">
@@ -223,39 +223,71 @@
                     <h2>Recent Trainings</h2>
                 </div>
                 <div class="container">
-                    @foreach($courses as $course)
-                    <div class="block">
-                        <div class="fr_img">
-                            <div class="img_container">
-                                <img src="{{ $course->thumbnail ?? '/images/image5-min-1.png' }}" alt="{{ $course->title ?? 'Course' }}"/>
-                                <div class="trns">
-                                    <div class="logo">
-                                        <img src="{{ $course->software_app_icon ?? '../images/gpt_logo.png' }}"/>
-                                    </div>
-                                    <div class="ctchprs">
-                                        <h3>{{ !empty(trim($course->catch_phrase)) ? $course->catch_phrase : 'Get To Learn How To Apply For Jobs Using ChatGPT!' }}</h3>
-                                    </div>
-                                    <div class="bttn">
-                                        <a href="#">Watch Here</a>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div class="caption">
-                                <div class="ctgry_dur">
-                                    <div class="ctgry">
-                                        <p>Category: <i>{{ $course->category?->name ?? 'General' }}</i></p>
-                                    </div>
-                                    <div class="dur">
-                                        <p>Duration: <i>{{ $course->getFormattedDurationAttribute() }}</i></p>
-                                    </div>
+                    @if($courses->where('plan_type', 'free')->count() > 0)
+                        @foreach($courses as $course)
+                            @if($course->plan_type == 'free')
+                                <div class="block">
+                                    <div class="fr_img">
+                                        <div class="img_container">
+                                            <img src="{{ $course->thumbnail ?? '/images/image5-min-1.png' }}" alt="{{ $course->title ?? 'Course' }}"/>
+                                            <div class="trns">
+                                                <div class="logo">
+                                                    <img src="{{ $course->software_app_icon ?? '../images/gpt_logo.png' }}"/>
+                                                </div>
+                                                <div class="ctchprs">
+                                                    <h3>{{ !empty(trim($course->catch_phrase)) ? $course->catch_phrase : 'Get To Learn How To Apply For Jobs Using ChatGPT!' }}</h3>
+                                                </div>
+                                                <div class="bttn">
+                                                    <a href="#">Watch Here</a>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        <div class="caption">
+                                            <div class="ctgry_dur">
+                                                <div class="ctgry">
+                                                    <p>Category: <i>{{ $course->category?->name ?? 'General' }}</i></p>
+                                                </div>
+                                                <div class="dur">
+                                                    <p>Duration: <i>{{ $course->getFormattedDurationAttribute() }}</i></p>
+                                                </div>
+                                            </div>
+                                            <div class="trainer">
+                                                <p>Instructor: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
+                                            </div>    
+                                        </div>                  
+                                    </div>  
                                 </div>
-                                <div class="trainer">
-                                    <p>Instructor: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
-                                </div>    
-                            </div>                  
-                        </div>  
-                    </div>
-                    @endforeach
+                            @endif
+                        @endforeach
+                    @else
+                        <div class="block">
+                            <div class="fr_img">
+                                <div class="img_container">
+                                    <img src="{{ '/images/image5-min-1.png' }}"/>
+                                    <div class="trns" style="justify-content:center;align-items:center;">
+                                        <div class="ctchprs" style="margin:3px auto;">
+                                            <h3 style="display:block;">{{ 'No Trainings Available at the Moment!' }}</h3>
+                                        </div>
+                                        <div class="bttn" style="margin:3px auto;">
+                                            <a href="https://www.youtube.com/@TechnoSpeak-j3f" target="_blank">Visit Our YouTube Channel</a>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="caption">
+                                    <div class="trainer">
+                                        <p style="text-align:center;">Our team is working hard to bring you new courses. Stay tuned!</p>
+                                    </div>    
+                                </div>              
+                            </div>  
+                        </div>
+                    @endif
+                </div>
+                <div class="view-more-container">
+                    @if(Auth::check())
+                        <a href="{{ url('/dashboard') }}" class="view-more-btn">View More Courses</a>
+                    @else
+                        <a href="{{ url('/login') }}" class="view-more-btn">View More Courses</a>
+                    @endif
                 </div>
             </div>
         </section>

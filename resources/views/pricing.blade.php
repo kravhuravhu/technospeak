@@ -6,7 +6,7 @@
         <title>Technospeak - Pricing</title>
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">
+        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
         <link rel="stylesheet" href="style/pricing.css">
         <link rel="stylesheet" href="style/home.css">
         <link rel="stylesheet" href="style/footer.css">
@@ -86,7 +86,7 @@
                                 
                                 <!-- Plan 2 -->
                                 <div class="card_container">
-                                    <div class="card highlight">
+                                    <div class="card card-2 highlight">
                                         <div class="plan_title">
                                             <h2>TechVault Access</h2>
                                         </div>
@@ -202,163 +202,166 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Personal Guide & Task Assistance -->
-                                <div class="card_container row2 centered-row">
-                                    <div class="card">
-                                        <div class="plan_title">
-                                            <h2>Help On Demand</h2>
-                                        </div>
-                                        <div class="icon">
-                                            <img src="../images/icons/quality-service.png" />
-                                        </div>
-                                        <div class="price">
-                                            <p>
-                                                <span><sub class="sub context">from</sub><sup class="context">R</sup></span> 100
-                                                <span class="dur">per hour</span>
-                                            </p>
-                                        </div>
-                                        <div class="dscpt_container">
-                                            <div class="dscpt">
-                                                <div class="tick"><img src="../images/icons/quality.png" /></div>
-                                                <div class="dscpt-p"><p>Live sessions or task completion</p></div>
-                                            </div>
-                                        </div>
-                                        <div class="bttn">
-                                            <button onclick="openModal('modal-guide')">Personal Guide</button>
-                                            <button onclick="openModal('modal-task')">Task Assistance</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal: Personal Guide -->
-                                    <div id="modal-guide" class="modal" onclick="closeModal(event, 'modal-guide')">
-                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                
+                                <!-- Row 2 Container -->
+                                <div class="row2-container">
+                                    <!-- Personal Guide & Task Assistance -->
+                                    <div class="card_container row2">
+                                        <div class="card">
                                             <div class="plan_title">
-                                                <h2>Personal Guide</h2>
+                                                <h2>Help On Demand</h2>
                                             </div>
                                             <div class="icon">
                                                 <img src="../images/icons/quality-service.png" />
                                             </div>
                                             <div class="price">
-                                                <p><span><sub class="sub context">from</sub><sup class="context">R</sup></span> 110 <span class="dur">/ hour</span></p>
+                                                <p>
+                                                    <span><sub class="sub context">from</sub><sup class="context">R</sup></span> 100
+                                                    <span class="dur">per hour</span>
+                                                </p>
                                             </div>
                                             <div class="dscpt_container">
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live personalised sessions</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Flexible scheduling</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Video call or chat options</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Additional hours available</p></div></div>
-                                            </div>
-                                            <div class="bttn">
-                                                <button>BOOK NOW</button>
-                                                <button onclick="document.getElementById('modal-guide').style.display='none'">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal: Task Assistance -->
-                                    <div id="modal-task" class="modal" onclick="closeModal(event, 'modal-task')">
-                                        <div class="card popup-content" onclick="event.stopPropagation();">
-                                            <div class="plan_title">
-                                                <h2>Task Assistance</h2>
-                                            </div>
-                                            <div class="icon">
-                                                <img src="../images/icons/quality-service.png" />
-                                            </div>
-                                            <div class="price">
-                                                <p><span><sup class="context">R</sup></span> 100 <span class="dur">/ hour</span></p>
-                                            </div>
-                                            <div class="dscpt_container">
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Hands-on task completion</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Coding & development</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>System configurations</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Tech-related solutions</p></div></div>
-                                            </div>
-                                            <div class="bttn">
-                                                <button>REQUEST HELP</button>
-                                                <button onclick="document.getElementById('modal-task').style.display='none'">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- CGroup Session -->
-                                <div class="card_container row2 centered-row">
-                                    <div class="card">
-                                        <div class="plan_title">
-                                            <h2>Group Session</h2>
-                                        </div>
-                                        <div class="icon">
-                                            <img src="../images/icons/quality-service.png" />
-                                        </div>
-                                        <div class="price">
-                                            <p>
-                                                <span>
-                                                    <sub class="sub context">from</sub>
-                                                    <sup class="context">R</sup>
-                                                </span>
-                                                130
-                                                <span class="dur">per session / hour</span>
-                                            </p>
-                                        </div>
-                                        <div class="dscpt_container">
-                                            <div class="dscpt">
-                                                <div class="tick">
-                                                    <img src="../images/icons/quality.png" />
+                                                <div class="dscpt">
+                                                    <div class="tick"><img src="../images/icons/quality.png" /></div>
+                                                    <div class="dscpt-p"><p>Live sessions or task completion</p></div>
                                                 </div>
-                                                <div class="dscpt-p">
-                                                    <p>Live Q&A and Consultation options</p>
+                                            </div>
+                                            <div class="bttn">
+                                                <button onclick="openModal('modal-guide')">Personal Guide</button>
+                                                <button onclick="openModal('modal-task')">Task Assistance</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal: Personal Guide -->
+                                        <div id="modal-guide" class="modal" onclick="closeModal(event, 'modal-guide')">
+                                            <div class="card popup-content" onclick="event.stopPropagation();">
+                                                <div class="plan_title">
+                                                    <h2>Personal Guide</h2>
+                                                </div>
+                                                <div class="icon">
+                                                    <img src="../images/icons/quality-service.png" />
+                                                </div>
+                                                <div class="price">
+                                                    <p><span><sub class="sub context">from</sub><sup class="context">R</sup></span> 110 <span class="dur">/ hour</span></p>
+                                                </div>
+                                                <div class="dscpt_container">
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live personalised sessions</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Flexible scheduling</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Video call or chat options</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Additional hours available</p></div></div>
+                                                </div>
+                                                <div class="bttn">
+                                                    <button>BOOK NOW</button>
+                                                    <button onclick="document.getElementById('modal-guide').style.display='none'">Close</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="bttn">
-                                            <button onclick="openModal('modal-qa')">Group Q/A</button>
-                                            <button onclick="openModal('modal-consult')">Consultation</button>
+
+                                        <!-- Modal: Task Assistance -->
+                                        <div id="modal-task" class="modal" onclick="closeModal(event, 'modal-task')">
+                                            <div class="card popup-content" onclick="event.stopPropagation();">
+                                                <div class="plan_title">
+                                                    <h2>Task Assistance</h2>
+                                                </div>
+                                                <div class="icon">
+                                                    <img src="../images/icons/quality-service.png" />
+                                                </div>
+                                                <div class="price">
+                                                    <p><span><sup class="context">R</sup></span> 100 <span class="dur">/ hour</span></p>
+                                                </div>
+                                                <div class="dscpt_container">
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Hands-on task completion</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Coding & development</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>System configurations</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Tech-related solutions</p></div></div>
+                                                </div>
+                                                <div class="bttn">
+                                                    <button>REQUEST HELP</button>
+                                                    <button onclick="document.getElementById('modal-task').style.display='none'">Close</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!-- Modal: Group Q/A -->
-                                    <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
-                                        <div class="card popup-content" onclick="event.stopPropagation();">
+                                    <!-- Group Session -->
+                                    <div class="card_container row2">
+                                        <div class="card">
                                             <div class="plan_title">
-                                                <h2>Group Q/A</h2>
+                                                <h2>Group Session</h2>
                                             </div>
                                             <div class="icon">
                                                 <img src="../images/icons/quality-service.png" />
                                             </div>
                                             <div class="price">
-                                                <p><span><sup class="context">R</sup></span> Free <span class="dur">/ session</span></p>
+                                                <p>
+                                                    <span>
+                                                        <sub class="sub context">from</sub>
+                                                        <sup class="context">R</sup>
+                                                    </span>
+                                                    130
+                                                    <span class="dur">per session / hour</span>
+                                                </p>
                                             </div>
                                             <div class="dscpt_container">
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live Q&A sessions</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Immediate feedback</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Submit questions via chat</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Various tech topics covered</p></div></div>
+                                                <div class="dscpt">
+                                                    <div class="tick">
+                                                        <img src="../images/icons/quality.png" />
+                                                    </div>
+                                                    <div class="dscpt-p">
+                                                        <p>Live Q&A and Consultation options</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="bttn">
-                                                <button>Register</button>
-                                                <button onclick="document.getElementById('modal-qa').style.display='none'">Close</button>
+                                                <button onclick="openModal('modal-qa')">Group Q/A</button>
+                                                <button onclick="openModal('modal-consult')">Consultation</button>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal: Consultation -->
-                                    <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
-                                        <div class="card popup-content" onclick="event.stopPropagation();">
-                                            <div class="plan_title">
-                                                <h2>Consultation</h2>
+                                        <!-- Modal: Group Q/A -->
+                                        <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
+                                            <div class="card popup-content" onclick="event.stopPropagation();">
+                                                <div class="plan_title">
+                                                    <h2>Group Q/A</h2>
+                                                </div>
+                                                <div class="icon">
+                                                    <img src="../images/icons/quality-service.png" />
+                                                </div>
+                                                <div class="price">
+                                                    <p><span><sup class="context">R</sup></span> Free <span class="dur">/ session</span></p>
+                                                </div>
+                                                <div class="dscpt_container">
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Live Q&A sessions</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Immediate feedback</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Submit questions via chat</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Various tech topics covered</p></div></div>
+                                                </div>
+                                                <div class="bttn">
+                                                    <button>Register</button>
+                                                    <button onclick="document.getElementById('modal-qa').style.display='none'">Close</button>
+                                                </div>
                                             </div>
-                                            <div class="icon">
-                                                <img src="../images/icons/quality-service.png" />
-                                            </div>
-                                            <div class="price">
-                                                <p><span><sup class="context">R</sup></span> 130 <span class="dur">/ hour</span></p>
-                                            </div>
-                                            <div class="dscpt_container">
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Detailed response to comments</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Programming support</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Cybersecurity guidance</p></div></div>
-                                                <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Skill-building sessions</p></div></div>
-                                            </div>
-                                            <div class="bttn">
-                                                <button>Register</button>
-                                                <button onclick="document.getElementById('modal-consult').style.display='none'">Close</button>
+                                        </div>
+                                        <!-- Modal: Consultation -->
+                                        <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
+                                            <div class="card popup-content" onclick="event.stopPropagation();">
+                                                <div class="plan_title">
+                                                    <h2>Consultation</h2>
+                                                </div>
+                                                <div class="icon">
+                                                    <img src="../images/icons/quality-service.png" />
+                                                </div>
+                                                <div class="price">
+                                                    <p><span><sup class="context">R</sup></span> 130 <span class="dur">/ hour</span></p>
+                                                </div>
+                                                <div class="dscpt_container">
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Detailed response to comments</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Programming support</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Cybersecurity guidance</p></div></div>
+                                                    <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Skill-building sessions</p></div></div>
+                                                </div>
+                                                <div class="bttn">
+                                                    <button>Register</button>
+                                                    <button onclick="document.getElementById('modal-consult').style.display='none'">Close</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

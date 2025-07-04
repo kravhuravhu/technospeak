@@ -143,25 +143,53 @@ function renderOtherPlans() {
 
 function showPlanDetails(planId) {
     const plan = allPlans.find(p => p.id === planId);
-    // Implement a modal or expandable section
-    alert(`Showing details for: ${plan.title}\n\n${plan.description}\n\nFeatures:\n- ${plan.features.join('\n- ')}`);
+    openModal({
+        title: `Details for ${plan.title}`,
+        body: `
+            <p><strong>Description:<br></strong> ${plan.description}</p>
+            <p><strong><br>Features:</strong></p>
+            ${plan.features.map(feature => `• ${feature}<br>`).join('')}<br>
+        `,
+        confirmText: "Close",
+        onConfirm: function() {
+            closeModal();
+        }
+    });
 }
 
 function unsubscribe(planId) {
-    if (confirm("Are you sure you want to unsubscribe from this plan?")) {
-        userPlanIds = userPlanIds.filter(id => id !== planId);
-        renderUserPlans();
-        renderOtherPlans();
-        // Make an API call to update the subscription
-    }
+    openModal({
+        title: "Unsubscribe Confirmation",
+        body: `
+            Are you sure you want to unsubscribe from this plan? This action cannot be undone.
+            <br><br>
+        `,
+        confirmText: "Yes, Unsubscribe",
+        cancelText: "No, Keep Subscription",
+        onConfirm: function() {
+            userPlanIds = userPlanIds.filter(id => id !== planId);
+            renderUserPlans();
+            renderOtherPlans();
+            console.log(`Plan ${planId} unsubscribed.`);
+        },
+        onCancel: function() {
+            console.log("Unsubscribe action cancelled.");
+        }
+    });
 }
 
 function subscribe(planId) {
     userPlanIds.push(planId);
     renderUserPlans();
     renderOtherPlans();
-    // Make an API call to update the subscription
-    alert("Subscription updated successfully!");
+    openModal({
+        title: "Subscription Updated",
+        body: `You have successfully subscribed to the ${allPlans.find(plan => plan.id === planId).title} plan.<br>`,
+        confirmText: "Awesome!",
+        onConfirm: function() {
+            closeModal();
+        }
+    });
 }
 
 // Initial render

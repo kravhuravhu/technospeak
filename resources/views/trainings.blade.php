@@ -6,7 +6,7 @@
         <title>Technospeak - Trainings</title>
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="IMAGES/icon/png" type="image/x-icon">
+        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
         <link rel="stylesheet" href="style/trainings.css">
         <link rel="stylesheet" href="style/home.css">
         <link rel="stylesheet" href="style/footer.css">

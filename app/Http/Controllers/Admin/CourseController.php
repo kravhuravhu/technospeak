@@ -23,8 +23,10 @@ class CourseController extends Controller
             ->withCount('episodes')
             ->latest()
             ->paginate(10);
+
+        $categories = CourseCategory::all();
             
-        return view('content-manager.courses.index', compact('courses'));
+        return view('content-manager.courses.index', compact('courses', 'categories'));
     }
 
     public function create()

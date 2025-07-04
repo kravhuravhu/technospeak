@@ -63,8 +63,8 @@ const allResources = [
     }
 ];
 
-// User current plan IDs (would come from backend)
-let userResourceIds = [1, 2]; // User has Free and Annual Subscription
+// User current plan IDs
+let userResourceIds = [1, 2];
 
 function renderResources() {
     const container = document.getElementById('resourceGrid');
@@ -112,12 +112,24 @@ function getPlanName(planId) {
 }
 
 function showUpgradeOptions(planId) {
-    // Show modal upgrade options
-    alert(`Please register to ${getPlanName(planId)} to access this resource. Redirecting to subscriptions...`);
-    // Redirect to subscriptions or show a modal
+    openModal({
+        title: "Upgrade Required",
+        body: `
+            <p>You need to register for the ${getPlanName(planId)} in order to access this resource.</p>
+            <br>
+        `,
+        confirmText: "Upgrade Now",
+        cancelText: "Cancel",
+        onConfirm: function() {
+            alert(`Redirecting to ${getPlanName(planId)} subscription page...`);
+            window.location.href = `/subscribe/${planId}`;
+        },
+        onCancel: function() {
+            console.log("Upgrade action cancelled.");
+        }
+    });
 }
 
-// Initialize resources when page loads
 document.addEventListener('DOMContentLoaded', function() {
     renderResources();
 });

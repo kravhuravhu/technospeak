@@ -347,17 +347,17 @@
                     </div>
                     <div class="scl_md_container">
                         <div class="md">
-                            <a href="" target="_blank">
+                            <a href="https://www.facebook.com/profile.php?id=61567521075043" target="_blank">
                                 <i class="fa-brands fa-facebook"></i>
                             </a>
                         </div>
                         <div class="md">
-                            <a href="" target="_blank">
+                            <a href="https://www.tiktok.com/@everything.tips8" target="_blank">
                                 <i class="fa-brands fa-tiktok"></i>
                             </a>
                         </div>
                         <div class="md">
-                            <a href="" target="_blank">
+                            <a href="https://www.youtube.com/@TechnoSpeak-j3f" target="_blank">
                                 <i class="fa-brands fa-youtube"></i>
                             </a>
                         </div>

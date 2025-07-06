@@ -38,8 +38,8 @@
                 <div class="links-column">
                     <h4 class="links-title">Legal</h4>
                     <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="https://www.termsfeed.com/live/2773b14c-5e82-46cb-bd59-48440e6b76a7">Privacy Policy</a></li>
+                        <li><a href="https://www.termsfeed.com/live/dcfacc5f-a882-49a9-952f-151deb348ca2">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

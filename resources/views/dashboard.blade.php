@@ -114,6 +114,17 @@
                             </div>
                             </a>
                         </div>
+                        <hr>
+                        <div class="nav_home">
+                            <a href="/">
+                            <div class="icon">
+                                <i class="fa-solid fa-home"></i>
+                            </div>
+                            <div class="title">
+                                <span>Home</span>
+                            </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

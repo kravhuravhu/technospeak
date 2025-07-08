@@ -176,7 +176,8 @@ section.bar-lt-rt {
       width: 300px;
       & > .container {
         width: 90%;
-        & > .nav-item {
+        & > .nav-item,
+        & > .nav_home {
           text-decoration: none;
           color: #000000;
           font-size: 1.3em;

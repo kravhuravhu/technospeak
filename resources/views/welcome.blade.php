@@ -238,7 +238,11 @@
                                                     <h3>{{ !empty(trim($course->catch_phrase)) ? $course->catch_phrase : 'Get To Learn How To Apply For Jobs Using ChatGPT!' }}</h3>
                                                 </div>
                                                 <div class="bttn">
-                                                    <a href="#">Watch Here</a>
+                                                    @if(Auth::check())
+                                                        <a href="/dashboard?{{ $course->id }}">Watch Here</a>
+                                                    @else
+                                                        <a href="{{ url('/login') }}">Watch Here</a>
+                                                    @endif
                                                 </div>
                                             </div> 
                                         </div>

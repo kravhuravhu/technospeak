@@ -91,11 +91,21 @@ class EpisodeController extends Controller
             ->with('success', 'Episode updated successfully!');
     }
 
-    public function destroy(Course $course, CourseEpisode $episode)
-    {
+public function destroy(Course $course, CourseEpisode $episode)
+{
+    try {
         $episode->delete();
-
-        return redirect()->route('content-manager.courses.episodes.index', $course)
-            ->with('success', 'Episode deleted successfully!');
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Episode deleted successfully'
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete episode: ' . $e->getMessage()
+        ], 500);
     }
+}
 }

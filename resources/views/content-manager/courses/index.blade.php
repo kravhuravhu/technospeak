@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Manage Courses')
-
+@stack('head')
 @section('content')
 <div class="admin-header">
     <div class="page-title">
@@ -178,9 +178,7 @@
                 }
             </style>
             <nav aria-label="Pagination Navigation">
-                <!-- Desktop View (Pagination Numbers & Previous/Next buttons) -->
                 <div class="pagination-desktop flex items-center justify-between">
-                    <!-- Results Info (Showing X to Y of Z results) -->
                     <div class="pagination-info">
                         <p class="text-sm text-gray-700">
                             Showing <span class="font-medium">{{ $courses->firstItem() }}</span> to 

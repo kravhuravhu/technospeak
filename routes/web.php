@@ -96,6 +96,18 @@ Route::prefix('content')->name('content-manager.')->group(function() {
             ]);
         Route::post('clients/{client}/enroll-course', [ClientController::class, 'enrollCourse'])->name('clients.enroll-course');
         Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
+
+        // Episode
+        Route::resource('content-manager/courses.episodes', 'Admin\EpisodeController')
+            ->names([
+                'index' => 'content-manager.courses.episodes.index',
+                'create' => 'content-manager.courses.episodes.create',
+                'store' => 'content-manager.courses.episodes.store',
+                'show' => 'content-manager.courses.episodes.show',
+                'edit' => 'content-manager.courses.episodes.edit',
+                'update' => 'content-manager.courses.episodes.update',
+                'destroy' => 'content-manager.courses.episodes.destroy'
+        ]);
         
         // Payments
         Route::resource('payments', PaymentsController::class);

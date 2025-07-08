@@ -33,15 +33,21 @@
                                     <h3 id="animated_header">Transform Your Digital Future</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Step into the next era of technological innovation with our cutting-edge solutions. 
-                                        We bridge the gap between complex tech and real-world applications, delivering seamless experiences 
-                                        that propel businesses forward. Our expert team crafts tailored systems designed to scale with your 
-                                        ambitions while maintaining ironclad security.</p>
+                                    <p><strong>Technospeak</strong> empowers you to master technology with confidence. We offer easy-to-follow tutorials, 
+                                        practical guides, and real-world support for students, professionals, and small businesses. 
+                                        Whether you want to boost productivity, learn new digital skills, or solve everyday tech challenges, 
+                                        our team is here to help you succeed—no jargon, just results.</p>
                                 </div>
                                 <div class="cta">
-                                    <a href="">
-                                        <div>Explore Solutions</div>
-                                    </a>
+                                    @if(Auth::check())
+                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                            <div>Explore Solutions</div>
+                                        </a>
+                                    @else
+                                        <a href="{{ url('/login') }}" class="cta">
+                                            <div>Explore Solutions</div>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="slider">
@@ -49,15 +55,21 @@
                                     <h3>AI-Powered Business Revolution</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Harness the transformative power of artificial intelligence without the complexity. Our intuitive 
-                                        platforms integrate machine learning into your daily operations, automating workflows, predicting 
-                                        trends, and unlocking hidden opportunities. From chatbots to data analytics, we make enterprise-grade 
-                                        AI accessible.</p>
+                                    <p>Discover how AI can simplify your everyday tasks and boost productivity—no technical background needed. 
+                                        At <strong>Technospeak</strong>, we guide you through practical uses of AI tools for writing, research, and creative 
+                                        projects. Learn to use chatbots, automate simple processes, and make smarter decisions with 
+                                        easy-to-follow tutorials designed for students, professionals, and small businesses.</p>
                                 </div>
                                 <div class="cta">
-                                    <a href="">
-                                        <div>Schedule Demo</div>
-                                    </a>
+                                    @if(Auth::check())
+                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                            <div>Explore Courses</div>
+                                        </a>
+                                    @else
+                                        <a href="{{ url('/login') }}" class="cta">
+                                            <div>Explore Courses</div>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="slider">
@@ -65,15 +77,21 @@
                                     <h3>Cloud Infrastructure Reimagined</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Experience cloud computing without compromises. Our hybrid-cloud architectures deliver blistering 
-                                        performance with military-grade security. Whether you're migrating legacy systems or building 
-                                        cloud-native applications, we provide the perfect balance of flexibility, reliability, and 
-                                        cost-efficiency.</p>
+                                    <p>Unlock the power of cloud tools for learning, collaboration, and productivity. At <strong>Technospeak</strong>, 
+                                        we guide you through using Google Workspace, Microsoft 365, and other essential platforms—no jargon, 
+                                        just practical skills. Whether you’re a student, educator, or small business, we help you work smarter, 
+                                        store safely, and access your files anywhere.</p>
                                 </div>
                                 <div class="cta">
-                                    <a href="">
-                                        <div>View Case Studies</div>
-                                    </a>
+                                    @if(Auth::check())
+                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                            <div>View Learning Tools</div>
+                                        </a>
+                                    @else
+                                        <a href="{{ url('/login') }}" class="cta">
+                                            <div>View Learning Tools</div>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="slider">
@@ -81,15 +99,21 @@
                                     <h3>24/7 Cybersecurity Shield</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Sleep soundly knowing your digital assets are protected by our multi-layered defense systems. 
-                                        Real-time threat detection, automated vulnerability patching, and white-hat penetration testing 
-                                        create an impenetrable security posture. We don't just respond to threats - we anticipate and 
-                                        neutralize them.</p>
+                                    <p>Stay safe online with our easy-to-follow cybersecurity guidance and practical tools. We help you 
+                                        recognize scams, protect your accounts, and secure your devices—no technical jargon required. Learn 
+                                        how to keep your personal and business information safe, and gain confidence navigating the digital 
+                                        world.</p>
                                 </div>
                                 <div class="cta">
-                                    <a href="">
-                                        <div>Get Protected</div>
-                                    </a>
+                                    @if(Auth::check())
+                                        <a href="{{ url('/dashboard#usr_techCoach') }}" class="cta">
+                                            <div>Get Cyber Shield</div>
+                                        </a>
+                                    @else
+                                        <a href="{{ url('/login') }}" class="cta">
+                                            <div>Get Cyber Shield</div>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -121,7 +145,7 @@
                                 <!-- Card 1: Creative Tools & AI -->
                                 <button class="card card1">
                                     <div class="cr-img">
-                                        <img src="../images/image5-min-1.png"/>
+                                        <img src="../images/Creative-Tools-AI.png"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>Creative Tools & AI</h3>
@@ -134,7 +158,7 @@
                                 <!-- Card 2: ICT Office Administration -->
                                 <button class="card card2">
                                     <div class="cr-img">
-                                        <img src="../images/image5-min-1.png"/>
+                                        <img src="../images/ICT-Office-Administration.jpg"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>ICT Office Administration</h3>
@@ -147,7 +171,7 @@
                                 <!-- Card 3: Technical Support Services -->
                                 <button class="card card3">
                                     <div class="cr-img">
-                                        <img src="../images/image5-min-1.png"/>
+                                        <img src="../images/Technical-Support-Services.png"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>Technical Support Services</h3>
@@ -160,7 +184,7 @@
                                 <!-- Card 4: Programming & EUC -->
                                 <button class="card card4">
                                     <div class="cr-img">
-                                        <img src="../images/image5-min-1.png"/>
+                                        <img src="../images/Programming-End-User.png"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>Programming & End-User Computing (EUC)</h3>
@@ -173,7 +197,7 @@
                                 <!-- Card 5: Networking & Internet Basics -->
                                 <button class="card card5">
                                     <div class="cr-img">
-                                        <img src="../images/image5-min-1.png"/>
+                                        <img src="../images/Networking-Internet.png"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>Networking & Internet Basics</h3>
@@ -238,11 +262,7 @@
                                                     <h3>{{ !empty(trim($course->catch_phrase)) ? $course->catch_phrase : 'Get To Learn How To Apply For Jobs Using ChatGPT!' }}</h3>
                                                 </div>
                                                 <div class="bttn">
-                                                    @if(Auth::check())
-                                                        <a href="/dashboard?{{ $course->id }}">Watch Here</a>
-                                                    @else
-                                                        <a href="{{ url('/login') }}">Watch Here</a>
-                                                    @endif
+                                                    <a href="#">Watch Here</a>
                                                 </div>
                                             </div> 
                                         </div>

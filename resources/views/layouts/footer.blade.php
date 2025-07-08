@@ -28,18 +28,63 @@
                 <div class="links-column">
                     <h4 class="links-title">Resources</h4>
                     <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Tutorials</a></li>
-                        <li><a href="#">Webinars</a></li>
-                        <li><a href="#">Community</a></li>
+                        <li><div class="footerButton">
+                                @if(Auth::check())
+                                    <a href="{{ url('/dashboard#usr_support') }}" class="footerButton">
+                                        <div>Help Center</div>
+                                    </a>
+                                @else
+                                    <a href="{{ url('/login') }}" class="footerButton">
+                                        <div>Help Center</div>
+                                    </a>
+                                @endif
+                            </div>
+                        </li>
+                        <li><div class="footerButton">
+                                @if(Auth::check())
+                                    <a href="{{ url('/dashboard#usr_alltrainings') }}" class="footerButton">
+                                        <div>Tutorials</div>
+                                    </a>
+                                @else
+                                    <a href="{{ url('/login') }}" class="footerButton">
+                                        <div>Tutorials</div>
+                                    </a>
+                                @endif
+                            </div>
+                        </li> 
+                        <li>
+                            <div class="footerButton">
+                                @if(Auth::check())
+                                    <a href="{{ url('/dashboard#usr_mysubscriptions') }}" class="footerButton">
+                                        <div>Webinars</div>
+                                    </a>
+                                @else
+                                    <a href="{{ url('/login') }}" class="footerButton">
+                                        <div>Webinars</div>
+                                    </a>
+                                @endif
+                            </div>
+                        </li>
+                        <li><div class="footerButton">
+                                @if(Auth::check())
+                                    <a href="{{ url('/dashboard#usr_resources') }}" class="footerButton">
+                                        <div>Community</div>
+                                    </a>
+                                @else
+                                    <a href="{{ url('/login') }}" class="footerButton">
+                                        <div>Community</div>
+                                    </a>
+                                @endif
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="links-column">
                     <h4 class="links-title">Legal</h4>
                     <ul>
-                        <li><a href="https://www.termsfeed.com/live/2773b14c-5e82-46cb-bd59-48440e6b76a7">Privacy Policy</a></li>
-                        <li><a href="https://www.termsfeed.com/live/dcfacc5f-a882-49a9-952f-151deb348ca2">Terms of Service</a></li>
+                        <li><a href="../privacy">Privacy Policy</a></li>
+                        <li><a href="../terms">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

@@ -65,17 +65,9 @@
                                 @endif
                             </div>
                         </li>
-                        <li><div class="footerButton">
-                                @if(Auth::check())
-                                    <a href="{{ url('/dashboard#usr_resources') }}" class="footerButton">
+                        <li><a href="https://chat.whatsapp.com/GT6Z3Aj9fO1EvMk6ZNpezR?mode=ac_c">
                                         <div>Community</div>
                                     </a>
-                                @else
-                                    <a href="{{ url('/login') }}" class="footerButton">
-                                        <div>Community</div>
-                                    </a>
-                                @endif
-                            </div>
                         </li>
                     </ul>
                 </div>
@@ -128,9 +120,9 @@
         <div class="footer-bottom">
             <p class="copyright-text">&copy; <span id="current-year"></span> TechnoSpeak. All rights reserved.</p>
             <div class="footer-legal">
-                <a href="#">Privacy Policy</a>
+                <a href="../privacy">Privacy Policy</a>
                 <span>•</span>
-                <a href="#">Terms of Service</a>
+                <a href="../terms">Terms of Service</a>
             </div>
         </div>
     </div>

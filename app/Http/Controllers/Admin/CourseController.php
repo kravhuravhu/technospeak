@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\CourseEpisode;
 use App\Models\Instructor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -56,7 +57,7 @@ class CourseController extends Controller
             'episodes.*.title' => 'required|string|max:255',
             'episodes.*.description' => 'required|string',
             'episodes.*.video_url' => 'required|url',
-            'episodes.*.duration' => 'required|string',
+            'episodes.*.duration' => 'required|numeric|min:1',
             'episodes.*.episode_number' => 'required|integer|min:1',
         ]);
 
@@ -81,16 +82,16 @@ class CourseController extends Controller
             \Log::info('Course created', ['course_id' => $course->id]);
 
             foreach ($validatedData['episodes'] as $episodeData) {
-                $durationInMinutes = ceil((int)explode(':', $episodeData['duration'])[0] * 60 + (int)explode(':', $episodeData['duration'])[1]) / 60;
-                
+                $durationInSeconds = (int) $episodeData['duration'];
+
                 $episode = $course->episodes()->create([
                     'title' => $episodeData['title'],
                     'description' => $episodeData['description'],
                     'episode_number' => $episodeData['episode_number'],
-                    'duration' => $durationInMinutes,
+                    'duration' => $durationInSeconds,
                     'video_url' => $episodeData['video_url'],
                 ]);
-                
+
                 \Log::debug('Episode created', ['episode_id' => $episode->id]);
             }
 
@@ -126,7 +127,9 @@ class CourseController extends Controller
 
     public function update(Request $request, Course $course)
     {
-        $validated = $request->validate([
+        \Log::info('Course update started', ['request' => $request->all()]);
+
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:course_categories,id',
             'instructor_id' => 'required|exists:instructors,id',
@@ -136,15 +139,107 @@ class CourseController extends Controller
             'level' => 'required|in:beginner,intermediate,advanced,expert,all levels',
             'thumbnail' => 'required|url',
             'software_app_icon' => 'required|url',
-            'total_duration' => 'required|integer|min:1',
             'noEpisodes' => 'required|integer|min:1',
-            'is_active' => 'boolean',
-        ]); 
-        
-        $course->update($validated);
+            'total_duration' => 'required|integer|min:1',
+            'episodes' => 'required|array|min:1',
+            'episodes.*.title' => 'required|string|max:255',
+            'episodes.*.description' => 'required|string',
+            'episodes.*.video_url' => 'required|url',
+            'episodes.*.duration' => 'required|numeric|min:1',
+            'episodes.*.id' => 'nullable|integer',
+            'episodes.*.episode_number' => 'required|integer|min:1',
+        ]);
 
-        return redirect()->route('content-manager.courses.index')
-            ->with('success', 'Course updated successfully!');
+        \Log::debug('Raw episode data from request:', [
+            'episodes' => $request->input('episodes'),
+            'first_episode_id' => $request->input('episodes.1.id') ?? 'not found',
+            'first_episode_data' => $request->input('episodes.1') ?? 'not found'
+        ]);
+
+        \DB::beginTransaction();
+        try {
+            // Update course details
+            $course->update([
+                'title' => $validatedData['title'],
+                'category_id' => $validatedData['category_id'],
+                'instructor_id' => $validatedData['instructor_id'],
+                'description' => $validatedData['description'],
+                'catch_phrase' => $validatedData['catch_phrase'],
+                'plan_type' => $validatedData['plan_type'],
+                'level' => $validatedData['level'],
+                'thumbnail' => $validatedData['thumbnail'],
+                'software_app_icon' => $validatedData['software_app_icon'],
+                'total_duration' => $validatedData['total_duration'],
+                'noEpisodes' => $validatedData['noEpisodes'],
+            ]);
+
+            $existingEpisodeIds = $course->episodes->pluck('id')->toArray();
+            $submittedEpisodeIds = [];
+
+            foreach ($validatedData['episodes'] as $episodeData) {
+                \Log::debug('Processing episode', [
+                    'id' => $episodeData['id'] ?? null,
+                    'type' => (isset($episodeData['id']) && $episodeData['id'] > 0) ? 'existing' : 'new',
+                    'data' => $episodeData
+                ]);
+                if (!isset($episodeData['id'])) {
+                    continue; // Skip if no ID (shouldn't happen with our form)
+                }
+
+                // Existing episode (positive ID)
+                if ($episodeData['id'] > 0) {
+                    $episode = CourseEpisode::where('id', $episodeData['id'])
+                        ->where('course_id', $course->id)
+                        ->first();
+
+                    if ($episode) {
+                        $episode->update([
+                            'title' => $episodeData['title'],
+                            'description' => $episodeData['description'],
+                            'episode_number' => $episodeData['episode_number'],
+                            'duration' => (int) $episodeData['duration'],
+                            'video_url' => $episodeData['video_url'],
+                        ]);
+                        $submittedEpisodeIds[] = $episode->id;
+                        \Log::debug('Updated existing episode', ['id' => $episode->id]);
+                    }
+                } 
+                // New episode (negative ID)
+                else {
+                    $newEpisode = $course->episodes()->create([
+                        'title' => $episodeData['title'],
+                        'description' => $episodeData['description'],
+                        'episode_number' => $episodeData['episode_number'],
+                        'duration' => (int) $episodeData['duration'],
+                        'video_url' => $episodeData['video_url'],
+                    ]);
+                    $submittedEpisodeIds[] = $newEpisode->id;
+                    \Log::debug('Created new episode', ['id' => $newEpisode->id]);
+                }
+            }
+
+            // Delete episodes that were removed from the form
+            $episodesToDelete = array_diff($existingEpisodeIds, $submittedEpisodeIds);
+            if (!empty($episodesToDelete)) {
+                CourseEpisode::where('course_id', $course->id)
+                    ->whereIn('id', $episodesToDelete)
+                    ->delete();
+            }
+
+            \DB::commit();
+            
+            return redirect()->route('content-manager.courses.index')
+                ->with('success', 'Course updated successfully!');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Course update failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withInput()
+                ->with('error', 'Failed to update course. Error: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Course $course)

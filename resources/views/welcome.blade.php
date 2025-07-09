@@ -262,21 +262,41 @@
                                                     <h3>{{ !empty(trim($course->catch_phrase)) ? $course->catch_phrase : 'Get To Learn How To Apply For Jobs Using ChatGPT!' }}</h3>
                                                 </div>
                                                 <div class="bttn">
-                                                    <a href="#">Watch Here</a>
+                                                    @if(Auth::check())
+                                                        <a href="/dashboard?{{ $course->id }}">Watch Here</a>
+                                                    @else
+                                                        <a href="{{ url('/login') }}">Watch Here</a>
+                                                    @endif
                                                 </div>
                                             </div> 
                                         </div>
                                         <div class="caption">
                                             <div class="ctgry_dur">
                                                 <div class="ctgry">
-                                                    <p>Category: <i>{{ $course->category?->name ?? 'General' }}</i></p>
+                                                    <p>Instructor: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
                                                 </div>
                                                 <div class="dur">
-                                                    <p>Duration: <i>{{ $course->getFormattedDurationAttribute() }}</i></p>
+                                                    @php
+                                                        $duration = $course->total_duration;
+
+                                                        if ($duration < 60) {
+                                                            $formatted = $duration . 's';
+                                                        } elseif ($duration < 3600) {
+                                                            $minutes = floor($duration / 60);
+                                                            $seconds = $duration % 60;
+                                                            $formatted = $minutes . 'm ' . $seconds . 's';
+                                                        } else {
+                                                            $hours = floor($duration / 3600);
+                                                            $minutes = floor(($duration % 3600) / 60);
+                                                            $seconds = $duration % 60;
+                                                            $formatted = $hours . 'h ' . $minutes . 'm ' . $seconds . 's';
+                                                        }
+                                                    @endphp
+                                                    <p>Duration: <i>{{ $formatted }}</i></p>
                                                 </div>
                                             </div>
                                             <div class="trainer">
-                                                <p>Instructor: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
+                                                <p>Category: <i>{{ $course->category?->name ?? 'General' }}</i></p>
                                             </div>    
                                         </div>                  
                                     </div>  

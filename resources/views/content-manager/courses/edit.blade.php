@@ -2,699 +2,521 @@
 
 @section('title', 'Edit Course: ' . $course->title)
 
-@section('head')
-    @parent
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-@endsection
-
 @section('content')
-
 <style>
-    .edit-container {
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-    
-    .edit-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .edit-title {
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: var(--darkBlue);
-    }
-    
-    .edit-form-section {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        margin-bottom: 2rem;
-        padding: 1.5rem;
-    }
-    
     .section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
         color: var(--skBlue);
         margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
+        font-size: 1.25rem;
+        font-weight: 600;
     }
-    
-    .section-title i {
-        margin-right: 0.75rem;
-    }
-    
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
+    .episode-form {
+        padding: 1rem;
         margin-bottom: 1.5rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1.25rem;
-    }
-    
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        font-size: 0.9rem;
-        color: var(--darkBlue);
-    }
-    
-    .form-input {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        font-size: 0.95rem;
-        transition: border-color 0.2s;
-        color:rgb(109, 122, 149);
-    }
-    
-    .form-input:focus {
-        border-color: var(--skBlue);
-        outline: none;
-    }
-    
-    /* Episode Editor */
-    .episode-editor {
-        background: #f8fafc;
-        border-radius: 6px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        position: relative;
-        border: 1px solid #e2e8f0;
-    }
-    
-    .episode-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .episode-number {
-        background: var(--skBlue);
-        color: white;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-    
-    .remove-episode {
-        background: #fee2e2;
-        border: 1px solid #fca5a5;
-        color: var(--danger);
-        cursor: pointer;
-        font-size: 0.85rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .remove-episode:hover {
-        background: #fecaca;
-    }
-    
-    /* Action Buttons */
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #e2e8f0;
-    }
-    
-    /* Confirmation modal */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-    }
-    
-    .modal-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .modal-content {
         background: white;
-        padding: 2rem;
         border-radius: 8px;
-        width: 90%;
-        max-width: 500px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 1.5rem;
-    }
-    
-    /* Status indicators */
-    .status-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    
-    .status-active {
-        background: #dcfce7;
-        color: #166534;
-    }
-    
-    .status-inactive {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-    
-    /* Episode duration display */
-    .duration-display {
-        font-family: monospace;
-        background: #f1f5f9;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-</style>
-
-<div class="edit-container">
-    <div class="admin-header">
-        <div class="page-title">
-            <h1>Edit Course: {{ $course->title }}</h1>
-            <p>Update course details and content | CourseID • {{ $course->id }}</p>
-        </div>
-        <div class="user-menu">
-            <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline">
-                <i class="fas fa-eye"></i> Preview
-            </a>
-        </div>
-    </div>
-
-    <form action="{{ route('content-manager.courses.update', $course->id) }}" method="POST" id="course-form">
-        @csrf
-        @method('PUT')
-        
-        <!-- Basic Information Section -->
-        <div class="edit-form-section">
-            <h3 class="section-title">
-                <i class="fas fa-info-circle"></i> Course Information
-            </h3>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Course Title</label>
-                    <input type="text" name="title" class="form-input" 
-                           value="{{ old('title', $course->title) }}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Catch Phrase</label>
-                    <input type="text" name="catch_phrase" class="form-input"
-                           value="{{ old('catch_phrase', $course->catch_phrase) }}" 
-                           minlength="50" maxlength="90" required>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-input" rows="4" required>{{ old('description', $course->description) }}</textarea>
-            </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select name="category_id" class="form-input" required>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $course->category_id == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Instructor</label>
-                    <select name="instructor_id" class="form-input" required>
-                        @foreach($instructors as $instructor)
-                            <option value="{{ $instructor->id }}" {{ $course->instructor_id == $instructor->id ? 'selected' : '' }}>
-                                {{ $instructor->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Plan Type</label>
-                    <select name="plan_type" class="form-input" required>
-                        <option value="free" {{ $course->plan_type == 'free' ? 'selected' : '' }}>Free</option>
-                        <option value="paid" {{ $course->plan_type == 'paid' ? 'selected' : '' }}>Paid</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Difficulty Level</label>
-                    <select name="level" class="form-input" required>
-                        @foreach(['beginner', 'intermediate', 'advanced', 'expert', 'all levels'] as $lvl)
-                            <option value="{{ $lvl }}" {{ $course->level == $lvl ? 'selected' : '' }}>
-                                {{ ucfirst($lvl) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <div>
-                        <span class="status-badge {{ $course->is_active ? 'status-active' : 'status-inactive' }}">
-                            {{ $course->is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Media Section -->
-        <div class="edit-form-section">
-            <h3 class="section-title">
-                <i class="fas fa-image"></i> Media URLs
-            </h3>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Thumbnail URL</label>
-                    <input type="url" name="thumbnail" class="form-input" 
-                           value="{{ old('thumbnail', $course->thumbnail) }}" required>
-                    @if($course->thumbnail)
-                        <div class="mt-2">
-                            <img src="{{ $course->thumbnail }}" alt="Thumbnail preview" style="max-width: 150px; border-radius: 4px;">
-                        </div>
-                    @endif
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Software/App Icon URL</label>
-                    <input type="url" name="software_app_icon" class="form-input" 
-                           value="{{ old('software_app_icon', $course->software_app_icon) }}" required>
-                    @if($course->software_app_icon)
-                        <div class="mt-2">
-                            <img src="{{ $course->software_app_icon }}" alt="Icon preview" style="max-width: 50px; border-radius: 4px;">
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-        
-        <!-- Episodes Section -->
-        <div class="edit-form-section">
-            <h3 class="section-title">
-                <i class="fas fa-film"></i> Course Episodes
-            </h3>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Total Episodes</label>
-                    <input type="number" name="noEpisodes" class="form-input" 
-                           value="{{ old('noEpisodes', $course->noEpisodes) }}" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Total Duration</label>
-                    <div class="duration-display">
-                        {{ gmdate('H:i:s', $course->total_duration) }}
-                    </div>
-                    <input type="hidden" name="total_duration" value="{{ $course->total_duration }}">
-                </div>
-            </div>
-            
-            <div id="episodes-container">
-                @foreach($course->episodes as $index => $episode)
-                <div class="episode-editor" data-episode-id="{{ $episode->id }}" data-index="{{ $index }}">
-                    <div class="episode-header">
-                        <div class="episode-number">{{ $episode->episode_number }}</div>
-                        <button type="button" class="remove-episode" data-episode-id="{{ $episode->id }}">
-                            <i class="fas fa-trash"></i> Remove
-                        </button>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Episode Title</label>
-                            <input type="text" name="episodes[{{ $index }}][title]" class="form-input" 
-                                   value="{{ old("episodes.$index.title", $episode->title) }}" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Video URL</label>
-                            <input type="url" name="episodes[{{ $index }}][video_url]" class="form-input episode-video-url" 
-                                   value="{{ old("episodes.$index.video_url", $episode->video_url) }}" required>
-                            @if($episode->video_url)
-                                <div class="mt-2">
-                                    <video src="{{ $episode->video_url }}" controls style="max-width: 100%; height: auto;"></video>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea name="episodes[{{ $index }}][description]" class="form-input" rows="2">{{ old("episodes.$index.description", $episode->description) }}</textarea>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Duration</label>
-                            <div class="duration-display">
-                                {{ gmdate('H:i:s', $episode->duration * 60) }}
-                            </div>
-                            <input type="hidden" name="episodes[{{ $index }}][duration]" value="{{ $episode->duration * 60 }}">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Status</label>
-                            <div>
-                                <span class="status-badge {{ $episode->is_active ? 'status-active' : 'status-inactive' }}">
-                                    {{ $episode->is_active ? 'Active' : 'Inactive' }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <input type="hidden" name="episodes[{{ $index }}][episode_number]" value="{{ $episode->episode_number }}">
-                    <input type="hidden" name="episodes[{{ $index }}][id]" value="{{ $episode->id }}">
-                </div>
-                @endforeach
-            </div>
-            
-            <button type="button" id="add-episode" class="btn btn-outline mt-2">
-                <i class="fas fa-plus"></i> Add Episode
-            </button>
-        </div>
-        
-        <div class="form-actions">
-            <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">
-                <i class="fas fa-times"></i> Cancel
-            </a>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Save Changes
-            </button>
-        </div>
-    </form>
-</div>
-
-<div class="modal-overlay" id="confirmation-modal">
-    <div class="modal-content">
-        <h3>Confirm Deletion</h3>
-        <p>Are you sure you want to delete this episode? This action cannot be undone.</p>
-        <div class="modal-actions">
-            <button type="button" class="btn btn-outline" id="cancel-delete">Cancel</button>
-            <button type="button" class="btn btn-danger" id="confirm-delete">Delete Episode</button>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add Episode Functionality
-    const addEpisodeBtn = document.getElementById('add-episode');
-    const episodesContainer = document.getElementById('episodes-container');
-    let episodeCount = {{ $course->episodes->count() }};
-    let episodeToDelete = null;
-    
-    // Confirmation modal elements
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const confirmDeleteBtn = document.getElementById('confirm-delete');
-    const cancelDeleteBtn = document.getElementById('cancel-delete');
-    
-    // Function to show confirmation modal
-    function showConfirmationModal(episodeId) {
-        episodeToDelete = episodeId;
-        confirmationModal.classList.add('active');
-    }
-    
-    // Function to hide confirmation modal
-    function hideConfirmationModal() {
-        confirmationModal.classList.remove('active');
-        episodeToDelete = null;
-    }
-    
-    // Event listeners for modal buttons
-    confirmDeleteBtn.addEventListener('click', function() {
-        if (episodeToDelete) {
-            // If episode has an ID (exists in database), send DELETE request
-            if (episodeToDelete !== 'new' && !episodeToDelete.startsWith('new-')) {
-                fetch(`{{ route('content-manager.courses.episodes.destroy', ['course' => $course->id, 'episode' => 'EPISODE_ID']) }}`.replace('EPISODE_ID', episodeToDelete), {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        & > .form-row {
+            margin-bottom: 0;
+            & > .form-group {
+                & > .form-label {
+                    &.episode_id {
+                        font-weight: 600;
+                        font-size: 1.15em;
+                        color: #253f6b;
                     }
-                })
-                .then(response => {
-                    if (response.status === 404) {
-                        throw new Error('Episode not found');
+                }
+                &.fr_remove_episode {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: fit-content;
+                    flex: none;
+                    & > button {
+                        margin-top: 16px;
                     }
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Remove the episode from UI
-                        const episodeElement = document.querySelector(`.episode-editor[data-episode-id="${episodeToDelete}"]`);
-                        if (episodeElement) {
-                            episodeElement.remove();
-                            updateEpisodeNumbers();
-                            updateTotalEpisodesCount();
-                            calculateTotalDuration();
-                        }
-                    } else {
-                        alert('Error deleting episode: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error deleting episode:', error);
-                    alert('Error deleting episode: ' + error.message);
-                });
-            } else {
-                // For new episodes not yet saved to database, just remove from UI
-                const episodeElement = document.querySelector(`.episode-editor[data-episode-id="${episodeToDelete}"]`);
-                if (episodeElement) {
-                    episodeElement.remove();
-                    updateEpisodeNumbers();
-                    updateTotalEpisodesCount();
-                    calculateTotalDuration();
                 }
             }
         }
-        hideConfirmationModal();
-    });
+    }
+    .old-value {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+        font-style: italic;
+        opacity: 0.8;
+    }
+    input::placeholder,
+    textarea::placeholder,
+    select::placeholder {
+        color: #888;
+        opacity: .3; 
+    }
+    input:focus::placeholder,
+    textarea:focus::placeholder {
+        color: #bbb;
+    }
+    input[disabled],
+    input[readonly],
+    textarea[disabled],
+    textarea[readonly],
+    select[disabled] {
+        background-color: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    input[disabled]:focus,
+    input[readonly]:focus,
+    textarea[disabled]:focus,
+    textarea[readonly]:focus,
+    select[disabled]:focus {
+        border: none;
+    }
+    .form-control {
+        &.episode-description {
+            min-height: auto;
+            padding: 0.2rem 1rem;
+            resize: both;
+        }
+    }
+    .calculating {
+        color: var(--skBlue);
+        font-style: italic;
+    }
+</style>
+
+<div class="admin-header">
+    <div class="page-title">
+        <h1>Edit Course: {{ $course->title }}</h1>
+        <p>Update course details and content | CourseID • {{ $course->id }}</p>
+    </div>
+    <div class="user-menu">
+        <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline">
+            <i class="fas fa-eye"></i> Preview
+        </a>
+        <form action="{{ route('content-manager.courses.destroy', $course->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                <i class="fas fa-trash"></i> Delete Course
+            </button>
+        </form>
+    </div>
+</div>
+
+<form action="{{ route('content-manager.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
     
-    cancelDeleteBtn.addEventListener('click', hideConfirmationModal);
-    
-    // Add new episode
-    addEpisodeBtn.addEventListener('click', function() {
-        episodeCount++;
-        const newIndex = episodeCount - 1;
-        const newId = 'new-' + Date.now(); // Unique ID for new episode
-        
-        const newEpisode = document.createElement('div');
-        newEpisode.className = 'episode-editor';
-        newEpisode.dataset.index = newIndex;
-        newEpisode.dataset.episodeId = newId;
-        
-        newEpisode.innerHTML = `
-            <div class="episode-header">
-                <div class="episode-number">${episodeCount}</div>
-                <button type="button" class="remove-episode" data-episode-id="${newId}">
-                    <i class="fas fa-trash"></i> Remove
-                </button>
-            </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Episode Title</label>
-                    <input type="text" name="episodes[${newIndex}][title]" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Video URL</label>
-                    <input type="url" name="episodes[${newIndex}][video_url]" class="form-input episode-video-url" required>
-                </div>
-            </div>
-            
+    <!-- Course Details Section -->
+    <div class="form-card" style="border-left: 4px solid var(--skBlue);">
+        <h3 class="section-title">Course Details</h3>   
+        <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="episodes[${newIndex}][description]" class="form-input" rows="2"></textarea>
+                <label for="title" class="form-label">Course Title</label>
+                <input type="text" id="title" name="title" class="form-control" 
+                    value="{{ old('title', $course->title) }}" 
+                    placeholder="Google Cloud Fundamentals" required>
+                <div class="old-value">Current: {{ $course->title }}</div>
             </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Duration</label>
-                    <div class="duration-display">0:00:00</div>
-                    <input type="hidden" name="episodes[${newIndex}][duration]" value="0">
+            <div class="form-group">
+                <label for="catch_phrase" class="form-label">Catch Phrase <span style="font-weight: normal;font-style:italic;">(50–90 characters)</span></label>
+                <input type="text" id="catch_phrase" name="catch_phrase" class="form-control"
+                    value="{{ old('catch_phrase', $course->catch_phrase) }}"
+                    minlength="50" maxlength="90"
+                    placeholder="Jumpstart your career with Google Workspace essentials" required>
+                <div class="old-value">Current: {{ $course->catch_phrase }}</div>
+                @error('catch_phrase')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="description" class="form-label">Course Description</label>
+                <textarea id="description" name="description" class="form-control" rows="5"
+                    placeholder="Briefly describe what the course covers, who it's for, and key takeaways." required>{{ old('description', $course->description) }}</textarea>
+                <div class="old-value">Current: {{ Str::limit($course->description, 100) }}</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category_id" class="form-label">Category</label>
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value="">Select Category</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id', $course->category_id) == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="old-value">Current: {{ $course->category->name }}</div>
+            </div>
+            <div class="form-group">
+                <label for="instructor_id" class="form-label">Instructor</label>
+                <select id="instructor_id" name="instructor_id" class="form-control" required>
+                    <option value="">Select Instructor</option>
+                    @foreach($instructors as $instructor)
+                        <option value="{{ $instructor->id }}" {{ old('instructor_id', $course->instructor_id) == $instructor->id ? 'selected' : '' }}>
+                            {{ $instructor->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="old-value">Current: {{ $course->instructor->name }}</div>
+            </div>
+            <div class="form-group">
+                <label for="plan_type" class="form-label">Plan Type</label>
+                <select id="plan_type" name="plan_type" class="form-control" required>
+                    <option value="free" {{ old('plan_type', $course->plan_type) == 'free' ? 'selected' : '' }}>Free</option>
+                    <option value="paid" {{ old('plan_type', $course->plan_type) == 'paid' ? 'selected' : '' }}>Paid</option>
+                </select>
+                <div class="old-value">Current: {{ ucfirst($course->plan_type) }}</div>
+            </div>
+            <div class="form-group">
+                <label for="level" class="form-label">Level</label>
+                <select id="level" name="level" class="form-control" required>
+                    @foreach(['beginner', 'intermediate', 'advanced', 'expert', 'all levels'] as $lvl)
+                        <option value="{{ $lvl }}" {{ old('level', $course->level) == $lvl ? 'selected' : '' }}>
+                            {{ ucfirst($lvl) }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="old-value">Current: {{ ucfirst($course->level) }}</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="thumbnail" class="form-label">Thumbnail URL</label>
+                <input type="url" id="thumbnail" name="thumbnail" class="form-control" 
+                    value="{{ old('thumbnail', $course->thumbnail) }}" 
+                    placeholder="https://example.com/thumbnail.jpg" required>
+                <div class="old-value">Current: <a href="{{ $course->thumbnail }}" target="_blank">View Thumbnail</a></div>
+            </div>
+            <div class="form-group">
+                <label for="software_app_icon" class="form-label">Software/App Icon URL</label>
+                <input type="url" id="software_app_icon" name="software_app_icon" class="form-control" 
+                    value="{{ old('software_app_icon', $course->software_app_icon) }}" 
+                    placeholder="https://example.com/icon.png" required>
+                <div class="old-value">Current: <a href="{{ $course->software_app_icon }}" target="_blank">View Icon</a></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="total_episodes" class="form-label">Total Episodes</label>
+                <input type="number" id="total_episodes" name="noEpisodes" class="form-control" 
+                    value="{{ old('noEpisodes', $course->episodes->count()) }}" readonly>
+                <div class="old-value">Current: {{ $course->episodes->count() }} episodes</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Total Duration</label>
+                <input type="hidden" id="total_duration_seconds" name="total_duration" 
+                    value="{{ old('total_duration', $course->total_duration) }}">
+                <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
+                    <span id="total_duration_display">
+                        @php
+                            $hours = floor($course->total_duration / 3600);
+                            $minutes = floor(($course->total_duration % 3600) / 60);
+                            $seconds = $course->total_duration % 60;
+                            
+                            if ($hours > 0) {
+                                echo "{$hours}h {$minutes}m {$seconds}s";
+                            } elseif ($minutes > 0) {
+                                echo "{$minutes}m {$seconds}s";
+                            } else {
+                                echo "{$seconds}s";
+                            }
+                        @endphp
+                    </span>
+                </div>
+                <div class="old-value">Current: {{ gmdate('H:i:s', $course->total_duration) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Episodes Section -->
+    <div class="form-card" style="background-color: #f3f3f3; border-left: 4px solid var(--skBlue);">
+        <h3 class="section-title">Course Episodes</h3>
+
+        <template id="episodeTemplate">
+            <div class="episode-form" data-episode-index="__INDEX__">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label episode_id">Episode #<span class="episode-number">__NUMBER__</span></label>
+                        <input type="hidden" name="episodes[__INDEX__][episode_number]" value="__NUMBER__">
+                        <input type="hidden" name="episodes[__INDEX__][id]" value="__ID__">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Episode Title</label>
+                        <input type="text" name="episodes[__INDEX__][title]" class="form-control" placeholder="Introduction to Google Cloud" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Episode Description <span style="font-weight: normal;font-style:italic;">(optional)</span></label>
+                        <textarea name="episodes[__INDEX__][description]" class="form-control episode-description" rows="2"
+                            placeholder="Brief summary of what this episode covers."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Video URL</label>
+                        <input type="url" name="episodes[__INDEX__][video_url]" class="form-control episode-video-url"
+                            placeholder="https://example.com/episode1.mp4" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (seconds)</label>
+                        <input type="number" name="episodes[__INDEX__][duration]" class="form-control episode-duration" 
+                            placeholder="Auto-calculated" readonly>
+                        <div class="calculating" style="display: none;">Calculating duration...</div>
+                    </div>
+                    <div class="form-group fr_remove_episode">
+                        <button type="button" class="remove-episode-btn btn btn-danger btn-sm mt-2">Remove</button>
+                    </div>
                 </div>
             </div>
+        </template>
+
+        <div id="episodesContainer">
+            @foreach($course->episodes as $index => $episode)
+                <div class="episode-form" data-episode-index="{{ $index }}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label episode_id">Episode #<span class="episode-number">{{ $episode->episode_number }}</span></label>
+                            <input type="hidden" name="episodes[{{ $index }}][episode_number]" value="{{ $episode->episode_number }}">
+                            <input type="hidden" name="episodes[{{ $index }}][id]" value="{{ $episode->id }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Episode Title</label>
+                            <input type="text" name="episodes[{{ $index }}][title]" class="form-control" 
+                                value="{{ old("episodes.$index.title", $episode->title) }}" 
+                                placeholder="Introduction to Google Cloud" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Episode Description <span style="font-weight: normal;font-style:italic;">(optional)</span></label>
+                            <textarea name="episodes[{{ $index }}][description]" class="form-control episode-description" rows="2"
+                                placeholder="Brief summary of what this episode covers.">{{ old("episodes.$index.description", $episode->description) }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Video URL</label>
+                            <input type="url" name="episodes[{{ $index }}][video_url]" class="form-control episode-video-url"
+                                value="{{ old("episodes.$index.video_url", $episode->video_url) }}"
+                                placeholder="https://example.com/episode1.mp4" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Duration <span style="font-weight: normal;font-style:italic;">(seconds)</span></label>
+                            <input type="number" name="episodes[{{ $index }}][duration]" class="form-control episode-duration" 
+                                value="{{ old("episodes.$index.duration", $episode->duration) }}"
+                                placeholder="Auto-calculated" readonly>
+                            <div class="calculating" style="display: none;">Calculating duration...</div>
+                        </div>
+                        <div class="form-group fr_remove_episode">
+                            <button type="button" class="remove-episode-btn btn btn-danger btn-sm mt-2">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <button type="button" id="addEpisodeBtn" class="btn btn-outline mt-3">
+            <i class="fas fa-plus"></i> Add Another Episode
+        </button>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline">Cancel</a>
+    </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let episodeCount = {{ $course->episodes->count() }};
+        let nextNewEpisodeId = -1; 
+
+        function init() {
+            bindAddEpisodeButton();
+            bindVideoUrlChange();
+            bindRemoveEpisode();
+            updateEpisodeStats();
             
-            <input type="hidden" name="episodes[${newIndex}][episode_number]" value="${episodeCount}">
-            <input type="hidden" name="episodes[${newIndex}][id]" value="${newId}">
-        `;
-        
-        episodesContainer.appendChild(newEpisode);
-        updateTotalEpisodesCount();
-        
-        // Add event listener for the new remove button
-        newEpisode.querySelector('.remove-episode').addEventListener('click', function() {
-            showConfirmationModal(newId);
-        });
-        
-        // Add event listener for video URL change to calculate duration
-        newEpisode.querySelector('.episode-video-url').addEventListener('change', function() {
-            calculateVideoDuration(this);
-        });
-    });
-    
-    // Function to update episode numbers after reordering or deletion
-    function updateEpisodeNumbers() {
-        const episodes = Array.from(document.querySelectorAll('.episode-editor'));
-        episodes.forEach((episode, index) => {
-            const episodeNumber = index + 1;
-            episode.dataset.index = index;
-            episode.querySelector('.episode-number').textContent = episodeNumber;
-            
-            // Update all input names to reflect new index
-            episode.querySelectorAll('input, textarea').forEach(input => {
-                const name = input.name.replace(/episodes\[\d+\]/, `episodes[${index}]`);
-                input.name = name;
+            Sortable.create(document.getElementById('episodesContainer'), {
+                handle: '.episode_id',
+                animation: 150,
+                onEnd: function () {
+                    reorderEpisodes();
+                    updateEpisodeStats();
+                }
             });
             
-            // Update episode number in hidden field
-            const episodeNumberInput = episode.querySelector('input[name$="[episode_number]"]');
-            if (episodeNumberInput) {
-                episodeNumberInput.value = episodeNumber;
+            // Check for duplicate titles
+            document.addEventListener('input', function (e) {
+                if (e.target.matches('.form-control[name*="[title]"]')) {
+                    checkDuplicateTitles();
+                }
+            });
+
+            document.querySelectorAll('.episode-video-url').forEach(input => {
+                if (input.value) {
+                    calculateDuration(input);
+                }
+            });
+        }
+
+        function bindAddEpisodeButton() {
+            const btn = document.getElementById('addEpisodeBtn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    addEpisode();
+                    setTimeout(updateEpisodeStats, 100);
+                });
             }
-        });
-    }
-    
-    // Function to update the total episodes count
-    function updateTotalEpisodesCount() {
-        const totalEpisodes = document.querySelectorAll('.episode-editor').length;
-        document.querySelector('input[name="noEpisodes"]').value = totalEpisodes;
-        episodeCount = totalEpisodes;
-    }
-    
-    // Function to calculate video duration when URL changes
-    function calculateVideoDuration(inputElement) {
-        const episodeForm = inputElement.closest('.episode-editor');
-        const durationDisplay = episodeForm.querySelector('.duration-display');
-        const durationInput = episodeForm.querySelector('input[name$="[duration]"]');
+        }
+
+        function bindVideoUrlChange() {
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('episode-video-url')) {
+                    calculateDuration(e.target);
+                }
+            });
+        }
+
+        function calculateDuration(videoUrlInput) {
+            const episodeForm = videoUrlInput.closest('.episode-form');
+            const durationField = episodeForm.querySelector('.episode-duration');
+            const calculatingText = episodeForm.querySelector('.calculating');
+            const videoUrl = videoUrlInput.value.trim();
+
+            if (!videoUrl) {
+                durationField.value = '';
+                return;
+            }
+
+            calculatingText.style.display = 'block';
+            durationField.value = '';
+
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.src = videoUrl;
+            
+            video.onloadedmetadata = function() {
+                const duration = Math.floor(video.duration);
+                durationField.value = duration;
+                calculatingText.style.display = 'none';
+                updateEpisodeStats();
+            };
+            
+            video.onerror = function() {
+                calculatingText.style.display = 'none';
+                durationField.value = '0';
+                updateEpisodeStats();
+            };
+        }
+
+        function addEpisode() {
+            episodeCount++;
+            nextNewEpisodeId--;
+            
+            const template = document.getElementById('episodeTemplate');
+            const newEpisode = template.content.firstElementChild.cloneNode(true);
+            
+            // Replace all placeholders
+            const newEpisodeHtml = newEpisode.outerHTML
+                .replace(/__INDEX__/g, episodeCount)
+                .replace(/__NUMBER__/g, episodeCount)
+                .replace(/__ID__/g, nextNewEpisodeId);
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newEpisodeHtml;
+            const finalNewEpisode = tempDiv.firstChild;
+            
+            // Set up event listeners
+            const videoUrlInput = finalNewEpisode.querySelector('.episode-video-url');
+            videoUrlInput.addEventListener('change', function() {
+                calculateDuration(this);
+            });
+            
+            const removeBtn = finalNewEpisode.querySelector('.remove-episode-btn');
+            removeBtn.addEventListener('click', function() {
+                finalNewEpisode.remove();
+                updateEpisodeStats();
+            });
+            
+            document.getElementById('episodesContainer').appendChild(finalNewEpisode);
+        }
+
+        function bindRemoveEpisode() {
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-episode-btn')) {
+                    const form = e.target.closest('.episode-form');
+                    form.remove();
+                    updateEpisodeStats();
+                }
+            });
+        }
+
+        function updateEpisodeStats() {
+            const forms = document.querySelectorAll('.episode-form');
+            const totalEpisodes = forms.length;
+            let totalSeconds = 0;
+
+            forms.forEach(form => {
+                const durField = form.querySelector('.episode-duration');
+                if (durField && durField.value) {
+                    totalSeconds += parseInt(durField.value) || 0;
+                }
+            });
+
+            document.getElementById('total_episodes').value = totalEpisodes;
+            document.getElementById('total_duration_seconds').value = totalSeconds;
+            document.getElementById('total_duration_display').textContent = formatDurationForDisplay(totalSeconds);
+        }
+
+        function formatDurationForDisplay(totalSeconds) {
+            totalSeconds = Math.floor(totalSeconds);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            
+            let parts = [];
+            if (h > 0) parts.push(`${h}h`);
+            if (m > 0) parts.push(`${m}m`);
+            if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+            
+            return parts.join(' ');
+        }
+
+        function reorderEpisodes() {
+            const forms = document.querySelectorAll('.episode-form');
+            forms.forEach((form, index) => {
+                const newNumber = index + 1;
+                form.querySelector('.episode-number').textContent = newNumber;
+                form.querySelector('input[name$="[episode_number]"]').value = newNumber;
+
+                form.querySelectorAll('input, textarea, select').forEach(input => {
+                    const name = input.name.replace(/episodes\[\d+\]/, `episodes[${index}]`);
+                    input.name = name;
+                });
+            });
+        }
+
+        function checkDuplicateTitles() {
+            const titles = [];
+            const fields = document.querySelectorAll('input[name*="[title]"]');
+            fields.forEach(field => {
+                const val = field.value.trim().toLowerCase();
+                if (titles.includes(val)) {
+                    field.setCustomValidity('Duplicate episode title.');
+                } else {
+                    field.setCustomValidity('');
+                    if (val) titles.push(val);
+                }
+            });
+        }
         
-        if (!durationDisplay || !durationInput) return;
-        
-        durationDisplay.textContent = 'Calculating...';
-        durationInput.value = '0';
-        
-        // In a real implementation, you would fetch the actual duration from the video URL
-        // This is a mock implementation that simulates the process
-        setTimeout(() => {
-            const durationInSeconds = Math.floor(Math.random() * 1800) + 60; // Random duration between 1-30 mins
-            durationDisplay.textContent = new Date(durationInSeconds * 1000).toISOString().substr(11, 8);
-            durationInput.value = durationInSeconds;
-            calculateTotalDuration();
-        }, 1000);
-    }
-    
-    // Function to calculate total duration of all episodes
-    function calculateTotalDuration() {
-        let totalSeconds = 0;
-        const durationInputs = document.querySelectorAll('input[name$="[duration]"]');
-        
-        durationInputs.forEach(input => {
-            totalSeconds += parseInt(input.value) || 0;
-        });
-        
-        document.querySelector('input[name="total_duration"]').value = totalSeconds;
-        document.querySelector('.duration-display').textContent = new Date(totalSeconds * 1000).toISOString().substr(11, 8);
-    }
-    
-    // Add event listeners to all remove buttons
-    document.querySelectorAll('.remove-episode').forEach(button => {
-        button.addEventListener('click', function() {
-            const episodeId = this.dataset.episodeId;
-            showConfirmationModal(episodeId);
-        });
+        init();
     });
-    
-    // Add event listeners to all video URL inputs for duration calculation
-    document.querySelectorAll('.episode-video-url').forEach(input => {
-        input.addEventListener('change', function() {
-            calculateVideoDuration(this);
-        });
-    });
-    
-    // Make episodes sortable
-    if (typeof Sortable !== 'undefined') {
-        new Sortable(episodesContainer, {
-            animation: 150,
-            handle: '.episode-header',
-            onEnd: function() {
-                updateEpisodeNumbers();
-            }
-        });
-    } else {
-        console.error('SortableJS library not loaded');
-        // Fallback behavior if Sortable fails to load
-        document.querySelectorAll('.episode-editor .episode-header').forEach(header => {
-            header.style.cursor = 'default';
-        });
-    }
-    
-    // Form submission handler to prevent duplicate submissions
-    const form = document.getElementById('course-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const submitButton = form.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            }
-        });
-    }
-});
 </script>
 @endsection

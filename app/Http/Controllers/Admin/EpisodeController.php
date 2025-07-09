@@ -91,21 +91,21 @@ class EpisodeController extends Controller
             ->with('success', 'Episode updated successfully!');
     }
 
-public function destroy(Course $course, CourseEpisode $episode)
-{
-    try {
-        $episode->delete();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Episode deleted successfully'
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to delete episode: ' . $e->getMessage()
-        ], 500);
+    public function destroy(Course $course, CourseEpisode $episode)
+    {
+        try {
+            $episode->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Episode deleted successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete episode: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
 }

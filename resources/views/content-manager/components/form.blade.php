@@ -80,7 +80,7 @@
         <label class="form-label">Total Duration</label>
         <input type="hidden" id="total_duration_seconds" name="total_duration" value="0">
         <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
-            <span id="total_duration_display">0 seconds</span>
+            <span id="total_duration_display">0 s</span>
         </div>
     </div>
 </div>
@@ -114,7 +114,7 @@
                         placeholder="https://example.com/episode1.mp4" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Duration <span style="font-weight: normal;font-style:italic;">(minutes)</span></label>
+                    <label class="form-label">Duration <span style="font-weight: normal;font-style:italic;">(seconds)</span></label>
                     <input type="text" name="episodes[__INDEX__][duration]" class="form-control episode-duration" style="cursor: not-allowed;" readonly>
                 </div>
                 <div class="form-group">
@@ -139,8 +139,6 @@
     <button type="submit" class="btn btn-primary">Create Course</button>
     <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">Cancel</a>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -183,9 +181,7 @@
 
                 getVideoDurationFromUrl(videoUrl, function(duration) {
                     if (duration) {
-                        const minutes = Math.floor(duration / 60);
-                        const seconds = Math.floor(duration % 60);
-                        durationField.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        durationField.value = Math.floor(duration);
                         updateEpisodeStats();
                     } else {
                         durationField.value = '0:00';
@@ -299,20 +295,15 @@
                 if (!durField) return;
 
                 const value = durField.value.trim();
-                
-                if (value.includes(':')) {
-                    const parts = value.split(':').map(Number);
-                    if (parts.length === 2) {
-                        // Convert MM:SS to total seconds
-                        totalSeconds += (parts[0] * 60) + parts[1];
-                    }
+                const seconds = Number(value);
+
+                if (!isNaN(seconds) && seconds > 0) {
+                    totalSeconds += seconds;
                 }
             });
 
             document.getElementById('total_episodes').value = totalEpisodes;
-            
             document.getElementById('total_duration_seconds').value = totalSeconds;
-            
             document.getElementById('total_duration_display').textContent = formatDurationForDisplay(totalSeconds);
         }
 

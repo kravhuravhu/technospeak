@@ -314,6 +314,13 @@
         <a href="{{ route('content-manager.courses.edit', $course->id) }}" class="btn btn-primary">
             <i class="fas fa-edit"></i> Edit Course
         </a>
+        <form action="{{ route('content-manager.courses.destroy', $course->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                <i class="fas fa-trash"></i> Delete Course
+            </button>
+        </form>
     </div>
 </div>
 
@@ -366,25 +373,31 @@
                     <div class="stat-card">
                         <div class="stat-value">
                             @php
-                                $hours = floor($course->total_duration / 3600);
-                                $minutes = floor(($course->total_duration % 3600) / 60);
-                                
+                                $totalSeconds = $course->total_duration;
+
+                                $hours = floor($totalSeconds / 3600);
+                                $minutes = floor(($totalSeconds % 3600) / 60);
+                                $seconds = $totalSeconds % 60;
+
                                 if ($hours > 0) {
-                                    echo $hours.'h '.$minutes.'m';
+                                    $formatted = sprintf('%02dh %02dm %02ds', $hours, $minutes, $seconds);
+                                } elseif ($minutes > 0) {
+                                    $formatted = sprintf('%02dm %02ds', $minutes, $seconds);
                                 } else {
-                                    echo $minutes.'m';
+                                    $formatted = sprintf('%02ds', $seconds);
                                 }
+                                echo $formatted;
                             @endphp
                         </div>
                         <div class="stat-label">Duration</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">{{ number_format(rand(1000, 10000)) }}</div>
+                        <div class="stat-value">0 Enrolled</div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">
-                            @if($course->is_active)
+                            @if($course->noEpisodes > 0)
                                 <span style="color: var(--success);">Active</span>
                             @else
                                 <span style="color: var(--danger);">Inactive</span>
@@ -416,19 +429,22 @@
                             @endif
                             <div class="episode-meta">
                                 <span><i class="far fa-clock"></i> {{ gmdate('i:s', $episode->duration) }}</span>
-                                <span><i class="fas fa-eye"></i> {{ number_format(rand(500, 5000)) }} views</span>
+                                <span><i class="fas fa-eye"></i> 0 views</span>
                             </div>
                         </div>
                         <div class="episode-actions">
-                            <button class="action-btn" title="Preview">
-                                <i class="fas fa-play"></i>
-                            </button>
                             <button class="action-btn" title="Edit">
-                                <i class="fas fa-edit"></i>
+                                <a href="{{ route('content-manager.courses.edit', $course->id) }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                             </button>
-                            <button class="action-btn" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                           <form action="{{ route('content-manager.courses.episodes.destroy', [$course->id, $episode->id]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this episode?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     @endforeach

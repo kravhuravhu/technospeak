@@ -457,11 +457,15 @@ body {
                                 transform: scale(1.05);
                                 z-index: 2;
                                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                                & > .cr-img {
+                                    height: 250px;
+                                    width: 250px;
+                                }
                             }
                             
                             & > .cr-img {
-                                height: 220px; 
-                                width: 220px;
+                                height: 200px; 
+                                width: 200px;
                                 border-radius: 50%;
                                 margin-bottom: 25px;
                                 overflow: hidden;

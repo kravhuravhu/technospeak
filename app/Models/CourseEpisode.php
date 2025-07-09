@@ -33,14 +33,18 @@ class CourseEpisode extends Model
         return $this->belongsTo(Course::class);
     }
 
+    // public function getDurationFormattedAttribute()
+    // {
+    //     $hours = floor($this->duration / 60);
+    //     $minutes = $this->duration % 60;
+        
+    //     if ($hours > 0) {
+    //         return sprintf('%dh %02dm', $hours, $minutes);
+    //     }
+    //     return sprintf('%dm', $minutes);
+    // }
     public function getDurationFormattedAttribute()
     {
-        $hours = floor($this->duration / 60);
-        $minutes = $this->duration % 60;
-        
-        if ($hours > 0) {
-            return sprintf('%dh %02dm', $hours, $minutes);
-        }
-        return sprintf('%dm', $minutes);
+        return $this->duration;
     }
 }

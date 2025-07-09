@@ -24,7 +24,6 @@ class Course extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
         'total_duration' => 'integer',
         'noEpisodes' => 'integer',
         'is_active' => 'boolean',
@@ -46,26 +45,10 @@ class Course extends Model
         return $this->hasMany(CourseEpisode::class);
     }
 
-    public function getFormattedPriceAttribute()
-    {
-        return $this->plan_type === 'paid' ? '$' . number_format($this->price, 2) : 'Free';
-    }
-
     public function getFormattedDurationAttribute()
     {
-        $hours = floor($this->total_duration / 60);
-        $minutes = $this->total_duration % 60;
-        
-        if ($hours > 0) {
-            return sprintf('%dh %02dm', $hours, $minutes);
-        }
-        return sprintf('%dm', $minutes);
+        return $this->total_duration;
     }
-
-    // public function scopeActive($query)
-    // {
-    //     return $query->where('is_active', true);
-    // }
 
     public function scopePaid($query)
     {

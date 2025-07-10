@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\StripeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -134,3 +135,30 @@ Route::prefix('content')->name('content-manager.')->group(function() {
     });
 
 });
+
+
+// --- Stripe routes ---
+Route::get('/index', [StripeController::class, 'index'])->name('index');
+
+Route::get('/checkout/success', [StripeController::class, 'success'])->name('success');
+
+Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+
+
+
+// Admin routes (make sure 'admin' middleware is defined)
+// Route::middleware('admin')->group(function () {
+// Route::get('/admin/payments', [PaymentsController::class, 'index'])->name('admin.payments.index');
+// Route::get('/admin/payments/{payment}', [PaymentsController::class, 'show'])->name('admin.payments.show');
+// Route::post('/admin/payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('admin.payments.approve');
+// Route::delete('/admin/payments/{payment}', [PaymentsController::class, 'destroy'])->name('admin.payments.destroy');
+// Route::get('/content-manager/payments', [PaymentsController::class, 'index'])->name('content-manager.payments.index');
+// Route::get('/content-manager/payments/{payment}', [PaymentsController::class, 'show'])->name('content-manager.payments.show');
+// Route::post('/content-manager/payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('content-manager.payments.approve');
+// });
+
+// Stripe flow
+// Route::post('/payments/initiate', [PaymentsController::class, 'initiateStripeCheckout'])->name('payment.initiate');
+// Route::get('/payments/success/{id}', [StripeController::class, 'success'])->name('payment.success');
+// Route::get('/payments/cancel/{id}', [StripeController::class, 'cancel'])->name('payment.cancel');
+

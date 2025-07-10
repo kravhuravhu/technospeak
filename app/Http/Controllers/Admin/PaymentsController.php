@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+use App\Models\Payment;
+use App\Models\Course;
+use App\Models\Client;
 
 class PaymentsController extends Controller
 {
@@ -23,29 +27,65 @@ class PaymentsController extends Controller
         return view('admin.payments.index', compact('payments', 'totalRevenue', 'pendingAmount'));
     }
 
-    public function show(Payment $payment)
+    public function initiateStripeCheckout(Request $request)
     {
-        $payment->load(['client', 'course']);
-        return view('admin.payments.show', compact('payment'));
+        $course = Course::findOrFail($request->course_id);
+        $client = Auth::user(); // assuming authenticated client
+
+        $amountInCents = (int) round($course->price * 100);
+
+        $payment = Payment::create([
+            'transaction_id' => uniqid('txn_'),
+            'client_id' => $client->id,
+            'course_id' => $course->id,
+            'amount' => $course->price,
+            'status' => 'pending',
+        ]);
+
+        Stripe::setApiKey(config('stripe.sk'));
+
+        $session = Session::create([
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'zar',
+                    'product_data' => [
+                        'name' => $course->title,
+                    ],
+                    'unit_amount' => $amountInCents,
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => route('payment.success', ['id' => $payment->id]),
+            'cancel_url' => route('payment.cancel', ['id' => $payment->id]),
+        ]);
+
+        return redirect()->away($session->url);
     }
 
     public function approve(Request $request, Payment $payment)
     {
         $payment->update(['status' => 'completed']);
 
-        // I'll discuss with Omega first to maybe ....
-        // 1. Grant the client access to the course
-        // 2. Send a confirmation email
+        // ✔️ Grant access to the course
+        $client = $payment->client;
+        $course = $payment->course;
+        $client->courses()->attach($course->id);
 
-        return redirect()->route('content-manager.payments.index')
-            ->with('success', 'Payment approved successfully!');
+        return redirect()->route('admin.payments.index')
+            ->with('success', 'Payment approved and course access granted!');
+    }
+
+    public function show(Payment $payment)
+    {
+        $payment->load(['client', 'course']);
+        return view('admin.payments.show', compact('payment'));
     }
 
     public function destroy(Payment $payment)
     {
         $payment->delete();
-
-        return redirect()->route('content-manager.payments.index')
+        return redirect()->route('admin.payments.index')
             ->with('success', 'Payment record deleted successfully!');
     }
 }

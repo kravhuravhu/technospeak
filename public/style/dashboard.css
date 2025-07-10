@@ -12,7 +12,7 @@
     --skBlue-color: #38b6ff;
     --lightBlue2Grey-color: #718096;
     --blue-color: #0d47a1;
-    --darkBlue-color: #2d3748;
+    --darkBlue-color: #062644;
     --liGrey-color: #ededed;
     --liGrey2-color: #b4b4b4;
     --black-color: #000000;
@@ -838,7 +838,7 @@ section.bar-lt-rt {
               max-width: 1200px;
               & > .title {
                 & > h1 {
-                  color: #2d3436;
+                  color: var(--darkBlue-color);
                   font-size: 1.5em;
                   margin-bottom: 8px;
                   font-weight: 600;
@@ -1211,7 +1211,7 @@ section.bar-lt-rt {
         }
 
         .issue-title h2 {
-          color: #2d3748;
+          color: var(--darkBlue-color);
           font-size: 1.8rem;
           margin-bottom: 5px;
           font-weight: 600;
@@ -1933,7 +1933,7 @@ section.bar-lt-rt {
         }
 
         .coach-intro h2 {
-          color: #2d3748;
+          color: var(--darkBlue-color);
           font-size: 1.8rem;
           margin-bottom: 5px;
           font-weight: 600;
@@ -2022,7 +2022,7 @@ section.bar-lt-rt {
         }
 
         .recommendations-title {
-          color: #2d3748;
+          color: var(--darkBlue-color);
           font-size: 1.4rem;
           margin-bottom: 20px;
           padding-bottom: 10px;
@@ -2263,7 +2263,7 @@ section.bar-lt-rt {
             & > .title {
               & > h2 {
                 font-size: 2rem;
-                color: #2d3748;
+                color: var(--darkBlue-color);
                 margin-bottom: 10px;
               }
               & > p {
@@ -2462,7 +2462,7 @@ section.bar-lt-rt {
             & > .contact-section {
               & > h2 {
                 font-size: 1.2rem;
-                color: #2d3748;
+                color: var(--darkBlue-color);
                 margin-bottom: 20px;
                 display: flex;
                 align-items: center;

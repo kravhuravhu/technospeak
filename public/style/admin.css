@@ -1,6 +1,6 @@
 :root {
     --skBlue: #38b6ff;
-    --darkBlue: #2d3748;
+    --darkBlue: #062644;
     --powBlue: #15415a;
     --lightGray: #f8fafc;
     --textDark: #2d3748;
@@ -47,7 +47,7 @@ body {
 }
 
 .sidebar-header img {
-    height: 40px;
+    width: 100%;
     margin-right: 10px;
 }
 

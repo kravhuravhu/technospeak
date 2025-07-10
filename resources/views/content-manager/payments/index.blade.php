@@ -88,3 +88,35 @@
     </div>
 </div>
 @endsection
+
+<!-- <td>
+    <div class="btn-group">
+        <a href="{{ route('admin.payments.show', $payment->id) }}" class="btn btn-outline btn-sm">
+            <i class="fas fa-eye"></i>
+        </a>
+        @if($payment->status === 'pending')
+        <form method="POST" action="{{ route('admin.payments.approve', $payment->id) }}">
+            @csrf
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-check"></i> Approve
+            </button>
+        </form>
+        @endif
+    </div>
+</td> -->
+
+<td>
+    <div class="btn-group">
+        <a href="{{ route('content-manager.payments.show', $payment->id) }}" class="btn btn-outline btn-sm">
+            <i class="fas fa-eye"></i>
+        </a>
+        @if($payment->status === 'pending')
+        <form method="POST" action="{{ route('content-manager.payments.approve', $payment->id) }}">
+            @csrf
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-check"></i> Approve
+            </button>
+        </form>
+        @endif
+    </div>
+</td>

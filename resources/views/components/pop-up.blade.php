@@ -8,7 +8,6 @@
         align-items: center;
         justify-content: center;
         z-index: 9999;
-    }
 
     .modal-content {
         background: white;
@@ -77,6 +76,7 @@
     .modal-button.cancel {
         background-color: #ff4747;
     }
+}
 </style>
 
 <div id="generic-modal" class="modal" style="display: none;">

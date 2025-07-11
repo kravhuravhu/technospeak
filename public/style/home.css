@@ -211,7 +211,7 @@ body {
                     border-radius: 30px;
                     transition: all .3s ease-in-out;
                     &.bg-wt {
-                        background-color: #2d3748;
+                        background-color: var(--darkBlue-color);
                         color: #e2e2e2;
                     }
                     &:hover {
@@ -2113,4 +2113,3 @@ body {
         }
     }
 }
-

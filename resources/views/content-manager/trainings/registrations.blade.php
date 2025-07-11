@@ -7,6 +7,11 @@
     <div class="page-title">
         <h1>{{ $training->title }}</h1>
         <p>Manage session registrations</p>
+        <p class="session-info">
+            <strong>Scheduled:</strong> {{ $training->scheduled_for->format('M d, Y H:i') }} •
+            <strong>Duration:</strong> {{ $training->duration }} •
+            <strong>Instructor:</strong> {{ $training->instructor ? $training->instructor->name : 'Not assigned' }}
+        </p>
     </div>
     <div class="user-menu">
         <span class="badge" style="background: var(--skBlue); color: white; padding: 0.5rem 1rem;">
@@ -98,4 +103,15 @@
         }
     });
 </script>
+
+<style>
+    .session-info {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .session-info strong {
+        color: var(--textDark);
+    }
+</style>
 @endsection

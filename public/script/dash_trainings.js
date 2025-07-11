@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         card.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Get all data attributes
             const isFree = this.getAttribute('data-training-type') === 'free';
             const title = this.getAttribute('data-title');
             const description = this.getAttribute('data-description');
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Set enroll button
             const enrollBtn = document.getElementById('enroll-btn');
-            enrollBtn.textContent = isFree ? 'Enroll Now' : 'Buy Now';
+            enrollBtn.textContent = isFree ? 'Enroll Now' : 'Unlock All';
             enrollBtn.style.backgroundColor = isFree ? '#38b6ff' : '#2ecc71';
             
             // Show modal

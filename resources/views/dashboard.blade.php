@@ -405,411 +405,118 @@
 
                 <!-- trainings containers -->
                 <div class="content-section alltrainings_content" id="usr_alltrainings">
-                    <!-- Free Trainings Section -->
                     <div class="rcmmnd_trngs free_tr all_tr ln_rcmm">
                         <div class="container">
                             <div class="title">
                                 <h1>Free Trainings</h1>
                             </div>
+                            @php
+                                // Get all free courses
+                                $freeCourses = isset($freeCourses) ? $freeCourses : app(App\Http\Controllers\Admin\CourseController::class)->trainingCallFree();
+                            @endphp
                             <div class="card-grid thn_grid_cd" id="free-trainings">
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Introduction to Digital Marketing"
-                                    data-description="Learn the fundamentals of digital marketing including SEO, social media, and content marketing. This comprehensive course will take you from beginner to confident practitioner with hands-on projects and real-world examples."
-                                    data-image="/images/thumbnails/Whisk_e3ccd6591e.jpg"
-                                    data-duration="4 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Sarah Johnson"
-                                    data-category="Marketing"
-                                    data-episodes='[
-                                        {"number":1,"name":"Introduction to Digital Marketing","duration":"15 min"},
-                                        {"number":2,"name":"Understanding SEO Basics","duration":"22 min"},
-                                        {"number":3,"name":"Social Media Marketing Strategies","duration":"18 min"},
-                                        {"number":4,"name":"Content Marketing Fundamentals","duration":"20 min"},
-                                        {"number":5,"name":"Email Marketing Techniques","duration":"16 min"},
-                                        {"number":6,"name":"Google Analytics Overview","duration":"25 min"},
-                                        {"number":7,"name":"PPC Advertising Basics","duration":"19 min"},
-                                        {"number":8,"name":"Creating a Digital Marketing Plan","duration":"30 min"}
-                                    ]'
-                                    data-time="3h 45min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="/images/thumbnails/Whisk_e3ccd6591e.jpg" alt="Introduction to Digital Marketing">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Digital Marketing</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Learn the fundamentals of digital marketing including SEO, social media, and content marketing. This comprehensive course will take you from beginner to confident practitioner with hands-on projects and real-world examples....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>3h 45min</span>
+                                @if($freeCourses->count() > 0)
+                                    @foreach($freeCourses->take(4) as $course) 
+                                        <a href="#" class="training-card" 
+                                            data-training-type="free"
+                                            data-title="{{ $course['title'] }}"
+                                            data-description="{{ $course['description'] }}"
+                                            data-image="{{ $course['thumbnail'] }}"
+                                            data-duration="{{ $course['formatted_duration'] }}"
+                                            data-level="{{ ucfirst($course['level']) }}"
+                                            data-instructor="{{ $course['instructor_name'] }}"
+                                            data-category="{{ $course['category_name'] }}"
+                                            data-episodes='@json($course['episodes'])'
+                                            data-time="{{ $course['formatted_duration'] }}"
+                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
+                                            <div class="card rcmmd_cd">
+                                                <div class="thmbnail thn_rcmm">
+                                                    <div class="trnsprnt thmb_img">
+                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
+                                                    </div>
                                                 </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
+                                                <div class="details thmb_dt">
+                                                    <div class="title content thmb_cnt">
+                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
+                                                    </div>
+                                                    <div class="ctprs content thmb_cnt">
+                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
+                                                    </div>
+                                                    <div class="thmb_dur_ep_container content thmb_cnt">
+                                                        <div class="cont left-side">
+                                                            <i class="fa-solid fa-stopwatch"></i>
+                                                            <span>{{ $course['formatted_duration'] }}</span>
+                                                        </div>
+                                                        <div class="cont right-side">
+                                                            <i class="fa-solid fa-video"></i>
+                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="thmb_enrll content">
+                                                        <label>Enroll Free</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <div class="no-courses-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
+                                        <p>No free courses available at the moment. Please check back later!</p>
                                     </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                @endif
                             </div>
                             
                             <div class="card-grid thn_grid_cd hidden" id="more-free-trainings">
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
+                                @if($freeCourses->count() > 4)
+                                    @foreach($freeCourses->slice(4) as $course)
+                                        <a href="#" class="training-card" 
+                                            data-training-type="free"
+                                            data-title="{{ $course['title'] }}"
+                                            data-description="{{ $course['description'] }}"
+                                            data-image="{{ $course['thumbnail'] }}"
+                                            data-duration="{{ $course['formatted_duration'] }}"
+                                            data-level="{{ ucfirst($course['level']) }}"
+                                            data-instructor="{{ $course['instructor_name'] }}"
+                                            data-category="{{ $course['category_name'] }}"
+                                            data-episodes='@json($course['episodes'])'
+                                            data-time="{{ $course['formatted_duration'] }}"
+                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
+                                            <div class="card rcmmd_cd">
+                                                <div class="thmbnail thn_rcmm">
+                                                    <div class="trnsprnt thmb_img">
+                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
+                                                    </div>
                                                 </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
+                                                <div class="details thmb_dt">
+                                                    <div class="title content thmb_cnt">
+                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
+                                                    </div>
+                                                    <div class="ctprs content thmb_cnt">
+                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
+                                                    </div>
+                                                    <div class="thmb_dur_ep_container content thmb_cnt">
+                                                        <div class="cont left-side">
+                                                            <i class="fa-solid fa-stopwatch"></i>
+                                                            <span>{{ $course['formatted_duration'] }}</span>
+                                                        </div>
+                                                        <div class="cont right-side">
+                                                            <i class="fa-solid fa-video"></i>
+                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="thmb_enrll content">
+                                                        <label>Enroll Free</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="training-card" 
-                                    data-training-type="free"
-                                    data-title="Python for Beginners"
-                                    data-description="Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises."
-                                    data-image="images/thumbnails/Whisk_f4a5896531.jpg"
-                                    data-duration="6 weeks"
-                                    data-level="Beginner"
-                                    data-instructor="Michael Chen"
-                                    data-category="Programming"
-                                    data-episodes='[
-                                        {"number":1,"name":"Python Installation & Setup","duration":"12 min"},
-                                        {"number":2,"name":"Variables and Data Types","duration":"18 min"},
-                                        {"number":3,"name":"Conditional Statements","duration":"20 min"},
-                                        {"number":4,"name":"Loops and Iterations","duration":"25 min"},
-                                        {"number":5,"name":"Functions in Python","duration":"22 min"},
-                                        {"number":6,"name":"Working with Lists","duration":"15 min"},
-                                        {"number":7,"name":"Dictionaries and Tuples","duration":"18 min"},
-                                        {"number":8,"name":"File Handling Basics","duration":"20 min"}
-                                    ]'
-                                    data-time="5h 30min">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="images/thumbnails/Whisk_f4a5896531.jpg" alt="Python for Beginners">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Python for Beginners</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Start your programming journey with this comprehensive Python course for absolute beginners. Learn syntax, data structures, and problem-solving techniques through practical exercises....</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>5h 30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>8 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll Free</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                        </a>
+                                    @endforeach
+                                @endif
                             </div>
                             
-                            <button class="toggle-btn" id="toggle-free">More Free Trainings</button>
+                            @if($freeCourses->count() > 4)
+                                <button class="toggle-btn" id="toggle-free">More Free Trainings</button>
+                            @endif
                         </div>
                     </div>
                     
@@ -818,121 +525,120 @@
                         <div class="container">
                             <div class="title">
                                 <h1>Premium Trainings</h1>
+                                <p class="subtitle">Unlock all premium trainings with a single payment</p>
                             </div>
+                            @php
+                                // Get all paid courses
+                                $paidCourses = isset($paidCourses) ? $paidCourses : app(App\Http\Controllers\Admin\CourseController::class)->trainingCallPaid();
+                            @endphp
                             <div class="card-grid thn_grid_cd" id="paid-trainings">
-                                <!-- Paid training card 1 -->
-                                <a href="#" class="training-card" 
-                                    data-training-type="paid"
-                                    data-title="Advanced Data Science"
-                                    data-description="Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio."
-                                    data-image="https://source.unsplash.com/random/400x300/?data,science"
-                                    data-duration="10 weeks"
-                                    data-level="Advanced"
-                                    data-instructor="Dr. Alan Turing"
-                                    data-category="Data Science"
-                                    data-price="$199"
-                                    data-episodes='[
-                                        {"number":1,"name":"Advanced Pandas Techniques","duration":"35 min"},
-                                        {"number":2,"name":"Data Visualization with Seaborn","duration":"40 min"},
-                                        {"number":3,"name":"Statistical Analysis Fundamentals","duration":"45 min"},
-                                        {"number":4,"name":"Machine Learning Introduction","duration":"50 min"},
-                                        {"number":5,"name":"Supervised Learning Algorithms","duration":"55 min"},
-                                        {"number":6,"name":"Unsupervised Learning Techniques","duration":"45 min"},
-                                        {"number":7,"name":"Neural Networks Basics","duration":"60 min"},
-                                        {"number":8,"name":"Model Evaluation Methods","duration":"40 min"}
-                                    ]'
-                                    data-time="15h 20min">
-                                        <div class="card rcmmd_cd">
-                                            <div class="thmbnail thn_rcmm">
-                                                <div class="trnsprnt thmb_img">
-                                                    <img src="https://source.unsplash.com/random/400x300/?data,science" alt="Advanced Data Science">
-                                                </div>
-                                            </div>
-                                            <div class="details thmb_dt">
-                                                <div class="title content thmb_cnt">
-                                                    <h1 class="thmb_h1">Advanced Data Science</h1>
-                                                </div>
-                                                <div class="ctprs content thmb_cnt">
-                                                    <p class="thmb_ct">Master machine learning algorithms, data visualization, and statistical analysis with Python. This course includes hands-on projects with real datasets to build your portfolio....</p>
-                                                </div>
-                                                <div class="thmb_dur_ep_container content thmb_cnt">
-                                                    <div class="cont left-side">
-                                                        <i class="fa-solid fa-stopwatch"></i>
-                                                        <span>15h 20min</span>
-                                                    </div>
-                                                    <div class="cont right-side">
-                                                        <i class="fa-solid fa-video"></i>
-                                                        <span>8 Episodes</span>
+                                @if($paidCourses->count() > 0)
+                                    @foreach($paidCourses->take(4) as $course) 
+                                        <a href="#" class="training-card" 
+                                            data-training-type="paid"
+                                            data-title="{{ $course['title'] }}"
+                                            data-description="{{ $course['description'] }}"
+                                            data-image="{{ $course['thumbnail'] }}"
+                                            data-duration="{{ $course['formatted_duration'] }}"
+                                            data-level="{{ ucfirst($course['level']) }}"
+                                            data-instructor="{{ $course['instructor_name'] }}"
+                                            data-category="{{ $course['category_name'] }}"
+                                            data-price="{{ $course['price'] }}"
+                                            data-episodes='@json($course['episodes'])'
+                                            data-time="{{ $course['formatted_duration'] }}"
+                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
+                                            <div class="card rcmmd_cd">
+                                                <div class="thmbnail thn_rcmm">
+                                                    <div class="trnsprnt thmb_img">
+                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
                                                     </div>
                                                 </div>
-                                                <div class="thmb_enrll content">
-                                                    <label>$199</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                </a>
-                                
-                                <!-- Paid training card 2 -->
-                                <a href="#" class="training-card" 
-                                    data-training-type="paid"
-                                    data-title="Complete Web Development Bootcamp"
-                                    data-description="Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio."
-                                    data-image="https://source.unsplash.com/random/400x300/?web,development"
-                                    data-duration="12 weeks"
-                                    data-level="Intermediate"
-                                    data-instructor="Angela Yu"
-                                    data-category="Web Development"
-                                    data-price="$249"
-                                    data-episodes='[
-                                        {"number":1,"name":"HTML5 Fundamentals","duration":"30 min"},
-                                        {"number":2,"name":"CSS3 and Responsive Design","duration":"45 min"},
-                                        {"number":3,"name":"JavaScript Basics","duration":"50 min"},
-                                        {"number":4,"name":"DOM Manipulation","duration":"40 min"},
-                                        {"number":5,"name":"React Introduction","duration":"55 min"},
-                                        {"number":6,"name":"Node.js and Express","duration":"60 min"},
-                                        {"number":7,"name":"MongoDB and Databases","duration":"45 min"},
-                                        {"number":8,"name":"Building RESTful APIs","duration":"50 min"}
-                                    ]'
-                                    data-time="20h 45min">
-                                        <div class="card rcmmd_cd">
-                                            <div class="thmbnail thn_rcmm">
-                                                <div class="trnsprnt thmb_img">
-                                                    <img src="https://source.unsplash.com/random/400x300/?web,development" alt="Complete Web Development Bootcamp">
-                                                </div>
-                                            </div>
-                                            <div class="details thmb_dt">
-                                                <div class="title content thmb_cnt">
-                                                    <h1 class="thmb_h1">Complete Web Development Bootcamp</h1>
-                                                </div>
-                                                <div class="ctprs content thmb_cnt">
-                                                    <p class="thmb_ct">Become a full-stack developer with HTML, CSS, JavaScript, React, Node.js and MongoDB. Build 5 real-world projects to showcase in your portfolio....</p>
-                                                </div>
-                                                <div class="thmb_dur_ep_container content thmb_cnt">
-                                                    <div class="cont left-side">
-                                                        <i class="fa-solid fa-stopwatch"></i>
-                                                        <span>20h 45min</span>
+                                                <div class="details thmb_dt">
+                                                    <div class="title content thmb_cnt">
+                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
                                                     </div>
-                                                    <div class="cont right-side">
-                                                        <i class="fa-solid fa-video"></i>
-                                                        <span>8 Episodes</span>
+                                                    <div class="ctprs content thmb_cnt">
+                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
+                                                    </div>
+                                                    <div class="thmb_dur_ep_container content thmb_cnt">
+                                                        <div class="cont left-side">
+                                                            <i class="fa-solid fa-stopwatch"></i>
+                                                            <span>{{ $course['formatted_duration'] }}</span>
+                                                        </div>
+                                                        <div class="cont right-side">
+                                                            <i class="fa-solid fa-video"></i>
+                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="thmb_enrll content">
+                                                        <label>Unlock</label>
                                                     </div>
                                                 </div>
-                                                <div class="thmb_enrll content">
-                                                    <label>$249</label>
-                                                </div>
                                             </div>
-                                        </div>
-                                </a>
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <div class="no-courses-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
+                                        <p>No premium courses available at the moment. Please check back later!</p>
+                                    </div>
+                                @endif
                             </div>
                             
                             <div class="card-grid thn_grid_cd hidden" id="more-paid-trainings">
-                                <!-- Additional paid training cards would go here -->
+                                @if($paidCourses->count() > 4)
+                                    @foreach($paidCourses->slice(4) as $course)
+                                        <a href="#" class="training-card" 
+                                            data-training-type="paid"
+                                            data-title="{{ $course['title'] }}"
+                                            data-description="{{ $course['description'] }}"
+                                            data-image="{{ $course['thumbnail'] }}"
+                                            data-duration="{{ $course['formatted_duration'] }}"
+                                            data-level="{{ ucfirst($course['level']) }}"
+                                            data-instructor="{{ $course['instructor_name'] }}"
+                                            data-category="{{ $course['category_name'] }}"
+                                            data-price="{{ $course['price'] }}"
+                                            data-episodes='@json($course['episodes'])'
+                                            data-time="{{ $course['formatted_duration'] }}"
+                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
+                                            <div class="card rcmmd_cd">
+                                                <div class="thmbnail thn_rcmm">
+                                                    <div class="trnsprnt thmb_img">
+                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
+                                                    </div>
+                                                </div>
+                                                <div class="details thmb_dt">
+                                                    <div class="title content thmb_cnt">
+                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
+                                                    </div>
+                                                    <div class="ctprs content thmb_cnt">
+                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
+                                                    </div>
+                                                    <div class="thmb_dur_ep_container content thmb_cnt">
+                                                        <div class="cont left-side">
+                                                            <i class="fa-solid fa-stopwatch"></i>
+                                                            <span>{{ $course['formatted_duration'] }}</span>
+                                                        </div>
+                                                        <div class="cont right-side">
+                                                            <i class="fa-solid fa-video"></i>
+                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="thmb_enrll content">
+                                                        <label>{{ $course['price'] }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
                             </div>
                             
-                            <button class="toggle-btn paid-btn" id="toggle-paid">More Trainings</button>
+                            @if($paidCourses->count() > 4)
+                                <button class="toggle-btn paid-btn" id="toggle-paid">More Trainings</button>
+                            @endif
                         </div>
                     </div>
-                    
+
                     <!-- Modal for Training Details -->
                     <div id="training-modal" class="modal">
                         <div class="modal-content">

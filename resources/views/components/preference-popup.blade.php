@@ -6,7 +6,7 @@
     )
 )
     <div id="onboarding-modal">
-        <div>
+        <div class="on-bord">
             @if(is_null(auth()->user()->preferred_category_id))
                 <h2>Tell us what you're into</h2>
                 <p>Select a category that best fits your interests.</p>

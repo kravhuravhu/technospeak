@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\TrainingRegistrationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,6 +50,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
     Route::get('/skip-onboarding', function () {
@@ -72,6 +75,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// --- Stripe routes ---
+Route::get('/index', [StripeController::class, 'index'])->name('index');
+
+Route::get('/checkout/success', [StripeController::class, 'success'])->name('success');
+
+Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
 
 require __DIR__.'/auth.php';
 
@@ -135,16 +145,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
     });
 
 });
-
-
-// --- Stripe routes ---
-Route::get('/index', [StripeController::class, 'index'])->name('index');
-
-Route::get('/checkout/success', [StripeController::class, 'success'])->name('success');
-
-Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
-
-
 
 // Admin routes (make sure 'admin' middleware is defined)
 // Route::middleware('admin')->group(function () {

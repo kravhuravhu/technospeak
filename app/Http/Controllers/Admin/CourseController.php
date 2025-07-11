@@ -242,6 +242,129 @@ class CourseController extends Controller
         }
     }
 
+    // populating to dash free
+    public function trainingCallFree($limit = null)
+    {
+        $query = Course::with(['category', 'instructor', 'episodes'])
+            ->free()
+            ->latest();
+
+        $freeCourses = ($limit ? $query->take($limit) : $query)->get()
+            ->map(function ($course) {
+                $totalSeconds = $course->total_duration;
+                $hours = floor($totalSeconds / 3600);
+                $minutes = floor(($totalSeconds % 3600) / 60);
+                $seconds = $totalSeconds % 60;
+
+                if ($hours > 0) {
+                    $formattedDuration = "{$hours}h{$minutes}m{$seconds}s";
+                } elseif ($minutes > 0) {
+                    $formattedDuration = "{$minutes}m{$seconds}s";
+                } else {
+                    $formattedDuration = "0m{$seconds}s";
+                }
+
+                $episodesArray = $course->episodes->map(function ($episode) {
+                    $duration = $episode->duration;
+                    $h = floor($duration / 3600);
+                    $m = floor(($duration % 3600) / 60);
+                    $s = $duration % 60;
+
+                    if ($h > 0) {
+                        $episodeDuration = "{$h}h{$m}m{$s}s";
+                    } elseif ($m > 0) {
+                        $episodeDuration = "{$m}m{$s}s";
+                    } else {
+                        $episodeDuration = "0m{$s}s";
+                    }
+
+                    return [
+                        'number' => $episode->episode_number,
+                        'name' => $episode->title,
+                        'duration' => $episodeDuration
+                    ];
+                })->toArray();
+
+                return [
+                    'id' => $course->id,
+                    'title' => $course->title,
+                    'description' => $course->description,
+                    'thumbnail' => $course->thumbnail,
+                    'formatted_duration' => $formattedDuration,
+                    'level' => $course->level,
+                    'instructor_name' => $course->instructor->name,
+                    'category_name' => $course->category->name,
+                    'episodes' => $episodesArray,
+                    'episodes_count' => $course->episodes->count(),
+                    'created_at' => $course->created_at
+                ];
+            });
+
+        return $freeCourses;
+    }
+
+    // populating to dash paid
+    public function trainingCallPaid($limit = null)
+    {
+        $query = Course::with(['category', 'instructor', 'episodes'])
+            ->paid()
+            ->latest();
+
+        $paidCourses = ($limit ? $query->take($limit) : $query)->get()
+            ->map(function ($course) {
+                $totalSeconds = $course->total_duration;
+                $hours = floor($totalSeconds / 3600);
+                $minutes = floor(($totalSeconds % 3600) / 60);
+                $seconds = $totalSeconds % 60;
+
+                if ($hours > 0) {
+                    $formattedDuration = "{$hours}h{$minutes}m{$seconds}s";
+                } elseif ($minutes > 0) {
+                    $formattedDuration = "{$minutes}m{$seconds}s";
+                } else {
+                    $formattedDuration = "0m{$seconds}s";
+                }
+
+                $episodesArray = $course->episodes->map(function ($episode) {
+                    $duration = $episode->duration;
+                    $h = floor($duration / 3600);
+                    $m = floor(($duration % 3600) / 60);
+                    $s = $duration % 60;
+
+                    if ($h > 0) {
+                        $episodeDuration = "{$h}h{$m}m{$s}s";
+                    } elseif ($m > 0) {
+                        $episodeDuration = "{$m}m{$s}s";
+                    } else {
+                        $episodeDuration = "0m{$s}s";
+                    }
+
+                    return [
+                        'number' => $episode->episode_number,
+                        'name' => $episode->title,
+                        'duration' => $episodeDuration
+                    ];
+                })->toArray();
+
+                return [
+                    'id' => $course->id,
+                    'title' => $course->title,
+                    'description' => $course->description,
+                    'thumbnail' => $course->thumbnail,
+                    'formatted_duration' => $formattedDuration,
+                    'level' => $course->level,
+                    'instructor_name' => $course->instructor->name,
+                    'category_name' => $course->category->name,
+                    'price' => 'Premium Training', 
+                    'episodes' => $episodesArray,
+                    'episodes_count' => $course->episodes->count(),
+                    'created_at' => $course->created_at
+                ];
+            });
+
+        return $paidCourses;
+    }
+
     public function destroy(Course $course)
     {
         $course->delete();

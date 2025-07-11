@@ -344,10 +344,19 @@
                     <h2>Join Our Weekly Q/A Sessions</h2>
                 </div>
                 <div class="button">
-                    <a href="">Register Q/A</a>
+                    @if(Auth::check())
+                        <a href="#" class="registration-trigger" data-type-id="4">Register Q/A</a>
+                    @else
+                        <a href="{{ route('login') }}">Register Q/A</a>
+                    @endif
                 </div>
             </div>
         </section>
+
+        @include('components.sessions_registration', [
+            'typeId' => 4,
+            'typeName' => 'Q/A Session'
+        ])
 
         <!-- Get in touch section -->
         <section class="gtch">

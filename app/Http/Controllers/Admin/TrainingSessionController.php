@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\TrainingSession;
 use App\Models\TrainingType;
 use App\Models\Instructor;
-use App\Models\Client;
+use App\Models\CourseCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class TrainingSessionController extends Controller
 {
@@ -30,34 +30,47 @@ class TrainingSessionController extends Controller
     public function create()
     {
         $types = TrainingType::all();
-        // $instructors = Client::where('is_instructor', true)->get();
+        $categories = CourseCategory::all();
         $instructors = Instructor::all();
 
-        return view('content-manager.trainings.create', compact('types', 'instructors'));
+        return view('content-manager.trainings.create', compact('types', 'categories', 'instructors'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'type_id' => 'required|exists:training_types,id',
-            'title' => 'required|string|max:150',
-            'description' => 'nullable|string',
-            'instructor_id' => 'nullable|exists:users,id',
-            'scheduled_at' => 'required|date|after:now',
-            'duration_minutes' => 'required|integer|min:15',
-            'price' => 'required|numeric|min:0',
-            'max_participants' => 'nullable|integer|min:1',
-            'thumbnail' => 'nullable|image|max:2048',
-        ]);
+        try {
+            Log::info('Training session creation started', ['data' => $request->all()]);
 
-        if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = $request->file('thumbnail')->store('trainings', 'public');
+            $validated = $request->validate([
+                'title' => 'required|max:150',
+                'type_id' => 'required|exists:training_types,id',
+                'description' => 'nullable|string',
+                'from_time' => 'required|date_format:H:i',
+                'to_time' => 'required|date_format:H:i|after:from_time',
+                'duration_seconds' => 'required|integer|min:60',
+                'category_id' => 'required|exists:course_categories,id',
+                'instructor_id' => 'nullable|exists:instructors,id',
+                'scheduled_for' => 'required|date',
+                'max_participants' => 'nullable|integer|min:1',
+            ]);
+
+            $training = TrainingSession::create($validated);
+
+            Log::info('Training session created successfully', ['training_id' => $training->id]);
+
+            return redirect()
+                ->route('content-manager.trainings.index')
+                ->with('success', 'Training session created.');
+        } catch (\Throwable $e) {
+            Log::error('Training session creation failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()
+                ->withErrors('An error occurred while creating the training session.')
+                ->withInput();
         }
-
-        TrainingSession::create($validated);
-
-        return redirect()->route('content-manager.trainings.index')
-            ->with('success', 'Training session created successfully!');
     }
 
     public function show(TrainingSession $training)
@@ -69,50 +82,66 @@ class TrainingSessionController extends Controller
     public function edit(TrainingSession $training)
     {
         $types = TrainingType::all();
-        $instructors = Client::where('is_instructor', true)->get();
+        $categories = CourseCategory::all();
+        $instructors = Instructor::all();
 
-        return view('content-manager.trainings.edit', compact('training', 'types', 'instructors'));
+        return view('content-manager.trainings.edit', compact('training', 'types', 'categories', 'instructors'));
     }
 
     public function update(Request $request, TrainingSession $training)
     {
-        $validated = $request->validate([
-            'type_id' => 'required|exists:training_types,id',
-            'title' => 'required|string|max:150',
-            'description' => 'nullable|string',
-            'instructor_id' => 'nullable|exists:users,id',
-            'scheduled_at' => 'required|date|after:now',
-            'duration_minutes' => 'required|integer|min:15',
-            'price' => 'required|numeric|min:0',
-            'max_participants' => 'nullable|integer|min:1',
-            'thumbnail' => 'nullable|image|max:2048',
+        \Log::info('Training session update started', [
+            'training_id' => $training->id,
+            'data' => $request->all()
         ]);
 
-        if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
-            if ($training->thumbnail) {
-                Storage::disk('public')->delete($training->thumbnail);
+        $validated = $request->validate([
+            'title' => 'required|string|max:150',
+            'type_id' => 'required|exists:training_types,id',
+            'description' => 'nullable|string',
+            'category_id' => 'required|exists:course_categories,id',
+            'instructor_id' => 'nullable|exists:instructors,id',
+            'scheduled_for' => 'required|date',
+            'from_time' => 'required|date_format:H:i',
+            'to_time' => 'required|date_format:H:i|after:from_time',
+            'max_participants' => 'nullable|integer|min:1',
+        ]);
+
+        try {
+            list($fh, $fm) = explode(':', $validated['from_time']);
+            list($th, $tm) = explode(':', $validated['to_time']);
+
+            $from = $fh * 3600 + $fm * 60;
+            $to = $th * 3600 + $tm * 60;
+            $duration = $to - $from;
+
+            if ($duration < 60) {
+                return back()->withErrors(['duration_seconds' => 'Duration must be at least 1 minute.'])->withInput();
             }
-            $validated['thumbnail'] = $request->file('thumbnail')->store('trainings', 'public');
+
+            $validated['duration_seconds'] = $duration;
+
+            $training->update($validated);
+
+            \Log::info('Training session updated', ['training' => $training->fresh()->toArray()]);
+
+            return redirect()->route('content-manager.trainings.index')
+                ->with('success', 'Training session updated successfully!');
+        } catch (\Throwable $e) {
+            \Log::error('Training session update failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return back()->withErrors('An error occurred while updating the training session.')->withInput();
         }
-
-        $training->update($validated);
-
-        return redirect()->route('content-manager.trainings.index')
-            ->with('success', 'Training session updated successfully!');
     }
 
     public function destroy(TrainingSession $training)
     {
-        // Prevent deletion if there are registrations
         if ($training->registrations()->exists()) {
             return back()->with('error', 
                 'Cannot delete training session with existing registrations. Cancel registrations first.');
-        }
-
-        // Delete thumbnail if exists
-        if ($training->thumbnail) {
-            Storage::disk('public')->delete($training->thumbnail);
         }
 
         $training->delete();

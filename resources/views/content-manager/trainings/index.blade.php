@@ -36,6 +36,7 @@
                 <th>Title</th>
                 <th>Type</th>
                 <th>Scheduled</th>
+                <th>Duration</th>
                 <th>Instructor</th>
                 <th>Participants</th>
                 <th>Status</th>
@@ -50,15 +51,15 @@
                 </td>
                 <td>{{ $session->type->name }}</td>
                 <td>
-                    {{ $session->scheduled_at->format('M d, Y H:i') }}<br>
-                    <small>({{ $session->duration_minutes }} mins)</small>
+                    {{ $session->scheduled_for->format('M d, Y') }}
                 </td>
+                <td>{{ $session->duration }}</td>
                 <td>{{ $session->instructor ? $session->instructor->name : 'Not assigned' }}</td>
                 <td>
                     {{ $session->registrations_count }} / {{ $session->max_participants ?? '∞' }}
                 </td>
                 <td>
-                    @if($session->scheduled_at->isPast())
+                    @if($session->scheduled_for->isPast())
                         <span class="status-badge status-inactive">Completed</span>
                     @else
                         <span class="status-badge status-active">Upcoming</span>

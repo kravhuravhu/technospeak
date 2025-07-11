@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Roboto", sans-serif;
   scroll-behavior: smooth;
 }
 :root {
@@ -49,7 +50,7 @@ body {
   justify-content: center;
   z-index: 9999;
 
-  & > div {
+  & > .on-bord {
     background: white;
     border-radius: 20px;
     padding: 40px;

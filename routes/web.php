@@ -11,97 +11,74 @@ use App\Http\Controllers\Admin\TrainingSessionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminAuth;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
+use App\Http\Controllers\CourseAccessController; 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// add courses variable to home page
+// Public routes
 Route::get('/', [WelcomeController::class, 'index']);
-
-Route::get('/about', function () {
-    return view('about');
-});
-
-Route::get('/trainings', function () {
-    return view('trainings');
-});
-
-Route::get('/pricing', function () {
-    return view('pricing');
-});
-
-Route::get('/privacy', function () {
-    return view('privacy');
-});
-
-Route::get('/terms', function () {
-    return view('terms');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
-
+Route::get('/about', function () { return view('about'); });
+Route::get('/trainings', function () { return view('trainings'); });
+Route::get('/pricing', function () { return view('pricing'); });
+Route::get('/privacy', function () { return view('privacy'); });
+Route::get('/terms', function () { return view('terms'); });
+ 
+// Auth routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+    
     Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
     Route::get('/skip-onboarding', function () {
         session(['skipped_preference' => true, 'skipped_userType' => true]);
         return redirect()->back();
     })->name('skipOnboarding');
-});
-
-Route::post('/email/verify/send', function (Request $request) {
-    if ($request->user()->hasVerifiedEmail()) {
-        return redirect()->route('dashboard')->with('status', 'email-already-verified');
-    }
-
-    $request->user()->sendEmailVerificationNotification();
-
-    return redirect()->route('dashboard')->with('status', 'verification-link-sent');
-})->middleware(['auth'])->name('custom.verification.send');
-
-Route::middleware('auth')->group(function () {
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+   
+    // Profile routes
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// --- Stripe routes ---
-Route::get('/index', [StripeController::class, 'index'])->name('index');
-
-Route::get('/checkout/success', [StripeController::class, 'success'])->name('success');
-
-Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+// training function distribution
+Route::get('/dashboard', function () {
+    $courseAccess = new CourseAccessController();
+    return view('dashboard', [
+        'freeCourses' => $courseAccess->getFreeCourses(),
+        'paidCourses' => $courseAccess->getPaidCourses()
+    ]);
+})->middleware(['auth']);
+ 
+// Training registration
+Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
+ 
+// Stripe routes
+Route::prefix('stripe')->group(function () {
+    Route::post('/webhook', [StripeWebhookController::class, 'handle']);
+    Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+});
 
 require __DIR__.'/auth.php';
-
-// --- admin routes ---
-
+ 
+// Admin routes
 Route::prefix('content')->name('content-manager.')->group(function() {
     Route::get('login', [AdminAuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AdminAuthController::class, 'login']);
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
-
+    
     Route::middleware([AdminAuth::class])->group(function() {
         Route::get('admin', [AdminController::class, 'admin'])->name('admin');
-
+        
         // Courses
         Route::resource('courses', CourseController::class);
         Route::resource('courses.episodes', EpisodeController::class);
-
+        
         // Course cate
         Route::resource('categories', CourseCategoryController::class)->except(['show']);
-
+        
         // Clients
         Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)
             ->names([
@@ -115,7 +92,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
             ]);
         Route::post('clients/{client}/enroll-course', [ClientController::class, 'enrollCourse'])->name('clients.enroll-course');
         Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
-
+        
         // Episode
         Route::resource('content-manager/courses.episodes', 'Admin\EpisodeController')
             ->names([
@@ -131,34 +108,15 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         // Payments
         Route::resource('payments', PaymentsController::class);
         Route::post('payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('payments.approve');
-
+        
         // trainings
         Route::resource('trainings', TrainingSessionController::class);
         Route::get('trainings/{training}/registrations', [TrainingSessionController::class, 'registrations'])->name('trainings.registrations');
         Route::post('trainings/{training}/mark-attendance', [TrainingSessionController::class, 'markAttendance'])->name('trainings.mark-attendance');
-
+        
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
-
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
-
 });
-
-// Admin routes (make sure 'admin' middleware is defined)
-// Route::middleware('admin')->group(function () {
-// Route::get('/admin/payments', [PaymentsController::class, 'index'])->name('admin.payments.index');
-// Route::get('/admin/payments/{payment}', [PaymentsController::class, 'show'])->name('admin.payments.show');
-// Route::post('/admin/payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('admin.payments.approve');
-// Route::delete('/admin/payments/{payment}', [PaymentsController::class, 'destroy'])->name('admin.payments.destroy');
-// Route::get('/content-manager/payments', [PaymentsController::class, 'index'])->name('content-manager.payments.index');
-// Route::get('/content-manager/payments/{payment}', [PaymentsController::class, 'show'])->name('content-manager.payments.show');
-// Route::post('/content-manager/payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('content-manager.payments.approve');
-// });
-
-// Stripe flow
-// Route::post('/payments/initiate', [PaymentsController::class, 'initiateStripeCheckout'])->name('payment.initiate');
-// Route::get('/payments/success/{id}', [StripeController::class, 'success'])->name('payment.success');
-// Route::get('/payments/cancel/{id}', [StripeController::class, 'cancel'])->name('payment.cancel');
-

@@ -113,7 +113,6 @@ class ClientController extends Controller
 
     public function destroy(Client $client)
     {
-        // Prevent deletion if client has any activity
         if ($client->courseSubscriptions()->exists() || 
             $client->trainingRegistrations()->exists() || 
             $client->payments()->exists()) {

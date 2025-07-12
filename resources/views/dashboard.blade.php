@@ -407,13 +407,32 @@
                 <div class="content-section alltrainings_content" id="usr_alltrainings">
                     <div class="rcmmnd_trngs free_tr all_tr ln_rcmm">
                         <div class="container">
-                            <div class="title">
-                                <h1>Free Trainings</h1>
+                            <div class="section-header">
+                                <div class="title">
+                                    <h1>Free Trainings</h1>
+                                </div>
+                                <div class="search-filter-container">
+                                    <div class="search-box">
+                                        <i class="fas fa-search search-icon"></i>
+                                        <input type="text" id="freeSearchInput" placeholder="Search free trainings..." class="search-control">
+                                    </div>
+                                    <div class="filter-dropdown">
+                                        <select id="freeFilterSelect" class="search-control">
+                                            <option value="">All Categories</option>
+                                            @foreach(\App\Models\CourseCategory::all() as $category)
+                                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <i class="fas fa-filter filter-icon"></i>
+                                    </div>
+                                </div>
                             </div>
-                            @php
-                                // Get all free courses
-                                $freeCourses = isset($freeCourses) ? $freeCourses : app(App\Http\Controllers\Admin\CourseController::class)->trainingCallFree();
-                            @endphp
+                            <div id="courseNoResultsMessagePaid" style="display:none;" class="no-results-message">
+                                No free trainings match your criteria. Try a different search
+                            </div>
+                            <div id="courseNoResultsMessageFree" style="display:none;" class="no-results-message">
+                                No free trainings match your criteria. Try a different search
+                            </div>
                             <div class="card-grid thn_grid_cd" id="free-trainings">
                                 @if($freeCourses->count() > 0)
                                     @foreach($freeCourses->take(4) as $course) 
@@ -523,14 +542,31 @@
                     <!-- Paid Trainings Section -->
                     <div class="rcmmnd_trngs paid_tr all_tr ln_rcmm">
                         <div class="container">
-                            <div class="title">
-                                <h1>Premium Trainings</h1>
-                                <p class="subtitle">Unlock all premium trainings with a single payment</p>
+                            <div class="section-header">
+                                <div class="title">
+                                    <h1>Premium Trainings</h1>
+                                    <p class="subtitle">Unlock all premium trainings with a single payment</p>
+                                </div>
+                                <div class="search-filter-container">
+                                    <div class="search-box">
+                                        <i class="fas fa-search search-icon"></i>
+                                        <input type="text" id="paidSearchInput" placeholder="Search premium trainings..." class="search-control">
+                                    </div>
+                                    <div class="filter-dropdown">
+                                        <select id="paidFilterSelect" class="search-control">
+                                            <option value="">All Categories</option>
+                                            @foreach(\App\Models\CourseCategory::all() as $category)
+                                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <i class="fas fa-filter filter-icon"></i>
+                                    </div>
+                                </div>
                             </div>
-                            @php
-                                // Get all paid courses
-                                $paidCourses = isset($paidCourses) ? $paidCourses : app(App\Http\Controllers\Admin\CourseController::class)->trainingCallPaid();
-                            @endphp
+
+                            <div id="courseNoResultsMessagePaid" style="display:none;" class="no-results-message">
+                                No premium trainings match your criteria. Try a different search
+                            </div>
                             <div class="card-grid thn_grid_cd" id="paid-trainings">
                                 @if($paidCourses->count() > 0)
                                     @foreach($paidCourses->take(4) as $course) 
@@ -644,7 +680,7 @@
                         <div class="modal-content">
                             <span class="close-btn">&times;</span>
                             <div class="modal-header">
-                                <h2 class="modal-title" id="modal-title">Training Title</h2>
+                                <h2 class="modal-title" id="modal-title-cs">Training Title</h2>
                                 <div class="modal-price" id="modal-price">Free</div>
                             </div>
                             <img src="" alt="Training Image" class="modal-image" id="modal-image">
@@ -1563,5 +1599,8 @@
 
         <!-- pop-up general -->
         <script src="/script/pop-up.js"></script>
+
+        <!-- search functions for courses -->
+         <script src="/script/trainings-filtering.js"></script>
     </body>
 </html>

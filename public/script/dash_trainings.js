@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const episodes = JSON.parse(this.getAttribute('data-episodes'));
             
             // Set modal content
-            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-title-cs').textContent = title;
             document.getElementById('modal-price').textContent = isFree ? 'Free' : price;
             document.getElementById('modal-image').src = image;
             document.getElementById('modal-image').alt = title;
@@ -67,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
     }
 
-    document.getElementById('toggle-free').addEventListener('click', function() {
-        const moreFree = document.getElementById('more-free-trainings');
-        moreFree.classList.toggle('hidden');
-        this.textContent = moreFree.classList.contains('hidden') ? 'More Free Trainings' : 'Show Less';
-    });
+    // document.getElementById('toggle-free').addEventListener('click', function() {
+    //     const moreFree = document.getElementById('more-free-trainings');
+    //     moreFree.classList.toggle('hidden');
+    //     this.textContent = moreFree.classList.contains('hidden') ? 'More Free Trainings' : 'Show Less';
+    // });
     
-    document.getElementById('toggle-paid').addEventListener('click', function() {
-        const morePaid = document.getElementById('more-paid-trainings');
-        morePaid.classList.toggle('hidden');
-        this.textContent = morePaid.classList.contains('hidden') ? 'More Trainings' : 'Show Less';
-    });
+    // document.getElementById('toggle-paid').addEventListener('click', function() {
+    //     const morePaid = document.getElementById('more-paid-trainings');
+    //     morePaid.classList.toggle('hidden');
+    //     this.textContent = morePaid.classList.contains('hidden') ? 'More Trainings' : 'Show Less';
+    // });
 });

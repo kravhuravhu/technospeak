@@ -26,10 +26,20 @@ Route::get('/trainings', function () { return view('trainings'); });
 Route::get('/pricing', function () { return view('pricing'); });
 Route::get('/privacy', function () { return view('privacy'); });
 Route::get('/terms', function () { return view('terms'); });
+
+// Training registration
+Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
  
 // Auth routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+    // training function distribution
+    Route::get('/dashboard', function () {
+        $courseAccess = new CourseAccessController();
+        return view('dashboard', [
+            'freeCourses' => $courseAccess->getFreeCourses(),
+            'paidCourses' => $courseAccess->getPaidCourses()
+        ]);
+    })->name('dashboard');
     
     Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
     Route::get('/skip-onboarding', function () {
@@ -41,18 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-// training function distribution
-Route::get('/dashboard', function () {
-    $courseAccess = new CourseAccessController();
-    return view('dashboard', [
-        'freeCourses' => $courseAccess->getFreeCourses(),
-        'paidCourses' => $courseAccess->getPaidCourses()
-    ]);
-})->middleware(['auth']);
- 
-// Training registration
-Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
  
 // Stripe routes
 Route::prefix('stripe')->group(function () {

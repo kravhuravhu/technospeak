@@ -54,8 +54,9 @@ Route::middleware(['auth'])->group(function () {
  
 // Stripe routes
 Route::prefix('stripe')->group(function () {
+    Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
+        ->name('stripe.checkout');
     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
-    Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
 });
 

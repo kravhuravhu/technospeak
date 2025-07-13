@@ -38,14 +38,22 @@ class StripeController extends Controller
         ]);
  
         Payment::create([
-            'client_id' => $client->id,
+            'id' => Payment::max('id') + 1, // Get the highest ID and increment
+            'client_id' => (string) $client->id,
             'amount' => $price,
             'payment_method' => 'stripe',
-            'stripe_session_id' => $session->id,
+            'status' => 'pending',
+            'payment_for' => strtolower($plan->name) === 'q/a session' ? 'qa_session' : 'service_plan',
+            'item_id' => $plan->id,
             'service_plan_id' => $plan->id,
-            'status' => 'pending'
+            'stripe_session_id' => $session->id
         ]);
  
         return redirect($session->url);
+    }
+
+    public function success()
+    {
+        return view('stripe.success'); // Or return a success message
     }
 }

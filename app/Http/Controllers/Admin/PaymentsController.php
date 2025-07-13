@@ -27,11 +27,7 @@ class PaymentsController extends Controller
         return view('content-manager.payments.index', compact('payments', 'totalRevenue', 'pendingAmount'));
     }
 
-    public function show(Payment $payment)
-    {
-        $payment->load(['client', 'course']);
-        return view('content-manager.payments.show', compact('payment'));
-    }
+    // Removed duplicate show method to fix redeclaration error.
 
     public function approve(Request $request, Payment $payment)
     {
@@ -41,14 +37,20 @@ class PaymentsController extends Controller
         $course = $payment->course;
         $client->courses()->attach($course->id);
 
-        return redirect()->route('admin.payments.index')
+        return redirect()->route('content-manager.payments.index')
             ->with('success', 'Payment approved and course access granted!');
+    }
+
+    public function show(Payment $payment)
+    {
+        $payment->load(['client', 'course']);
+        return view('admin.payments.show', compact('payment'));
     }
 
     public function destroy(Payment $payment)
     {
         $payment->delete();
-        return redirect()->route('admin.payments.index')
+        return redirect()->route('content-manager.payments.index')
             ->with('success', 'Payment record deleted successfully!');
     }
 }

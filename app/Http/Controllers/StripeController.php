@@ -5,60 +5,47 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Models\Client;
+use App\Models\ServicePlan;
 use App\Models\Payment;
-use App\Models\Course;
 
 class StripeController extends Controller
 {
-    public function index()
+    public function checkout($clientId, $planId)
     {
-        return view('index');
-    }
+        $client = Client::findOrFail($clientId);
+        $plan = ServicePlan::findOrFail($planId);
 
-    public function checkout(Request $request)
-    {
-        Stripe::setApiKey(config('stripe.sk'));
+        $price = $client->userType === 'student' 
+            ? $plan->rate_student 
+            : $plan->rate_business;
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $session = Session::create([
+            'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'zar',
-                    'product_data' => [
-                        'name' => 'Send money',
-                    ],
-                    'unit_amount' => 1000, // R10.00
+                    'product_data' => ['name' => $plan->name],
+                    'unit_amount' => $price * 100,
                 ],
                 'quantity' => 1,
             ]],
-            'mode' => 'payment',
-            'success_url' => route('success'),
-            'cancel_url' => route('index'),
+            'mode' => $plan->is_subscription ? 'subscription' : 'payment',
+            'success_url' => url('/payment-success'),
+            'cancel_url' => url('/payment-cancel'),
         ]);
 
-        return redirect()->away($session->url);
+        Payment::create([
+            'client_id' => $client->id,
+            'amount' => $price,
+            'payment_method' => 'stripe',
+            'stripe_session_id' => $session->id,
+            'service_plan_id' => $plan->id,
+            'status' => 'pending'
+        ]);
+
+        return redirect($session->url);
     }
-
-    public function success()
-    {
-        return view('stripe.success');
-    }
-
-    // public function success($id)
-    // {
-    //     $payment = Payment::findOrFail($id);
-    //     $payment->update(['status' => 'completed']);
-
-    //     $client = $payment->client;
-    //     $course = $payment->course;
-    //     $client->courses()->attach($course->id);
-
-    //     return redirect()->route('courses.show', $course->id)
-    //         ->with('success', 'Payment completed and access granted!');
-    // }
-
-    // public function cancel($id)
-    // {
-    //     return view('stripe.cancel');
-    // }
 }
-

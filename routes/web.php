@@ -92,7 +92,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
         
         // Episode
-        Route::resource('content-manager/courses.episodes', 'Admin\EpisodeController')
+        Route::resource('content-manager/courses.episodes', EpisodeController::class)
             ->names([
                 'index' => 'content-manager.courses.episodes.index',
                 'create' => 'content-manager.courses.episodes.create',

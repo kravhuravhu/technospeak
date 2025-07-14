@@ -22,26 +22,34 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
                 </p>
             </div>
             
-            <form class="registration-form" method="POST" action="{{ route('training.register') }}">
+            <form class="registration-form" method="POST" action="{{ route('session.register') }}">
                 @csrf
-                <input type="hidden" name="session_id" value="{{ $latestSession->id }}">
+                <input type="hidden" name="qa_session_id" value="{{ $latestSession->id }}">
                 
                 <div class="form-group">
                     <label for="name-{{ $typeId }}">Full Name</label>
-                    <input type="text" id="name-{{ $typeId }}" name="name" required>
+                    <input type="text" id="name-{{ $typeId }}" name="name" 
+                        value="{{ Auth::user()->name }}" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email-{{ $typeId }}">Email</label>
-                    <input type="email" id="email-{{ $typeId }}" name="email" required>
+                    <input type="email" id="email-{{ $typeId }}" name="email" 
+                        value="{{ Auth::user()->email }}" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>
-                    <input type="tel" id="phone-{{ $typeId }}" name="phone">
+                    <input type="tel" id="phone-{{ $typeId }}" name="phone"
+                        value="{{ Auth::user()->phone }}">
                 </div>
                 
-                <button type="submit" class="submit-btn">Complete Registration</button>
+                <div class="payment-summary">
+                    <h4>Payment Summary</h4>
+                    <p>Q/A Session: R110.00</p>
+                </div>
+                
+                <button type="submit" class="submit-btn">Proceed to Payment</button>
             </form>
         @else
             <div class="no-session">

@@ -18,9 +18,10 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
 use App\Http\Controllers\CourseAccessController; 
+use App\Http\Controllers\QaSessionRegistrationController;
 
 // Public routes
-Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/about', function () { return view('about'); });
 Route::get('/trainings', function () { return view('trainings'); });
 Route::get('/pricing', function () { return view('pricing'); });
@@ -70,6 +71,16 @@ Route::middleware(['auth'])->group(function () {
         session(['skipped_preference' => true, 'skipped_userType' => true]);
         return redirect()->back();
     })->name('skipOnboarding');
+
+    // Q/A Session Registration Routes
+    Route::post('/register-session', [QaSessionRegistrationController::class, 'store'])
+        ->name('session.register');
+    Route::get('/qa-registration/success/{id}', [QaSessionRegistrationController::class, 'success'])
+        ->name('qa.registration.success');
+    Route::get('/qa-registration/cancel/{id}', [QaSessionRegistrationController::class, 'cancel'])
+        ->name('qa.registration.cancel');
+
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
    
     // Profile routes
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -87,4 +87,15 @@ class Client extends Authenticatable implements MustVerifyEmail
     {
         return $this->courseSubscriptions()->where('course_id', $courseId)->exists();
     }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription_expiry && 
+            $this->subscription_expiry->isFuture();
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'client_course_subscriptions')->withPivot(['progress', 'current_episode_id'])->withTimestamps();
+    }
 }

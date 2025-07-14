@@ -7,8 +7,8 @@
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
         <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="style/dashboard.css">
-        <link rel="stylesheet" href="style/footer.css">
+        <link rel="stylesheet" href="{{ asset('style/dashboard.css') }}">
+        <link rel="stylesheet" href="{{ asset('style/footer.css') }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -17,6 +17,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <!-- Font Awesome CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
         @include('components.preference-popup', [
@@ -29,7 +31,7 @@
             <div class="main_container">
                 <div class="logo_container">
                     <a href="#">
-                        <img src="/images/default-no-logo.png" alt="technospeak_icon">
+                        <img src="{{ asset('/images/default-no-logo.png')}}" alt="technospeak_icon">
                     </a>
                 </div>
                 <div class="nav-bar">
@@ -150,16 +152,39 @@
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Search...">
                     </div>
-                    <div class="welcome">
+                   <div class="welcome">
                         <div class="nname">
-                            <h1>Welcome back, {{ Auth::user()->name }}</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </p>
-                            <p>sed do eiusmod tempor incididunt ut labore et dolore </p>
+                            <h1>
+                                @php
+                                    $hour = now()->hour;
+                                    if ($hour < 12) {
+                                        echo 'Good morning,';
+                                    } elseif ($hour < 17) {
+                                        echo 'Good afternoon,';
+                                    } else {
+                                        echo 'Good evening,';
+                                    }
+                                @endphp
+                                {{ Auth::user()->name }}!
+                            </h1>
+                            @if($enrolledCourses->count() > 0)
+                                @php
+                                    $completedCount = 0;
+                                    $inProgressCount = $enrolledCourses->count() - $completedCount;
+                                    $nextCourse = $enrolledCourses->first();
+                                @endphp
+                                
+                                <p>You have <strong>{{ $inProgressCount }}</strong> course{{ $inProgressCount === 1 ? '' : 's' }} in progress and <strong>{{ $completedCount }}</strong> completed.</p>
+                                <p><i class="fas fa-arrow-circle-right"></i> {{ $inProgressCount > 0 ? 'Pick up where you left off with' : 'Explore new learning with' }} <strong>{{ $nextCourse->title }}</strong>.</p>
+                            @else
+                                <p>You’ve got <strong>{{ $freeCourses->count() + $paidCourses->count() }}</strong> exciting trainings waiting to explore.</p>
+                                <p>Start your first one and unlock new skills today!</p>
+                            @endif
                         </div>
-                        <div>
+                        <div class="welcome-illustration">
                             <picture>
                                 <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.webp" type="image/webp">
-                                <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.gif" alt="👋"/>
+                                <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b_1f3fd/512.gif" alt="👋" class="waving-hand">
                             </picture>
                         </div>
                     </div>
@@ -169,106 +194,35 @@
                                 <h1>My Trainings</h1>
                             </div>
                             <div class="card-grid">
-                                <a href="">
-                                    <div class="card">
-                                        <div class="thmbnail">
-                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            <div class="trnsprnt"></div>
-                                        </div>
-                                        <div class="details">
-                                            <div class="title content">
-                                                <h1>Training Title</h1>
+                                @forelse($enrolledCourses ?? [] as $course)
+                                    <a href="">
+                                        <div class="card">
+                                            <div class="thmbnail">
+                                                <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
+                                                <div class="trnsprnt"></div>
                                             </div>
-                                            <div class="dur content">
-                                                <p><i>Duration: 30min</i></p>
-                                            </div>
-                                            <div class="ctprs content">
-                                                <p>Video catchphrase here blah blah</p>
-                                            </div>
-                                            <div class="progress_bar content">
-                                                <div class="main-bar">
-                                                    <div class="progress"></div>
+                                            <div class="details">
+                                                <div class="title content">
+                                                    <h1>{{ $course->title }}</h1>
                                                 </div>
-                                                <div class="cr-bar">65%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="">
-                                    <div class="card">
-                                        <div class="thmbnail">
-                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            <div class="trnsprnt"></div>
-                                        </div>
-                                        <div class="details">
-                                            <div class="title content">
-                                                <h1>Training Title</h1>
-                                            </div>
-                                            <div class="dur content">
-                                                <p><i>Duration: 30min</i></p>
-                                            </div>
-                                            <div class="ctprs content">
-                                                <p>Video catchphrase here blah blah</p>
-                                            </div>
-                                            <div class="progress_bar content">
-                                                <div class="main-bar">
-                                                    <div class="progress"></div>
+                                                <div class="dur content">
+                                                    <p><i>Duration: {{ $course->formatted_duration }}</i></p>
                                                 </div>
-                                                <div class="cr-bar">65%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="">
-                                    <div class="card">
-                                        <div class="thmbnail">
-                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            <div class="trnsprnt"></div>
-                                        </div>
-                                        <div class="details">
-                                            <div class="title content">
-                                                <h1>Training Title</h1>
-                                            </div>
-                                            <div class="dur content">
-                                                <p><i>Duration: 30min</i></p>
-                                            </div>
-                                            <div class="ctprs content">
-                                                <p>Video catchphrase here blah blah</p>
-                                            </div>
-                                            <div class="progress_bar content">
-                                                <div class="main-bar">
-                                                    <div class="progress"></div>
+                                                <div class="progress_bar content">
+                                                    <div class="main-bar">
+                                                        <div class="progress" style="width: {{ $course->progress }}%"></div>
+                                                    </div>
+                                                    <div class="cr-bar">{{ $course->progress }}%</div>
                                                 </div>
-                                                <div class="cr-bar">65%</div>
                                             </div>
                                         </div>
+                                    </a>
+                                @empty
+                                    <div class="empty-state">
+                                        <p>You haven't enrolled in any trainings yet.</p>
+                                        <a href="#usr_alltrainings" class="browse-btn">Browse Courses → </a>
                                     </div>
-                                </a>
-                                <a href="">
-                                    <div class="card">
-                                        <div class="thmbnail">
-                                            <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            <div class="trnsprnt"></div>
-                                        </div>
-                                        <div class="details">
-                                            <div class="title content">
-                                                <h1>Training Title</h1>
-                                            </div>
-                                            <div class="dur content">
-                                                <p><i>Duration: 30min</i></p>
-                                            </div>
-                                            <div class="ctprs content">
-                                                <p>Video catchphrase here blah blah</p>
-                                            </div>
-                                            <div class="progress_bar content">
-                                                <div class="main-bar">
-                                                    <div class="progress"></div>
-                                                </div>
-                                                <div class="cr-bar">65%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -436,7 +390,8 @@
                             <div class="card-grid thn_grid_cd" id="free-trainings">
                                 @if($freeCourses->count() > 0)
                                     @foreach($freeCourses->take(4) as $course) 
-                                        <a href="#" class="training-card" 
+                                        <a href="#" class="training-card"
+                                            data-course-id="{{ $course['id'] }}"    
                                             data-training-type="free"
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
@@ -472,7 +427,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="thmb_enrll content">
-                                                        <label>Enroll Free</label>
+                                                        <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
+                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Enroll Free' }}
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -490,6 +447,7 @@
                                     @foreach($freeCourses->slice(4) as $course)
                                         <a href="#" class="training-card" 
                                             data-training-type="free"
+                                            data-course-id="{{ $course['id'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -572,6 +530,7 @@
                                     @foreach($paidCourses->take(4) as $course) 
                                         <a href="#" class="training-card" 
                                             data-training-type="paid"
+                                            data-course-id="{{ $course['id'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -607,7 +566,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="thmb_enrll content">
-                                                        <label>Unlock</label>
+                                                        <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
+                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Unlock' }}
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -625,6 +586,7 @@
                                     @foreach($paidCourses->slice(4) as $course)
                                         <a href="#" class="training-card" 
                                             data-training-type="paid"
+                                            data-course-id="{{ $course['id'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -660,7 +622,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="thmb_enrll content">
-                                                        <label>{{ $course['price'] }}</label>
+                                                        <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
+                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Unlock' }}
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1485,6 +1449,81 @@
                     }
                     });
                 }
+
+                function handleInitialLoad() {
+                    // Check for hash first, then localStorage, then default to dashboard
+                    const hash = window.location.hash.substring(1);
+                    const storedSection = localStorage.getItem('activeSection');
+                    const defaultSection = 'usr_dashboard';
+                    
+                    const targetSection = hash || storedSection || defaultSection;
+                    switchToSection(targetSection);
+                }
+
+                // allow # if called
+                function switchToSection(sectionId) {
+                    const navItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+                    
+                    if (!navItem || !document.getElementById(sectionId)) {
+                        console.warn(`Section ${sectionId} not found`);
+                        return;
+                    }
+
+                    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+
+                    navItem.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+
+                    localStorage.setItem('activeSection', sectionId);
+
+                    const rightbar = document.getElementById('rightbar-container');
+                    const profile_tag = document.getElementById('profile_tag');
+                    const txt_btn_rm = document.getElementById('txt_btn_rm');
+                    
+                    if (rightbar) {
+                        if (sectionId === 'usr_alltrainings') {
+                            rightbar.style.display = 'none';
+                            profile_tag.style.display = 'block';
+                            txt_btn_rm.style.display = 'none';
+                        } else {
+                            rightbar.style.display = 'block';
+                            profile_tag.style.display = 'none';
+                            txt_btn_rm.style.display = 'flex';
+                        }
+                    }
+
+                    if (window.location.hash.substring(1) !== sectionId) {
+                        history.replaceState(null, null, `#${sectionId}`);
+                    }
+                }
+
+                window.addEventListener('hashchange', function() {
+                    const sectionId = window.location.hash.substring(1);
+                    switchToSection(sectionId);
+                });
+
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const sectionId = this.getAttribute('data-section');
+                        switchToSection(sectionId);
+                    });
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (event.target.matches('a[href^="#"]')) {
+                        const href = event.target.getAttribute('href');
+                        const sectionId = href.substring(1);
+                        
+                        if (document.getElementById(sectionId)) {
+                            event.preventDefault();
+                            switchToSection(sectionId);
+                        }
+                    }
+                });
+
+                handleInitialLoad();
             });
         </script>
 

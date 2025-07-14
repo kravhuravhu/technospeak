@@ -69,11 +69,13 @@ class ClientController extends Controller
             ->get();
 
         $trainings = TrainingSession::whereNotIn('id', $client->trainingRegistrations->pluck('session_id'))
-            ->where('scheduled_at', '>', now()) 
+            ->where('created_at', '>', now()) 
             ->take(5)
             ->get();
 
-        return view('content-manager.clients.show', compact('client', 'courses', 'trainings'));
+        $trainingSessions = TrainingSession::all();
+
+        return view('content-manager.clients.show', compact('client', 'courses', 'trainings', 'trainingSessions'));
     }
 
     public function edit(Client $client)
@@ -133,7 +135,6 @@ class ClientController extends Controller
             'payment_status' => 'required|in:free,paid'
         ]);
 
-        // Check if already enrolled
         if ($client->courseSubscriptions()->where('course_id', $validated['course_id'])->exists()) {
             return back()->with('error', 'Client is already enrolled in this course');
         }
@@ -153,7 +154,6 @@ class ClientController extends Controller
             'payment_status' => 'required|in:pending,paid'
         ]);
 
-        // Check if already registered
         if ($client->trainingRegistrations()->where('session_id', $validated['session_id'])->exists()) {
             return back()->with('error', 'Client is already registered for this session');
         }
@@ -164,5 +164,18 @@ class ClientController extends Controller
         ]);
 
         return back()->with('success', 'Client registered for training successfully!');
+    }
+
+    public function destroyEnrollment(Request $request)
+    {
+        $subscription = \App\Models\ClientCourseSubscription::find($request->input('subscription_id'));
+
+        if (!$subscription) {
+            return back()->with('error', 'Subscription not found');
+        }
+
+        $subscription->delete();
+
+        return back()->with('success', 'Enrollment removed');
     }
 }

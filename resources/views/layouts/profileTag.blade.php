@@ -13,7 +13,7 @@
         </div>
         @if (!isset($showDropdown) || $showDropdown)
             <div id="dropdownMenu" class="dropdown hidden">
-                <a href="#usr_settings" class="content-section">Profile</a>
+                <a href="" class="content-section">Profile</a>
                 <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit">Logout</button>

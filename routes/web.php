@@ -33,39 +33,15 @@ Route::post('/training/register', [TrainingRegistrationController::class, 'store
  
 // Auth routes
 Route::middleware(['auth'])->group(function () {
+    // training function distribution
     Route::get('/dashboard', function () {
-        $user = Auth::user();
-        
         $courseAccess = new CourseAccessController();
-        $freeCourses = $courseAccess->getFreeCourses();
-        $paidCourses = $courseAccess->getPaidCourses();
-
-        $enrolledCourses = $user->courseSubscriptions()
-            ->with(['course' => function($query) {
-                $query->with(['category', 'instructor', 'episodes']);
-            }])
-            ->get()
-            ->map(function($subscription) {
-                $course = $subscription->course;
-                
-                $progress = $subscription->progress_percent ?? 0;
-                
-                return (object) [
-                    'id' => $course->id,
-                    'title' => $course->title,
-                    'thumbnail' => $course->thumbnail,
-                    'formatted_duration' => $course->formatted_duration,
-                    'progress' => $progress
-                ];
-            });
-
         return view('dashboard', [
-            'freeCourses' => $freeCourses,
-            'paidCourses' => $paidCourses,
-            'enrolledCourses' => $enrolledCourses
+            'freeCourses' => $courseAccess->getFreeCourses(),
+            'paidCourses' => $courseAccess->getPaidCourses()
         ]);
     })->name('dashboard');
-
+    
     Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
     Route::get('/skip-onboarding', function () {
         session(['skipped_preference' => true, 'skipped_userType' => true]);
@@ -86,10 +62,6 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
-    ->middleware('auth')
-    ->name('courses.enroll');
  
 // Stripe routes
 Route::prefix('stripe')->group(function () {
@@ -130,7 +102,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
             ]);
         Route::post('clients/{client}/enroll-course', [ClientController::class, 'enrollCourse'])->name('clients.enroll-course');
         Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
-                
+        
         // Episode
         Route::resource('content-manager/courses.episodes', EpisodeController::class)
             ->names([
@@ -158,6 +130,3 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-
-// Enrollments
-Route::delete('client-courses/delete', [ClientController::class, 'destroyEnrollment'])->name('content-manager.client-courses.destroy');

@@ -220,7 +220,7 @@
         <section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
-                    <img src="{{ asset('/images/teams/two_team.jpeg') }}" alt="office_technospeak"/>
+                    <img src="/images/teams/two_team.jpeg" alt="office_technospeak"/>
                 </div>
                 <div class="about_brief block">
                     <div class="title_container">

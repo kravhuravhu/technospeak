@@ -6,7 +6,7 @@
 <div class="admin-header">
     <div class="page-title">
         <h1>{{ $client->full_name }}</h1>
-        <p>Client ID: {{ $client->id }} • Registered: {{ $client->registered_date->format('M d, Y') }}  {{ $client->registered_time }}</p>
+        <p>Client ID: {{ $client->id }} • Registered: {{ $client->registered_date }}  {{ $client->registered_time }}</p>
     </div>
     <div class="user-menu">
         <a href="{{ route('content-manager.clients.edit', $client) }}" class="btn btn-primary">
@@ -97,9 +97,9 @@
                 <label for="session_id" class="form-label">Register for Training</label>
                 <select name="session_id" id="session_id" class="form-control" required>
                     <option value="">Select Training Session</option>
-                    @foreach($trainingSessions as $training)
+                    @foreach($trainings as $training)
                         <option value="{{ $training->id }}">
-                            {{ $training->title }} ({{ $training->scheduled_for->format('M d') }})
+                            {{ $training->title }} ({{ $training->scheduled_at->format('M d') }})
                         </option>
                     @endforeach
                 </select>
@@ -163,11 +163,11 @@
                                class="btn btn-outline btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <form action="{{ route('content-manager.client-courses.destroy') }}" method="POST" style="display:inline;">
+                            <form action="{{ route('content-manager.client-courses.destroy', $subscription) }}" 
+                                  method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <input type="hidden" name="subscription_id" value="{{ $subscription->id }}">
-                                <button type="submit" class="btn btn-danger btn-sm"
+                                <button type="submit" class="btn btn-danger btn-sm" 
                                         onclick="return confirm('Remove this enrollment?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -198,7 +198,7 @@
                     <tr>
                         <td>{{ $registration->session->title }}</td>
                         <td>{{ $registration->session->type->name }}</td>
-                        <td>{{ $registration->session->scheduled_for->format('M d, Y') }}</td>
+                        <td>{{ $registration->session->scheduled_at->format('M d, Y H:i') }}</td>
                         <td>
                             <span class="status-badge status-{{ $registration->payment_status === 'paid' ? 'active' : 'pending' }}">
                                 {{ ucfirst($registration->payment_status) }}
@@ -207,7 +207,7 @@
                         <td>
                             @if($registration->attended)
                                 <span class="status-badge status-active">Attended</span>
-                            @elseif($registration->session->scheduled_for->isPast())
+                            @elseif($registration->session->scheduled_at->isPast())
                                 <span class="status-badge status-inactive">Missed</span>
                             @else
                                 <span class="status-badge status-pending">Pending</span>

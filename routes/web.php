@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\EpisodeController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\TrainingSessionController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminAuth;
 use Illuminate\Support\Facades\Route;
@@ -29,15 +30,16 @@ Route::get('/terms', function () { return view('terms'); });
 
 // Training registration
 Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
- 
+
 // Auth routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user();
         
         $courseAccess = new CourseAccessController();
         $freeCourses = $courseAccess->getFreeCourses();
         $paidCourses = $courseAccess->getPaidCourses();
+        $recommendedCourses = $courseAccess->getrecommendedCourses();
 
         $enrolledCourses = $user->courseSubscriptions()
             ->with(['course' => function($query) {
@@ -61,10 +63,21 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard', [
             'freeCourses' => $freeCourses,
             'paidCourses' => $paidCourses,
-            'enrolledCourses' => $enrolledCourses
+            'enrolledCourses' => $enrolledCourses,
+            'recommendedCourses' => $recommendedCourses
         ]);
     })->name('dashboard');
 
+    // Email Verification
+    Route::post('/email/verify/send', function (Request $request) {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('dashboard')->with('status', 'email-already-verified');
+        }
+        $request->user()->sendEmailVerificationNotification();
+        
+        return redirect()->route('dashboard')->with('status', 'verification-link-sent');
+    })->middleware(['auth'])->name('custom.verification.send');
+ 
     Route::post('/onboarding/complete', [PreferenceController::class, 'set'])->name('completeOnboarding');
     Route::get('/skip-onboarding', function () {
         session(['skipped_preference' => true, 'skipped_userType' => true]);
@@ -80,6 +93,7 @@ Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')
     ->name('courses.enroll');
  
+
 // Stripe routes
 Route::prefix('stripe')->group(function () {
     Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])

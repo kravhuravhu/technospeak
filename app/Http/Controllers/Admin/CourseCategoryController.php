@@ -59,7 +59,6 @@ class CourseCategoryController extends Controller
 
     public function destroy(CourseCategory $category)
     {
-        // Prevent deletion if category has courses
         if ($category->courses()->exists()) {
             return back()->with('error', 
                 'Cannot delete category with existing courses. Move or delete the courses first.');

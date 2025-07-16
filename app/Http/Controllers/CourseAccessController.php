@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Admin\CourseController;
 use App\Models\Course; 
+use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 
 class CourseAccessController extends Controller
@@ -18,6 +19,38 @@ class CourseAccessController extends Controller
         $this->adminCourseController = new CourseController();
         
         Auth::shouldUse($currentGuard);
+    }
+
+    // recommended trainings
+    public function getrecommendedCourses()
+    {
+        $user = Auth::user();
+        $recommendedCourses = collect();
+
+        // Get enrolled courses
+        $enrolledCourses = $user->courseSubscriptions()->pluck('course_id');
+
+        // based on preferred
+        if ($user->preferred_category_id) {
+            $recommendedCourses = Course::where('category_id', $user->preferred_category_id)
+                ->whereNotIn('id', $enrolledCourses)
+                ->inRandomOrder()
+                ->limit(4)
+                ->get();
+        }
+
+        // random if no preferred
+        if ($recommendedCourses->count() < 4) {
+            $additionalCourses = Course::whereNotIn('id', $enrolledCourses)
+                ->whereNotIn('id', $recommendedCourses->pluck('id'))
+                ->inRandomOrder()
+                ->limit(4 - $recommendedCourses->count())
+                ->get();
+
+            $recommendedCourses = $recommendedCourses->merge($additionalCourses);
+        }
+
+        return $recommendedCourses;
     }
 
     public function getFreeCourses()

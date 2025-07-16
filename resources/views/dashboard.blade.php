@@ -173,7 +173,6 @@
                                     $inProgressCount = $enrolledCourses->count() - $completedCount;
                                     $nextCourse = $enrolledCourses->first();
                                 @endphp
-                                
                                 <p>You have <strong>{{ $inProgressCount }}</strong> course{{ $inProgressCount === 1 ? '' : 's' }} in progress and <strong>{{ $completedCount }}</strong> completed.</p>
                                 <p><i class="fas fa-arrow-circle-right"></i> {{ $inProgressCount > 0 ? 'Pick up where you left off with' : 'Explore new learning with' }} <strong>{{ $nextCourse->title }}</strong>.</p>
                             @else
@@ -230,128 +229,68 @@
                         <div class="container">
                             <div class="title">
                                 <h1>Recommended Trainings</h1>
+                                @if(Auth::user()->preferred_category_id)
+                                    <p>Based on your interest in {{ Auth::user()->preferredCategory->name }}</p>
+                                @endif
                             </div>
                             <div class="card-grid thn_grid_cd">
-                                <a href="">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
+                                @forelse($recommendedCourses as $course)
+                                    <a href="#" class="training-card"
+                                        data-course-id="{{ $course->id }}"    
+                                        data-training-type="{{ $course->plan_type }}"
+                                        data-title="{{ $course->title }}"
+                                        data-description="{{ $course->description }}"
+                                        data-image="{{ $course->thumbnail }}"
+                                        data-duration="{{ $course->formatted_duration }}"
+                                        data-level="{{ ucfirst($course->level) }}"
+                                        data-instructor="{{ $course->instructor->name ?? 'Unknown' }}"
+                                        data-category="{{ $course->category->name ?? 'Uncategorized' }}"
+                                        data-price="{{ $course->plan_type === 'paid' ? $course->price : 'Free' }}"
+                                        data-episodes='@json($course->episodes->map(function($episode) {
+                                            return [
+                                                'number' => $episode->episode_number,
+                                                'name' => $episode->title,
+                                                'duration' => $episode->formatted_duration
+                                            ];
+                                        }))'
+                                        data-time="{{ $course->formatted_duration }}"
+                                        data-created="{{ $course->created_at->toDateTimeString() }}">
+                                        <div class="card rcmmd_cd">
+                                            <div class="thmbnail thn_rcmm">
+                                                <div class="trnsprnt thmb_img">
+                                                    <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
+                                                </div>
+                                            </div>
+                                            <div class="details thmb_dt">
+                                                <div class="title content thmb_cnt">
+                                                    <h1 class="thmb_h1">{{ Str::limit($course->title, 20) }}</h1>
+                                                </div>
+                                                <div class="ctprs content thmb_cnt">
+                                                    <p class="thmb_ct">{{ Str::limit($course->description, 150) }}...</p>
+                                                </div>
+                                                <div class="thmb_dur_ep_container content thmb_cnt">
+                                                    <div class="cont left-side">
+                                                        <i class="fa-solid fa-stopwatch"></i>
+                                                        <span>{{ $course->formatted_duration }}</span>
+                                                    </div>
+                                                    <div class="cont right-side">
+                                                        <i class="fa-solid fa-video"></i>
+                                                        <span>{{ $course->episodes->count() }} Episodes</span>
+                                                    </div>
+                                                </div>
+                                                <div class="thmb_enrll content">
+                                                    <label class="{{ $course->is_enrolled ? 'enrolled' : '' }}">
+                                                        {{ $course->is_enrolled ? 'Enrolled' : ($course->plan_type === 'paid' ? 'Unlock' : 'Enroll Free') }}
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Training Title</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>1h30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>4 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll</label>
-                                            </div>
-                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="no-courses-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
+                                        <p>No recommended courses available at the moment.</p>
                                     </div>
-                                </a>
-                                <a href="">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Training Title</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>1h30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>4 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Training Title</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>1h30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>4 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="">
-                                    <div class="card rcmmd_cd">
-                                        <div class="thmbnail thn_rcmm">
-                                            <div class="trnsprnt thmb_img">
-                                                <img src="../images/teams/zinhle.jpeg" alt="team two">
-                                            </div>
-                                        </div>
-                                        <div class="details thmb_dt">
-                                            <div class="title content thmb_cnt">
-                                                <h1 class="thmb_h1">Training Title</h1>
-                                            </div>
-                                            <div class="ctprs content thmb_cnt">
-                                                <p class="thmb_ct">Study Smarter with Google & Microsoft Tools</p>
-                                            </div>
-                                            <div class="thmb_dur_ep_container content thmb_cnt">
-                                                <div class="cont left-side">
-                                                    <i class="fa-solid fa-stopwatch"></i>
-                                                    <span>1h30min</span>
-                                                </div>
-                                                <div class="cont right-side">
-                                                    <i class="fa-solid fa-video"></i>
-                                                    <span>4 Episodes</span>
-                                                </div>
-                                            </div>
-                                            <div class="thmb_enrll content">
-                                                <label>Enroll</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                @endforelse
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,7 @@ class PreferenceController extends Controller
 
         $rules = [];
 
+    
         if ($request->has('preferred_category_id')) {
             $rules['preferred_category_id'] = 'required|exists:course_categories,id';
         }

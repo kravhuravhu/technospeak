@@ -48,7 +48,7 @@
             <tr>
                 <th>Transaction ID</th>
                 <th>Client</th>
-                <th>Course</th>
+                <th>Service</th>
                 <th>Amount</th>
                 <th>Date</th>
                 <th>Status</th>
@@ -59,8 +59,8 @@
             @foreach($payments as $payment)
             <tr data-status="{{ $payment->status }}" data-client="{{ strtolower($payment->client->name) }}">
                 <td>#{{ $payment->transaction_id }}</td>
-                <td>{{ $payment->client->name }}</td>
-                <td>{{ $payment->course->title }}</td>
+                <td>{{ $payment->client->email }}</td>
+                <td>{{ $payment->payment_for }}</td>
                 <td>${{ number_format($payment->amount, 2) }}</td>
                 <td>{{ $payment->created_at->format('M d, Y') }}</td>
                 <td>

@@ -231,11 +231,11 @@
                     @endforeach
 
                     <!-- Next Button -->
-                    {{--@if ($clients->hasMorePages())
-                        <a href="{{ $courses->nextPageUrl() }}" class="page-next">Next »</a>
+                    @if ($clients->hasMorePages())
+                        <a href="{{ $clients->nextPageUrl() }}" class="page-next">Next »</a>
                     @else
                         <span class="page-next disabled">Next »</span>
-                    @endif --}}
+                    @endif
                 </div>
             </div>
         </nav>

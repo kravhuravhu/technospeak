@@ -38,6 +38,11 @@ class Payment extends Model
         return $this->belongsTo(Client::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
     public function item()
     {
         if ($this->payment_for === self::PAYMENT_FOR_COURSE) {

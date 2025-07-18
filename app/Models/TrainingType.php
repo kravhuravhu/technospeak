@@ -13,16 +13,24 @@ class TrainingType extends Model
         'name',
         'description',
         'is_group_session',
-        'max_participants'
+        'max_participants',
+        'student_price',
+        'professional_price'
     ];
 
     protected $casts = [
         'is_group_session' => 'boolean',
-        'max_participants' => 'integer'
+        'student_price' => 'decimal:2',
+        'professional_price' => 'decimal:2'
     ];
 
     public function sessions()
     {
         return $this->hasMany(TrainingSession::class, 'type_id');
+    }
+
+    public function getPriceForUserType(string $userType): float
+    {
+        return $userType === 'Student' ? $this->student_price : $this->professional_price;
     }
 }

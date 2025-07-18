@@ -10,14 +10,15 @@ class TrainingRegistration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
         'session_id',
+        'client_id',
+        'phone',
         'payment_status',
+        'payment_id',
         'attended'
     ];
 
     protected $casts = [
-        'registered_at' => 'datetime',
         'attended' => 'boolean'
     ];
 
@@ -29,6 +30,11 @@ class TrainingRegistration extends Model
     public function session()
     {
         return $this->belongsTo(TrainingSession::class, 'session_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id');
     }
 
     public function markAsAttended()

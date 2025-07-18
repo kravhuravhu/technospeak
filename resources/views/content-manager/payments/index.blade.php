@@ -58,10 +58,10 @@
         <tbody>
             @foreach($payments as $payment)
             <tr data-status="{{ $payment->status }}" data-client="{{ strtolower($payment->client->name) }}">
-                <td>#{{ $payment->transaction_id }}</td>
+                <td>{{ $payment->transaction_id }}</td>
                 <td>{{ $payment->client->email }}</td>
                 <td>{{ $payment->payment_for }}</td>
-                <td>${{ number_format($payment->amount, 2) }}</td>
+                <td>R{{ number_format($payment->amount, 2) }}</td>
                 <td>{{ $payment->created_at->format('M d, Y') }}</td>
                 <td>
                     @if($payment->status === 'completed')
@@ -74,9 +74,9 @@
                 </td>
                 <td>
                     <div class="btn-group">
-                        <button class="btn btn-outline btn-sm">
+                        <a href="{{ route('content-manager.payments.show', $payment->id) }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-eye"></i>
-                        </button>
+                        </a>
                         @if($payment->status === 'pending')
                         <button class="btn btn-primary btn-sm">
                             <i class="fas fa-check"></i> Approve

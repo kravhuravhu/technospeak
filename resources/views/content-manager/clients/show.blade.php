@@ -236,20 +236,22 @@
                         <th>For</th>
                         <th>Method</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Item</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($client->payments as $payment)
+                    @foreach($client->payments->sortByDesc('created_at') as $payment)
                     <tr>
                         <td>{{ $payment->created_at->format('M d, Y') }}</td>
-                        <td>${{ number_format($payment->amount, 2) }}</td>
+                        <td>R{{ number_format($payment->amount, 2) }}</td>
                         <td>
-                            @if($payment->payment_for === 'course')
-                                Course: {{ $payment->item->title ?? 'N/A' }}
-                            @else
-                                Training: {{ $payment->item->title ?? 'N/A' }}
-                            @endif
+                            @php
+                                $service = $payment->detailed_service_name;
+                            @endphp
+                            
+                            @isset($service['title'])
+                                {{ $service['title'] }}
+                            @endisset
                         </td>
                         <td>{{ ucfirst($payment->payment_method) }}</td>
                         <td>
@@ -258,15 +260,11 @@
                             </span>
                         </td>
                         <td>
-                            @if($payment->status === 'pending')
-                                <form action="{{ route('content-manager.payments.approve', $payment) }}" 
-                                      method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-check"></i> Approve
-                                    </button>
-                                </form>
-                            @endif
+                            <div class="btn-group">
+                                <a href="{{ route('content-manager.clients.show', $payment->client->id) }}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

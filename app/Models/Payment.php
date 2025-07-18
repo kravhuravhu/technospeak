@@ -2,67 +2,126 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use \App\Models\TrainingRegistration;
 
 class Payment extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
+        'transaction_id',
         'client_id',
         'amount',
         'payment_method',
-        'transaction_id',
         'status',
-        'paid_at',
-        'payment_for',
-        'item_id'
+        'payable_type',
+        'payable_id'
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'paid_at' => 'datetime',
-        'created_at' => 'datetime'
     ];
 
-    const STATUS_PENDING = 'pending';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_FAILED = 'failed';
+    protected $attributes = [
+        'status' => 'pending',
+    ];
 
-    const PAYMENT_FOR_COURSE = 'course';
-    const PAYMENT_FOR_TRAINING = 'training_session';
+    const PAYABLE_TYPES = [
+        'training' => \App\Models\TrainingSession::class,
+        'course' => \App\Models\Course::class,
+        'subscription' => \App\Models\Subscription::class,
+        'task' => \App\Models\Task::class,
+    ];
 
-    public function client()
+    public function payable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function course()
+    public function getPaymentForAttribute(): string
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function item()
-    {
-        if ($this->payment_for === self::PAYMENT_FOR_COURSE) {
-            return $this->belongsTo(Course::class, 'item_id');
+        if (!$this->payable) {
+            $short = class_basename($this->payable_type);
+            return $short . ' #' . $this->payable_id;
         }
-        return $this->belongsTo(TrainingSession::class, 'item_id');
+
+        return $this->payable->title ?? class_basename($this->payable_type) . ' #' . $this->payable_id;
     }
 
-    public function markAsCompleted()
+    public function getPayableTypeNameAttribute(): string
     {
-        $this->update([
-            'status' => self::STATUS_COMPLETED,
-            'paid_at' => now()
-        ]);
+        return array_search($this->payable_type, self::PAYABLE_TYPES) ?: 
+               class_basename($this->payable_type);
     }
 
-    public function markAsFailed()
+    public function scopeCompleted($query)
     {
-        $this->update([
-            'status' => self::STATUS_FAILED
-        ]);
+        return $query->where('status', 'completed');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeFailed($query)
+    {
+        return $query->where('status', 'failed');
+    }
+    
+    public function getDetailedServiceNameAttribute()
+    {
+        if (!$this->payable) {
+            return [
+                'type' => ucfirst($this->payable_type),
+                'title' => 'N/A'
+            ];
+        }
+
+        switch ($this->payable_type) {
+            case 'training':
+                return [
+                    'type' => $this->payable->type->name ?? 'Training',
+                    'title' => $this->payable->title,
+                    'date' => optional($this->payable->scheduled_for)->format('M d, Y')
+                ];
+            case 'course':
+                return [
+                    'type' => 'Course',
+                    'title' => $this->payable->title,
+                    'category' => $this->payable->category->name ?? 'N/A'
+                ];
+            default:
+                return [
+                    'type' => ucfirst($this->payable_type),
+                    'title' => $this->payable->title ?? 'N/A'
+                ];
+        }
+    }
+
+    public function trainingRegistration()
+    {
+        return $this->hasOne(TrainingRegistration::class, 'payment_id');
+    }
+
+    protected static function booted()
+    {
+        static::updated(function (Payment $payment) {
+            if ($payment->payable_type === \App\Models\TrainingSession::class) {
+                TrainingRegistration::where([
+                    'client_id' => $payment->client_id,
+                    'session_id' => $payment->payable_id,
+                ])->update([
+                    'payment_status' => $payment->status,
+                    'payment_id' => $payment->id,
+                ]);
+            }
+        });
     }
 }

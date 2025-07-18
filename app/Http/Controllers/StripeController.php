@@ -1,59 +1,128 @@
 <?php
- 
+
 namespace App\Http\Controllers;
- 
+
+use App\Models\Payment;
+use App\Models\Client;
+use App\Models\TrainingSession;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
-use App\Models\Client;
-use App\Models\ServicePlan;
-use App\Models\Payment;
- 
+use App\Models\TrainingRegistration;
+use App\Notifications\PaymentProcessed;
+
 class StripeController extends Controller
 {
     public function checkout($clientId, $planId)
     {
-        $client = Client::findOrFail($clientId);
-        $plan = ServicePlan::findOrFail($planId);
- 
-        $price = $client->userType === 'student'
-            ? $plan->rate_student
-            : $plan->rate_business;
- 
         Stripe::setApiKey(env('STRIPE_SECRET'));
- 
-        $session = Session::create([
+
+        $client = Client::findOrFail($clientId);
+        $isStudent = $client->userType === 'Student';
+
+        if (str_starts_with($planId, 'training_')) {
+            return $this->handleTrainingPayment($client, $planId);
+        }
+
+        // other methods lateer
+    }
+
+    protected function handleTrainingPayment(Client $client, string $planId)
+    {
+        $sessionId = str_replace('training_', '', $planId);
+        $session = TrainingSession::with('type')->findOrFail($sessionId);
+        
+        $price = $session->type->getPriceForUserType($client->userType);
+        $description = "Training: " . $session->title;
+
+        $stripeSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'zar',
-                    'product_data' => ['name' => $plan->name],
+                    'product_data' => [
+                        'name' => $description,
+                    ],
                     'unit_amount' => $price * 100,
                 ],
                 'quantity' => 1,
             ]],
-            'mode' => $plan->is_subscription ? 'subscription' : 'payment',
-            'success_url' => url('/payment-success'),
-            'cancel_url' => url('/payment-cancel'),
+            'mode' => 'payment',
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}&checkout_complete=true',
+            'cancel_url' => url()->previous(),
+            'customer_email' => $client->email,
+            'metadata' => [
+                'client_id' => $client->id,
+                'training_session_id' => $session->id,
+                'user_type' => $client->userType
+            ]
         ]);
- 
-        Payment::create([
-            'id' => Payment::max('id') + 1, // Get the highest ID and increment
-            'client_id' => (string) $client->id,
-            'amount' => $price,
-            'payment_method' => 'stripe',
-            'status' => 'pending',
-            'payment_for' => strtolower($plan->name) === 'q/a session' ? 'qa_session' : 'service_plan',
-            'item_id' => $plan->id,
-            'service_plan_id' => $plan->id,
-            'stripe_session_id' => $session->id
-        ]);
- 
-        return redirect($session->url);
+
+        return redirect($stripeSession->url);
     }
 
-    public function success()
+    public function success(Request $request)
     {
-        return view('stripe.success'); // Or return a success message
+        if (!$request->has('checkout_complete')) {
+            return redirect('/');
+        }
+
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+            $stripeSession = Session::retrieve($request->get('session_id'));
+
+            if (isset($stripeSession->metadata->training_session_id)) {
+                return $this->handleTrainingPaymentSuccess($stripeSession);
+            }
+
+            return redirect('/')->with('error', 'Invalid payment session');
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'Error processing payment: ' . $e->getMessage());
+        }
     }
+
+    protected function handleTrainingPaymentSuccess($stripeSession)
+    {
+        try {
+            $payment = Payment::firstOrCreate(
+                ['transaction_id' => $stripeSession->payment_intent],
+                [
+                    'client_id' => $stripeSession->metadata->client_id,
+                    'amount' => $stripeSession->amount_total / 100,
+                    'payment_method' => 'stripe',
+                    'status' => 'completed',
+                    'payable_type' => 'training',
+                    'payable_id' => $stripeSession->metadata->training_session_id
+                ]
+            );
+
+            // Update registration status
+            TrainingRegistration::updateOrCreate(
+                [
+                    'session_id' => $stripeSession->metadata->training_session_id,
+                    'client_id' => $stripeSession->metadata->client_id
+                ],
+                [
+                    'payment_status' => 'completed',
+                    'payment_id' => $payment->id
+                ]
+            );
+
+            if ($payment->wasRecentlyCreated) {
+                $client = Client::find($stripeSession->metadata->client_id);
+                $client->notify(new PaymentProcessed($payment, 'success'));
+            }
+
+            $trainingSession = TrainingSession::find($stripeSession->metadata->training_session_id);
+
+            return response()->view('/success-payment', [
+                'payment' => $payment,
+                'trainingSession' => $trainingSession
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'Error processing payment: ' . $e->getMessage());
+        }
+    }
+
 }

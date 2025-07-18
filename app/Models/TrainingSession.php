@@ -20,14 +20,15 @@ class TrainingSession extends Model
         'category_id',
         'instructor_id',
         'scheduled_for',
-        'max_participants',
+        'max_participants'
     ];
 
     protected $casts = [
         'scheduled_for' => 'datetime',
-        'max_participants' => 'integer',
-        'created_at' => 'datetime'
+        'from_time' => 'datetime:H:i',
+        'to_time' => 'datetime:H:i',
     ];
+
 
     public function type()
     {
@@ -49,6 +50,16 @@ class TrainingSession extends Model
         return $this->hasMany(TrainingRegistration::class, 'session_id');
     }
 
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
+
+    public function getPriceForUser(Client $client): float
+    {
+        return $this->type->getPriceForUserType($client->userType);
+    }
+
     public function getAvailableSpotsAttribute()
     {
         return $this->max_participants ? 
@@ -56,10 +67,12 @@ class TrainingSession extends Model
                null;
     }
 
-    public function isFull()
+    public function isFull(): bool
     {
-        return $this->max_participants && 
-               $this->registrations()->count() >= $this->max_participants;
+        if ($this->type->is_group_session) {
+            return $this->registrations()->count() >= $this->max_participants;
+        }
+        return $this->registrations()->exists();
     }
 
     public function scopeUpcoming(Builder $query): void

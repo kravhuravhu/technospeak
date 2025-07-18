@@ -147,8 +147,22 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         ]);
         
         // Payments
-        Route::resource('payments', PaymentsController::class);
-        Route::post('payments/{payment}/approve', [PaymentsController::class, 'approve'])->name('payments.approve');
+        Route::prefix('payments')->group(function() {
+            Route::get('/', [PaymentsController::class, 'index'])->name('payments.index');
+            Route::get('/create', [PaymentsController::class, 'create'])->name('payments.create');
+            Route::post('/', [PaymentsController::class, 'store'])->name('payments.store');
+            Route::get('/{payment}', [PaymentsController::class, 'show'])->name('payments.show');
+            Route::post('/{payment}/approve', [PaymentsController::class, 'approve'])->name('payments.approve');
+            
+            // AJAX endpoints
+            Route::get('/get-items', [PaymentsController::class, 'getItems'])->name('payments.get-items');
+            Route::get('/calculate-amount', [PaymentsController::class, 'calculateAmount'])->name('payments.calculate-amount');
+
+            // success
+            Route::get('/payment/success', function() {
+                return view('payments.success'); 
+            })->name('payment.success');
+        });
         
         // trainings
         Route::resource('trainings', TrainingSessionController::class);

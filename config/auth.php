@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'clients'),
+        'guard' => 'web', // Changed from env('AUTH_GUARD', 'web') to hardcoded 'web'
+        'passwords' => 'clients', // Changed from env() to hardcoded
     ],
 
     /*
@@ -38,11 +38,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'clients',
+            'provider' => 'clients', // Matches your provider key
         ],
         'admin' => [
             'driver' => 'session',
-            'provider' => 'admins',
+            'provider' => 'admins', // Ensure you have an 'admins' provider if needed
         ],
     ],
 
@@ -68,9 +68,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Client::class,
         ],
+        // Remove or keep 'admins' provider based on your needs
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Models\Admin::class, // Only if you have an Admin model
         ],
     ],
 
@@ -96,7 +97,7 @@ return [
     'passwords' => [
         'clients' => [
             'provider' => 'clients',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'table' => 'password_reset_tokens', // Hardcoded for clarity
             'expire' => 60,
             'throttle' => 60,
         ],
@@ -113,6 +114,6 @@ return [
     |
     */
 
-    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+    'password_timeout' => 10800, // 3 hours (hardcoded)
 
 ];

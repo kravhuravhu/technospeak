@@ -19,6 +19,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
 use App\Http\Controllers\CourseAccessController; 
+use App\Http\Controllers\IssueController; 
 
 // Public routes
 Route::get('/', [WelcomeController::class, 'index']);
@@ -87,6 +88,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile routes
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Issue reporting routes
+    Route::get('/get-help', [IssueController::class, 'showForm'])->name('get-help');
+    Route::post('/submit-issue', [IssueController::class, 'submitIssue'])->name('submit-issue');
+    Route::get('/my-issues', [IssueController::class, 'getUserIssues'])->name('my-issues');
 });
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
@@ -100,6 +106,17 @@ Route::prefix('stripe')->group(function () {
         ->name('stripe.checkout');
     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
     Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+});
+
+// Issue mail test route
+Route::get('/test-email', function() {
+    $client = App\Models\Client::first();
+    $issue = App\Models\Issue::first();
+    
+    return view('emails.issue_confirmation', [
+        'client' => $client,
+        'issue' => $issue
+    ]);
 });
 
 require __DIR__.'/auth.php';

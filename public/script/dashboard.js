@@ -2,28 +2,82 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('issueForm');
   const confirmation = document.getElementById('confirmation');
   const backBtn = document.querySelector('.back-btn');
-  
-  form.addEventListener('submit', function(e) {
+
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
-    // Simple form validation
+    
+    // Form validation
     const title = document.getElementById('issueTitle').value.trim();
     const description = document.getElementById('issueDescription').value.trim();
     const category = document.getElementById('issueCategory').value;
-    if (!title || !description || !category) {
+    const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
+    
+    if (!title || !description || !category || !urgency) {
       alert('Please fill in all required fields');
       return;
     }
 
     const submitBtn = form.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Show loading state
     submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
     submitBtn.disabled = true;
 
-    setTimeout(() => {
-      form.style.display = 'none';
-      confirmation.style.display = 'block';
+    try {
+      // Prepare form data
+      const formData = {
+        issueTitle: title,
+        issueDescription: description,
+        issueCategory: category,
+        urgency: urgency,
+        _token: document.querySelector('meta[name="csrf-token"]').content
+      };
+
+      // Submit via AJAX
+      const response = await fetch('/submit-issue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': formData._token
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Server returned an error');
+      }
+
+      if (data.success) {
+        // Show success message
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        throw new Error(data.message || 'There was an error submitting your issue');
+      }
+    } catch (error) {
+      console.error('Full error details:', error);
+      let errorMessage = error.message;
       
-      confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 1500);
+      // Try to get more detailed error message from response
+      if (error.response) {
+        try {
+          const errorData = await error.response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // Couldn't parse JSON error response
+        }
+      }
+      
+      alert(`Error: ${errorMessage}\n\nPlease check the console for more details.`);
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
+    }
   });
   
   backBtn.addEventListener('click', function() {
@@ -37,7 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  
+
+  // Animation observer (keep your existing code)
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -50,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(el);
   });
 });
+
 
 /* script for Support section */
 document.addEventListener('DOMContentLoaded', function() {

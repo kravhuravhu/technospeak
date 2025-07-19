@@ -29,7 +29,7 @@ class TrainingType extends Model
         return $this->hasMany(TrainingSession::class, 'type_id');
     }
 
-    public function getPriceForUserType(string $userType): float
+    public function getPriceForUserType(?string $userType): float
     {
         return $userType === 'Student' ? $this->student_price : $this->professional_price;
     }

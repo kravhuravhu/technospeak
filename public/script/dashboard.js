@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // Animation observer (keep your existing code)
+  // Animation observer
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(el);
   });
 });
-
 
 /* script for Support section */
 document.addEventListener('DOMContentLoaded', function() {

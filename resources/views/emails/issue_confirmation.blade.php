@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Issue Has Been Received</title>
+    <title>Issue Confirmation</title>
 </head>
 <body>
-    <h2>Hello {{ $client->name }} {{ $client->surname }},</h2>
+    <h2>Hello {{ $issue->client->name }},</h2>
     
-    <p>We've received your technical issue and our team is working on it.</p>
+    <p>We've received your support request (Reference #{{ $issue->id }}).</p>
     
     <h3>Issue Details:</h3>
-    <p><strong>Title:</strong> {{ $issue->title }}</p>
-    <p><strong>Description:</strong> {{ $issue->description }}</p>
-    <p><strong>Urgency:</strong> {{ ucfirst($issue->urgency) }}</p>
-    <p><strong>Submitted:</strong> {{ $issue->created_at->format('F j, Y \a\t g:i a') }}</p>
+    <ul>
+        <li><strong>Title:</strong> {{ $issue->title }}</li>
+        <li><strong>Description:</strong> {{ $issue->description }}</li>
+        <li><strong>Urgency:</strong> {{ ucfirst($issue->urgency) }}</li>
+        <li><strong>Submitted:</strong> {{ $issue->created_at->format('F j, Y \a\t g:i a') }}</li>
+    </ul>
     
-    <p>Our typical response time is 24-48 hours. You'll receive another email when we have an update.</p>
+    <p>Our team will review your request and respond within 24-48 hours.</p>
     
     <p>Thank you,<br>
     TechnoSpeak Support Team</p>

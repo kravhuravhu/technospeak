@@ -34,6 +34,13 @@
                 <span>Trainings</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('content-manager.issues.index') }}" class="{{ request()->routeIs('content-manager.issues.*') ? 'active' : '' }}">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Issues</span>
+            </a>
+        </li>
+
         
         <div class="menu-divider"></div>
         

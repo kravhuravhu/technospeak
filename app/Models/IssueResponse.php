@@ -10,9 +10,10 @@ class IssueResponse extends Model
     
     protected $fillable = [
         'issue_id',
-        'admin_id',
+        'responder_id',
         'response_type',
-        'content'
+        'content',
+        'is_customer_visible'
     ];
     
     public function issue()
@@ -20,8 +21,8 @@ class IssueResponse extends Model
         return $this->belongsTo(Issue::class);
     }
     
-    public function admin()
+    public function responder()
     {
-        return $this->belongsTo(User::class, 'admin_id');
+        return $this->belongsTo(User::class, 'responder_id');
     }
 }

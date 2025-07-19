@@ -15,22 +15,17 @@ class IssueConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $client;
     public $issue;
 
-    public function __construct(Client $client, Issue $issue)
+    public function __construct(Issue $issue)
     {
-        $this->client = $client;
         $this->issue = $issue;
     }
 
     public function build()
     {
-        return $this->subject("Support Request Confirmation #{$this->issue->id}")
-               ->html('');
-
-        // return $this->subject("Support Request Confirmation #{$this->issue->id}")
-        //            ->view('emails.issue_confirmation');
+        return $this->subject("Issue Received #{$this->issue->id}")
+                   ->view('emails.issue_confirmation');
     }
 
     /**

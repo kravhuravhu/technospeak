@@ -14,50 +14,89 @@ use Illuminate\Support\Facades\Mail;
 
 class IssueController extends Controller
 {
-    public function showForm()
-    {
-        return view('dashboard.get-help'); // Adjust to your actual view path
-    }
-    
     public function submitIssue(Request $request)
     {
         $validated = $request->validate([
-            'issueTitle' => 'required|string|max:255',
-            'issueDescription' => 'required|string',
-            'issueCategory' => 'required|in:microsoft,google,canva,system,general,other',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|in:microsoft,google,canva,system,general',
             'urgency' => 'required|in:low,medium,high'
         ]);
         
+        $client = Auth::user();
+        
         $issue = Issue::create([
-            'client_id' => Auth::id(),
-            'title' => $validated['issueTitle'],
-            'description' => $validated['issueDescription'],
-            'category' => $validated['issueCategory'],
+            'client_id' => $client->id,
+            'email' => $client->email,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'category' => $validated['category'],
             'urgency' => $validated['urgency'],
             'status' => 'open'
         ]);
-
-        // Get the authenticated client
-        $client = Client::find(Auth::id());
         
-        // Send email confirmation
-        if ($client && $client->email) {
-            Mail::to($client->email)
-                ->send(new IssueConfirmation($client, $issue));
-        }
+        // Send confirmation email
+        Mail::to($client->email)->send(new IssueConfirmation($issue));
         
         return response()->json([
             'success' => true,
-            'message' => 'Your issue has been submitted successfully!'
+            'issue_id' => $issue->id,
+            'message' => 'Issue submitted successfully. Our team will contact you soon.'
         ]);
     }
     
-    public function getUserIssues()
+    public function getIssue($id)
     {
-        $issues = Issue::where('client_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $issue = Issue::with(['client', 'responses', 'assignments'])->findOrFail($id);
+        return response()->json($issue);
+    }
+    
+    public function updateStatus(Request $request, $id)
+    {
+        $issue = Issue::findOrFail($id);
+        
+        $validated = $request->validate([
+            'status' => 'required|in:open,assigned,in_progress,resolved,closed',
+            'admin_id' => 'required_if:status,assigned|nullable|integer',
+            'resolution_details' => 'required_if:status,resolved|nullable|string'
+        ]);
+        
+        $issue->update([
+            'status' => $validated['status'],
+            'resolution_details' => $validated['resolution_details'] ?? null,
+            'resolved_at' => $validated['status'] === 'resolved' ? now() : null,
+            'closed_at' => $validated['status'] === 'closed' ? now() : null
+        ]);
+        
+        if ($validated['status'] === 'assigned') {
+            IssueAssignment::create([
+                'issue_id' => $issue->id,
+                'admin_id' => $validated['admin_id'],
+                'status' => 'active'
+            ]);
             
-        return view('dashboard.my-issues', compact('issues'));
+            $issue->update(['assigned_to' => $validated['admin_id']]);
+        }
+        
+        return response()->json(['success' => true]);
+    }
+    
+    public function addResponse(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string',
+            'response_type' => 'required|in:email,comment,solution,internal_note',
+            'is_customer_visible' => 'boolean'
+        ]);
+        
+        IssueResponse::create([
+            'issue_id' => $id,
+            'responder_id' => Auth::id(),
+            'response_type' => $validated['response_type'],
+            'content' => $validated['content'],
+            'is_customer_visible' => $validated['is_customer_visible'] ?? false
+        ]);
+        
+        return response()->json(['success' => true]);
     }
 }

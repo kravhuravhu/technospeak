@@ -11,12 +11,7 @@ class IssueAssignment extends Model
     protected $fillable = [
         'issue_id',
         'admin_id',
-        'status_changed_at'
-    ];
-    
-    protected $casts = [
-        'assigned_at' => 'datetime',
-        'status_changed_at' => 'datetime'
+        'status'
     ];
     
     public function issue()

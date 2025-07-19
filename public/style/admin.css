@@ -463,6 +463,56 @@ textarea.form-control {
     }
 }
 
+/* Issues */
+.badge-low {
+    background: #cce5ff;
+    color: #004085;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.badge-medium {
+    background: #ffeeba;
+    color: #856404;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.badge-high {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.issue-detail, .issue-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.issue-table th, .issue-table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.issue-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.issue-table th {
+    background-color: #f1f5f9;
+    text-align: left;
+}
+
+.issue-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
 /* Responsive */
 @media (max-width: 992px) {
     .admin-sidebar {

@@ -89,10 +89,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Issue reporting routes
-    Route::get('/get-help', [IssueController::class, 'showForm'])->name('get-help');
-    Route::post('/submit-issue', [IssueController::class, 'submitIssue'])->name('submit-issue');
-    Route::get('/my-issues', [IssueController::class, 'getUserIssues'])->name('my-issues');
+    // Issue submission
+    Route::post('/issues', [IssueController::class, 'submitIssue']);
+    
+    // Issue management
+    Route::get('/issues/{id}', [IssueController::class, 'getIssue']);
+    Route::put('/issues/{id}/status', [IssueController::class, 'updateStatus']);
+    Route::post('/issues/{id}/responses', [IssueController::class, 'addResponse']);
 });
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
@@ -106,17 +109,6 @@ Route::prefix('stripe')->group(function () {
         ->name('stripe.checkout');
     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
     Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
-});
-
-// Issue mail test route
-Route::get('/test-email', function() {
-    $client = App\Models\Client::first();
-    $issue = App\Models\Issue::first();
-    
-    return view('emails.issue_confirmation', [
-        'client' => $client,
-        'issue' => $issue
-    ]);
 });
 
 require __DIR__.'/auth.php';
@@ -186,6 +178,9 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::get('trainings/{training}/registrations', [TrainingSessionController::class, 'registrations'])->name('trainings.registrations');
         Route::post('trainings/{training}/mark-attendance', [TrainingSessionController::class, 'markAttendance'])->name('trainings.mark-attendance');
         
+        // issues
+        Route::resource('issues', \App\Http\Controllers\Admin\IssueController::class);
+
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');

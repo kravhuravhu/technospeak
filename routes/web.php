@@ -166,11 +166,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
             // AJAX endpoints
             Route::get('/get-items', [PaymentsController::class, 'getItems'])->name('payments.get-items');
             Route::get('/calculate-amount', [PaymentsController::class, 'calculateAmount'])->name('payments.calculate-amount');
-
-            // success
-            Route::get('/payment/success', function() {
-                return view('payments.success'); 
-            })->name('payment.success');
         });
         
         // trainings
@@ -190,3 +185,8 @@ Route::prefix('content')->name('content-manager.')->group(function() {
 
 // Enrollments
 Route::delete('client-courses/delete', [ClientController::class, 'destroyEnrollment'])->name('content-manager.client-courses.destroy');
+
+// success payment
+Route::get('/success-payment', function() {
+    return view('success-payment'); 
+})->name('payment.success');

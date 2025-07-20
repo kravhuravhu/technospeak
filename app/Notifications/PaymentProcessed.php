@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Payment;
 
-class PaymentProcessed extends Notification implements ShouldQueue
+class PaymentProcessed extends Notification
 {
     use Queueable;
 
@@ -32,21 +32,21 @@ class PaymentProcessed extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $actionUrl = route('payments.show', $this->payment);
+        $actionUrl = route('dashboard');
         $displayableActionUrl = str_replace(['http://', 'https://'], '', $actionUrl);
 
-        $greeting = $this->status === 'success' 
+        $pstatus = $this->status === 'success' 
             ? 'Payment Successful!'
             : 'Payment Failed';
 
         $introLines = $this->getIntroLines();
         $outroLines = $this->getOutroLines();
-        $actionText = $this->status === 'success' ? 'View Payment Details' : 'Try Again';
+        $actionText = $this->status === 'success' ? '' : 'Try Again';
 
         return (new MailMessage)
             ->subject($this->subject)
             ->markdown('emails.payment-notification', [
-                'greeting' => $greeting,
+                'pstatus' => $pstatus,
                 'introLines' => $introLines,
                 'actionText' => $actionText,
                 'actionUrl' => $actionUrl,
@@ -63,7 +63,6 @@ class PaymentProcessed extends Notification implements ShouldQueue
         if ($this->status === 'success') {
             return [
                 'Your payment of R' . number_format($this->payment->amount, 2) . ' has been successfully processed.',
-                'Transaction ID: ' . $this->payment->transaction_id,
                 'Payment Method: ' . ucwords(str_replace('_', ' ', $this->payment->payment_method)),
                 'Payment For: ' . $this->payment->payment_for
             ];
@@ -81,13 +80,15 @@ class PaymentProcessed extends Notification implements ShouldQueue
         if ($this->status === 'success') {
             return [
                 'Thank you for your payment. Your transaction has been completed.',
-                'A receipt for your purchase has been sent to your email.'
+                '********************************************',
+                'You will receive an invite 24hours before the session.',
+                '********************************************'
             ];
         }
 
         return [
             'If you believe this is an error, please contact our support team.',
-            'No funds have been deducted from your account.'
+            'No funds have been deducted from your account. Support: admin@technospeak.co.za | info@technospeak.co.za'
         ];
     }
 }

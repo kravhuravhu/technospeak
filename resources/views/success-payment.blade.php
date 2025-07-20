@@ -5,6 +5,7 @@
     <title>Payment Success</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset ('style/home.css') }}" type="text/css">
+    <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
     <style>
         :root {
             --success: #38b000;
@@ -124,7 +125,7 @@
                 <p>You'll receive session details and meeting link 24 hours before the session.</p>
             </div>
 
-            <a href="{{ route('dashboard') }}" class="back-to-dashboard">Go to Dashboard</a>
+            <a href="{{ url('/') }}" class="back-to-dashboard">Go to Home</a>
         </div>
     </div>
 

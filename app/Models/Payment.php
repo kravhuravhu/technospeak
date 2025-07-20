@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use \App\Models\TrainingRegistration;
+use \App\Models\Instructor;
 
 class Payment extends Model
 {
@@ -39,9 +40,14 @@ class Payment extends Model
         return $this->morphTo();
     }
 
-    public function client(): BelongsTo
+    public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
     public function getPaymentForAttribute(): string
@@ -89,7 +95,8 @@ class Payment extends Model
                 return [
                     'type' => $this->payable->type->name ?? 'Training',
                     'title' => $this->payable->title,
-                    'date' => optional($this->payable->scheduled_for)->format('M d, Y')
+                    'date' => optional($this->payable->scheduled_for)->format('M d, Y'),
+                    'instructor' => $this->payable->instructor->name ?? null
                 ];
             case 'course':
                 return [

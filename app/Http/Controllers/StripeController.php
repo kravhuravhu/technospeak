@@ -84,17 +84,33 @@ class StripeController extends Controller
     protected function handleTrainingPaymentSuccess($stripeSession)
     {
         try {
-            $payment = Payment::firstOrCreate(
-                ['transaction_id' => $stripeSession->payment_intent],
-                [
+            $existingPending = Payment::where([
+                'client_id' => $stripeSession->metadata->client_id,
+                'payable_type' => 'training',
+                'payable_id' => $stripeSession->metadata->training_session_id,
+                'status' => 'pending'
+            ])->first();
+
+            if ($existingPending) {
+                $existingPending->update([
+                    'transaction_id' => $stripeSession->payment_intent,
+                    'payment_method' => 'stripe',
+                    'status' => 'completed',
+                    'amount' => $stripeSession->amount_total / 100
+                ]);
+
+                $payment = $existingPending;
+            } else {
+                $payment = Payment::create([
+                    'transaction_id' => $stripeSession->payment_intent,
                     'client_id' => $stripeSession->metadata->client_id,
                     'amount' => $stripeSession->amount_total / 100,
                     'payment_method' => 'stripe',
                     'status' => 'completed',
                     'payable_type' => 'training',
                     'payable_id' => $stripeSession->metadata->training_session_id
-                ]
-            );
+                ]);
+            }
 
             // Update registration status
             TrainingRegistration::updateOrCreate(
@@ -108,9 +124,10 @@ class StripeController extends Controller
                 ]
             );
 
-            if ($payment->wasRecentlyCreated) {
+            if ($payment->wasRecentlyCreated || $payment->wasChanged('status')) {
                 $client = Client::find($stripeSession->metadata->client_id);
-                $client->notify(new PaymentProcessed($payment, 'success'));
+                $status = $payment->status === 'completed' ? 'success' : 'failed';
+                $client->notify(new PaymentProcessed($payment, $status));
             }
 
             $trainingSession = TrainingSession::find($stripeSession->metadata->training_session_id);

@@ -145,11 +145,6 @@ function enrollInCourse(courseId) {
     .then(async response => {
         const data = await response.json();
         
-        if (data.redirect) {
-            window.location.href = data.redirect;
-            return;
-        }
-        
         if (data.success) {
             showPopUp('success', 'Success', data.message);
             updateEnrollmentUI(courseId);
@@ -167,10 +162,19 @@ function enrollInCourse(courseId) {
 }
 
 function refreshMyTrainings() {
-    fetch('/dashboard/mytrainings')
+    fetch('/dashboard')
         .then(response => response.text())
         .then(html => {
-            document.querySelector('.my_learnings').innerHTML = html;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContent = doc.querySelector('.my_learnings');
+            if (newContent) {
+                document.querySelector('.my_learnings').innerHTML = newContent.innerHTML;
+            }
+        })
+        .catch(error => {
+            console.error('Error updating trainings:', error);
+            showPopUp('error', 'Error', 'Could not refresh trainings.');
         });
 }
 

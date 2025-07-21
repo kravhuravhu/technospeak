@@ -55,7 +55,8 @@ class PaymentProcessed extends Notification
                 'salutation' => 'Best regards,',
                 'status' => $this->status,
                 'payment' => $this->payment
-            ]);
+            ])
+            ->bcc('admin@technospeak.co.za');
     }
 
     protected function getIntroLines()

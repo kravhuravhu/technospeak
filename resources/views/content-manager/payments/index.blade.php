@@ -14,7 +14,12 @@
 <div class="data-table">
     <div class="data-table-header">
         <div class="data-table-title">
-            <h3>Payment History</h3>
+            @if (number_format($pendingAmount, 2) == 0.00)
+                <h3>Payment History</h3>
+            @else
+                <h3>Payment History</h3>
+                <span><i>Pending: R{{ number_format($pendingAmount, 2) }}</i></span>
+            @endif
         </div>
         <div class="table-actions">
             <div class="search-box">
@@ -197,8 +202,7 @@
             </div>
         </nav>
         <div class="summary">
-            <strong>Total: ${{ number_format($totalRevenue, 2) }}</strong>
-            <span>Pending: ${{ number_format($pendingAmount, 2) }}</span>
+            <strong>Total: R{{ number_format($totalRevenue, 2) }}</strong>
         </div>
     </div>
 </div>

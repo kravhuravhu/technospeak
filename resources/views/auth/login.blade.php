@@ -27,6 +27,7 @@
     <div class="form_wrapper">
         <form method="POST" action="{{ route('login') }}">
             @csrf
+            <input type="hidden" name="redirect" value="{{ request('redirect') }}">
             <div class="input-icon">
                 <i class="fa fa-envelope"></i>
                 <input type="email" name="email" placeholder="Enter your email" required>

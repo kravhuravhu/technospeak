@@ -158,11 +158,11 @@
                                 @php
                                     $hour = now()->hour;
                                     if ($hour < 12) {
-                                        echo 'Good morning,';
+                                        echo 'Good Morning,';
                                     } elseif ($hour < 17) {
-                                        echo 'Good afternoon,';
+                                        echo 'Good Afternoon,';
                                     } else {
-                                        echo 'Good evening,';
+                                        echo 'Good Evening,';
                                     }
                                 @endphp
                                 {{ Auth::user()->name }}!
@@ -194,7 +194,7 @@
                             </div>
                             <div class="card-grid">
                                 @forelse($enrolledCourses ?? [] as $course)
-                                    <a href="">
+                                    <a href="{{ route('enrolled-courses.show', $course->id) }}" class="enrolled-course-link">
                                         <div class="card">
                                             <div class="thmbnail">
                                                 <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">

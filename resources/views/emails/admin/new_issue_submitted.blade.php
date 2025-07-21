@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $subject ?? 'Issue Confirmation' }}</title>
+    <title>New Issue Submitted</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="margin:0;padding:0;background-color:#f0f2f5;font-family:Roboto,sans-serif;">
@@ -21,68 +21,58 @@
                        style="background-color:#ffffff;border-radius:8px;overflow:hidden;">
                     <tr>
                         <td style="padding:40px;">
-                            <!-- Greeting -->
                             <h1 style="margin:0 0 10px;font-size:24px;color:#111;">
-                                Hello {{ $issue->client->name }},
+                                New Issue Submitted
                             </h1>
- 
-                            <!-- Status Line -->
+                            
                             <p style="margin:0 0 20px;font-size:14px;color:#38b6ff;text-transform:uppercase;letter-spacing:1px;">
-                                Issue Received Successfully
+                                Requires Your Attention
                             </p>
- 
-                            <!-- Intro -->
-                            <p style="margin:0 0 15px;font-size:16px;line-height:1.5;color:#333;">
-                                We've received your support request. Below are the issue details.
-                            </p>
- 
-                            <!-- Issue Details -->
+
                             <h2 style="font-size:18px;color:#111;margin-bottom:15px;">Issue Details</h2>
- 
+
                             <table style="width:100%;margin:20px 0;border-collapse:collapse;">
                                 <tr>
                                     <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Reference Number</td>
                                     <td style="padding:10px;border:1px solid #ddd;">#{{ $issue->id }}</td>
                                 </tr>
                                 <tr>
+                                    <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Client</td>
+                                    <td style="padding:10px;border:1px solid #ddd;">{{ $issue->client->name }} {{ $issue->client->surname }}</td>
+                                </tr>
+                                <tr>
                                     <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Title</td>
                                     <td style="padding:10px;border:1px solid #ddd;">{{ $issue->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Description</td>
-                                    <td style="padding:10px;border:1px solid #ddd;">{{ $issue->description }}</td>
-                                </tr>
-                                <tr>
                                     <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Urgency</td>
-                                    <td style="padding:10px;border:1px solid #ddd;">{{ ucfirst($issue->urgency) }}</td>
+                                    <td style="padding:10px;border:1px solid #ddd;">
+                                        <span style="color: {{ $issue->urgency === 'high' ? '#e53e3e' : ($issue->urgency === 'medium' ? '#dd6b20' : '#38a169') }}">
+                                            {{ ucfirst($issue->urgency) }}
+                                        </span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Submitted At</td>
                                     <td style="padding:10px;border:1px solid #ddd;">{{ $issue->created_at->format('F j, Y \a\t g:i A') }}</td>
                                 </tr>
                             </table>
- 
-                            <!-- Outro -->
-                            <p style="margin:0 0 15px;font-size:16px;line-height:1.5;color:#333;text-align:center;">
-                                Our support team will respond within 24–48 hours. You will be notified via email once an update is available.
-                            </p>
- 
-                            <p style="margin:0 0 15px;font-size:16px;line-height:1.5;color:#333;text-align:center;">
-                                If this issue is urgent, please call our support line or reply to this email.
-                            </p>
- 
-                            <!-- Salutation -->
+
+                            <div style="margin:30px 0;text-align:center;">
+                                <a href="{{ route('content-manager.issues.show', $issue) }}" 
+                                   style="display:inline-block;padding:12px 24px;background-color:#38b6ff;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">
+                                    View Issue in Dashboard
+                                </a>
+                            </div>
+
                             <p style="margin:30px 0 0;font-size:16px;line-height:1.5;color:#333;">
-                                Best regards,<br>TechnoSpeak Support Team<br><br>
-                                Support: admin@technospeak.co.za | info@technospeak.co.za
+                                Best regards,<br>TechnoSpeak Support Team
                             </p>
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
- 
-        <!-- Footer -->
         <tr>
             <td align="center" style="padding:20px;font-size:12px;color:#999;">
                 &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.

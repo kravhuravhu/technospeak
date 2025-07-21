@@ -661,6 +661,7 @@
                     </div>
                     
                     <form id="issueForm" class="issue-form">
+                        @csrf
                         <div class="form-group">
                             <label for="issueTitle">What's the main problem?</label>
                             <input type="text" id="issueTitle" placeholder="E.g., 'Excel formulas not working'" required>

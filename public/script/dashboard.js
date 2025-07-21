@@ -1,109 +1,78 @@
+
+// Issue section 
 document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('issueForm');
-  const confirmation = document.getElementById('confirmation');
-  const backBtn = document.querySelector('.back-btn');
+    const form = document.getElementById('issueForm');
+    const confirmation = document.getElementById('confirmation');
+    const backBtn = document.querySelector('.back-btn');
 
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Form validation
-    const title = document.getElementById('issueTitle').value.trim();
-    const description = document.getElementById('issueDescription').value.trim();
-    const category = document.getElementById('issueCategory').value;
-    const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
-    
-    if (!title || !description || !category || !urgency) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    const submitBtn = form.querySelector('.submit-btn');
-    const originalBtnText = submitBtn.innerHTML;
-    
-    // Show loading state
-    submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
-    submitBtn.disabled = true;
-
-    try {
-      // Prepare form data
-      const formData = {
-        issueTitle: title,
-        issueDescription: description,
-        issueCategory: category,
-        urgency: urgency,
-        _token: document.querySelector('meta[name="csrf-token"]').content
-      };
-
-      // Submit via AJAX
-      const response = await fetch('/submit-issue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-TOKEN': formData._token
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Server returned an error');
-      }
-
-      if (data.success) {
-        // Show success message
-        form.style.display = 'none';
-        confirmation.style.display = 'block';
-        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        throw new Error(data.message || 'There was an error submitting your issue');
-      }
-    } catch (error) {
-      console.error('Full error details:', error);
-      let errorMessage = error.message;
-      
-      // Try to get more detailed error message from response
-      if (error.response) {
-        try {
-          const errorData = await error.response.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch (e) {
-          // Couldn't parse JSON error response
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Form validation
+        const title = document.getElementById('issueTitle').value.trim();
+        const description = document.getElementById('issueDescription').value.trim();
+        const category = document.getElementById('issueCategory').value;
+        const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
+        
+        if (!title || !description || !category || !urgency) {
+            alert('Please fill in all required fields');
+            return;
         }
-      }
-      
-      alert(`Error: ${errorMessage}\n\nPlease check the console for more details.`);
-      submitBtn.innerHTML = originalBtnText;
-      submitBtn.disabled = false;
-    }
-  });
-  
-  backBtn.addEventListener('click', function() {
-    confirmation.style.display = 'none';
-    form.style.display = 'block';
-    form.reset();
-    
-    const submitBtn = form.querySelector('.submit-btn');
-    submitBtn.innerHTML = '<span>Get Help Now</span><i class="fas fa-paper-plane"></i>';
-    submitBtn.disabled = false;
-    
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
 
-  // Animation observer
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-      }
+        const submitBtn = form.querySelector('.submit-btn');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
+        submitBtn.disabled = true;
+
+        try {
+            // Get CSRF token from meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            
+            const response = await fetch('/issues', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    issueTitle: title,
+                    issueDescription: description,
+                    issueCategory: category,
+                    urgency: urgency
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Server returned an error');
+            }
+
+            if (data.success) {
+                form.style.display = 'none';
+                confirmation.style.display = 'block';
+                confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                throw new Error(data.message || 'There was an error submitting your issue');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Error: ${error.message}`);
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+        }
     });
-  }, { threshold: 0.1 });
-  
-  document.querySelectorAll('.step, .form-group').forEach(el => {
-    observer.observe(el);
-  });
+    
+    backBtn.addEventListener('click', function() {
+        confirmation.style.display = 'none';
+        form.style.display = 'block';
+        form.reset();
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 });
 
 /* script for Support section */

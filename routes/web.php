@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\EpisodeController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\TrainingSessionController;
+use App\Http\Controllers\Admin\AdminIssueController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ProfileController;
@@ -94,14 +95,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile routes
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Issue submission
-    Route::post('/issues', [IssueController::class, 'submitIssue']);
     
     // Issue management
-    Route::get('/issues/{id}', [IssueController::class, 'getIssue']);
-    Route::put('/issues/{id}/status', [IssueController::class, 'updateStatus']);
-    Route::post('/issues/{id}/responses', [IssueController::class, 'addResponse']);
+    Route::get('/my-issues', [IssueController::class, 'index'])->name('issues.index');
+    Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
+    Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
 });
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
@@ -178,13 +176,24 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::get('trainings/{training}/registrations', [TrainingSessionController::class, 'registrations'])->name('trainings.registrations');
         Route::post('trainings/{training}/mark-attendance', [TrainingSessionController::class, 'markAttendance'])->name('trainings.mark-attendance');
         
-        // issues
-        Route::resource('issues', \App\Http\Controllers\Admin\IssueController::class);
+       // issues
+        Route::resource('issues', \App\Http\Controllers\Admin\AdminIssueController::class);  
+        Route::post('issues/{issue}/assign', [\App\Http\Controllers\Admin\AdminIssueController::class, 'assign'])->name('issues.assign');
+        Route::post('issues/{issue}/add-response', [\App\Http\Controllers\Admin\AdminIssueController::class, 'addResponse'])->name('issues.add-response');
+        Route::post('issues/{issue}/mark-resolved', [\App\Http\Controllers\Admin\AdminIssueController::class, 'markResolved'])->name('issues.mark-resolved');
 
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+    });
+
+    // routes/web.php (admin)
+    Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+        Route::resource('issues', AdminIssueController::class)->except(['create', 'store']);
+        Route::post('issues/{issue}/assign', [AdminIssueController::class, 'assign'])->name('issues.assign');
+        Route::post('issues/{issue}/close', [AdminIssueController::class, 'close'])->name('issues.close');
+        Route::post('issues/{issue}/response', [AdminIssueController::class, 'addResponse'])->name('issues.response');
     });
 });
 

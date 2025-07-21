@@ -127,6 +127,7 @@ class StripeController extends Controller
             if ($payment->wasRecentlyCreated || $payment->wasChanged('status')) {
                 $client = Client::find($stripeSession->metadata->client_id);
                 $status = $payment->status === 'completed' ? 'success' : 'failed';
+                // send mail
                 $client->notify(new PaymentProcessed($payment, $status));
             }
 

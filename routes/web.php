@@ -69,6 +69,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('dashboard');
 
+    // view enrolled
+    Route::get('/enrolled-courses/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
+    Route::post('/enrolled-courses/{course}/episodes/{episode}/complete', 
+        [App\Http\Controllers\CourseAccessController::class, 'markEpisodeCompleted'])
+        ->name('enrolled-courses.episodes.complete');
+
     // Email Verification
     Route::post('/email/verify/send', function (Request $request) {
         if ($request->user()->hasVerifiedEmail()) {
@@ -102,7 +108,6 @@ Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')
     ->name('courses.enroll');
  
-
 // Stripe routes
 Route::prefix('stripe')->group(function () {
     Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])

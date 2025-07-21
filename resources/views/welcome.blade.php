@@ -347,7 +347,7 @@
                     @if(Auth::check())
                         <a href="#" class="registration-trigger" data-type-id="4">Register Q/A</a>
                     @else
-                        <a href="{{ route('login') }}">Register Q/A</a>
+                        <a href="{{ route('login', ['redirect' => url()->current()]) }}">Register Q/A</a>
                     @endif
                 </div>
             </div>

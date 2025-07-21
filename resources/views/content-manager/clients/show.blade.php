@@ -200,8 +200,8 @@
                         <td>{{ $registration->session->type->name }}</td>
                         <td>{{ $registration->session->scheduled_for->format('M d, Y') }}</td>
                         <td>
-                            <span class="status-badge status-{{ $registration->payment_status === 'paid' ? 'active' : 'pending' }}">
-                                {{ ucfirst($registration->payment_status) }}
+                            <span class="status-badge status-{{ $registration->payment_status === 'completed' ? 'active' : 'pending' }}">
+                                {{ $registration->payment_status === 'completed' ? 'Payment Completed' : ucfirst($registration->payment_status) }}
                             </span>
                         </td>
                         <td>

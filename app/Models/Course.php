@@ -47,7 +47,18 @@ class Course extends Model
 
     public function getFormattedDurationAttribute()
     {
-        return $this->total_duration;
+        $totalSeconds = $this->total_duration;
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+        $seconds = $totalSeconds % 60;
+
+        if ($hours > 0) {
+            return "{$hours}h{$minutes}m{$seconds}s";
+        } elseif ($minutes > 0) {
+            return "{$minutes}m{$seconds}s";
+        } else {
+            return "0m{$seconds}s";
+        }
     }
 
     public function scopePaid($query)

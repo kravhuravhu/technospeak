@@ -33,7 +33,7 @@ class AdminController extends Controller
         $activeClients = \App\Models\Client::whereNotNull('email_verified_at')->count();
         $pendingPayments = \App\Models\Payment::where('status', 'pending')->count();
         $trainingSessions = TrainingSession::count();
-
+        $processedPayments = \App\Models\Payment::where('status', 'completed')->count();
         // not yet
         // $recentActivities = ActivityLog::latest()->take(5)->get();
 
@@ -43,7 +43,8 @@ class AdminController extends Controller
             'activeClients',
             'pendingPayments',
             'trainingSessions',
-            'recentClients'
+            'recentClients',
+            'processedPayments'
         ));
     }
 

@@ -44,8 +44,20 @@
         <div class="icon">
             <i class="fas fa-credit-card"></i>
         </div>
-        <h3>Pending Payments</h3>
-        <div class="value">{{ $pendingPayments }}</div>
+        <h3>
+            @if ($pendingPayments == 0)
+                Processed Payments
+            @else
+                Pending Payments
+            @endif
+        </h3>
+        <div class="value">
+            @if ($pendingPayments == 0)
+                {{ $processedPayments }}
+            @else
+                {{ $pendingPayments }}
+            @endif
+        </div>
         <div class="change negative">
             <i class="fas fa-arrow-down"></i> 3% from last month
         </div>

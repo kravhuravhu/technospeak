@@ -146,4 +146,83 @@ class CourseAccessController extends Controller
             'message' => 'Payment required for premium courses'
         ]);
     }
+
+    // view enrolled courses
+    public function show(Course $course)
+    {
+        $user = Auth::user();
+
+        if (!$user->isSubscribedTo($course->id)) {
+            abort(403, 'You are not enrolled in this course');
+        }
+
+        $totalSeconds = $course->total_duration;
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+        $seconds = $totalSeconds % 60;
+        
+        $formattedDuration = ($hours > 0 ? "{$hours}h" : "") . ($minutes > 0 ? "{$minutes}m" : "") . "{$seconds}s";
+
+        $subscription = $user->courseSubscriptions()->where('course_id', $course->id)->first();
+        $progress = $subscription ? $subscription->progress : 0;
+        $completedEpisodes = $subscription->completedEpisodes ?? collect();
+
+        $episodes = $course->episodes->map(function($episode) use ($completedEpisodes) {
+            $duration = $episode->duration;
+            $h = floor($duration / 3600);
+            $m = floor(($duration % 3600) / 60);
+            $s = $duration % 60;
+            
+            $durationFormatted = ($h > 0 ? "{$h}h" : "") . ($m > 0 ? "{$m}m" : "") . "{$s}s";
+
+            return [
+                'id' => $episode->id,
+                'number' => $episode->episode_number,
+                'title' => $episode->title,
+                'description' => $episode->description,
+                'duration' => $durationFormatted,
+                'video_url' => $episode->video_url,
+                'completed' => $completedEpisodes->contains($episode->id),
+                'is_free' => $episode->is_free
+            ];
+        });
+
+        return view('enrolled-courses.show', compact('course', 'subscription'));
+
+    }
+
+    public function markEpisodeCompleted(Course $course, CourseEpisode $episode)
+    {
+        $user = Auth::user();
+        
+        // Verify user is enrolled in this course
+        if (!$user->isSubscribedTo($course->id)) {
+            abort(403, 'You are not enrolled in this course');
+        }
+
+        // Verify episode belongs to this course
+        if ($episode->course_id !== $course->id) {
+            abort(400, 'Episode does not belong to this course');
+        }
+
+        $subscription = $user->courseSubscriptions()
+            ->where('course_id', $course->id)
+            ->first();
+
+        // Mark episode as completed
+        $subscription->completedEpisodes()->syncWithoutDetaching([$episode->id]);
+
+        // Update progress
+        $completedCount = $subscription->completedEpisodes()->count();
+        $totalEpisodes = $course->episodes()->count();
+        $progress = round(($completedCount / $totalEpisodes) * 100);
+
+        $subscription->update(['progress' => $progress]);
+
+        return response()->json([
+            'success' => true,
+            'progress' => $progress,
+            'message' => 'Episode marked as completed'
+        ]);
+    }
 }

@@ -9,22 +9,13 @@ class Issue extends Model
 {
     protected $table = 'issues';
     
-    protected $fillable = [
-        'client_id',
-        'email',
-        'title',
-        'description',
-        'category',
-        'urgency',
-        'status',
-        'resolution_details',
-        'admin_notes',
-        'assigned_to'
+        protected $fillable = [
+        'client_id', 'email', 'title', 'description', 'category', 
+        'urgency', 'status', 'resolution_details', 'admin_notes', 
+        'assigned_to', 'resolved_at', 'closed_at'
     ];
-    
+
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
         'resolved_at' => 'datetime',
         'closed_at' => 'datetime'
     ];
@@ -32,22 +23,22 @@ class Issue extends Model
     // Relationships
     public function client()
     {
-        return $this->belongsTo(Client::class, 'client_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id2');
     }
-    
-    public function assignee()
+
+    public function assignedTo()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(Instructor::class, 'assigned_to');
     }
-    
-    public function assignments()
-    {
-        return $this->hasMany(IssueAssignment::class);
-    }
-    
+
     public function responses()
     {
         return $this->hasMany(IssueResponse::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(IssueAssignment::class);
     }
     
     // Helpers
@@ -60,5 +51,15 @@ class Issue extends Model
             'system' => 'Computer/System Issues',
             'general' => 'General Tech Problem'
         ];
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class, 'assigned_to');
+    }
+
+    public function currentAssignment()
+    {
+        return $this->hasOne(IssueAssignment::class)->where('status', 'active')->latest();
     }
 }

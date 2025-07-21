@@ -23,4 +23,14 @@ class IssueAssignment extends Model
     {
         return $this->belongsTo(User::class, 'admin_id');
     }
+
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }

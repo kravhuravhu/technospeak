@@ -103,7 +103,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/my-issues', [IssueController::class, 'index'])->name('issues.index');
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
+
+    // Contact section
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
+    Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
+
+    // Coaching section
+    Route::get('/training-sessions/upcoming', [TrainingController::class, 'upcomingSessions']);
+    Route::get('/training-sessions/{id}', [TrainingController::class, 'getSession']);
+    Route::post('/training-sessions/rsvp', [TrainingController::class, 'rsvp']);
+    Route::post('/training-sessions/cancel', [TrainingController::class, 'cancelRegistration']);
+    Route::get('/my-training-registrations', [TrainingController::class, 'myRegistrations']);
 });
+
+// Coaching section
+Route::get('/training-types', [TrainingController::class, 'getTrainingTypes']);
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')

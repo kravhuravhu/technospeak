@@ -151,7 +151,7 @@
                             <h3 class="name">Khuliso J. Ravhuravhu</h3>
                             <i class="description">TS - Business Manager</i>
                         </li>
-                        <li class="team swiper-slide">
+                        <!-- <li class="team swiper-slide">
                             <img src="images/tsTeam/phuti.jpeg" alt="Team7" class="team-image">
                             <h3 class="name">Phuti Palesa Rammutla</h3>
                             <i class="description">TS - Analysis & Sales Team</i>
@@ -160,7 +160,7 @@
                             <img src="images/tsTeam/faith.jpeg" alt="Team10" class="team-image">
                             <h3 class="name">Faith Maswangayi</h3>
                             <i class="description">TS - Sales Team</i>
-                        </li>
+                        </li> -->
                     </ul>
 
                     <div class="swiper-pagination"></div>

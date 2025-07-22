@@ -105,4 +105,5 @@ class TrainingRegistrationController extends Controller
 
         return view('content-manager.trainings.registrations', compact('training', 'registrations'));
     }
+    
 }

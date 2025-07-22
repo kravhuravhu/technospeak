@@ -575,43 +575,51 @@
 
             <!-- Ask Questions -->
             <div class="question-container">
-            <div class="question-box">
-                <h2 class="question-title">Real Questions. Real Answers.</h2>
-                
-                <div class="input-group">
-                <input type="email" placeholder="Enter your email" class="input-field"/>
-                <textarea placeholder="Write your question here..." class="input-field message-field" rows="3"></textarea>
-                </div>
-                
-                <svg class="arrow" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5,25 Q30,15 50,25 T95,25" stroke="white" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-                <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" fill="white"/>
-                    </marker>
-                </defs>
-                </svg>
-                
-                <button class="send-btn">
-                Send Question
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                </button>
+                <div class="question-box">
+                    <h2 class="question-title">Real Questions. Real Answers.</h2>
+                    
+                    <!-- Form with proper attributes but hidden -->
+                    <form id="questionForm" action="{{ route('questions.submit') }}" method="POST" style="display: none;">
+                        @csrf
+                        <input type="email" name="email" id="formEmail" required>
+                        <textarea name="question" id="formQuestion" required></textarea>
+                    </form>
 
-                <div class="circle circle1"></div>
-                <div class="circle circle2"></div>
-                <div class="circle circle3"></div>
+                    <div class="input-group">
+                    <input type="email" placeholder="Enter your email" class="input-field"/>
+                    <textarea placeholder="Write your question here..." class="input-field message-field" rows="3"></textarea>
+                    </div>
+                    
+                    <svg class="arrow" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5,25 Q30,15 50,25 T95,25" stroke="white" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="white"/>
+                        </marker>
+                    </defs>
+                    </svg>
+                    
+                    <button class="send-btn">
+                    Send Question
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </button>
+
+                    <div class="circle circle1"></div>
+                    <div class="circle circle2"></div>
+                    <div class="circle circle3"></div>
+                </div>
             </div>
-            </div>
+
             <!-- Footer Section -->
             {{-- Include the footer --}}
             @include('layouts.footer')
         </main>
 
         <!-- Ask Question script -->
-        <script>
+        <!-- <script>
             function submitQuestion() {
             const email = document.querySelector('input[type="email"]').value;
             const question = document.querySelector('input[type="text"]').value;
@@ -621,7 +629,7 @@
                 alert('Please fill in both fields.');
             }
             }
-        </script>
+        </script> -->
 
         <!-- Price modals -->
         <script>
@@ -634,5 +642,8 @@
                 document.getElementById(id).style.display = 'flex';
             }
         </script>
+
+        <script src="script/pop-up.js"></script>
+
     </body>
 </html>

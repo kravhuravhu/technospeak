@@ -61,6 +61,31 @@ class Course extends Model
         }
     }
 
+    public function getTitleAttribute($value)
+    {
+        return ucwords($value);
+    }
+
+    public function getCatchPhraseAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getPlanTypeAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getLevelAttribute($value) 
+    {
+        return ucwords($value);
+    }
+
     public function scopePaid($query)
     {
         return $query->where('plan_type', 'paid');

@@ -2019,347 +2019,344 @@ section.bar-lt-rt {
           background: linear-gradient(to bottom, #38b6ff, #25f4ee);
         }
 
+        /* Swiper Container */
+        .coach-swiper-container {
+            width: 100%;
+            padding: 20px 0 40px;
+        }
+
         /* Coach Header */
         .coach-header {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 30px;
-          flex-wrap: wrap;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .coach-avatar {
-          position: relative;
-          margin-right: 25px;
-          flex-shrink: 0;
+            position: relative;
+            margin-right: 25px;
+            flex-shrink: 0;
         }
 
         .coach-avatar img {
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 5px solid #e6f4ff;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #e6f4ff;
         }
 
         .coach-intro h2 {
-          color: var(--darkBlue-color);
-          font-size: 1.8rem;
-          margin-bottom: 5px;
-          font-weight: 600;
+            color: var(--darkBlue-color);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 600;
         }
 
         .coach-tagline {
-          color: #4a5568;
-          font-size: 1.1rem;
-          margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
         .coach-bio {
-          background-color: #f8fafc;
-          padding: 15px;
-          border-radius: 10px;
-          margin-top: 10px;
-          border-left: 4px solid #38b6ff;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #38b6ff;
         }
 
         .coach-bio p {
-          color: #4a5568;
-          font-size: 0.95rem;
-          line-height: 1.5;
-          margin: 0;
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
         }
 
         .coach-bio strong {
-          color: #2d3748;
+            color: #2d3748;
         }
 
         /* Coach Features */
         .coach-features {
-          display: flex;
-          justify-content: space-between;
-          margin: 40px 0;
-          flex-wrap: wrap;
-          gap: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .feature-card {
-          flex: 1;
-          min-width: 200px;
-          background-color: #f8fafc;
-          border-radius: 15px;
-          padding: 25px;
-          display: flex;
-          align-items: flex-start;
-          transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s ease;
         }
 
         .feature-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 20px rgba(56, 182, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(56, 182, 255, 0.1);
         }
 
         .feature-icon {
-          width: 50px;
-          height: 50px;
-          background-color: #e6f4ff;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 15px;
-          color: #38b6ff;
-          font-size: 1.3rem;
-          flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background-color: #e6f4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #38b6ff;
+            font-size: 1.3rem;
+            flex-shrink: 0;
         }
 
         .feature-content h3 {
-          color: #2d3748;
-          font-size: 1.1rem;
-          margin-bottom: 5px;
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
         }
 
         .feature-content p {
-          color: #718096;
-          font-size: 0.9rem;
-          line-height: 1.5;
-          margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
         }
 
-        /* Recommendations */
+        /* Swiper Navigation */
+        .swiper-nav-btns {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .swiper-nav-btn {
+            background: none;
+            border: none;
+            color: #38b6ff; 
+            font-size: 24px; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+
+        .swiper-nav-btn:hover {
+            color: #2d3748; 
+        }
+
+        .swiper-pagination {
+            position: relative;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background-color: #cbd5e0;
+            opacity: 1;
+            display: inline-block;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: #38b6ff;
+        }
+
+        .swiper-container {
+            padding-bottom: 40px; 
+        }
+
+        .swiper-wrapper {
+            margin-bottom: 20px;
+        }
+
         .coach-recommendations {
-          margin: 40px 0;
+            margin: 40px 0;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 40px;
         }
 
         .recommendations-title {
-          color: var(--darkBlue-color);
-          font-size: 1.4rem;
-          margin-bottom: 20px;
-          padding-bottom: 10px;
-          border-bottom: 2px solid #e2e8f0;
+            color: var(--darkBlue-color);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .recommendation-card {
-          background: white;
-          border-radius: 15px;
-          padding: 20px;
-          margin-bottom: 20px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-          border: 1px solid #e2e8f0;
-          position: relative;
-          transition: all 0.3s ease;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
         .recommendation-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 6px 20px rgba(56, 182, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 182, 255, 0.15);
         }
 
         .recommendation-card.priority {
-          border-left: 5px solid #38b6ff;
+            border-left: 5px solid #38b6ff;
         }
 
         .recommendation-badge {
-          position: absolute;
-          top: -10px;
-          right: 20px;
-          background-color: #38b6ff;
-          color: white;
-          padding: 5px 15px;
-          border-radius: 20px;
-          font-size: 0.8rem;
-          font-weight: bold;
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: #38b6ff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
         .recommendation-content h4 {
-          color: #2d3748;
-          font-size: 1.2rem;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
         }
 
         .recommendation-content h4 i {
-          margin-right: 10px;
-          color: #38b6ff;
+            margin-right: 10px;
+            color: #38b6ff;
         }
 
         .recommendation-desc {
-          color: #4a5568;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
         }
 
         .recommendation-meta {
-          display: flex;
-          gap: 15px;
-          margin-bottom: 15px;
-          flex-wrap: wrap;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .recommendation-meta span {
-          display: flex;
-          align-items: center;
-          font-size: 0.85rem;
-          color: #718096;
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #718096;
         }
 
         .recommendation-meta i {
-          margin-right: 5px;
-          font-size: 0.9rem;
+            margin-right: 5px;
+            font-size: 0.9rem;
         }
 
         .new-badge {
-          background-color: #38b6ff;
-          color: white;
-          padding: 3px 10px;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: bold;
+            background-color: #38b6ff;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
         }
 
         .start-btn,
         .rsvp-btn,
         .watch-btn {
-          padding: 10px 20px;
-          border: none;
-          border-radius: 50px;
-          font-size: 0.9rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #38b6ff;
+            color: white;
         }
 
-        .start-btn {
-          background-color: #38b6ff;
-          color: white;
-        }
-
-        .rsvp-btn {
-          background-color: #38b6ff;
-          color: white;
-        }
-
-        .watch-btn {
-          background-color: #38b6ff;
-          color: white;
-        }
-
-        .start-btn:hover {
-          background-color: #2d3748;
-        }
-
-        .rsvp-btn:hover {
-          background-color: #2d3748;
-        }
-
+        .start-btn:hover,
+        .rsvp-btn:hover,
         .watch-btn:hover {
-          background-color: #216f9c;
+            background-color: #2d3748;
         }
-
-        /* CTA Section */
-        /* .coach-cta2 {
-          text-align: center;
-          margin-top: 40px;
-          padding: 30px;
-          background-color: #f8fafc;
-          border-radius: 15px;
-        }
-
-        .coach-cta2 h3 {
-          color: #2d3748;
-          font-size: 1.5rem;
-          margin-bottom: 10px;
-        }
-
-        .coach-cta2 p {
-          color: #4a5568;
-          font-size: 1rem;
-          line-height: 1.6;
-          margin-bottom: 20px;
-          max-width: 500px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .schedule-btn2 {
-          background-color: #38b6ff;
-          color: white;
-          border: none;
-          padding: 15px 30px;
-          border-radius: 50px;
-          font-size: 1rem;
-          font-weight: 600;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(56, 182, 255, 0.3);
-        }
-
-        .schedule-btn2 i {
-          margin-right: 8px;
-        }
-
-        .schedule-btn2:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
-        }
-
-        .assurance2 {
-          margin-top: 15px;
-          color: #718096;
-          font-size: 0.85rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .assurance2 i {
-          margin-right: 8px;
-          color: #38b6ff;
-        } */
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-          .coach-header {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-          }
-          
-          .coach-avatar {
-            margin-right: 0;
-            margin-bottom: 20px;
-          }
-          
-          .coach-bio {
-            text-align: left;
-          }
-          
-          .feature-card {
-            min-width: 100%;
-          }
+            .coach-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .coach-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .coach-bio {
+                text-align: left;
+            }
+            
+            .feature-card {
+                min-width: 100%;
+            }
+
+            .coach-features {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
-          .techCoach_content {
-            padding: 20px;
-            border-radius: 15px;
-          }
-          
-          .coach-intro h2 {
-            font-size: 1.5rem;
-          }
-          
-          .recommendation-card {
-            padding: 15px;
-          }
-          
-          /* .schedule-btn {
-            padding: 12px 25px;
-            font-size: 0.95rem;
-          } */
+            .techCoach_content {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .coach-intro h2 {
+                font-size: 1.5rem;
+            }
+            
+            .recommendation-card {
+                padding: 15px;
+            }
+        }
+        
+        /* Upcomming RSVP Now section */
+        .notify-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #FF9800;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .notify-btn:hover {
+            background-color: #F57C00;
+        }
+
+        /* Loading spinner */
+        .fa-spinner.fa-spin {
+            margin-right: 8px;
         }
       }
       

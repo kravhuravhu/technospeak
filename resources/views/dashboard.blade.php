@@ -17,6 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <!-- Font Awesome CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
@@ -158,11 +159,11 @@
                                 @php
                                     $hour = now()->hour;
                                     if ($hour < 12) {
-                                        echo 'Good Morning,';
+                                        echo 'Good morning,';
                                     } elseif ($hour < 17) {
-                                        echo 'Good Afternoon,';
+                                        echo 'Good afternoon,';
                                     } else {
-                                        echo 'Good Evening,';
+                                        echo 'Good evening,';
                                     }
                                 @endphp
                                 {{ Auth::user()->name }}!
@@ -194,7 +195,7 @@
                             </div>
                             <div class="card-grid">
                                 @forelse($enrolledCourses ?? [] as $course)
-                                    <a href="{{ route('enrolled-courses.show', $course->id) }}" class="enrolled-course-link">
+                                    <a href="">
                                         <div class="card">
                                             <div class="thmbnail">
                                                 <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
@@ -661,7 +662,6 @@
                     </div>
                     
                     <form id="issueForm" class="issue-form">
-                        @csrf
                         <div class="form-group">
                             <label for="issueTitle">What's the main problem?</label>
                             <input type="text" id="issueTitle" placeholder="E.g., 'Excel formulas not working'" required>
@@ -797,105 +797,355 @@
 
                 <!-- Tech Coach containers -->
                 <div class="content-section techCoach_content" id="usr_techCoach">
-                    <div class="coach-header">
-                        <div class="coach-avatar">
-                            <img src="images/tsTeam/Norris.jpg" alt="Your Tech Coach">
-                        </div>
-                        <div class="coach-intro">
-                            <h2>Meet Your Personal Tech Coach</h2>
-                            <p class="coach-tagline">Your dedicated guide to tech mastery and problem-solving</p>
-                            <div class="coach-bio">
-                                <p><strong>Coach Norris</strong>, Velisa Africa facilitator with 5+ years experience helping professionals succeed with technology.</p>
+                    <!-- Swiper Container for Coaches -->
+                    <div class="coach-swiper-container">
+                        <div class="swiper coachSwiper">
+                            <div class="swiper-wrapper">
+                                <!-- Coach 1 - Norris -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/Norris.jpg" alt="Coach Norris">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your dedicated guide to tech mastery and problem-solving</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Norris</strong>, Velisa Africa facilitator with 5+ years experience helping professionals succeed with technology. Specializes in productivity tools and workflow optimization.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-user-graduate"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Personalised Learning Path</h3>
+                                                <p>Customised recommendations based on your skills and goals</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-video"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>1-on-1 Video Sessions</h3>
+                                                <p>Get direct help with your specific challenges</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-tasks"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Progress Tracking</h3>
+                                                <p>Monitor your improvement with regular checkpoints</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coach 2 - Junior -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/junior.jpg" alt="Coach Junior">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your expert in software development and coding</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Junior</strong>, Full-stack developer with 7 years experience teaching programming fundamentals and advanced concepts to beginners and professionals alike.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-code"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Coding Fundamentals</h3>
+                                                <p>Master the basics of programming with hands-on exercises</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-project-diagram"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Project Guidance</h3>
+                                                <p>Get help with your coding projects from concept to completion</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-bug"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Debugging Help</h3>
+                                                <p>Learn how to find and fix errors in your code</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coach 3 - Rose -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/rose.png" alt="Coach Rose">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your guide to design and creative technologies</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Rose</strong>, UI/UX designer and digital artist with 6 years experience helping creatives leverage technology for stunning visual results.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-palette"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Design Principles</h3>
+                                                <p>Learn the fundamentals of good design and user experience</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>App Design</h3>
+                                                <p>Create beautiful and functional mobile interfaces</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-photo-video"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Multimedia Tools</h3>
+                                                <p>Master photo and video editing software</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coach 4 - Lehlogonolo/Bucks -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/hloks.jpeg" alt="Coach Bucks">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your data and analytics specialist</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Bucks</strong>, Data scientist with 8 years experience teaching data analysis, visualization, and interpretation techniques for business intelligence.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-database"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Data Management</h3>
+                                                <p>Learn to organize and analyze large datasets effectively</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Data Visualization</h3>
+                                                <p>Create compelling charts and graphs to tell data stories</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-calculator"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Advanced Excel</h3>
+                                                <p>Master pivot tables, formulas, and data analysis tools</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coach 5 - Zinhle -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/zinhle.jpeg" alt="Coach Zinhle">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your cybersecurity and IT infrastructure expert</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Zinhle</strong>, Cybersecurity specialist with 6 years experience in network security and IT best practices for individuals and businesses.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-shield-alt"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Online Security</h3>
+                                                <p>Protect yourself from cyber threats and scams</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-network-wired"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Networking Basics</h3>
+                                                <p>Understand how networks and the internet work</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-laptop-code"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>System Maintenance</h3>
+                                                <p>Keep your devices running smoothly and securely</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coach 6 - Omega -->
+                                <div class="swiper-slide">
+                                    <div class="coach-header">
+                                        <div class="coach-avatar">
+                                            <img src="images/tsTeam/ts2/omega.jpg" alt="Coach Omega">
+                                        </div>
+                                        <div class="coach-intro">
+                                            <h2>Meet Your Personal Tech Coach</h2>
+                                            <p class="coach-tagline">Your AI and emerging technologies guide</p>
+                                            <div class="coach-bio">
+                                                <p><strong>Coach Omega</strong>, AI researcher and tech futurist with 5 years experience helping professionals understand and leverage cutting-edge technologies.</p>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                    
+                                    <div class="coach-features">
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-robot"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>AI Tools</h3>
+                                                <p>Learn to use AI assistants and productivity tools</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-brain"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Machine Learning</h3>
+                                                <p>Understand the basics of how AI systems learn</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-lightbulb"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>Tech Trends</h3>
+                                                <p>Stay ahead with insights on emerging technologies</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>     
-                    
-                    <div class="coach-features">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-user-graduate"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h3>Personalised Learning Path</h3>
-                                <p>Customised recommendations based on your skills and goals</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h3>1-on-1 Video Sessions</h3>
-                                <p>Get direct help with your specific challenges</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-tasks"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h3>Progress Tracking</h3>
-                                <p>Monitor your improvement with regular checkpoints</p>
+                            
+                            <!-- Swiper Navigation -->
+                            <div class="swiper-nav-btns">
+                                <button class="swiper-nav-btn swiper-button-prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="swiper-pagination"></div>
+                                <button class="swiper-nav-btn swiper-button-next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Lower Part (Unchanged) -->
                     <div class="coach-recommendations">
                         <h3 class="recommendations-title">Your Personalised Recommendations</h3>
                         
                         <div class="recommendation-card priority">
-                        <div class="recommendation-badge">Priority</div>
-                        <div class="recommendation-content">
-                            <h4><i class="fas fa-star"></i> Mastering Excel Shortcuts</h4>
-                            <p class="recommendation-desc">Boost your productivity with these essential keyboard tips that will save you hours each week.</p>
-                            <div class="recommendation-meta">
-                            <span class="duration"><i class="far fa-clock"></i> 25 min</span>
-                            <span class="difficulty"><i class="fas fa-bolt"></i> Beginner</span>
+                            <div class="recommendation-badge">Priority</div>
+                            <div class="recommendation-content">
+                                <h4><i class="fas fa-star"></i> Mastering Excel Shortcuts</h4>
+                                <p class="recommendation-desc">Boost your productivity with these essential keyboard tips that will save you hours each week.</p>
+                                <div class="recommendation-meta">
+                                    <span class="duration"><i class="far fa-clock"></i> 25 min</span>
+                                    <span class="difficulty"><i class="fas fa-bolt"></i> Beginner</span>
+                                </div>
+                                <button class="start-btn">Start Learning</button>
                             </div>
-                            <button class="start-btn">Start Learning</button>
                         </div>
+                        
+                        <div class="recommendation-card" data-session-id="1">
+                            <div class="recommendation-content">
+                                <h4><i class="fas fa-users"></i> Google Docs Collaboration</h4>
+                                <p class="recommendation-desc">Live training on <span class="session-date">June 18, 2023</span> at <span class="session-time">10:00 AM</span> - Learn real-time collaboration techniques with your team.</p>
+                                <div class="recommendation-meta">
+                                    <span class="date"><i class="far fa-calendar-alt"></i> <span class="full-date">June 18, 2023 10:00 AM</span></span>
+                                    <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
+                                </div>
+                                <button class="rsvp-btn" data-session-id="1">RSVP Now</button>
+                            </div>
                         </div>
                         
                         <div class="recommendation-card">
-                        <div class="recommendation-content">
-                            <h4><i class="fas fa-users"></i> Google Docs Collaboration</h4>
-                            <p class="recommendation-desc">Live training on June 18 at 10AM - Learn real-time collaboration techniques with your team.</p>
-                            <div class="recommendation-meta">
-                            <span class="date"><i class="far fa-calendar-alt"></i> June 18, 10AM</span>
-                            <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
+                            <div class="recommendation-content">
+                                <h4><i class="fas fa-laptop-medical"></i> Fixing Common Laptop Errors</h4>
+                                <p class="recommendation-desc">New video tutorial covering the top 5 laptop issues our students face and how to solve them.</p>
+                                <div class="recommendation-meta">
+                                    <span class="duration"><i class="far fa-clock"></i> 42 min</span>
+                                    <span class="new-badge">New!</span>
+                                </div>
+                                <button class="watch-btn">Watch Now</button>
                             </div>
-                            <button class="rsvp-btn">RSVP Now</button>
-                        </div>
-                        </div>
-                        
-                        <div class="recommendation-card">
-                        <div class="recommendation-content">
-                            <h4><i class="fas fa-laptop-medical"></i> Fixing Common Laptop Errors</h4>
-                            <p class="recommendation-desc">New video tutorial covering the top 5 laptop issues our students face and how to solve them.</p>
-                            <div class="recommendation-meta">
-                            <span class="duration"><i class="far fa-clock"></i> 42 min</span>
-                            <span class="new-badge">New!</span>
-                            </div>
-                            <button class="watch-btn">Watch Now</button>
-                        </div>
                         </div>
                     </div>
-
-                    <!-- <div class="coach-cta2">
-                        <h3>Ready for Personalised Guidance?</h3>
-                        <p>Schedule a 1-on-1 session with your Tech Coach to get direct help with your specific challenges.</p>
-                        <button class="schedule-btn2">
-                        <i class="fas fa-calendar-check"></i> Schedule Session
-                        </button>
-                        <p class="assurance2">
-                        <i class="fas fa-shield-alt"></i> All sessions are confidential and tailored to your needs
-                        </p>
-                    </div>
-                    </div> -->
-
                 </div>
+
 
                 <!-- Support Section -->
                 <div class="content-section support_content" id="usr_support">
@@ -905,7 +1155,7 @@
                                 <h2>Support Center</h2>
                                 <p>Find answers to common questions or contact our support team</p>
                             </div>
-                            <!-- Enhanced FAQ Section -->
+                            <!-- FAQ Section -->
                             <div class="faq-section">
                                 <div class="section-header">
                                     <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
@@ -1557,6 +1807,33 @@
 
                 $(window).on('click', function () {
                     $('#dropdownMenu').addClass('hidden');
+                });
+            });
+        </script>
+
+        <!-- Scripts -->
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Swiper
+                const swiper = new Swiper('.coachSwiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // Autoplay
+                    autoplay: {
+                        delay: 10000,
+                        disableOnInteraction: false,
+                    },
                 });
             });
         </script>

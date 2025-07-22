@@ -366,7 +366,8 @@
                 </div>
                 <div class="form_container">
                     <div class="form"> 
-                        <form action="">
+                        <form action="{{ route('contact.submit') }}" method="POST">
+                            @csrf
                             <div class="block">
                                 <div class="prgrph">
                                     <p>Full Names:</p>

@@ -71,10 +71,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // view enrolled
-    Route::get('/enrolled-courses/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
-    Route::post('/enrolled-courses/{course}/episodes/{episode}/complete', 
-        [App\Http\Controllers\CourseAccessController::class, 'markEpisodeCompleted'])
-        ->name('enrolled-courses.episodes.complete');
+    Route::prefix('enrolled-courses')->group(function () {
+        Route::get('/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
+        Route::delete('/{course}', [CourseAccessController::class, 'destroy'])->name('enrolled-courses.destroy');
+        Route::post('/{course}/episodes/{episode}/complete', 
+            [CourseAccessController::class, 'markEpisodeCompleted'])
+            ->name('enrolled-courses.episodes.complete');
+    });
 
     // Email Verification
     Route::post('/email/verify/send', function (Request $request) {
@@ -100,7 +103,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/my-issues', [IssueController::class, 'index'])->name('issues.index');
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
+
+    // Contact section
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
+    Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
+
+    // Coaching section
+    Route::get('/training-sessions/upcoming', [TrainingController::class, 'upcomingSessions']);
+    Route::get('/training-sessions/{id}', [TrainingController::class, 'getSession']);
+    Route::post('/training-sessions/rsvp', [TrainingController::class, 'rsvp']);
+    Route::post('/training-sessions/cancel', [TrainingController::class, 'cancelRegistration']);
+    Route::get('/my-training-registrations', [TrainingController::class, 'myRegistrations']);
 });
+
+// Coaching section
+Route::get('/training-types', [TrainingController::class, 'getTrainingTypes']);
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')

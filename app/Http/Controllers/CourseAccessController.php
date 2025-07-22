@@ -225,4 +225,26 @@ class CourseAccessController extends Controller
             'message' => 'Episode marked as completed'
         ]);
     }
+
+    public function destroy(Course $course)
+    {
+        $user = Auth::user();
+        
+        // Verify user is enrolled in this course
+        if (!$user->isSubscribedTo($course->id)) {
+            abort(403, 'You are not enrolled in this course');
+        }
+
+        $subscription = $user->courseSubscriptions()
+            ->where('course_id', $course->id)
+            ->firstOrFail();
+
+        $subscription->delete();
+
+        return redirect()->route('dashboard')
+            ->with('toast', [
+                'type' => 'success',
+                'message' => 'Successfully unenrolled from ' . $course->title
+            ]);
+    }
 }

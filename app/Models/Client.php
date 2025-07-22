@@ -53,6 +53,26 @@ class Client extends Authenticatable implements MustVerifyEmail
         $this->attributes['surname'] = ucfirst(strtolower($value));
     }
 
+    public function getNameAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getSurnameAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getUserTypeAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function getSubscriptionTypeAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
     public function preferredCategory()
     {
         return $this->belongsTo(CourseCategory::class, 'preferred_category_id');

@@ -45,6 +45,17 @@ class CourseEpisode extends Model
     // }
     public function getDurationFormattedAttribute()
     {
-        return $this->duration;
+        $totalSeconds = $this->duration;
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+        $seconds = $totalSeconds % 60;
+
+        if ($hours > 0) {
+            return "{$hours}h{$minutes}m{$seconds}s";
+        } elseif ($minutes > 0) {
+            return "{$minutes}m{$seconds}s";
+        } else {
+            return "0m{$seconds}s";
+        }
     }
 }

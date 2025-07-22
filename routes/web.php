@@ -71,10 +71,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // view enrolled
-    Route::get('/enrolled-courses/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
-    Route::post('/enrolled-courses/{course}/episodes/{episode}/complete', 
-        [App\Http\Controllers\CourseAccessController::class, 'markEpisodeCompleted'])
-        ->name('enrolled-courses.episodes.complete');
+    Route::prefix('enrolled-courses')->group(function () {
+        Route::get('/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
+        Route::delete('/{course}', [CourseAccessController::class, 'destroy'])->name('enrolled-courses.destroy');
+        Route::post('/{course}/episodes/{episode}/complete', 
+            [CourseAccessController::class, 'markEpisodeCompleted'])
+            ->name('enrolled-courses.episodes.complete');
+    });
 
     // Email Verification
     Route::post('/email/verify/send', function (Request $request) {

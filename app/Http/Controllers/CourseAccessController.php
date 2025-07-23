@@ -55,6 +55,32 @@ class CourseAccessController extends Controller
         return $recommendedCourses;
     }
 
+    public function getSingleRecommendedCourse()
+    {
+        $user = Auth::user();
+        $recommendedCourse = null;
+
+        // Get enrolled courses
+        $enrolledCourses = $user->courseSubscriptions()->pluck('course_id');
+
+        // First try based on preferred category
+        if ($user->preferred_category_id) {
+            $recommendedCourse = Course::where('category_id', $user->preferred_category_id)
+                ->whereNotIn('id', $enrolledCourses)
+                ->inRandomOrder()
+                ->first();
+        }
+
+        // If no preferred category or no course found, get any random course
+        if (!$recommendedCourse) {
+            $recommendedCourse = Course::whereNotIn('id', $enrolledCourses)
+                ->inRandomOrder()
+                ->first();
+        }
+
+        return $recommendedCourse;
+    }
+
     public function getFreeCourses()
     {
         $user = Auth::user();

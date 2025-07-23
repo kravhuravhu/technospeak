@@ -1110,29 +1110,40 @@
                         </div>
                     </div>
 
-                    <!-- Lower Part (Unchanged) -->
+                    <!-- Coaching - Lower Part -->
                     <div class="coach-recommendations">
                         <h3 class="recommendations-title">Your Personalised Recommendations</h3>
-                        
-                        <div class="recommendation-card priority">
-                            <div class="recommendation-badge">Priority</div>
-                            <div class="recommendation-content">
-                                <h4><i class="fas fa-star"></i> Mastering Excel Shortcuts</h4>
-                                <p class="recommendation-desc">Boost your productivity with these essential keyboard tips that will save you hours each week.</p>
-                                <div class="recommendation-meta">
-                                    <span class="duration"><i class="far fa-clock"></i> 25 min</span>
-                                    <span class="difficulty"><i class="fas fa-bolt"></i> Beginner</span>
+                        @php $singleCourse = app('App\Http\Controllers\CourseAccessController')->getSingleRecommendedCourse(); @endphp
+
+                        @if($singleCourse)
+                            <div class="recommendation-card priority">
+                                <div class="recommendation-badge">Priority</div>
+                                <div class="recommendation-content">
+                                    <h4><i class="fas fa-star"></i> {{ $singleCourse->title }}</h4>
+                                    <p class="recommendation-desc">{{ $singleCourse->description }}</p>
+                                    <div class="recommendation-meta">
+                                        <span class="duration"><i class="far fa-clock"></i>{{ $singleCourse->formatted_duration }}</span>
+                                        <span class="difficulty"><i class="fas fa-bolt"></i>{{ ucfirst($singleCourse->level) }}</span>
+                                    </div>
+                                    <button class="start-btn">Start Learning</button>
                                 </div>
-                                <button class="start-btn">Start Learning</button>
                             </div>
-                        </div>
+                        @endif
                         
+                        @php
+                            // Get the latest upcoming session of the specified type
+                            $typeId = 4;
+                            $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
+                                ->where('scheduled_for', '>', now())
+                                ->orderBy('scheduled_for', 'desc')
+                                ->first();
+                        @endphp
                         <div class="recommendation-card" data-session-id="1">
                             <div class="recommendation-content">
-                                <h4><i class="fas fa-users"></i> Google Docs Collaboration</h4>
-                                <p class="recommendation-desc">Live training on <span class="session-date">June 18, 2023</span> at <span class="session-time">10:00 AM</span> - Learn real-time collaboration techniques with your team.</p>
+                                <h4><i class="fas fa-users"></i>{{ $latestSession->title }}</h4>
+                                <p class="recommendation-desc">Live training on <span class="session-date">{{ $latestSession->scheduled_for->format('F j, Y') }}</span> at <span class="session-time">{{ $latestSession->scheduled_for->format('g:i A') }}</span> - {{ $latestSession->description }}</p>
                                 <div class="recommendation-meta">
-                                    <span class="date"><i class="far fa-calendar-alt"></i> <span class="full-date">June 18, 2023 10:00 AM</span></span>
+                                    <span class="date"><i class="fas fa-clock"></i>  <span class="full-date">Duration: {{ $latestSession->duration }} </span></span>
                                     <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
                                 </div>
                                 <button class="rsvp-btn" data-session-id="1">RSVP Now</button>

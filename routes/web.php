@@ -108,12 +108,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
 
-    // Coaching section
-    Route::get('/training-sessions/upcoming', [TrainingController::class, 'upcomingSessions']);
-    Route::get('/training-sessions/{id}', [TrainingController::class, 'getSession']);
-    Route::post('/training-sessions/rsvp', [TrainingController::class, 'rsvp']);
-    Route::post('/training-sessions/cancel', [TrainingController::class, 'cancelRegistration']);
-    Route::get('/my-training-registrations', [TrainingController::class, 'myRegistrations']);
 });
 
 // rating & cert
@@ -126,8 +120,6 @@ Route::prefix('api/courses/{course}')->group(function() {
     });
 });
 
-// Coaching section
-Route::get('/training-types', [TrainingController::class, 'getTrainingTypes']);
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')

@@ -1897,7 +1897,8 @@ section.bar-lt-rt {
         /* Swiper Container */
         .coach-swiper-container {
             width: 100%;
-            padding: 20px 0 40px;
+            position: relative;
+            padding: 0 60px;
         }
 
         /* Coach Header */

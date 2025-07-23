@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Technospeak Strategies - Home</title>
+        <title>
+            Dashboard - 
+            @if(Auth::check())
+                {{ Auth::user()->name }} {{ Auth::user()->surname }}
+            @else
+                Technospeak Strategies
+            @endif
+        </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
@@ -159,11 +166,11 @@
                                 @php
                                     $hour = now()->hour;
                                     if ($hour < 12) {
-                                        echo 'Good morning,';
+                                        echo 'Good Morning,';
                                     } elseif ($hour < 17) {
-                                        echo 'Good afternoon,';
+                                        echo 'Good Afternoon,';
                                     } else {
-                                        echo 'Good evening,';
+                                        echo 'Good Evening,';
                                     }
                                 @endphp
                                 {{ Auth::user()->name }}!
@@ -195,7 +202,7 @@
                             </div>
                             <div class="card-grid">
                                 @forelse($enrolledCourses ?? [] as $course)
-                                    <a href="">
+                                    <a href="{{ route('enrolled-courses.show', $course->id) }}" class="enrolled-course-link">
                                         <div class="card">
                                             <div class="thmbnail">
                                                 <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
@@ -578,48 +585,48 @@
                             @endif
                         </div>
                     </div>
+                </div>
 
-                    <!-- Modal for Training Details -->
-                    <div id="training-modal" class="modal">
-                        <div class="modal-content">
-                            <span class="close-btn">&times;</span>
-                            <div class="modal-header">
-                                <h2 class="modal-title" id="modal-title-cs">Training Title</h2>
-                                <div class="modal-price" id="modal-price">Free</div>
-                            </div>
-                            <img src="" alt="Training Image" class="modal-image" id="modal-image">
-                            <div class="modal-description" id="modal-description">
-                                Detailed description of the training will appear here.
-                            </div>
-                            <div class="modal-meta">
-                                <div class="meta-item">
-                                    <span class="meta-label"><i class="fas fa-stopwatch"></i> Duration:</span>
-                                    <span id="modal-duration">4 weeks</span>
-                                </div>
-                                <div class="meta-item">
-                                    <span class="meta-label"><i class="fas fa-chart-line"></i> Level:</span>
-                                    <span id="modal-level">Beginner</span>
-                                </div>
-                                <div class="meta-item">
-                                    <span class="meta-label"><i class="fas fa-user-tie"></i> Instructor:</span>
-                                    <span id="modal-instructor">John Doe</span>
-                                </div>
-                                <div class="meta-item">
-                                    <span class="meta-label"><i class="fas fa-tag"></i> Category:</span>
-                                    <span id="modal-category">Business</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Episode List Section -->
-                            <div class="episodes-container">
-                                <h3 class="episodes-title"><i class="fas fa-list-ol"></i> Training Episodes</h3>
-                                <ul class="episode-list" id="episode-list">
-                                    <!-- by JavaScript -->
-                                </ul>
-                            </div>
-                            
-                            <a href="#" class="enroll-btn" id="enroll-btn">Enroll Now</a>
+                <!-- Modal for Training Details -->
+                <div id="training-modal" class="modal trainings_modal_details">
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="modal-title-cs">Training Title</h2>
+                            <div class="modal-price" id="modal-price">Free</div>
                         </div>
+                        <img src="" alt="Training Image" class="modal-image" id="modal-image">
+                        <div class="modal-description" id="modal-description">
+                            Detailed description of the training will appear here.
+                        </div>
+                        <div class="modal-meta">
+                            <div class="meta-item">
+                                <span class="meta-label"><i class="fas fa-stopwatch"></i> Duration:</span>
+                                <span id="modal-duration">4 weeks</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label"><i class="fas fa-chart-line"></i> Level:</span>
+                                <span id="modal-level">Beginner</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label"><i class="fas fa-user-tie"></i> Instructor:</span>
+                                <span id="modal-instructor">John Doe</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label"><i class="fas fa-tag"></i> Category:</span>
+                                <span id="modal-category">Business</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Episode List Section -->
+                        <div class="episodes-container">
+                            <h3 class="episodes-title"><i class="fas fa-list-ol"></i> Training Episodes</h3>
+                            <ul class="episode-list" id="episode-list">
+                                <!-- by JavaScript -->
+                            </ul>
+                        </div>
+                        
+                        <a href="#" class="enroll-btn" id="enroll-btn">Enroll Now</a>
                     </div>
                 </div>
 
@@ -1145,7 +1152,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <!-- Support Section -->
                 <div class="content-section support_content" id="usr_support">

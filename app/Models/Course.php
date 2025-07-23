@@ -95,4 +95,19 @@ class Course extends Model
     {
         return $query->where('plan_type', 'free');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(CourseComment::class)->whereNull('parent_id');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(CourseRating::class);
+    }
+
+    public function getHasCertificateAttribute()
+    {
+        return $this->attributes['has_certificate'] ?? false;
+    }
 }

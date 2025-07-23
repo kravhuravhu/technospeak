@@ -365,6 +365,37 @@ class CourseController extends Controller
         return $paidCourses;
     }
 
+    // resources
+    public function getResources(Course $course)
+    {
+        return response()->json($course->resources);
+    }
+
+    public function addResource(Request $request, Course $course)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file' => 'required|file|max:100240'
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store('course_resources', 'public');
+
+        $resource = $course->resources()->create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'file_url' => Storage::url($path),
+            'file_type' => $file->getClientMimeType(),
+            'file_size' => $file->getSize()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'resource' => $resource
+        ]);
+    }
+
     public function destroy(Course $course)
     {
         $course->delete();

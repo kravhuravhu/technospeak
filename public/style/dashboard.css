@@ -1109,131 +1109,6 @@ section.bar-lt-rt {
             }
           }
         }
-        & > .modal {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.7);
-          z-index: 1000;
-          overflow-y: auto;
-          & > .modal-content {
-            background-color: white;
-            margin: 3% auto;
-            padding: 2rem;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            & > .close-btn {
-              position: absolute;
-              top: 1rem;
-              right: 1.5rem;
-              font-size: 1.5rem;
-              color: #aaa;
-              cursor: pointer;
-              &:hover {
-                color: #333;
-              }
-            }
-            & > .modal-header {
-              margin-bottom: 1.5rem;
-              & > .modal-title {
-                font-size: 1.5rem;
-                color: #38b6ff;
-                margin-bottom: 0.5rem;
-              }
-              & > .modal-price {
-                font-size: 1.2rem;
-                font-weight: bold;
-                margin-bottom: 1rem;
-              }
-            }
-            & > .modal-image {
-              width: 100%;
-              max-height: 200px;
-              object-fit: cover;
-              object-position: center;
-              border-radius: 15px;
-              margin-bottom: 1.5rem;
-            }
-            & > .modal-description {
-              margin-bottom: 1.5rem;
-              line-height: 1.7;
-            }
-            & > .modal-meta {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 1.5rem;
-              flex-wrap: wrap;
-              & > .meta-item {
-                flex: 1;
-                min-width: 150px;
-                margin-bottom: 1rem;
-                & > .meta-label {
-                  font-weight: bold;
-                  color: #2c3e50;
-                  display: block;
-                  margin-bottom: 0.3rem;
-                }
-              }
-            }
-            & > .episodes-container {
-              margin: 2rem 0;
-              & > .episodes-title {
-                font-size: 1.2rem;
-                color: #38b6ff;
-                margin-bottom: 1rem;
-                padding-bottom: 0.5rem;
-                border-bottom: 1px solid #eee;
-              }
-              & > .episode-list {
-                list-style-type: none;
-                & > .episode-item {
-                  padding: 0.8rem 0;
-                  border-bottom: 1px solid #f0f0f0;
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  &:last-child {
-                    border-bottom: none;
-                  }
-                  & > .episode-number {
-                    font-weight: bold;
-                    color: #38b6ff;
-                    width: 30px;
-                  }
-                  & > .episode-name {
-                    flex: 1;
-                    margin: 0 1rem;
-                  }
-                  & > .episode-duration {
-                    color: #666;
-                    font-size: 0.9rem;
-                  }
-                }
-              }
-            }
-            & > .enroll-btn {
-              display: inline-block;
-              padding: 14px 30px;
-              background-color: #38b6ff;
-              color: white;
-              text-decoration: none;
-              border-radius: 15px;
-              font-weight: bold;
-              transition: all .3s ease-in-out;
-              font-size: 1.1em;
-              margin-top: 1rem;
-              &:hover {
-                background-color: #114672e0;
-              }
-            }
-          }
-        } 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
           .rcmmnd_trngs.ln_rcmm {
@@ -2954,6 +2829,133 @@ section.bar-lt-rt {
                 margin-top: 10px;
               }
             }
+          }
+        }
+      }
+    }
+    
+    /* Modal for trainings details */
+    & > .trainings_modal_details {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      overflow-y: auto;
+      & > .modal-content {
+        background-color: white;
+        margin: 3% auto;
+        padding: 2rem;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 800px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        & > .close-btn {
+          position: absolute;
+          top: 1rem;
+          right: 1.5rem;
+          font-size: 1.5rem;
+          color: #aaa;
+          cursor: pointer;
+          &:hover {
+            color: #333;
+          }
+        }
+        & > .modal-header {
+          margin-bottom: 1.5rem;
+          & > .modal-title {
+            font-size: 1.5rem;
+            color: #38b6ff;
+            margin-bottom: 0.5rem;
+          }
+          & > .modal-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+          }
+        }
+        & > .modal-image {
+          width: 100%;
+          max-height: 200px;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 15px;
+          margin-bottom: 1.5rem;
+        }
+        & > .modal-description {
+          margin-bottom: 1.5rem;
+          line-height: 1.7;
+        }
+        & > .modal-meta {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+          flex-wrap: wrap;
+          & > .meta-item {
+            flex: 1;
+            min-width: 150px;
+            margin-bottom: 1rem;
+            & > .meta-label {
+              font-weight: bold;
+              color: #2c3e50;
+              display: block;
+              margin-bottom: 0.3rem;
+            }
+          }
+        }
+        & > .episodes-container {
+          margin: 2rem 0;
+          & > .episodes-title {
+            font-size: 1.2rem;
+            color: #38b6ff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+          }
+          & > .episode-list {
+            list-style-type: none;
+            & > .episode-item {
+              padding: 0.8rem 0;
+              border-bottom: 1px solid #f0f0f0;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              &:last-child {
+                border-bottom: none;
+              }
+              & > .episode-number {
+                font-weight: bold;
+                color: #38b6ff;
+                width: 30px;
+              }
+              & > .episode-name {
+                flex: 1;
+                margin: 0 1rem;
+              }
+              & > .episode-duration {
+                color: #666;
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+        & > .enroll-btn {
+          display: inline-block;
+          padding: 14px 30px;
+          background-color: #38b6ff;
+          color: white;
+          text-decoration: none;
+          border-radius: 15px;
+          font-weight: bold;
+          transition: all .3s ease-in-out;
+          font-size: 1.1em;
+          margin-top: 1rem;
+          &:hover {
+            background-color: #114672e0;
           }
         }
       }

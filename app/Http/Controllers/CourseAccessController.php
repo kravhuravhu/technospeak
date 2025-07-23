@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Models\Course; 
 use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\CourseRating;
 
 class CourseAccessController extends Controller
 {
@@ -226,11 +228,51 @@ class CourseAccessController extends Controller
         ]);
     }
 
+    // course/epidode progress
+    public function updateProgress(Request $request, Course $course, CourseEpisode $episode)
+    {
+        $validated = $request->validate([
+            'watched_seconds' => 'required|integer|min:0',
+            'is_completed' => 'sometimes|boolean'
+        ]);
+
+        $subscription = Auth::user()->courseSubscriptions()
+            ->where('course_id', $course->id)
+            ->firstOrFail();
+
+        $duration = $episode->duration;
+        $watchedSeconds = min($validated['watched_seconds'], $duration);
+        $progressPercent = round(($watchedSeconds / $duration) * 100);
+
+        $progress = $subscription->episodeProgress()->updateOrCreate(
+            ['episode_id' => $episode->id],
+            [
+                'watched_seconds' => $watchedSeconds,
+                'progress_percent' => $progressPercent,
+                'is_completed' => $validated['is_completed'] ?? false,
+                'last_played_at' => now(),
+                'completed_at' => $validated['is_completed'] ?? false ? now() : null
+            ]
+        );
+
+        // overall progress
+        $totalEpisodes = $course->episodes()->count();
+        $completedEpisodes = $subscription->episodeProgress()->where('is_completed', true)->count();
+        $overallProgress = round(($completedEpisodes / $totalEpisodes) * 100);
+
+        $subscription->update(['progress' => $overallProgress]);
+
+        return response()->json([
+            'success' => true,
+            'progress' => $progress,
+            'overall_progress' => $overallProgress
+        ]);
+    }
+
     public function destroy(Course $course)
     {
         $user = Auth::user();
-        
-        // Verify user is enrolled in this course
+
         if (!$user->isSubscribedTo($course->id)) {
             abort(403, 'You are not enrolled in this course');
         }
@@ -246,5 +288,118 @@ class CourseAccessController extends Controller
                 'type' => 'success',
                 'message' => 'Successfully unenrolled from ' . $course->title
             ]);
+    }
+
+    // user comments
+    public function getComments(Course $course)
+    {
+        $comments = $course->comments()
+            ->with(['client', 'replies.client'])
+            ->whereNull('parent_id')
+            ->latest()
+            ->get();
+
+        return response()->json($comments);
+    }
+
+    public function addComment(Request $request, Course $course)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|max:1000',
+            'parent_id' => 'nullable|exists:course_comments,id'
+        ]);
+
+        $comment = $course->comments()->create([
+            'client_id' => Auth::id(),
+            'parent_id' => $validated['parent_id'] ?? null,
+            'content' => $validated['content']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'comment' => $comment->load('client')
+        ]);
+    }
+
+    // course certifications
+    public function getCertificate(Course $course)
+    {
+        $subscription = Auth::user()->courseSubscriptions()
+            ->where('course_id', $course->id)
+            ->where('completed', true)
+            ->first();
+
+        if (!$subscription) {
+            abort(404, 'No certificate available');
+        }
+
+        $certificate = $subscription->certificate;
+
+        if (!$certificate) {
+            abort(404, 'This course does not provide a certificate');
+        }
+
+        return response()->json($certificate);
+    }
+
+    // course rating
+    public function getRatings(Course $course)
+    {
+
+        $ratings = $course->ratings()
+            ->with('client')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'average' => $course->ratings()->avg('rating'),
+            'count' => $course->ratings()->count(),
+            'user_rating' => $course->ratings()->where('client_id', Auth::id())->first(),
+            'all_ratings' => $ratings
+        ]);
+    }
+
+    public function submitRating(Request $request, Course $course)
+    {
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:1000'
+        ]);
+
+        $rating = $course->ratings()->updateOrCreate(
+            ['client_id' => Auth::id()],
+            ['rating' => $validated['rating'], 'review' => $validated['review']]
+        );
+
+        return response()->json([
+            'success' => true,
+            'rating' => $rating
+        ]);
+    }
+
+    public function updateRating(Request $request, Course $course, CourseRating $rating)
+    {
+        if ($rating->client_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($rating->course_id !== $course->id) {
+            abort(400, 'Rating does not belong to this course');
+        }
+
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:1000'
+        ]);
+
+        $rating->update([
+            'rating' => $validated['rating'],
+            'review' => $validated['review']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'rating' => $rating
+        ]);
     }
 }

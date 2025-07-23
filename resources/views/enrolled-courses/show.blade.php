@@ -37,7 +37,7 @@
             color: var(--text-medium);
             background-color: #f8fafc;
             background-image: url("../images/75xPHEQBmvA2.jpg");
-            background-size: cover;
+            background-size: inherit;
             background-repeat: no-repeat;
             background-position: center;
             & > .main-cont-enrolled {
@@ -47,7 +47,7 @@
         }
         
         .course-show-container {
-            max-width: 75%;
+            max-width: 85%;
             margin: 0 auto;
             padding: 30px;
         
@@ -445,6 +445,271 @@
                 opacity: 1;
             }
         }
+
+        .course-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .episode-item.completed {
+            opacity: 0.7;
+        }
+        
+        .episode-item.completed .episode-number {
+            background-color: var(--success-color);
+        }
+        
+        .rating-stars {
+            color: gold;
+            font-size: 24px;
+        }
+        
+        .resource-item {
+            padding: 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--primary-color);
+        }
+
+        .comments-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        #comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            min-height: 100px;
+        }
+
+        .certificate-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .course-rating {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .rating-display {
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .stars i {
+            color: gold;
+            font-size: 20px;
+        }
+
+        .star-rating {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .star-rating i {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .star-rating i:hover {
+            transform: scale(1.2);
+        }
+
+        #rating-review {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+
+        #submit-rating, #edit-rating {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #submit-rating:hover, #edit-rating:hover {
+            background: var(--primary-dark);
+        }
+
+        .average-rating {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .average-rating .stars {
+            vertical-align: middle;
+        }
+
+        #average-score {
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .all-reviews-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .review-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .review-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .review-user-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .review-stars {
+            color: gold;
+            margin-right: 40px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .review-content {
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .edit-review-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .edit-review-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .editable-review {
+            border: 1px solid var(--border-light);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .edit-review-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .edit-review-actions button {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-review-btn {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .cancel-review-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .current-user-review {
+            background-color: #e6f7ff;
+            border-left: 3px solid var(--primary-color);
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -492,77 +757,130 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn unenroll-btn" id="unenroll-btn">
-                                <i class="fas fa-times-circle"></i> Unenroll Course
+                                <i class="fas fa-times-circle"></i> Unenroll
                             </button>
                         </form>
                     </div>
                 </div>
-            </div>        
-            <div class="course-content">
-                <div class="course-video">
-                    <div class="video-container" id="video-container">
-                        <div class="video-placeholder" id="video-placeholder">
-                            <img src="{{ $course->thumbnail }}" alt="Course Thumbnail" class="video-thumb" />
-                            <div class="overlay" id="video-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <p>Select an episode to start watching</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="video-description">
-                        <h3>About This Course</h3>
-                        <p>{{ $course['description'] }}</p>
-                        
-                        <div class="instructor-info">
-                            <h4>Instructor</h4>
-                            <div class="instructor-details">
-                                <div class="instructor-avatar">
-                                    <img src="{{ asset('images/icons/circle-user-solid.svg') }}" alt="Instructor Avatar">
-                                </div>
-                                <div class="instructor-text">
-                                    <h5>{{ $course->instructor->name }}</h5>
-                                    <p>Senior Instructor</p>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+
+            <div class="course-tabs">
+                <button class="tab-btn active" data-tab="episodes">Episodes</button>
+                <button class="tab-btn" data-tab="resources">Resources</button>
+                <button class="tab-btn" data-tab="certificate" id="certificate-tab" style="display:none">Certificate</button>
+            </div>
+
+            <div class="tab-content" id="resources-tab" style="display:none">
+                <div class="resources-container">
+                    <h3>Course Resources</h3>
+                    <div class="resources-list" id="resources-list">
+                        <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
-                
-                <div class="course-sidebar">
-                    <div class="progress-container">
-                        <div class="progress-header">
-                            <h3>Your Progress</h3>
-                            <div class="progress-percent">{{ $course['progress'] }}%</div>
+            </div>
+
+            <div class="tab-content" id="certificate-tab" style="display:none">
+                <div class="certificate-container">
+                    <h3>Your Certificate</h3>
+                    <div class="certificate-view" id="certificate-view">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                    <button id="download-certificate">Download Certificate</button>
+                </div>
+            </div>
+            <div class="tab-content active" id="episodes-tab">     
+                <div class="course-content">
+                    <div class="course-video">
+                        <div class="video-container" id="video-container">
+                            <div class="video-placeholder" id="video-placeholder">
+                                <img src="{{ $course->thumbnail }}" alt="Course Thumbnail" class="video-thumb" />
+                                <div class="overlay" id="video-overlay">
+                                    <i class="fas fa-play-circle"></i>
+                                    <p>Select an episode to start watching</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: {{ $course['progress'] }}%"></div>
+                        <div class="video-description">
+                            <h3>About This Course</h3>
+                            <p>{{ $course['description'] }}</p>
+                            
+                            <div class="instructor-info">
+                                <h4>Instructor</h4>
+                                <div class="instructor-details">
+                                    <div class="instructor-avatar">
+                                        <img src="{{ asset('images/icons/circle-user-solid.svg') }}" alt="Instructor Avatar">
+                                    </div>
+                                    <div class="instructor-text">
+                                        <h5>{{ $course->instructor->name }}</h5>
+                                        <p>Senior Instructor</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress-actions">
-                            <button class="btn mark-complete-btn" id="mark-complete-btn">
-                                <i class="fas fa-check-circle"></i> Mark as Complete
-                            </button>
+
+                        <div class="course-rating">
+                            <h3>Course Rating</h3>
+                            <div class="rating-display">
+                                <div class="average-rating">
+                                    <div class="stars" id="average-stars"></div>
+                                    <span id="average-score">0.0</span> (<span id="rating-count">0</span> ratings)
+                                </div>
+                            </div>
+                            
+                            <!-- Rating Form -->
+                            <div class="rating-form" id="rating-form" style="display:none">
+                                <h4>Rate this course</h4>
+                                <div class="star-rating">
+                                    <i class="far fa-star" data-rating="1"></i>
+                                    <i class="far fa-star" data-rating="2"></i>
+                                    <i class="far fa-star" data-rating="3"></i>
+                                    <i class="far fa-star" data-rating="4"></i>
+                                    <i class="far fa-star" data-rating="5"></i>
+                                </div>
+                                <textarea id="rating-review" placeholder="Optional review..."></textarea>
+                                <button id="submit-rating">Submit Rating</button>
+                            </div>
+                            
+                            <!-- All Reviews Container will be inserted here by JavaScript -->
                         </div>
                     </div>
                     
-                    <div class="episodes-list">
-                        <h3>Course Episodes</h3>
-                        <ul id="course-episodes-list">
-                            @foreach($course['episodes'] as $episode)
-                            <li class="episode-item {{ $episode['completed'] ? 'completed' : '' }}" 
-                                data-episode-id="{{ $episode['id'] }}"
-                                data-video-url="{{ $episode['video_url'] }}"
-                                data-episode-title="{{ $episode['title'] }}">
-                                <div class="episode-number">{{ $episode->episode_number }}</div>
-                                <div class="episode-info">
-                                    <h4>{{ $episode['title'] }}</h4>
-                                    <p>{{ $episode->duration_formatted }}</p>
-                                </div>
-                                @if($episode['completed'])
-                                    <i class="fas fa-check-circle"></i>
-                                @endif
-                            </li>
-                            @endforeach
-                        </ul>
+                    <div class="course-sidebar">
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <h3>Your Progress</h3>
+                                <div class="progress-percent">{{ $course['progress'] }}%</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ $course['progress'] }}%"></div>
+                            </div>
+                            <div class="progress-actions">
+                                <button class="btn mark-complete-btn" id="mark-complete-btn">
+                                    <i class="fas fa-check-circle"></i> Mark as Complete
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="episodes-list">
+                            <h3>Course Episodes</h3>
+                            <ul id="course-episodes-list">
+                                @foreach($course['episodes'] as $episode)
+                                <li class="episode-item {{ $episode['completed'] ? 'completed' : '' }}" 
+                                    data-episode-id="{{ $episode['id'] }}"
+                                    data-video-url="{{ $episode['video_url'] }}"
+                                    data-episode-title="{{ $episode['title'] }}">
+                                    <div class="episode-number">{{ $episode->episode_number }}</div>
+                                    <div class="episode-info">
+                                        <h4>{{ $episode['title'] }}</h4>
+                                        <p>{{ $episode->duration_formatted }}</p>
+                                    </div>
+                                    @if($episode['completed'])
+                                        <i class="fas fa-check-circle"></i>
+                                    @endif
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -571,247 +889,609 @@
         <div class="toast" id="toast"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toast notification function
-            function showToast(message, type = 'success') {
-                const toast = document.getElementById('toast');
-                toast.textContent = message;
-                toast.className = 'toast';
-                
-                // Add type class if needed (for different styles)
-                if (type === 'error') {
-                    toast.style.backgroundColor = 'var(--danger-color)';
-                } else if (type === 'info') {
-                    toast.style.backgroundColor = 'var(--primary-color)';
-                } else {
-                    toast.style.backgroundColor = 'var(--text-dark)';
-                }
-                
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Handle episode selection
-            function handleEpisodeSelection(item) {
-                const videoUrl = item.getAttribute('data-video-url');
-                const episodeId = item.getAttribute('data-episode-id');
-                const episodeTitle = item.getAttribute('data-episode-title');
-                
-                const videoContainer = document.getElementById('video-container');
-                const placeholder = document.getElementById('video-placeholder');
-                
-                // Show loading state
-                videoContainer.innerHTML = '<div class="loading-spinner"></div>';
-                
-                // Remove active class from all episodes
-                document.querySelectorAll('.episode-item').forEach(ep => {
-                    ep.classList.remove('active');
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // toast notifications
+    function showToast(message, type = 'success') {
+        const icons = {
+            success: 'success',
+            error: 'error',
+            info: 'info'
+        };
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: icons[type] || 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    }
+
+    // episode selection
+    function handleEpisodeSelection(item) {
+        const videoUrl = item.getAttribute('data-video-url');
+        const episodeTitle = item.getAttribute('data-episode-title');
+
+        const videoContainer = document.getElementById('video-container');
+
+        videoContainer.innerHTML = '<div class="loading-spinner"></div>';
+
+        document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
+        item.classList.add('active');
+
+        setTimeout(() => {
+            videoContainer.innerHTML = `
+                <video controls autoplay style="width: 100%; height: 100%">
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+
+            const video = videoContainer.querySelector('video');
+            if (video) {
+                video.play().catch(e => {
+                    showToast('Click on the video to start playback', 'info');
                 });
-                
-                // Add active class to selected episode
-                item.classList.add('active');
-                
-                // Load video after a small delay to show loading spinner
-                setTimeout(() => {
-                    videoContainer.innerHTML = `
-                        <video controls autoplay style="width: 100%; height: 100%">
-                            <source src="${videoUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    `;
-                    
-                    const video = videoContainer.querySelector('video');
-                    if (video) {
-                        video.play().catch(e => {
-                            console.log('Auto-play prevented:', e);
-                            showToast('Click on the video to start playback', 'info');
-                        });
-                        
-                        // Update video title in the description
-                        document.querySelector('.video-description h3').textContent = episodeTitle;
-                    }
-                }, 500);
+
+                document.querySelector('.video-description h3').textContent = episodeTitle;
             }
-            
-            // Set up episode click handlers
-            document.querySelectorAll('.episode-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    handleEpisodeSelection(this);
+        }, 500);
+    }
+
+    // episode click handlers
+    document.querySelectorAll('.episode-item').forEach(item => {
+        item.addEventListener('click', function () {
+            handleEpisodeSelection(this);
+        });
+    });
+
+    // video placeholder overlay click
+    const videoOverlay = document.getElementById('video-overlay');
+    if (videoOverlay) {
+        videoOverlay.addEventListener('click', function () {
+            const firstEpisode = document.querySelector('.episode-item');
+            if (firstEpisode) {
+                handleEpisodeSelection(firstEpisode);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No episodes available',
+                    timer: 2500,
+                    showConfirmButton: false
                 });
+            }
+        });
+    }
+
+    // Mark as complete button
+    document.getElementById('mark-complete-btn').addEventListener('click', function () {
+        const activeEpisode = document.querySelector('.episode-item.active');
+        if (!activeEpisode) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Please select an episode first',
+                timer: 2500,
+                showConfirmButton: false
             });
-            
-            // Set up click handler for video placeholder overlay
-            const videoOverlay = document.getElementById('video-overlay');
-            if (videoOverlay) {
-                videoOverlay.addEventListener('click', function() {
-                    const firstEpisode = document.querySelector('.episode-item');
-                    if (firstEpisode) {
-                        handleEpisodeSelection(firstEpisode);
-                    } else {
-                        showToast('No episodes available', 'error');
-                    }
-                });
+            return;
+        }
+
+        const episodeId = activeEpisode.getAttribute('data-episode-id');
+        const courseId = {{ $course['id'] }};
+
+        Swal.fire({
+            title: 'Marking episode as completed...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
-            
-            // Handle mark as complete button
-            document.getElementById('mark-complete-btn').addEventListener('click', function() {
-                const activeEpisode = document.querySelector('.episode-item.active');
-                if (!activeEpisode) {
-                    showToast('Please select an episode first', 'error');
-                    return;
-                }
-                
-                const episodeId = activeEpisode.getAttribute('data-episode-id');
-                const courseId = {{ $course['id'] }};
-                
-                // Show loading state on button
-                const btn = this;
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                btn.disabled = true;
-                
-                fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
+        });
+
+        fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    activeEpisode.classList.add('completed');
+                    if (!activeEpisode.querySelector('.fa-check-circle')) {
+                        activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
                     }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        activeEpisode.classList.add('completed');
-                        
-                        // Add checkmark if not already present
-                        if (!activeEpisode.querySelector('.fa-check-circle')) {
-                            activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
+
+                    const progressPercent = document.querySelector('.progress-percent');
+                    const progressFill = document.querySelector('.progress-fill');
+
+                    let currentProgress = parseInt(progressPercent.textContent);
+                    const targetProgress = data.progress;
+
+                    const increment = () => {
+                        if (currentProgress < targetProgress) {
+                            currentProgress++;
+                            progressPercent.textContent = `${currentProgress}%`;
+                            progressFill.style.width = `${currentProgress}%`;
+                            setTimeout(increment, 20);
                         }
-                        
-                        // Smoothly update progress
-                        const progressPercent = document.querySelector('.progress-percent');
-                        const progressFill = document.querySelector('.progress-fill');
-                        
-                        let currentProgress = parseInt(progressPercent.textContent);
-                        const targetProgress = data.progress;
-                        
-                        // Animate progress increase
-                        const increment = () => {
-                            if (currentProgress < targetProgress) {
-                                currentProgress++;
-                                progressPercent.textContent = `${currentProgress}%`;
-                                progressFill.style.width = `${currentProgress}%`;
-                                setTimeout(increment, 20);
-                            }
-                        };
-                        
-                        increment();
-                        
-                        showToast('Episode marked as completed!');
-                    } else {
-                        showToast(data.message || 'Operation failed', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Failed to mark episode as completed', 'error');
-                })
-                .finally(() => {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-            });
-            
-            // Confirm before unenrolling
-            const unenrollBtn = document.getElementById('unenroll-btn');
-            if (unenrollBtn) {
-                unenrollBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const form = this.closest('form');
-                    const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
-                    
+                    };
+
+                    increment();
+
                     Swal.fire({
-                        title: 'Confirm Unenrollment',
-                        html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#e53e3e',
-                        cancelButtonColor: '#718096',
-                        confirmButtonText: 'Yes, Unenroll',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Show loading state
-                            Swal.showLoading();
-                            
-                            fetch(form.action, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    _method: 'DELETE'
-                                })
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                window.location.href = '/dashboard';
-                            })
-                            .catch(error => {
-                                Swal.fire(
-                                    'Error',
-                                    'There was a problem unenrolling from the course. Please try again.',
-                                    'error'
-                                );
-                                console.error('Error:', error);
-                            });
-                        }
+                        icon: 'success',
+                        title: 'Episode marked as completed!',
+                        timer: 2500,
+                        showConfirmButton: false
                     });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: data.message || 'Operation failed',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to mark episode as completed',
+                    timer: 3000,
+                    showConfirmButton: false
                 });
-            }          
-            // Keyboard navigation for episodes
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                    const episodes = Array.from(document.querySelectorAll('.episode-item'));
-                    const activeIndex = episodes.findIndex(ep => ep.classList.contains('active'));
-                    
-                    if (activeIndex >= 0) {
-                        e.preventDefault();
-                        let newIndex;
-                        
-                        if (e.key === 'ArrowDown' && activeIndex < episodes.length - 1) {
-                            newIndex = activeIndex + 1;
-                        } else if (e.key === 'ArrowUp' && activeIndex > 0) {
-                            newIndex = activeIndex - 1;
-                        }
-                        
-                        if (newIndex !== undefined) {
-                            handleEpisodeSelection(episodes[newIndex]);
-                            episodes[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    }
+            });
+    });
+
+    // Confirm before unenrolling
+    const unenrollBtn = document.getElementById('unenroll-btn');
+    if (unenrollBtn) {
+        unenrollBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const form = this.closest('form');
+            const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
+
+            Swal.fire({
+                title: 'Confirm Unenrollment',
+                html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e53e3e',
+                cancelButtonColor: '#38b6ff',
+                confirmButtonText: 'Yes, Unenroll',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Unenrolling...',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading(),
+                    });
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE'
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        })
+                        .then(() => {
+                            window.location.href = '/dashboard';
+                        })
+                        .catch(() => {
+                            Swal.fire(
+                                'Error',
+                                'There was a problem unenrolling from the course. Please try again.',
+                                'error'
+                            );
+                        });
                 }
             });
         });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    }
+
+    // navigation for episodes
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            const episodes = Array.from(document.querySelectorAll('.episode-item'));
+            const activeIndex = episodes.findIndex(ep => ep.classList.contains('active'));
+
+            if (activeIndex >= 0) {
+                e.preventDefault();
+                let newIndex;
+
+                if (e.key === 'ArrowDown' && activeIndex < episodes.length - 1) {
+                    newIndex = activeIndex + 1;
+                } else if (e.key === 'ArrowUp' && activeIndex > 0) {
+                    newIndex = activeIndex - 1;
+                }
+
+                if (newIndex !== undefined) {
+                    handleEpisodeSelection(episodes[newIndex]);
+                    episodes[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+    });
+
+    // Rating system
+    const courseId = {{ $course->id }};
+    let currentUserRating = null;
+
+    // editable review
+    function createEditableReview(review, rating) {
+        const editableDiv = document.createElement('div');
+        editableDiv.className = 'editable-review';
+        
+        const starsDiv = document.createElement('div');
+        starsDiv.className = 'star-rating';
+        starsDiv.style.marginBottom = '10px';
+        
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            star.className = i <= rating ? 'fas fa-star' : 'far fa-star';
+            star.dataset.rating = i;
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.dataset.rating);
+                const stars = this.parentElement.querySelectorAll('i');
+                stars.forEach((s, idx) => {
+                    s.className = idx < selectedRating ? 'fas fa-star' : 'far fa-star';
+                });
+            });
+            starsDiv.appendChild(star);
+        }
+        
+        const textarea = document.createElement('textarea');
+        textarea.value = review || '';
+        textarea.style.width = '100%';
+        textarea.style.minHeight = '80px';
+        
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'edit-review-actions';
+        
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'save-review-btn';
+        saveBtn.textContent = 'Save';
+        saveBtn.addEventListener('click', function() {
+            updateUserRating(selectedRating, textarea.value);
+        });
+        
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'cancel-review-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.addEventListener('click', function() {
+            loadAllReviews();
+        });
+        
+        actionsDiv.appendChild(cancelBtn);
+        actionsDiv.appendChild(saveBtn);
+        
+        editableDiv.appendChild(starsDiv);
+        editableDiv.appendChild(textarea);
+        editableDiv.appendChild(actionsDiv);
+        
+        return editableDiv;
+    }
+
+    // Update user rating
+    function updateUserRating(rating, review) {
+        if (!rating) {
+            showToast('Please select a rating', 'error');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Updating your rating...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+        });
+
+        const method = currentUserRating ? 'PUT' : 'POST';
+        const url = currentUserRating ? 
+            `/api/courses/${courseId}/ratings/${currentUserRating.id}` : 
+            `/api/courses/${courseId}/ratings`;
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                rating: rating,
+                review: review
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Rating updated successfully!', 'success');
+                    loadRatings();
+                    loadAllReviews();
+                } else {
+                    showToast(data.message || 'Failed to update rating', 'error');
+                }
+            })
+            .catch(() => {
+                showToast('Failed to update rating', 'error');
+            });
+    }
+
+    // Load ratings data
+    function loadRatings() {
+        fetch(`/api/courses/${courseId}/ratings`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch ratings');
+                return response.json();
+            })
+            .then(data => {
+                const averageRating = data.average || 0;
+                document.getElementById('average-score').textContent = Number(averageRating).toFixed(1);
+                document.getElementById('rating-count').textContent = data.count;
+
+                renderStars(document.getElementById('average-stars'), averageRating, false);
+
+                if (data.user_rating) {
+                    currentUserRating = data.user_rating;
+                    document.getElementById('rating-form').style.display = 'none';
+                } else {
+                    document.getElementById('rating-form').style.display = 'block';
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Could not load ratings',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            });
+    }
+
+    // all ratings
+    function loadAllReviews() {
+        fetch(`/api/courses/${courseId}/ratings`)
+            .then(response => response.json())
+            .then(data => {
+                const reviewsContainer = document.querySelector('.all-reviews-container');
+                if (reviewsContainer) {
+                    reviewsContainer.remove();
+                }
+
+                const newReviewsContainer = document.createElement('div');
+                newReviewsContainer.className = 'all-reviews-container';
+                newReviewsContainer.innerHTML = '<h4>All Reviews</h4>';
+
+                if (data.all_ratings && data.all_ratings.length > 0) {
+                    data.all_ratings.forEach(review => {
+                        const isCurrentUser = data.user_rating && review.id === data.user_rating.id;
+                        const reviewElement = createReviewElement(review, isCurrentUser);
+                        newReviewsContainer.appendChild(reviewElement);
+                    });
+                } else {
+                    newReviewsContainer.innerHTML += '<p>No reviews yet</p>';
+                }
+
+                const ratingSection = document.querySelector('.course-rating');
+                ratingSection.appendChild(newReviewsContainer);
+            })
+            .catch(error => {
+                console.error('Error loading reviews:', error);
+            });
+    }
+
+    // Create review element
+    function createReviewElement(review, isCurrentUser) {
+        const reviewElement = document.createElement('div');
+        reviewElement.className = `review-item ${isCurrentUser ? 'current-user-review' : ''}`;
+        
+        const reviewHeader = document.createElement('div');
+        reviewHeader.className = 'review-header';
+        
+        const reviewUser = document.createElement('div');
+        reviewUser.className = 'review-user';
+        
+        const avatar = document.createElement('img');
+        avatar.className = 'review-avatar';
+        
+        const clientData = review.client || {};
+        avatar.src = clientData.avatar || '/images/icons/circle-user-solid.svg';
+        avatar.alt = clientData.name || clientData.surname || 'Anonymous';
+        
+        const userName = document.createElement('span');
+        userName.className = 'review-user-name';
+        
+        userName.textContent = clientData.name && clientData.surname 
+            ? `${clientData.name} ${clientData.surname}`
+            : clientData.name || clientData.surname || 'Anonymous';
+
+        userName.textContent = clientData.name 
+            ? `${clientData.name.substring(0, 3)}${'*'.repeat(clientData.name.length - 3)} ${'*'.repeat(clientData.surname?.length || 0)}`
+            : 'Anonymous';
+        
+        reviewUser.appendChild(avatar);
+        reviewUser.appendChild(userName);
+        
+        const reviewStars = document.createElement('div');
+        reviewStars.className = 'review-stars';
+        reviewStars.innerHTML = renderStarsHTML(review.rating);
+        
+        reviewHeader.appendChild(reviewUser);
+        reviewHeader.appendChild(reviewStars);
+        
+        if (isCurrentUser) {
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-review-btn';
+            editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+            editBtn.addEventListener('click', function() {
+                editReview(reviewElement, review);
+            });
+            reviewHeader.appendChild(editBtn);
+        }
+        
+        const reviewDate = document.createElement('div');
+        reviewDate.className = 'review-date';
+        reviewDate.textContent = new Date(review.created_at).toLocaleDateString();
+        
+        const reviewContent = document.createElement('div');
+        reviewContent.className = 'review-content';
+        reviewContent.textContent = review.review || 'No review provided';
+        
+        reviewElement.appendChild(reviewHeader);
+        reviewElement.appendChild(reviewDate);
+        reviewElement.appendChild(reviewContent);
+        
+        return reviewElement;
+    }
+
+    // Edit review
+    function editReview(reviewElement, review) {
+        const reviewContent = reviewElement.querySelector('.review-content');
+        const originalContent = reviewContent.textContent;
+        const originalRating = review.rating;
+        
+        const editableReview = createEditableReview(originalContent, originalRating);
+        selectedRating = originalRating;
+        
+        // Replace the content with editable version
+        reviewContent.replaceWith(editableReview);
+    }
+
+    // function to render stars HTML
+    function renderStarsHTML(rating) {
+        let starsHTML = '';
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        
+        for (let i = 1; i <= 5; i++) {
+            if (i <= fullStars) {
+                starsHTML += '<i class="fas fa-star"></i>';
+            } else if (i === fullStars + 1 && hasHalfStar) {
+                starsHTML += '<i class="fas fa-star-half-alt"></i>';
+            } else {
+                starsHTML += '<i class="far fa-star"></i>';
+            }
+        }
+        return starsHTML;
+    }
+
+    // Render stars based on rating
+    function renderStars(container, rating, interactive = true) {
+        container.innerHTML = '';
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+
+            if (i <= fullStars) {
+                star.className = 'fas fa-star';
+            } else if (i === fullStars + 1 && hasHalfStar) {
+                star.className = 'fas fa-star-half-alt';
+            } else {
+                star.className = 'far fa-star';
+            }
+
+            if (interactive) {
+                star.dataset.rating = i;
+                star.addEventListener('mouseover', handleStarHover);
+                star.addEventListener('click', handleStarClick);
+            }
+
+            container.appendChild(star);
+        }
+    }
+
+    // Star hover effect
+    function handleStarHover(e) {
+        const rating = parseInt(e.target.dataset.rating);
+        const stars = e.target.parentElement.querySelectorAll('i');
+
+        stars.forEach((star, index) => {
+            star.className = index < rating ? 'fas fa-star' : 'far fa-star';
+        });
+    }
+
+    // Star click handler
+    let selectedRating = 0;
+    function handleStarClick(e) {
+        selectedRating = parseInt(e.target.dataset.rating);
+        const stars = document.querySelectorAll('.star-rating i');
+
+        stars.forEach((star, index) => {
+            star.className = index < selectedRating ? 'fas fa-star' : 'far fa-star';
+        });
+    }
+
+    // submit-rating
+    document.getElementById('submit-rating').addEventListener('click', function () {
+        if (selectedRating === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Please select a rating',
+                timer: 2500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+        const review = document.getElementById('rating-review').value;
+
+        updateUserRating(selectedRating, review);
+    });
+
+    // Star rating interaction
+    document.querySelectorAll('.star-rating i').forEach(star => {
+        star.addEventListener('mouseover', handleStarHover);
+        star.addEventListener('click', handleStarClick);
+    });
+
+    loadRatings();
+
+    // all ratings
+    loadAllReviews();
+
+    // if course has certificate - show tab
+    fetch(`/api/courses/{{ $course->id }}/has-certificate`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.has_certificate) {
+                document.getElementById('certificate-tab').style.display = 'block';
+            }
+        });
+});
+</script>
+ 
 </body>
 </html>

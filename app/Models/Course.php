@@ -76,10 +76,10 @@ class Course extends Model
         return ucfirst($value);
     }
 
-    public function getPlanTypeAttribute($value)
-    {
-        return ucfirst($value);
-    }
+    // public function getPlanTypeAttribute($value)
+    // {
+    //     return ucfirst($value);
+    // }
 
     public function getLevelAttribute($value) 
     {
@@ -106,8 +106,9 @@ class Course extends Model
         return $this->hasMany(CourseRating::class);
     }
 
-    public function getHasCertificateAttribute()
-    {
-        return $this->attributes['has_certificate'] ?? false;
-    }
+    public function resources()
+{
+    return $this->hasMany(CourseResource::class, 'course_id');
+}
+
 }

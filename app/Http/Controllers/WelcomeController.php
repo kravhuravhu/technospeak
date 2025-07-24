@@ -10,6 +10,7 @@ class WelcomeController extends Controller
     public function index()
     {
         $courses = Course::with(['category', 'instructor'])
+                    ->where('plan_type', 'free')
                     ->latest()
                     ->take(6)
                     ->get();

@@ -774,6 +774,11 @@ section.bar-lt-rt {
                           font-size: .9em;
                           color: #1d1d1d;
                           overflow: hidden;
+                          text-overflow: ellipsis;
+                          display: -webkit-box;
+                          -webkit-box-orient: vertical;
+                          line-clamp: 2;
+                          -webkit-line-clamp: 2;
                           &.thmb_ct {
                             font-size: 1.1em;
                           }
@@ -1042,8 +1047,8 @@ section.bar-lt-rt {
                           text-overflow: ellipsis;
                           display: -webkit-box;
                           -webkit-box-orient: vertical;
-                          line-clamp: 3;
-                          -webkit-line-clamp: 3;
+                          line-clamp: 2;
+                          -webkit-line-clamp: 2;
                         }
                       }
                       &.thmb_dur_ep_container {
@@ -2121,6 +2126,12 @@ section.bar-lt-rt {
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 15px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
         }
 
         .recommendation-meta {
@@ -2156,6 +2167,7 @@ section.bar-lt-rt {
         .watch-btn {
             padding: 10px 20px;
             border: none;
+            text-decoration: none;
             border-radius: 50px;
             font-size: 0.9rem;
             font-weight: 500;

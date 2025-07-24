@@ -215,8 +215,11 @@ class CourseAccessController extends Controller
             ];
         });
 
-        return view('enrolled-courses.show', compact('course', 'subscription'));
+        $certificate = $subscription->certificate;
 
+        $resources = $course->resources()->get();
+
+        return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources'));
     }
 
     public function markEpisodeCompleted(Course $course, CourseEpisode $episode)
@@ -300,6 +303,11 @@ class CourseAccessController extends Controller
         $user = Auth::user();
 
         if (!$user->isSubscribedTo($course->id)) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'error' => 'You are not enrolled in this course'
+                ], 403);
+            }
             abort(403, 'You are not enrolled in this course');
         }
 
@@ -308,6 +316,14 @@ class CourseAccessController extends Controller
             ->firstOrFail();
 
         $subscription->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'redirect' => route('dashboard'),
+                'message' => 'Successfully unenrolled from ' . $course->title
+            ]);
+        }
 
         return redirect()->route('dashboard')
             ->with('toast', [

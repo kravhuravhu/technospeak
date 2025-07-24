@@ -43,9 +43,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 episodeList.appendChild(li);
             });
             
-            // Set enroll button
+            // Set enroll button & URL
             const enrollBtn = document.getElementById('enroll-btn');
-            enrollBtn.textContent = isFree ? 'Enroll Now' : 'Unlock All';
+            const isEnrolled = this.getAttribute('data-enrolled') === 'true';
+            const showLink = this.getAttribute('data-show-link');
+
+            if (isEnrolled && showLink) {
+                enrollBtn.textContent = 'Open';
+                enrollBtn.href = showLink;
+                enrollBtn.classList.add('open-btn');
+                enrollBtn.removeAttribute('target');
+                enrollBtn.removeAttribute('data-enroll');
+            } else {
+                enrollBtn.textContent = isFree ? 'Enroll Now' : 'Unlock All';
+                enrollBtn.href = '#';
+                enrollBtn.classList.remove('open-btn');
+                enrollBtn.setAttribute('data-enroll', 'true');
+            }
             
             // Show modal
             const courseId = this.getAttribute('data-course-id');
@@ -78,13 +92,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (enrollBtn) {
         enrollBtn.addEventListener('click', function(e) {
+            // open link
+            if (!this.hasAttribute('data-enroll')) {
+                return;
+            }
+
             e.preventDefault();
 
             if (this.textContent === 'Enrolled') {
-                showPopUp('info', 'Info', 'You are already enrolled in this course');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: 'You are already enrolled in this course',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
                 return;
             }
-            
+
             const modal = document.getElementById('training-modal');
             const courseId = modal.getAttribute('data-course-id');
             
@@ -109,27 +134,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function showPopUp(type, title, message) {
-    const popup = document.createElement('div');
-    popup.className = `popup ${type}`;
-    popup.innerHTML = `
-        <h3>${title}</h3>
-        <p>${message}</p>
-    `;
-    
-    popup.style.position = 'fixed';
-    popup.style.top = '20px';
-    popup.style.right = '20px';
-    popup.style.padding = '20px';
-    popup.style.backgroundColor = type === 'error' ? '#ffebee' : '#e8f5e9';
-    popup.style.border = type === 'error' ? '1px solid #ef9a9a' : '1px solid #a5d6a7';
-    popup.style.borderRadius = '5px';
-    popup.style.zIndex = '1000';
-    popup.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    
-    document.body.appendChild(popup);
-    
-    setTimeout(() => popup.remove(), 5000);
+function showSwalNotification(type, title, message) {
+    const iconMap = {
+        'success': 'success',
+        'error': 'error',
+        'info': 'info',
+        'warning': 'warning'
+    };
+
+    Swal.fire({
+        icon: iconMap[type] || 'info',
+        title: title,
+        text: message,
+        timer: 7000,
+        showConfirmButton: false,
+        position: 'top-end',
+        toast: true,
+        background: type === 'error' ? '#ffebee' : '#e8f5e9',
+        timerProgressBar: true
+    });
 }
 
 function enrollInCourse(courseId) {
@@ -146,18 +169,17 @@ function enrollInCourse(courseId) {
         const data = await response.json();
         
         if (data.success) {
-            showPopUp('success', 'Success', data.message);
+            showSwalNotification('success', 'Success', data.message);
             updateEnrollmentUI(courseId);
             closeModal();
-
             refreshMyTrainings();
         } else {
-            showPopUp('error', 'Error', data.message);
+            showSwalNotification('error', 'Error', data.message);
         }
     })
     .catch(error => {
         console.error('Enrollment error:', error);
-        showPopUp('error', 'Error', 'An error occurred during enrollment');
+        showSwalNotification('error', 'Error', 'An error occurred during enrollment');
     });
 }
 
@@ -174,7 +196,7 @@ function refreshMyTrainings() {
         })
         .catch(error => {
             console.error('Error updating trainings:', error);
-            showPopUp('error', 'Error', 'Could not refresh trainings.');
+            showSwalNotification('error', 'Error', 'Could not refresh trainings.');
         });
 }
 
@@ -182,7 +204,7 @@ function updateEnrollmentUI(courseId) {
     document.querySelectorAll(`.training-card[data-course-id="${courseId}"] .thmb_enrll label`).forEach(btn => {
         btn.textContent = 'Enrolled';
         btn.classList.add('enrolled');
-        btn.style.backgroundColor = '#2ecc71';
+        btn.style.backgroundColor = '#062644';
         btn.style.cursor = 'default';
     });
 
@@ -193,7 +215,7 @@ function updateEnrollmentUI(courseId) {
             const modalEnrollBtn = document.getElementById('enroll-btn');
             if (modalEnrollBtn) {
                 modalEnrollBtn.textContent = 'Enrolled';
-                modalEnrollBtn.style.backgroundColor = '#2ecc71';
+                modalEnrollBtn.style.backgroundColor = '#062644';
                 modalEnrollBtn.style.cursor = 'default';
             }
         }

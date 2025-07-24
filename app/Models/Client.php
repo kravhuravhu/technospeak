@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Cache;
 
 class Client extends Authenticatable implements MustVerifyEmail
 {
@@ -103,9 +104,19 @@ class Client extends Authenticatable implements MustVerifyEmail
         return "{$this->registered_date} {$this->registered_time}";
     }
 
+    // public function isSubscribedTo($courseId)
+    // {
+    //     return $this->courseSubscriptions()->where('course_id', $courseId)->exists();
+    // }
+
+    // In your User model
     public function isSubscribedTo($courseId)
     {
-        return $this->courseSubscriptions()->where('course_id', $courseId)->exists();
+        return Cache::remember("user_{$this->id}_enrolled_in_{$courseId}", now()->addMinutes(5), function() use ($courseId) {
+            return $this->courseSubscriptions()
+                ->where('course_id', $courseId)
+                ->exists();
+        });
     }
 
     public function hasActiveSubscription()

@@ -115,9 +115,6 @@ Route::prefix('api/courses/{course}')->group(function() {
     Route::get('/ratings', [CourseAccessController::class, 'getRatings']);
     Route::post('/ratings', [CourseAccessController::class, 'submitRating']);
     Route::put('/ratings/{rating}', [CourseAccessController::class, 'updateRating']);
-    Route::get('/has-certificate', function(Course $course) {
-        return response()->json(['has_certificate' => $course->has_certificate]);
-    });
 });
 
 

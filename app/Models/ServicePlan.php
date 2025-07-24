@@ -22,12 +22,19 @@ class ServicePlan extends Model
     }
  
     protected $fillable = [
-        'name',
-        'description',
-        'rate_student',
-        'rate_business',
-        'stripe_price_id_student',
-        'stripe_price_id_business',
-        'is_subscription'
-    ];
+            'name',
+            'description',
+            'rate_student',
+            'rate_business',
+            'stripe_price_id_student',
+            'stripe_price_id_business',
+            'is_subscription',
+            'is_hourly',
+            'duration_hours'
+        ];
+
+        public function getPriceForUserType(?string $userType): float
+        {
+            return $userType === 'Student' ? $this->rate_student : $this->rate_business;
+        }
 }

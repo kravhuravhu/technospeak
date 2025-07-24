@@ -83,7 +83,7 @@ section.price_container {
                 }
             }
         }
-        & > .plans_container {
+        & > .plans_container, .session-registration-modal {
             width: 100%;
             margin: 0 auto;
             position: relative;
@@ -156,7 +156,7 @@ section.price_container {
                                 &:hover {
                                     box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
                                     transform: scale(1.05);
-                                    & > .bttn {
+                                    & > .bttn, .subscription-trigger {
                                         & > button {
                                             background-color: #38b6ff;
                                             color: #fafafa;
@@ -243,7 +243,7 @@ section.price_container {
                                         }
                                     }
                                 }
-                                & > .bttn {
+                                & > .bttn, .subscription-trigger {
                                     width: 100%;
                                     margin-top: auto;
                                     padding: 25px 0;
@@ -374,7 +374,7 @@ section.price_container {
                                         }
                                     }
                                     
-                                    .bttn {
+                                    .bttn, .subscription-trigger {
                                         width: 100%;
                                         margin-top: auto;
                                         padding: 20px 0;
@@ -419,7 +419,7 @@ section.price_container {
                                     &:hover {
                                         transform: scale(1.03);
                                     }
-                                    & > .bttn {
+                                    & > .bttn, .subscription-trigger {
                                         display: flex;
                                         gap: 10px;
                                         justify-content: center;
@@ -543,7 +543,7 @@ section.price_container {
                                     .row2 & {
                                         width: 330px;
                                     }
-                                    & > .bttn {
+                                    & > .bttn, .subscription-trigger {
                                         & > button {
                                             padding: 15px;
                                         }
@@ -577,7 +577,7 @@ section.price_container {
                                     .row2 & {
                                         width: 300px;
                                     }
-                                    & > .bttn {
+                                    & > .bttn, .subscription-trigger {
                                         & > button {
                                             padding: 10px;
                                         }
@@ -1421,6 +1421,54 @@ section.price_container {
   }
 }
 
+/* Session registration modal */
+.session-registration-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 10000;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
 
 /* Footer Section */
 /* applied form global CSS - footer.css */

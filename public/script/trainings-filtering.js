@@ -11,14 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const morePaidTrainingsContainer = document.getElementById('more-paid-trainings');
     const noResultsPaid = document.getElementById('courseNoResultsMessagePaid');
 
-    console.log('Debug - Free Elements:', {
-        searchInput: !!freeSearchInput,
-        filterSelect: !!freeFilterSelect,
-        container: !!freeTrainingsContainer,
-        moreContainer: !!moreFreeTrainingsContainer,
-        noResultsEl: !!noResultsFree
-    });
-
     function filterCourses(searchInput, filterSelect, container, moreContainer, noResultsElement) {
         const searchTerm = searchInput.value.toLowerCase();
         const filterValue = filterSelect.value.toLowerCase();
@@ -57,11 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        console.log(`Visible cards: ${visibleCount}`, allCards.length);
-        
         if (noResultsElement) {
             noResultsElement.style.display = visibleCount === 0 ? 'block' : 'none';
-            console.log('No results element state:', noResultsElement.style.display);
         }
     }
 

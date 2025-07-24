@@ -44,6 +44,16 @@ class ClientCourseSubscription extends Model
         return $this->hasMany(EpisodeProgress::class, 'subscription_id');
     }
 
+    public function certificate()
+    {
+        return $this->hasOne(CourseCertificate::class, 'subscription_id');
+    }
+
+    public function resources()
+    {
+        return $this->hasMany(CourseResource::class, 'course_id');
+    }
+
     public function markAsCompleted()
     {
         $this->update([

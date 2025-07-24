@@ -497,12 +497,70 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: white;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .resource-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resource-info {
+            flex: 1;
+        }
+        
+        .resource-info h4 {
+            margin: 0 0 5px;
+            color: var(--text-dark);
+        }
+        
+        .resource-info p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .resource-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-light);
         }
         
         .resource-icon {
             font-size: 24px;
             margin-right: 15px;
             color: var(--primary-color);
+        }
+        
+        .resource-download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .resource-download-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .resource-type-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #e6f7ff;
+            color: var(--primary-dark);
         }
 
         .comments-container {
@@ -524,10 +582,112 @@
 
         .certificate-container {
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: var(--shadow);
             text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .certificate-header {
+            margin-bottom: 20px;
+        }
+        
+        .certificate-header h3 {
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .certificate-header p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .certificate-preview {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .certificate-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .certificate-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .certificate-detail-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .certificate-detail-item h4 {
+            margin: 0 0 5px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .certificate-detail-item p {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .certificate-actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .certificate-btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .certificate-download {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .certificate-download:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .certificate-share {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .certificate-share:hover {
+            background-color: var(--bg-light);
+            transform: translateY(-2px);
         }
 
         .course-rating {
@@ -710,6 +870,68 @@
             background-color: #e6f7ff;
             border-left: 3px solid var(--primary-color);
         }
+        
+        .no-resources, .no-certificate {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .no-resources i, .no-certificate i {
+            font-size: 50px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .no-resources h3, .no-certificate h3 {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .no-resources p, .no-certificate p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .resources-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .resources-count {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .resources-filter {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--border-light);
+            background: white;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-btn:hover:not(.active) {
+            background: #f5f5f5;
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -767,27 +989,11 @@
             <div class="course-tabs">
                 <button class="tab-btn active" data-tab="episodes">Episodes</button>
                 <button class="tab-btn" data-tab="resources">Resources</button>
-                <button class="tab-btn" data-tab="certificate" id="certificate-tab" style="display:none">Certificate</button>
+                @if($certificate)
+                    <button class="tab-btn" data-tab="certificate">Certificate</button>
+                @endif
             </div>
 
-            <div class="tab-content" id="resources-tab" style="display:none">
-                <div class="resources-container">
-                    <h3>Course Resources</h3>
-                    <div class="resources-list" id="resources-list">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="certificate-tab" style="display:none">
-                <div class="certificate-container">
-                    <h3>Your Certificate</h3>
-                    <div class="certificate-view" id="certificate-view">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                    <button id="download-certificate">Download Certificate</button>
-                </div>
-            </div>
             <div class="tab-content active" id="episodes-tab">     
                 <div class="course-content">
                     <div class="course-video">
@@ -841,7 +1047,7 @@
                                 <button id="submit-rating">Submit Rating</button>
                             </div>
                             
-                            <!-- All Reviews Container will be inserted here by JavaScript -->
+                            <!-- All Reviews Container JS -->
                         </div>
                     </div>
                     
@@ -884,613 +1090,787 @@
                     </div>
                 </div>
             </div>
+
+            <div class="tab-content" id="resources-tab" style="display:none;">
+                <div class="resources-container">
+                    <div class="resources-header">
+                        <h3>Course Resources</h3>
+                        <span class="resources-count">{{ count($resources) }} resources available</span>
+                    </div>
+                    
+                    <div class="resources-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="pdf">PDF</button>
+                        <button class="filter-btn" data-filter="video">Video</button>
+                        <button class="filter-btn" data-filter="audio">Audio</button>
+                        <button class="filter-btn" data-filter="document">Document</button>
+                    </div>
+                    
+                    <div class="resources-list" id="resources-list" style="margin: 35px 0;">
+                        @forelse($resources as $resource)
+                            <div class="resource-item" data-type="{{ strtolower($resource->file_type) }}">
+                                <div class="resource-icon">
+                                    @if($resource->file_type === 'PDF')
+                                        <i class="fas fa-file-pdf"></i>
+                                    @elseif($resource->file_type === 'VIDEO')
+                                        <i class="fas fa-file-video"></i>
+                                    @elseif($resource->file_type === 'AUDIO')
+                                        <i class="fas fa-file-audio"></i>
+                                    @else
+                                        <i class="fas fa-file-alt"></i>
+                                    @endif
+                                </div>
+                                <div class="resource-info">
+                                    <h4>{{ $resource->title }}</h4>
+                                    <p>{{ $resource->description }}</p>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type-badge">{{ strtoupper($resource->file_type) }}</span>
+                                    <span>{{ number_format($resource->file_size / 1024, 1) }} MB</span>
+                                    <a href="{{ $resource->file_url }}" download class="resource-download-btn">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="no-resources">
+                                <i class="fas fa-folder-open"></i>
+                                <h3>No Resources Available</h3>
+                                <p>This course doesn't have any additional resources yet.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="certificate-tab" style="display:none;">
+                @if($certificate)
+                    <div class="certificate-container">
+                        <div class="certificate-header">
+                            <h3>Course Completion Certificate</h3>
+                            <p>Congratulations on completing the course! Here's your certificate of completion.</p>
+                        </div>
+                        
+                        <div class="certificate-preview">
+                            <img src="{{ $certificate->certificate_url }}" alt="Certificate Preview" id="certificate-image">
+                        </div>
+                        
+                        <div class="certificate-details">
+                            <div class="certificate-detail-item">
+                                <h4>Issued To</h4>
+                                <p>{{ Auth::user()->name }}</p>
+                            </div>
+                            <div class="certificate-detail-item">
+                                <h4>Course Title</h4>
+                                <p>{{ $course->title }}</p>
+                            </div>
+                            <div class="certificate-detail-item">
+                                <h4>Date Issued</h4>
+                                <p>{{ \Carbon\Carbon::parse($certificate->issued_at)->format('F j, Y') }}</p>
+                            </div>
+                            <div class="certificate-detail-item">
+                                <h4>Certificate ID</h4>
+                                <p>{{ $certificate->certificate_id }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="certificate-actions">
+                            <a href="{{ $certificate->certificate_url }}" download class="certificate-btn certificate-download">
+                                <i class="fas fa-download"></i> Download PDF
+                            </a>
+                            <button class="certificate-btn certificate-share" id="share-certificate">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                @else
+                    <div class="no-certificate">
+                        <i class="fas fa-certificate"></i>
+                        <h3>No Certificate Available</h3>
+                        <p>Complete all course episodes to earn your certificate of completion.</p>
+                        <button class="btn mark-complete-btn" onclick="document.querySelector('.tab-btn[data-tab=\"episodes\"]').click()">
+                            <i class="fas fa-play-circle"></i> Continue Learning
+                        </button>
+                    </div>
+                @endif
+            </div>
         </div>
 
         <div class="toast" id="toast"></div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // toast notifications
-    function showToast(message, type = 'success') {
-        const icons = {
-            success: 'success',
-            error: 'error',
-            info: 'info'
-        };
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icons[type] || 'success',
-            title: message,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
-    }
-
-    // episode selection
-    function handleEpisodeSelection(item) {
-        const videoUrl = item.getAttribute('data-video-url');
-        const episodeTitle = item.getAttribute('data-episode-title');
-
-        const videoContainer = document.getElementById('video-container');
-
-        videoContainer.innerHTML = '<div class="loading-spinner"></div>';
-
-        document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
-        item.classList.add('active');
-
-        setTimeout(() => {
-            videoContainer.innerHTML = `
-                <video controls autoplay style="width: 100%; height: 100%">
-                    <source src="${videoUrl}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            `;
-
-            const video = videoContainer.querySelector('video');
-            if (video) {
-                video.play().catch(e => {
-                    showToast('Click on the video to start playback', 'info');
-                });
-
-                document.querySelector('.video-description h3').textContent = episodeTitle;
-            }
-        }, 500);
-    }
-
-    // episode click handlers
-    document.querySelectorAll('.episode-item').forEach(item => {
-        item.addEventListener('click', function () {
-            handleEpisodeSelection(this);
-        });
-    });
-
-    // video placeholder overlay click
-    const videoOverlay = document.getElementById('video-overlay');
-    if (videoOverlay) {
-        videoOverlay.addEventListener('click', function () {
-            const firstEpisode = document.querySelector('.episode-item');
-            if (firstEpisode) {
-                handleEpisodeSelection(firstEpisode);
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'No episodes available',
-                    timer: 2500,
-                    showConfirmButton: false
-                });
-            }
-        });
-    }
-
-    // Mark as complete button
-    document.getElementById('mark-complete-btn').addEventListener('click', function () {
-        const activeEpisode = document.querySelector('.episode-item.active');
-        if (!activeEpisode) {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // toast notifications
+        function showToast(message, type = 'success') {
+            const icons = {
+                success: 'success',
+                error: 'error',
+                info: 'info'
+            };
             Swal.fire({
-                icon: 'error',
-                title: 'Please select an episode first',
-                timer: 2500,
-                showConfirmButton: false
+                toast: true,
+                position: 'top-end',
+                icon: icons[type] || 'success',
+                title: message,
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
             });
-            return;
         }
 
-        const episodeId = activeEpisode.getAttribute('data-episode-id');
-        const courseId = {{ $course['id'] }};
+        // episode selection
+        function handleEpisodeSelection(item) {
+            const videoUrl = item.getAttribute('data-video-url');
+            const episodeTitle = item.getAttribute('data-episode-title');
 
-        Swal.fire({
-            title: 'Marking episode as completed...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
+            const videoContainer = document.getElementById('video-container');
+
+            videoContainer.innerHTML = '<div class="loading-spinner"></div>';
+
+            document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
+            item.classList.add('active');
+
+            setTimeout(() => {
+                videoContainer.innerHTML = `
+                    <video controls autoplay style="width: 100%; height: 100%">
+                        <source src="${videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+
+                const video = videoContainer.querySelector('video');
+                if (video) {
+                    video.play().catch(e => {
+                        showToast('Click on the video to start playback', 'info');
+                    });
+
+                    document.querySelector('.video-description h3').textContent = episodeTitle;
+                }
+            }, 500);
+        }
+
+        // episode click handlers
+        document.querySelectorAll('.episode-item').forEach(item => {
+            item.addEventListener('click', function () {
+                handleEpisodeSelection(this);
+            });
         });
 
-        fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    activeEpisode.classList.add('completed');
-                    if (!activeEpisode.querySelector('.fa-check-circle')) {
-                        activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
-                    }
-
-                    const progressPercent = document.querySelector('.progress-percent');
-                    const progressFill = document.querySelector('.progress-fill');
-
-                    let currentProgress = parseInt(progressPercent.textContent);
-                    const targetProgress = data.progress;
-
-                    const increment = () => {
-                        if (currentProgress < targetProgress) {
-                            currentProgress++;
-                            progressPercent.textContent = `${currentProgress}%`;
-                            progressFill.style.width = `${currentProgress}%`;
-                            setTimeout(increment, 20);
-                        }
-                    };
-
-                    increment();
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Episode marked as completed!',
-                        timer: 2500,
-                        showConfirmButton: false
-                    });
+        // video placeholder overlay click
+        const videoOverlay = document.getElementById('video-overlay');
+        if (videoOverlay) {
+            videoOverlay.addEventListener('click', function () {
+                const firstEpisode = document.querySelector('.episode-item');
+                if (firstEpisode) {
+                    handleEpisodeSelection(firstEpisode);
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: data.message || 'Operation failed',
-                        timer: 3000,
+                        title: 'No episodes available',
+                        timer: 2500,
                         showConfirmButton: false
                     });
                 }
-            })
-            .catch(() => {
+            });
+        }
+
+        // Mark as complete button
+        document.getElementById('mark-complete-btn').addEventListener('click', function () {
+            const activeEpisode = document.querySelector('.episode-item.active');
+            if (!activeEpisode) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Failed to mark episode as completed',
-                    timer: 3000,
+                    title: 'Please select an episode first',
+                    timer: 2500,
                     showConfirmButton: false
                 });
-            });
-    });
+                return;
+            }
 
-    // Confirm before unenrolling
-    const unenrollBtn = document.getElementById('unenroll-btn');
-    if (unenrollBtn) {
-        unenrollBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const form = this.closest('form');
-            const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
+            const episodeId = activeEpisode.getAttribute('data-episode-id');
+            const courseId = {{ $course['id'] }};
 
             Swal.fire({
-                title: 'Confirm Unenrollment',
-                html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#e53e3e',
-                cancelButtonColor: '#38b6ff',
-                confirmButtonText: 'Yes, Unenroll',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Unenrolling...',
-                        allowOutsideClick: false,
-                        didOpen: () => Swal.showLoading(),
-                    });
+                title: 'Marking episode as completed...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-                    fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            _method: 'DELETE'
-                        })
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error('Network response was not ok');
-                            return response.json();
-                        })
-                        .then(() => {
-                            window.location.href = '/dashboard';
-                        })
-                        .catch(() => {
-                            Swal.fire(
-                                'Error',
-                                'There was a problem unenrolling from the course. Please try again.',
-                                'error'
-                            );
+            fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        activeEpisode.classList.add('completed');
+                        if (!activeEpisode.querySelector('.fa-check-circle')) {
+                            activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
+                        }
+
+                        const progressPercent = document.querySelector('.progress-percent');
+                        const progressFill = document.querySelector('.progress-fill');
+
+                        let currentProgress = parseInt(progressPercent.textContent);
+                        const targetProgress = data.progress;
+
+                        const increment = () => {
+                            if (currentProgress < targetProgress) {
+                                currentProgress++;
+                                progressPercent.textContent = `${currentProgress}%`;
+                                progressFill.style.width = `${currentProgress}%`;
+                                setTimeout(increment, 20);
+                            }
+                        };
+
+                        increment();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Episode marked as completed!',
+                            timer: 2500,
+                            showConfirmButton: false
                         });
-                }
-            });
+                        
+                        // Check if certificate tab should be shown
+                        if (targetProgress === 100) {
+                            const certificateTab = document.getElementById('certificate-tab');
+                            if (certificateTab) {
+                                certificateTab.style.display = 'block';
+                            }
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message || 'Operation failed',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to mark episode as completed',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                });
         });
-    }
 
-    // navigation for episodes
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-            const episodes = Array.from(document.querySelectorAll('.episode-item'));
-            const activeIndex = episodes.findIndex(ep => ep.classList.contains('active'));
-
-            if (activeIndex >= 0) {
+        // Confirm before unenrolling
+        const unenrollBtn = document.getElementById('unenroll-btn');
+        if (unenrollBtn) {
+            unenrollBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                let newIndex;
 
-                if (e.key === 'ArrowDown' && activeIndex < episodes.length - 1) {
-                    newIndex = activeIndex + 1;
-                } else if (e.key === 'ArrowUp' && activeIndex > 0) {
-                    newIndex = activeIndex - 1;
-                }
+                const form = this.closest('form');
+                const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
 
-                if (newIndex !== undefined) {
-                    handleEpisodeSelection(episodes[newIndex]);
-                    episodes[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            }
-        }
-    });
+                Swal.fire({
+                    title: 'Confirm Unenrollment',
+                    html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e53e3e',
+                    cancelButtonColor: '#38b6ff',
+                    confirmButtonText: 'Yes, Unenroll',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Unenrolling...',
+                            allowOutsideClick: false,
+                            didOpen: () => Swal.showLoading(),
+                        });
 
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
-            this.classList.add('active');
-            const tabId = this.getAttribute('data-tab');
-            document.getElementById(`${tabId}-tab`).classList.add('active');
-        });
-    });
-
-    // Rating system
-    const courseId = {{ $course->id }};
-    let currentUserRating = null;
-
-    // editable review
-    function createEditableReview(review, rating) {
-        const editableDiv = document.createElement('div');
-        editableDiv.className = 'editable-review';
-        
-        const starsDiv = document.createElement('div');
-        starsDiv.className = 'star-rating';
-        starsDiv.style.marginBottom = '10px';
-        
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('i');
-            star.className = i <= rating ? 'fas fa-star' : 'far fa-star';
-            star.dataset.rating = i;
-            star.addEventListener('click', function() {
-                selectedRating = parseInt(this.dataset.rating);
-                const stars = this.parentElement.querySelectorAll('i');
-                stars.forEach((s, idx) => {
-                    s.className = idx < selectedRating ? 'fas fa-star' : 'far fa-star';
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                _method: 'DELETE'
+                            })
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('Network response was not ok');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    const redirectUrl = new URL(data.redirect);
+                                    redirectUrl.searchParams.set('unenrolled', '1');
+                                    redirectUrl.searchParams.set('message', encodeURIComponent(data.message));
+                                    window.location.href = redirectUrl.toString();
+                                } else {
+                                    throw new Error('Unenrollment failed');
+                                }
+                            })
+                            .catch(() => {
+                                Swal.fire(
+                                    'Error',
+                                    'There was a problem unenrolling from the course. Please try again.',
+                                    'error'
+                                );
+                            });
+                    }
                 });
             });
-            starsDiv.appendChild(star);
-        }
-        
-        const textarea = document.createElement('textarea');
-        textarea.value = review || '';
-        textarea.style.width = '100%';
-        textarea.style.minHeight = '80px';
-        
-        const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'edit-review-actions';
-        
-        const saveBtn = document.createElement('button');
-        saveBtn.className = 'save-review-btn';
-        saveBtn.textContent = 'Save';
-        saveBtn.addEventListener('click', function() {
-            updateUserRating(selectedRating, textarea.value);
-        });
-        
-        const cancelBtn = document.createElement('button');
-        cancelBtn.className = 'cancel-review-btn';
-        cancelBtn.textContent = 'Cancel';
-        cancelBtn.addEventListener('click', function() {
-            loadAllReviews();
-        });
-        
-        actionsDiv.appendChild(cancelBtn);
-        actionsDiv.appendChild(saveBtn);
-        
-        editableDiv.appendChild(starsDiv);
-        editableDiv.appendChild(textarea);
-        editableDiv.appendChild(actionsDiv);
-        
-        return editableDiv;
-    }
-
-    // Update user rating
-    function updateUserRating(rating, review) {
-        if (!rating) {
-            showToast('Please select a rating', 'error');
-            return;
         }
 
-        Swal.fire({
-            title: 'Updating your rating...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading(),
-        });
+        // navigation for episodes
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                const episodes = Array.from(document.querySelectorAll('.episode-item'));
+                const activeIndex = episodes.findIndex(ep => ep.classList.contains('active'));
 
-        const method = currentUserRating ? 'PUT' : 'POST';
-        const url = currentUserRating ? 
-            `/api/courses/${courseId}/ratings/${currentUserRating.id}` : 
-            `/api/courses/${courseId}/ratings`;
+                if (activeIndex >= 0) {
+                    e.preventDefault();
+                    let newIndex;
 
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                rating: rating,
-                review: review
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Rating updated successfully!', 'success');
-                    loadRatings();
-                    loadAllReviews();
-                } else {
-                    showToast(data.message || 'Failed to update rating', 'error');
+                    if (e.key === 'ArrowDown' && activeIndex < episodes.length - 1) {
+                        newIndex = activeIndex + 1;
+                    } else if (e.key === 'ArrowUp' && activeIndex > 0) {
+                        newIndex = activeIndex - 1;
+                    }
+
+                    if (newIndex !== undefined) {
+                        handleEpisodeSelection(episodes[newIndex]);
+                        episodes[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 }
-            })
-            .catch(() => {
-                showToast('Failed to update rating', 'error');
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+
+                // Toggle tab buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Toggle tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+
+                const target = document.getElementById(`${tabId}-tab`);
+                if (target) {
+                    target.style.display = 'block';
+                }
             });
-    }
+        });
 
-    // Load ratings data
-    function loadRatings() {
-        fetch(`/api/courses/${courseId}/ratings`)
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to fetch ratings');
-                return response.json();
+        // Resource filtering
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                const resources = document.querySelectorAll('.resource-item');
+                
+                resources.forEach(resource => {
+                    if (filter === 'all') {
+                        resource.style.display = 'flex';
+                    } else {
+                        const type = resource.getAttribute('data-type');
+                        resource.style.display = type.includes(filter) ? 'flex' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Share certificate functionality
+        const shareCertificateBtn = document.getElementById('share-certificate');
+        if (shareCertificateBtn) {
+            shareCertificateBtn.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Share Certificate',
+                    html: `
+                        <p>Share your achievement on social media or copy the link below:</p>
+                        <div class="social-share-buttons" style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+                            <button class="btn" style="background: #3b5998; color: white; padding: 8px 15px; border-radius: 4px;">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </button>
+                            <button class="btn" style="background: #1da1f2; color: white; padding: 8px 15px; border-radius: 4px;">
+                                <i class="fab fa-twitter"></i> Twitter
+                            </button>
+                            <button class="btn" style="background: #0077b5; color: white; padding: 8px 15px; border-radius: 4px;">
+                                <i class="fab fa-linkedin-in"></i> LinkedIn
+                            </button>
+                        </div>
+                        <div class="input-group" style="display: flex; margin-top: 10px;">
+                            <input type="text" id="certificate-url" value="{{ $certificate ? $certificate->certificate_url : '' }}" readonly style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px;">
+                            <button id="copy-certificate-url" class="btn" style="background: var(--primary-color); color: white; border-radius: 0 4px 4px 0;">
+                                Copy
+                            </button>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+
+                document.getElementById('copy-certificate-url').addEventListener('click', function() {
+                    const urlInput = document.getElementById('certificate-url');
+                    urlInput.select();
+                    document.execCommand('copy');
+                    showToast('Certificate link copied to clipboard!');
+                });
+            });
+        }
+
+        // Rating system
+        const courseId = {{ $course->id }};
+        let currentUserRating = null;
+
+        // editable review
+        function createEditableReview(review, rating) {
+            const editableDiv = document.createElement('div');
+            editableDiv.className = 'editable-review';
+            
+            const starsDiv = document.createElement('div');
+            starsDiv.className = 'star-rating';
+            starsDiv.style.marginBottom = '10px';
+            
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('i');
+                star.className = i <= rating ? 'fas fa-star' : 'far fa-star';
+                star.dataset.rating = i;
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    const stars = this.parentElement.querySelectorAll('i');
+                    stars.forEach((s, idx) => {
+                        s.className = idx < selectedRating ? 'fas fa-star' : 'far fa-star';
+                    });
+                });
+                starsDiv.appendChild(star);
+            }
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = review || '';
+            textarea.style.width = '100%';
+            textarea.style.minHeight = '80px';
+            
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'edit-review-actions';
+            
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'save-review-btn';
+            saveBtn.textContent = 'Save';
+            saveBtn.addEventListener('click', function() {
+                updateUserRating(selectedRating, textarea.value);
+            });
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'cancel-review-btn';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', function() {
+                loadAllReviews();
+            });
+            
+            actionsDiv.appendChild(cancelBtn);
+            actionsDiv.appendChild(saveBtn);
+            
+            editableDiv.appendChild(starsDiv);
+            editableDiv.appendChild(textarea);
+            editableDiv.appendChild(actionsDiv);
+            
+            return editableDiv;
+        }
+
+        // Update user rating
+        function updateUserRating(rating, review) {
+            if (!rating) {
+                showToast('Please select a rating', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Updating your rating...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+            });
+
+            const method = currentUserRating ? 'PUT' : 'POST';
+            const url = currentUserRating ? 
+                `/api/courses/${courseId}/ratings/${currentUserRating.id}` : 
+                `/api/courses/${courseId}/ratings`;
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    rating: rating,
+                    review: review
+                })
             })
-            .then(data => {
-                const averageRating = data.average || 0;
-                document.getElementById('average-score').textContent = Number(averageRating).toFixed(1);
-                document.getElementById('rating-count').textContent = data.count;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Rating updated successfully!', 'success');
+                        loadRatings();
+                        loadAllReviews();
+                    } else {
+                        showToast(data.message || 'Failed to update rating', 'error');
+                    }
+                })
+                .catch(() => {
+                    showToast('Failed to update rating', 'error');
+                });
+        }
 
-                renderStars(document.getElementById('average-stars'), averageRating, false);
+        // Load ratings data
+        function loadRatings() {
+            fetch(`/api/courses/${courseId}/ratings`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch ratings');
+                    return response.json();
+                })
+                .then(data => {
+                    const averageRating = data.average || 0;
+                    document.getElementById('average-score').textContent = Number(averageRating).toFixed(1);
+                    document.getElementById('rating-count').textContent = data.count;
 
-                if (data.user_rating) {
-                    currentUserRating = data.user_rating;
-                    document.getElementById('rating-form').style.display = 'none';
+                    renderStars(document.getElementById('average-stars'), averageRating, false);
+
+                    if (data.user_rating) {
+                        currentUserRating = data.user_rating;
+                        document.getElementById('rating-form').style.display = 'none';
+                    } else {
+                        document.getElementById('rating-form').style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Could not load ratings',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                });
+        }
+
+        // all ratings
+        function loadAllReviews() {
+            fetch(`/api/courses/${courseId}/ratings`)
+                .then(response => response.json())
+                .then(data => {
+                    const reviewsContainer = document.querySelector('.all-reviews-container');
+                    if (reviewsContainer) {
+                        reviewsContainer.remove();
+                    }
+
+                    const newReviewsContainer = document.createElement('div');
+                    newReviewsContainer.className = 'all-reviews-container';
+                    newReviewsContainer.innerHTML = '<h4>All Reviews</h4>';
+
+                    if (data.all_ratings && data.all_ratings.length > 0) {
+                        data.all_ratings.forEach(review => {
+                            const isCurrentUser = data.user_rating && review.id === data.user_rating.id;
+                            const reviewElement = createReviewElement(review, isCurrentUser);
+                            newReviewsContainer.appendChild(reviewElement);
+                        });
+                    } else {
+                        newReviewsContainer.innerHTML += '<p>No reviews yet</p>';
+                    }
+
+                    const ratingSection = document.querySelector('.course-rating');
+                    ratingSection.appendChild(newReviewsContainer);
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                });
+        }
+
+        // Create review element
+        function createReviewElement(review, isCurrentUser) {
+            const reviewElement = document.createElement('div');
+            reviewElement.className = `review-item ${isCurrentUser ? 'current-user-review' : ''}`;
+            
+            const reviewHeader = document.createElement('div');
+            reviewHeader.className = 'review-header';
+            
+            const reviewUser = document.createElement('div');
+            reviewUser.className = 'review-user';
+            
+            const avatar = document.createElement('img');
+            avatar.className = 'review-avatar';
+            
+            const clientData = review.client || {};
+            avatar.src = clientData.avatar || '/images/icons/circle-user-solid.svg';
+            avatar.alt = clientData.name || clientData.surname || 'Anonymous';
+            
+            const userName = document.createElement('span');
+            userName.className = 'review-user-name';
+            
+            userName.textContent = clientData.name && clientData.surname 
+                ? `${clientData.name.substring(0, 3)}${'*'.repeat(clientData.name.length - 3)} ${'*'.repeat(clientData.surname?.length || 0)}`
+                : 'Anonymous';
+            
+            reviewUser.appendChild(avatar);
+            reviewUser.appendChild(userName);
+            
+            const reviewStars = document.createElement('div');
+            reviewStars.className = 'review-stars';
+            reviewStars.innerHTML = renderStarsHTML(review.rating);
+            
+            reviewHeader.appendChild(reviewUser);
+            reviewHeader.appendChild(reviewStars);
+            
+            if (isCurrentUser) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-review-btn';
+                editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                editBtn.addEventListener('click', function() {
+                    editReview(reviewElement, review);
+                });
+                reviewHeader.appendChild(editBtn);
+            }
+            
+            const reviewDate = document.createElement('div');
+            reviewDate.className = 'review-date';
+            reviewDate.textContent = new Date(review.created_at).toLocaleDateString();
+            
+            const reviewContent = document.createElement('div');
+            reviewContent.className = 'review-content';
+            reviewContent.textContent = review.review || 'No review provided';
+            
+            reviewElement.appendChild(reviewHeader);
+            reviewElement.appendChild(reviewDate);
+            reviewElement.appendChild(reviewContent);
+            
+            return reviewElement;
+        }
+
+        // Edit review
+        function editReview(reviewElement, review) {
+            const reviewContent = reviewElement.querySelector('.review-content');
+            const originalContent = reviewContent.textContent;
+            const originalRating = review.rating;
+            
+            const editableReview = createEditableReview(originalContent, originalRating);
+            selectedRating = originalRating;
+            
+            // Replace the content with editable version
+            reviewContent.replaceWith(editableReview);
+        }
+
+        // function to render stars HTML
+        function renderStarsHTML(rating) {
+            let starsHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    starsHTML += '<i class="fas fa-star-half-alt"></i>';
                 } else {
-                    document.getElementById('rating-form').style.display = 'block';
+                    starsHTML += '<i class="far fa-star"></i>';
                 }
-            })
-            .catch(() => {
+            }
+            return starsHTML;
+        }
+
+        // Render stars based on rating
+        function renderStars(container, rating, interactive = true) {
+            container.innerHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('i');
+
+                if (i <= fullStars) {
+                    star.className = 'fas fa-star';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    star.className = 'fas fa-star-half-alt';
+                } else {
+                    star.className = 'far fa-star';
+                }
+
+                if (interactive) {
+                    star.dataset.rating = i;
+                    star.addEventListener('mouseover', handleStarHover);
+                    star.addEventListener('click', handleStarClick);
+                }
+
+                container.appendChild(star);
+            }
+        }
+
+        // Star hover effect
+        function handleStarHover(e) {
+            const rating = parseInt(e.target.dataset.rating);
+            const stars = e.target.parentElement.querySelectorAll('i');
+
+            stars.forEach((star, index) => {
+                star.className = index < rating ? 'fas fa-star' : 'far fa-star';
+            });
+        }
+
+        // Star click handler
+        let selectedRating = 0;
+        function handleStarClick(e) {
+            selectedRating = parseInt(e.target.dataset.rating);
+            const stars = document.querySelectorAll('.star-rating i');
+
+            stars.forEach((star, index) => {
+                star.className = index < selectedRating ? 'fas fa-star' : 'far fa-star';
+            });
+        }
+
+        // submit-rating
+        document.getElementById('submit-rating').addEventListener('click', function () {
+            if (selectedRating === 0) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Could not load ratings',
-                    timer: 3000,
+                    title: 'Please select a rating',
+                    timer: 2500,
                     showConfirmButton: false
                 });
-            });
-    }
-
-    // all ratings
-    function loadAllReviews() {
-        fetch(`/api/courses/${courseId}/ratings`)
-            .then(response => response.json())
-            .then(data => {
-                const reviewsContainer = document.querySelector('.all-reviews-container');
-                if (reviewsContainer) {
-                    reviewsContainer.remove();
-                }
-
-                const newReviewsContainer = document.createElement('div');
-                newReviewsContainer.className = 'all-reviews-container';
-                newReviewsContainer.innerHTML = '<h4>All Reviews</h4>';
-
-                if (data.all_ratings && data.all_ratings.length > 0) {
-                    data.all_ratings.forEach(review => {
-                        const isCurrentUser = data.user_rating && review.id === data.user_rating.id;
-                        const reviewElement = createReviewElement(review, isCurrentUser);
-                        newReviewsContainer.appendChild(reviewElement);
-                    });
-                } else {
-                    newReviewsContainer.innerHTML += '<p>No reviews yet</p>';
-                }
-
-                const ratingSection = document.querySelector('.course-rating');
-                ratingSection.appendChild(newReviewsContainer);
-            })
-            .catch(error => {
-                console.error('Error loading reviews:', error);
-            });
-    }
-
-    // Create review element
-    function createReviewElement(review, isCurrentUser) {
-        const reviewElement = document.createElement('div');
-        reviewElement.className = `review-item ${isCurrentUser ? 'current-user-review' : ''}`;
-        
-        const reviewHeader = document.createElement('div');
-        reviewHeader.className = 'review-header';
-        
-        const reviewUser = document.createElement('div');
-        reviewUser.className = 'review-user';
-        
-        const avatar = document.createElement('img');
-        avatar.className = 'review-avatar';
-        
-        const clientData = review.client || {};
-        avatar.src = clientData.avatar || '/images/icons/circle-user-solid.svg';
-        avatar.alt = clientData.name || clientData.surname || 'Anonymous';
-        
-        const userName = document.createElement('span');
-        userName.className = 'review-user-name';
-        
-        userName.textContent = clientData.name && clientData.surname 
-            ? `${clientData.name} ${clientData.surname}`
-            : clientData.name || clientData.surname || 'Anonymous';
-
-        userName.textContent = clientData.name 
-            ? `${clientData.name.substring(0, 3)}${'*'.repeat(clientData.name.length - 3)} ${'*'.repeat(clientData.surname?.length || 0)}`
-            : 'Anonymous';
-        
-        reviewUser.appendChild(avatar);
-        reviewUser.appendChild(userName);
-        
-        const reviewStars = document.createElement('div');
-        reviewStars.className = 'review-stars';
-        reviewStars.innerHTML = renderStarsHTML(review.rating);
-        
-        reviewHeader.appendChild(reviewUser);
-        reviewHeader.appendChild(reviewStars);
-        
-        if (isCurrentUser) {
-            const editBtn = document.createElement('button');
-            editBtn.className = 'edit-review-btn';
-            editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-            editBtn.addEventListener('click', function() {
-                editReview(reviewElement, review);
-            });
-            reviewHeader.appendChild(editBtn);
-        }
-        
-        const reviewDate = document.createElement('div');
-        reviewDate.className = 'review-date';
-        reviewDate.textContent = new Date(review.created_at).toLocaleDateString();
-        
-        const reviewContent = document.createElement('div');
-        reviewContent.className = 'review-content';
-        reviewContent.textContent = review.review || 'No review provided';
-        
-        reviewElement.appendChild(reviewHeader);
-        reviewElement.appendChild(reviewDate);
-        reviewElement.appendChild(reviewContent);
-        
-        return reviewElement;
-    }
-
-    // Edit review
-    function editReview(reviewElement, review) {
-        const reviewContent = reviewElement.querySelector('.review-content');
-        const originalContent = reviewContent.textContent;
-        const originalRating = review.rating;
-        
-        const editableReview = createEditableReview(originalContent, originalRating);
-        selectedRating = originalRating;
-        
-        // Replace the content with editable version
-        reviewContent.replaceWith(editableReview);
-    }
-
-    // function to render stars HTML
-    function renderStarsHTML(rating) {
-        let starsHTML = '';
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 >= 0.5;
-        
-        for (let i = 1; i <= 5; i++) {
-            if (i <= fullStars) {
-                starsHTML += '<i class="fas fa-star"></i>';
-            } else if (i === fullStars + 1 && hasHalfStar) {
-                starsHTML += '<i class="fas fa-star-half-alt"></i>';
-            } else {
-                starsHTML += '<i class="far fa-star"></i>';
-            }
-        }
-        return starsHTML;
-    }
-
-    // Render stars based on rating
-    function renderStars(container, rating, interactive = true) {
-        container.innerHTML = '';
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 >= 0.5;
-
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('i');
-
-            if (i <= fullStars) {
-                star.className = 'fas fa-star';
-            } else if (i === fullStars + 1 && hasHalfStar) {
-                star.className = 'fas fa-star-half-alt';
-            } else {
-                star.className = 'far fa-star';
+                return;
             }
 
-            if (interactive) {
-                star.dataset.rating = i;
-                star.addEventListener('mouseover', handleStarHover);
-                star.addEventListener('click', handleStarClick);
-            }
+            const review = document.getElementById('rating-review').value;
 
-            container.appendChild(star);
-        }
-    }
-
-    // Star hover effect
-    function handleStarHover(e) {
-        const rating = parseInt(e.target.dataset.rating);
-        const stars = e.target.parentElement.querySelectorAll('i');
-
-        stars.forEach((star, index) => {
-            star.className = index < rating ? 'fas fa-star' : 'far fa-star';
+            updateUserRating(selectedRating, review);
         });
-    }
 
-    // Star click handler
-    let selectedRating = 0;
-    function handleStarClick(e) {
-        selectedRating = parseInt(e.target.dataset.rating);
-        const stars = document.querySelectorAll('.star-rating i');
-
-        stars.forEach((star, index) => {
-            star.className = index < selectedRating ? 'fas fa-star' : 'far fa-star';
+        // Star rating interaction
+        document.querySelectorAll('.star-rating i').forEach(star => {
+            star.addEventListener('mouseover', handleStarHover);
+            star.addEventListener('click', handleStarClick);
         });
-    }
 
-    // submit-rating
-    document.getElementById('submit-rating').addEventListener('click', function () {
-        if (selectedRating === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Please select a rating',
-                timer: 2500,
-                showConfirmButton: false
-            });
-            return;
-        }
+        loadRatings();
 
-        const review = document.getElementById('rating-review').value;
-
-        updateUserRating(selectedRating, review);
+        // all ratings
+        loadAllReviews();
     });
-
-    // Star rating interaction
-    document.querySelectorAll('.star-rating i').forEach(star => {
-        star.addEventListener('mouseover', handleStarHover);
-        star.addEventListener('click', handleStarClick);
-    });
-
-    loadRatings();
-
-    // all ratings
-    loadAllReviews();
-
-    // if course has certificate - show tab
-    fetch(`/api/courses/{{ $course->id }}/has-certificate`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.has_certificate) {
-                document.getElementById('certificate-tab').style.display = 'block';
-            }
-        });
-});
 </script>
  
 </body>

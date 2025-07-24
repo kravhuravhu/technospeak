@@ -16,6 +16,7 @@
         <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
         <link rel="stylesheet" href="{{ asset('style/dashboard.css') }}">
         <link rel="stylesheet" href="{{ asset('style/footer.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -252,13 +253,15 @@
                                         data-duration="{{ $course->formatted_duration }}"
                                         data-level="{{ ucfirst($course->level) }}"
                                         data-instructor="{{ $course->instructor->name ?? 'Unknown' }}"
+                                        data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
                                         data-category="{{ $course->category->name ?? 'Uncategorized' }}"
-                                        data-price="{{ $course->plan_type === 'paid' ? $course->price : 'Free' }}"
+                                        data-price="{{ $course->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"
                                         data-episodes='@json($course->episodes->map(function($episode) {
                                             return [
                                                 'number' => $episode->episode_number,
                                                 'name' => $episode->title,
-                                                'duration' => $episode->formatted_duration
+                                                'duration' => $episode->duration_formatted
                                             ];
                                         }))'
                                         data-time="{{ $course->formatted_duration }}"
@@ -349,6 +352,8 @@
                                             data-category="{{ $course['category_name'] }}"
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
+                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -404,6 +409,8 @@
                                             data-category="{{ $course['category_name'] }}"
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
+                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -488,6 +495,8 @@
                                             data-price="{{ $course['price'] }}"
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
+                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -544,6 +553,8 @@
                                             data-price="{{ $course['price'] }}"
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
+                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -1125,31 +1136,80 @@
                                         <span class="duration"><i class="far fa-clock"></i>{{ $singleCourse->formatted_duration }}</span>
                                         <span class="difficulty"><i class="fas fa-bolt"></i>{{ ucfirst($singleCourse->level) }}</span>
                                     </div>
-                                    <button class="start-btn">Start Learning</button>
+                                    <a href="#" 
+                                        class="start-btn training-card"
+                                        data-course-id="{{ $singleCourse->id }}"
+                                        data-training-type="{{ $singleCourse->plan_type }}"
+                                        data-title="{{ $singleCourse->title }}"
+                                        data-description="{{ $singleCourse->description }}"
+                                        data-image="{{ $singleCourse->thumbnail }}"
+                                        data-duration="{{ $singleCourse->formatted_duration }}"
+                                        data-level="{{ ucfirst($singleCourse->level) }}"
+                                        data-instructor="{{ $singleCourse->instructor->name ?? 'Unknown' }}"
+                                        data-category="{{ $singleCourse->category->name ?? 'Uncategorized' }}"
+                                        data-price="{{ $singleCourse->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                        data-episodes='@json($singleCourse->episodes->map(function($episode) {
+                                                return [
+                                                    'number' => $episode->episode_number,
+                                                    'name' => $episode->title,
+                                                    'duration' => $episode->duration_formatted
+                                                ];
+                                            }))'
+                                        >
+                                        Start Learning
+                                        </a>
                                 </div>
                             </div>
                         @endif
                         
                         @php
-                            // Get the latest upcoming session of the specified type
                             $typeId = 4;
                             $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
-                                ->where('scheduled_for', '>', now())
                                 ->orderBy('scheduled_for', 'desc')
                                 ->first();
                         @endphp
-                        <div class="recommendation-card" data-session-id="1">
-                            <div class="recommendation-content">
-                                <h4><i class="fas fa-users"></i>{{ $latestSession->title }}</h4>
-                                <p class="recommendation-desc">Live training on <span class="session-date">{{ $latestSession->scheduled_for->format('F j, Y') }}</span> at <span class="session-time">{{ $latestSession->scheduled_for->format('g:i A') }}</span> - {{ $latestSession->description }}</p>
-                                <div class="recommendation-meta">
-                                    <span class="date"><i class="fas fa-clock"></i>  <span class="full-date">Duration: {{ $latestSession->duration }} </span></span>
-                                    <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
+
+                        @if($latestSession)
+                            @php
+                                $isPast = $latestSession->scheduled_for->isPast();
+                            @endphp
+
+                            <div class="recommendation-card {{ $isPast ? 'dimmed-session' : '' }}" data-session-id="{{ $latestSession->id }}">
+                                <div class="recommendation-content">
+                                    <h4><i class="fas fa-users"></i> {{ $latestSession->title }}</h4>
+                                    <p class="recommendation-desc">
+                                        Live training on 
+                                        <span class="session-date">{{ $latestSession->scheduled_for->format('F j, Y') }}</span> 
+                                        at 
+                                        <span class="session-time">{{ $latestSession->scheduled_for->format('g:i A') }}</span> 
+                                        - {{ $latestSession->description }}
+                                    </p>
+                                    <div class="recommendation-meta">
+                                        <span class="date">
+                                            <i class="fas fa-clock"></i> Duration: {{ $latestSession->duration }}
+                                        </span>
+                                        <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
+                                    </div>
+                                    @if(!$isPast)
+                                        <button class="rsvp-btn" data-session-id="{{ $latestSession->id }}">RSVP Now</button>
+                                    @else
+                                        <button class="rsvp-btn" disabled style="opacity: 0.8; cursor: not-allowed;background:#062644;">Session Ended</button>
+                                    @endif
                                 </div>
-                                <button class="rsvp-btn" data-session-id="1">RSVP Now</button>
                             </div>
-                        </div>
-                        
+                        @else
+                            <div class="recommendation-card">
+                                <div class="recommendation-content">
+                                    <h4><i class="fas fa-users-slash"></i> No Upcoming Group Sessions</h4>
+                                    <p class="recommendation-desc">We'll notify you when the next session is scheduled. Stay tuned!</p>
+                                    <div class="recommendation-meta">
+                                        <span class="type"><i class="fas fa-clock"></i> Last checked: {{ now()->format('F j, Y g:i A') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                
                         <div class="recommendation-card">
                             <div class="recommendation-content">
                                 <h4><i class="fas fa-laptop-medical"></i> Fixing Common Laptop Errors</h4>
@@ -1875,5 +1935,37 @@
 
         <!-- search functions for courses -->
          <script src="/script/trainings-filtering.js"></script>
+
+        <!-- pop up swal -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- success unenrollment -->
+         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const params = new URLSearchParams(window.location.search);
+                const wasUnenrolled = params.get('unenrolled');
+                const message = params.get('message');
+
+                if (wasUnenrolled === '1') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Unenrolled',
+                        text: decodeURIComponent(message || 'You have been unenrolled successfully'),
+                        timer: 7000,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false
+                    });
+
+                    if (window.history.replaceState) {
+                        const url = new URL(window.location);
+                        url.searchParams.delete('unenrolled');
+                        url.searchParams.delete('message');
+                        window.history.replaceState({}, document.title, url.pathname);
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

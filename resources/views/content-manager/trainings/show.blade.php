@@ -38,27 +38,12 @@
     
     <div class="form-row">
         <div class="form-group">
-            <label class="form-label">From Time</label>
-            <p>{{ $training->from_time }}</p>
+            <label class="form-label">Time</label>
+            <p>{{ $training->from_time->format('H\hm') }} - {{ $training->to_time->format('H\hm') }}</p>
         </div>
         <div class="form-group">
-            <label class="form-label">To Time</label>
-            <p>{{ $training->to_time }}</p>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Duration Seconds</label>
-            <p>{{ $training->duration_seconds }}</p>
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group">
-            <label class="form-label">Category ID</label>
-            <p>{{ $training->category->name }}</p>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Instructor ID</label>
-            <p>{{ $training->instructor->name ?? 'Not assigned' }}</p>
+            <label class="form-label">Duration</label>
+            <p>{{ $training->formatted_duration }}</p>
         </div>
         <div class="form-group">
             <label class="form-label">Scheduled For</label>
@@ -66,11 +51,20 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">Max Participants</label>
-        <p>{{ $training->max_participants ?? 'No limit' }}</p>
+    <div class="form-row">
+        <div class="form-group">
+            <label class="form-label">Category</label>
+            <p>{{ $training->category->name }}</p>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Instructor</label>
+            <p>{{ $training->instructor->name ?? 'Not assigned' }}</p>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Participants</label>
+            <p>{{ $training->registrations->count() }} / {{ $training->max_participants ?? 'No limit' }}</p>
+        </div>
     </div>
-    
     <div class="form-group">
         <label class="form-label">Created At</label>
         <p>{{ $training->created_at->format('M d, Y H:i') }}</p>

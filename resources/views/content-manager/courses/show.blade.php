@@ -8,15 +8,15 @@
     .card {
         background: white;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         overflow: hidden;
         margin-bottom: 2rem;
     }
     
     .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     
     .card-header {
@@ -25,12 +25,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        background-color: #f8fafc;
     }
     
     .card-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: var(--darkBlue);
+        color: var(--skBlue);
         margin: 0;
     }
     
@@ -38,22 +39,24 @@
         padding: 1.5rem;
     }
     
-    /* Course Header (keeping your existing style) */
+    /* Course Header */
     .course-header {
         display: flex;
         margin-bottom: 2rem;
-        padding: 1rem;
+        padding: 1.5rem;
         background: white;
-        border-radius: 9px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-left: 4px solid var(--skBlue);
     }
     
     .course-thumbnail {
         width: 340px;
+        height: 200px;
         border-radius: 8px;
         object-fit: cover;
         margin-right: 2rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
     .course-meta {
@@ -203,6 +206,7 @@
         border-radius: 12px;
         background: white;
         text-align: center;
+        box-shadow: 0 4px 6px rgb(0 0 0 / 23%);
     }
     
     .stat-value {
@@ -240,38 +244,56 @@
         border: none;
     }
     
-    /* Progress Bar */
-    .progress-container {
-        margin-top: 2rem;
+    /* Resource List */
+    .resource-list {
+        display: grid;
+        gap: 1rem;
     }
     
-    .progress-label {
+    .resource-card {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        color: #4a5568;
+        align-items: center;
+        padding: 1.25rem;
+        border-radius: 8px;
+        background: white;
+        border-left: 3px solid var(--skGreen);
     }
     
-    .progress-bar {
-        height: 8px;
-        border-radius: 4px;
-        background-color: #edf2f7;
-        overflow: hidden;
+    .resource-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: rgba(56, 161, 105, 0.1);
+        color: var(--skGreen);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+        font-size: 1.1rem;
     }
     
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--skBlue), var(--powBlue));
-        border-radius: 4px;
-        width: 65%; /* Example value */
+    .resource-content {
+        flex: 1;
+    }
+    
+    .resource-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: var(--darkBlue);
+    }
+    
+    .resource-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #a0aec0;
     }
     
     /* Responsive */
     @media (max-width: 768px) {
         .course-header {
             flex-direction: column;
-            text-align: center;
         }
         
         .course-thumbnail {
@@ -283,7 +305,7 @@
         }
         
         .course-meta {
-            justify-content: center;
+            justify-content: flex-start;
         }
         
         .episode-card {
@@ -325,7 +347,7 @@
 </div>
 
 <div class="course-header">
-    <img src="{{ $course->thumbnail }}" alt="Course thumbnail" class="course-thumbnail">
+    <img src="{{ $course->thumbnail }}" alt="Course thumbnail" class="course-thumbnail" onerror="this.src='https://via.placeholder.com/340x200?text=Thumbnail+Not+Available'">
     <div>
         <h2>{{ $course->title }}</h2>
         <p class="text-muted">{{ $course->catch_phrase }}</p>
@@ -338,11 +360,21 @@
                 <i class="fas fa-layer-group"></i> {{ $course->category->name }}
             </span>
             <span class="badge {{ $course->plan_type === 'free' ? 'badge-free' : 'badge-paid' }}">
+                <i class="fas {{ $course->plan_type === 'free' ? 'fa-unlock-alt' : 'fa-lock' }}"></i>&nbsp
                 {{ ucfirst($course->plan_type) }}
             </span>
             <span class="badge badge-level">
+                <i class="fas fa-signal"></i>&nbsp
                 {{ ucfirst($course->level) }}
             </span>
+            <span class="meta-item">
+                <i class="fas fa-calendar-alt"></i> {{ $course->created_at->format('M d, Y') }}
+            </span>
+        </div>
+        
+        <div class="mt-3">
+            <img src="{{ $course->software_app_icon }}" alt="Software icon" style="width: 32px; height: 32px; margin-right: 0.5rem;" onerror="this.style.display='none'">
+            <span class="text-sm text-gray-600">Associated Software/App</span>
         </div>
     </div>
 </div>
@@ -355,7 +387,7 @@
                 <i class="fas fa-align-left text-gray-400"></i>
             </div>
             <div class="card-body">
-                <p class="text-gray-700 leading-relaxed">{{ $course->description }}</p>
+                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $course->description }}</p>
             </div>
         </div>
 
@@ -367,40 +399,38 @@
             <div class="card-body">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value">{{ $course->noEpisodes }}</div>
+                        <div class="stat-value">{{ $course->episodes->count() }}</div>
                         <div class="stat-label">Episodes</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">
                             @php
                                 $totalSeconds = $course->total_duration;
-
                                 $hours = floor($totalSeconds / 3600);
                                 $minutes = floor(($totalSeconds % 3600) / 60);
                                 $seconds = $totalSeconds % 60;
 
                                 if ($hours > 0) {
-                                    $formatted = sprintf('%02dh %02dm %02ds', $hours, $minutes, $seconds);
+                                    echo "{$hours}h {$minutes}m";
                                 } elseif ($minutes > 0) {
-                                    $formatted = sprintf('%02dm %02ds', $minutes, $seconds);
+                                    echo "{$minutes}m {$seconds}s";
                                 } else {
-                                    $formatted = sprintf('%02ds', $seconds);
+                                    echo "{$seconds}s";
                                 }
-                                echo $formatted;
                             @endphp
                         </div>
                         <div class="stat-label">Duration</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">0 Enrolled</div>
+                        <div class="stat-value">0</div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">
-                            @if($course->noEpisodes > 0)
+                            @if($course->episodes->count() > 0)
                                 <span style="color: var(--success);">Active</span>
                             @else
-                                <span style="color: var(--danger);">Inactive</span>
+                                <span style="color: var(--danger);">Draft</span>
                             @endif
                         </div>
                         <div class="stat-label">Status</div>
@@ -408,16 +438,62 @@
                 </div>
             </div>
         </div>
+        
+        @if($course->resources->count() > 0)
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Course Resources ({{ $course->resources->count() }})</h3>
+                <i class="fas fa-paperclip text-gray-400"></i>
+            </div>
+            <div class="card-body">
+                <div class="resource-list">
+                    @foreach($course->resources as $resource)
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            @if($resource->resourceType)
+                                <i class="{{ $resource->resourceType->icon }}"></i>
+                            @else
+                                <i class="fas fa-file"></i>
+                            @endif
+                        </div>
+                        <div class="resource-content">
+                            <h4 class="resource-title">{{ $resource->title }}</h4>
+                            <div class="resource-meta">
+                                <span><i class="fas fa-file"></i> {{ $resource->file_type ?: 'Unknown' }}</span>
+                                <span><i class="fas fa-database"></i> {{ $resource->file_size }}</span>
+                                @if($resource->description)
+                                <span><i class="fas fa-info-circle"></i> {{ Str::limit($resource->description, 40) }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="episode-actions">
+                            <a href="{{ $resource->file_url }}" target="_blank" class="action-btn" title="Download">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <form action="{{ route('content-manager.resource.destroy', [$course->id, $resource->id]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this resource?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <div>
-                
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Course Episodes ({{ $course->episodes->count() }})</h3>
                 <i class="fas fa-list-ol text-gray-400"></i>
             </div>
             <div class="card-body">
+                @if($course->episodes->count() > 0)
                 <div class="episode-list">
                     @foreach($course->episodes as $episode)
                     <div class="episode-card">
@@ -433,15 +509,13 @@
                             </div>
                         </div>
                         <div class="episode-actions">
-                            <button class="action-btn" title="Edit">
-                                <a href="{{ route('content-manager.courses.edit', $course->id) }}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </button>
-                           <form action="{{ route('content-manager.courses.episodes.destroy', [$course->id, $episode->id]) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('content-manager.courses.edit', $course->id) }}#episode-{{ $episode->id }}" class="action-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('content-manager.courses.episodes.destroy', [$course->id, $episode->id]) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this episode?')">
+                                <button type="submit" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this episode?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -449,6 +523,15 @@
                     </div>
                     @endforeach
                 </div>
+                @else
+                <div class="text-center py-4 text-gray-500">
+                    <i class="fas fa-video-slash fa-2x mb-2"></i>
+                    <p>No episodes added yet</p>
+                    <a href="{{ route('content-manager.courses.edit', $course->id) }}" class="btn btn-sm btn-primary mt-2">
+                        <i class="fas fa-plus"></i> Add Episodes
+                    </a>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -463,15 +546,27 @@
                     <div class="video-container">
                         <iframe src="{{ $course->episodes->first()->video_url }}" allowfullscreen></iframe>
                     </div>
+                    <div class="mt-3 text-sm text-gray-600">
+                        <p><strong>Duration:</strong> {{ gmdate('i:s', $course->episodes->first()->duration) }}</p>
+                        @if($course->episodes->first()->description)
+                        <p class="mt-1">{{ $course->episodes->first()->description }}</p>
+                        @endif
+                    </div>
                 </div>
             </div>
         @endif
     </div>
 </div>
 
-<div class="mt-6">
+<div class="mt-6 flex justify-between">
     <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">
         <i class="fas fa-arrow-left"></i> Back to All Courses
     </a>
+    <div>
+        <a href="{{ route('content-manager.courses.edit', $course->id) }}" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit Course
+        </a>
+    </div>
 </div>
+
 @endsection

@@ -84,6 +84,11 @@ class Client extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ClientCourseSubscription::class);
     }
 
+    public function getCoursesCountAttribute()
+    {
+        return $this->courseSubscriptions()->count();
+    }
+
     public function trainingRegistrations()
     {
         return $this->hasMany(TrainingRegistration::class);

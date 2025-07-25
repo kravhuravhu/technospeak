@@ -1192,7 +1192,7 @@
                                         <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
                                     </div>
                                     @if(!$isPast)
-                                        <button class="rsvp-btn" data-session-id="{{ $latestSession->id }}">RSVP Now</button>
+                                        <button class="rsvp-btn registration-trigger" data-type-id="4" data-session-id="{{ $latestSession->id }}">RSVP Now</button>
                                     @else
                                         <button class="rsvp-btn" disabled style="opacity: 0.8; cursor: not-allowed;background:#062644;">Session Ended</button>
                                     @endif
@@ -1209,6 +1209,12 @@
                                 </div>
                             </div>
                         @endif
+
+                        <!-- pop up for register -->
+                         @include('components.sessions_registration', [
+                            'typeId' => 4,
+                            'typeName' => 'Q/A Session'
+                        ])
                 
                         <div class="recommendation-card">
                             <div class="recommendation-content">
@@ -1381,7 +1387,7 @@
                                         </div>
                                         <h4>Email Us</h4>
                                         <p>Send us an email & we'll respond within 24 hours</p>
-                                        <a href="mailto:support@yourdomain.com" class="contact-btn">Email Support</a>
+                                        <a href="mailto:admin@technospeak.co.za" class="contact-btn">Email Support</a>
                                     </div>
                                     <div class="contact-card">
                                         <div class="contact-icon">

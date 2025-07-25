@@ -21,6 +21,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
 use App\Http\Controllers\CourseAccessController; 
 use App\Http\Controllers\IssueController; 
+use App\Http\Controllers\Admin\CourseResourceController;
 use App\Http\Controllers\SubscriptionController; 
 use App\Http\Controllers\ServiceController; 
 
@@ -46,12 +47,6 @@ Route::post('/service/purchase', [ServiceController::class, 'purchase'])
 Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
     ->name('subscription.subscribe.free')
     ->middleware('auth');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 // Auth routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -137,6 +132,17 @@ Route::prefix('api/courses/{course}')->group(function() {
     Route::put('/ratings/{rating}', [CourseAccessController::class, 'updateRating']);
 });
 
+// Subscription routes
+Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
+->middleware('auth');
+
+Route::post('/service/purchase', [ServiceController::class, 'purchase'])
+    ->name('service.purchase')
+    ->middleware('auth');
+
+Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
+    ->name('subscription.subscribe.free')
+    ->middleware('auth');
 
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')
@@ -164,7 +170,13 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         // Courses
         Route::resource('courses', CourseController::class);
         Route::resource('courses.episodes', EpisodeController::class);
-        
+
+        // Course Resources
+        Route::resource('resource', CourseResourceController::class)
+            ->names([
+                'destroy' => 'resource.destroy',
+            ]);
+                
         // Course cate
         Route::resource('categories', CourseCategoryController::class)->except(['show']);
         
@@ -212,11 +224,62 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::get('trainings/{training}/registrations', [TrainingSessionController::class, 'registrations'])->name('trainings.registrations');
         Route::post('trainings/{training}/mark-attendance', [TrainingSessionController::class, 'markAttendance'])->name('trainings.mark-attendance');
         
-       // issues
+        // issues
         Route::resource('issues', \App\Http\Controllers\Admin\AdminIssueController::class);  
         Route::post('issues/{issue}/assign', [\App\Http\Controllers\Admin\AdminIssueController::class, 'assign'])->name('issues.assign');
         Route::post('issues/{issue}/add-response', [\App\Http\Controllers\Admin\AdminIssueController::class, 'addResponse'])->name('issues.add-response');
         Route::post('issues/{issue}/mark-resolved', [\App\Http\Controllers\Admin\AdminIssueController::class, 'markResolved'])->name('issues.mark-resolved');
+
+        // more features
+        Route::prefix('other-features')->name('other-features.')->group(function() {
+            Route::get('/', [\App\Http\Controllers\Admin\OtherFeaturesController::class, 'index'])
+                ->name('index');
+            
+            // other features routes
+            Route::resource('instructors', \App\Http\Controllers\Admin\InstructorController::class)
+                ->except(['show'])
+                ->names([
+                    'index' => 'instructors.index',
+                    'create' => 'instructors.create',
+                    'store' => 'instructors.store',
+                    'edit' => 'instructors.edit',
+                    'update' => 'instructors.update',
+                    'destroy' => 'instructors.destroy'
+                ]);
+                
+            Route::resource('categories', \App\Http\Controllers\Admin\CourseCategoryController::class)
+                ->except(['show'])
+                ->names([
+                    'index' => 'categories.index',
+                    'create' => 'categories.create',
+                    'store' => 'categories.store',
+                    'edit' => 'categories.edit',
+                    'update' => 'categories.update',
+                    'destroy' => 'categories.destroy'
+                ]);
+                
+            Route::resource('resource-types', \App\Http\Controllers\Admin\ResourceTypeController::class)
+                ->except(['show'])
+                ->names([
+                    'index' => 'resource-types.index',
+                    'create' => 'resource-types.create',
+                    'store' => 'resource-types.store',
+                    'edit' => 'resource-types.edit',
+                    'update' => 'resource-types.update',
+                    'destroy' => 'resource-types.destroy'
+                ]);
+                
+            Route::resource('training-types', \App\Http\Controllers\Admin\TrainingTypeController::class)
+                ->except(['show'])
+                ->names([
+                    'index' => 'training-types.index',
+                    'create' => 'training-types.create',
+                    'store' => 'training-types.store',
+                    'edit' => 'training-types.edit',
+                    'update' => 'training-types.update',
+                    'destroy' => 'training-types.destroy'
+                ]);
+        });
 
         // Settings
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');

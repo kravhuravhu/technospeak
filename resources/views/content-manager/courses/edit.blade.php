@@ -10,32 +10,35 @@
         font-size: 1.25rem;
         font-weight: 600;
     }
-    .episode-form {
+    .episode-form, .resource-form {
         padding: 1rem;
         margin-bottom: 1.5rem;
         background: white;
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        & > .form-row {
-            margin-bottom: 0;
-            & > .form-group {
-                & > .form-label {
-                    &.episode_id {
-                        font-weight: 600;
-                        font-size: 1.15em;
-                        color: #253f6b;
-                    }
-                }
-                &.fr_remove_episode {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    width: fit-content;
-                    flex: none;
-                    & > button {
-                        margin-top: 16px;
-                    }
-                }
+    }
+    .resource-form {
+        border-left: 3px solid var(--skGreen);
+    }
+    .form-row {
+        margin-bottom: 0;
+    }
+    .form-group {
+        & > .form-label {
+            &.episode_id {
+                font-weight: 600;
+                font-size: 1.15em;
+                color: #253f6b;
+            }
+        }
+        &.fr_remove_episode, &.fr_remove_resource {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+            flex: none;
+            & > button {
+                margin-top: 16px;
             }
         }
     }
@@ -83,6 +86,11 @@
     .calculating {
         color: var(--skBlue);
         font-style: italic;
+    }
+    .file-info small {
+        display: block;
+        margin-top: 5px;
+        color: #666;
     }
 </style>
 
@@ -323,6 +331,119 @@
         </button>
     </div>
 
+    <!-- Resources Section -->
+    <div class="form-card" style="border-left: 4px solid var(--skGreen);">
+        <h3 class="section-title">Course Resources <i>(optional)</i></h3>
+        
+        <template id="resourceTemplate">
+            <div class="resource-form" data-resource-index="__INDEX__">
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Resource Title</label>
+                            <input type="text" name="resources[__INDEX__][title]" class="form-control" placeholder="Course Workbook PDF">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">File URL</label>
+                            <input type="url" name="resources[__INDEX__][file_url]" class="form-control resource-file-url" 
+                                placeholder="https://example.com/resource.pdf" 
+                                ondrop="handleResourceDrop(event, this)" 
+                                ondragover="event.preventDefault();">
+                            <input type="hidden" name="resources[__INDEX__][file_size]" value="0">
+                            <div class="file-info" style="margin-top: 5px;">
+                                <small>Type: <span class="file-type">Not detected</span> | Size: <span class="file-size">0 Bytes</span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Resource Type</label>
+                        <select name="resources[__INDEX__][resource_type_id]" class="form-control resource-type">
+                            <option value="">Select Type</option>
+                            @foreach($resourceTypes as $type)
+                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thumbnail URL <i>(optional)</i></label>
+                        <input type="url" name="resources[__INDEX__][thumbnail_url]" class="form-control" placeholder="https://example.com/thumbnail.jpg">
+                    </div>
+                </div>
+                <div class="form-row">
+                        <label class="form-label">Description</label>
+                        <textarea name="resources[__INDEX__][description]" class="form-control" rows="2" placeholder="Brief description of this resource"></textarea>
+                    </div>
+                <button type="button" class="remove-resource-btn btn btn-danger btn-sm mt-2">Remove Resource</button>
+                <hr>
+            </div>
+        </template>
+
+        <div id="resourcesContainer">
+            @foreach($course->resources as $index => $resource)
+                <div class="resource-form" data-resource-index="{{ $index }}">
+                    <input type="hidden" name="resources[{{ $index }}][id]" value="{{ $resource->id }}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Resource Title</label>
+                            <input type="text" name="resources[{{ $index }}][title]" class="form-control" 
+                                value="{{ old("resources.$index.title", $resource->title) }}"
+                                placeholder="Course Workbook PDF">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">File URL</label>
+                            <input type="url" name="resources[{{ $index }}][file_url]" class="form-control resource-file-url" 
+                                value="{{ old("resources.$index.file_url", $resource->file_url) }}"
+                                placeholder="https://example.com/resource.pdf" 
+                                ondrop="handleResourceDrop(event, this)" 
+                                ondragover="event.preventDefault();">
+                            <input type="hidden" name="resources[{{ $index }}][file_size]" value="{{ old("resources.$index.file_size", $resource->file_size) }}">
+                            <div class="file-info" style="margin-top: 5px;">
+                                <small>Type: <span class="file-type">{{ $resource->file_type ?: 'Not detected' }}</span> | 
+                                Size: <span class="file-size" data-size="{{ $resource->file_size }}">{{ $resource->file_size }} Bytes</span></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Resource Type</label>
+                            <select name="resources[{{ $index }}][resource_type_id]" class="form-control resource-type">
+                                <option value="">Select Type</option>
+                                @foreach($resourceTypes as $type)
+                                    <option value="{{ $type->id }}" {{ old("resources.$index.resource_type_id", $resource->resource_type_id) == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Thumbnail URL <i>(optional)</i></label>
+                            <input type="url" name="resources[{{ $index }}][thumbnail_url]" class="form-control" 
+                                   value="{{ old("resources.$index.thumbnail_url", $resource->thumbnail_url) }}"
+                                   placeholder="https://example.com/thumbnail.jpg">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="resources[{{ $index }}][description]" class="form-control" rows="2" 
+                                placeholder="Brief description of this resource">{{ old("resources.$index.description", $resource->description) }}</textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-resource-btn btn btn-danger btn-sm mt-2">Remove Resource</button>
+                    <hr>
+                </div>
+            @endforeach
+        </div>
+
+        <button type="button" id="addResourceBtn" class="btn btn-outline mt-3">
+            <i class="fas fa-plus"></i> Add Resource
+        </button>
+    </div>
+
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">Save Changes</button>
         <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline">Cancel</a>
@@ -334,12 +455,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let episodeCount = {{ $course->episodes->count() }};
+        let resourceCount = {{ $course->resources->count() }};
         let nextNewEpisodeId = -1; 
+        let nextNewResourceId = -1;
 
         function init() {
             bindAddEpisodeButton();
             bindVideoUrlChange();
             bindRemoveEpisode();
+            bindAddResourceButton();
+            bindResourceFileUrlChange();
+            bindRemoveResource();
             updateEpisodeStats();
             
             Sortable.create(document.getElementById('episodesContainer'), {
@@ -361,6 +487,12 @@
             document.querySelectorAll('.episode-video-url').forEach(input => {
                 if (input.value) {
                     calculateDuration(input);
+                }
+            });
+
+            document.querySelectorAll('.resource-file-url').forEach(input => {
+                if (input.value) {
+                    updateFileInfo(input);
                 }
             });
         }
@@ -514,6 +646,135 @@
                     if (val) titles.push(val);
                 }
             });
+        }
+
+        // Resource functions
+        function bindAddResourceButton() {
+            const btn = document.getElementById('addResourceBtn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    addResource();
+                });
+            }
+        }
+
+        function bindResourceFileUrlChange() {
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('resource-file-url')) {
+                    updateFileInfo(e.target);
+                }
+            });
+        }
+
+        function bindRemoveResource() {
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-resource-btn')) {
+                    e.target.closest('.resource-form').remove();
+                }
+            });
+        }
+
+        function addResource() {
+            resourceCount++;
+            nextNewResourceId--;
+            
+            const template = document.getElementById('resourceTemplate');
+            const newResource = template.content.firstElementChild.cloneNode(true);
+            
+            // Replace all placeholders
+            const newResourceHtml = newResource.outerHTML.replace(/__INDEX__/g, resourceCount);
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newResourceHtml;
+            const finalNewResource = tempDiv.firstChild;
+            
+            // Set up event listeners
+            const fileUrlInput = finalNewResource.querySelector('.resource-file-url');
+            fileUrlInput.addEventListener('change', function() {
+                updateFileInfo(this);
+            });
+            
+            const removeBtn = finalNewResource.querySelector('.remove-resource-btn');
+            removeBtn.addEventListener('click', function() {
+                finalNewResource.remove();
+            });
+            
+            document.getElementById('resourcesContainer').appendChild(finalNewResource);
+        }
+
+        function updateFileInfo(fileUrlInput) {
+            const resourceForm = fileUrlInput.closest('.resource-form');
+            const fileInfo = resourceForm.querySelector('.file-info');
+            const fileTypeSpan = resourceForm.querySelector('.file-type');
+            const fileSizeSpan = resourceForm.querySelector('.file-size');
+            const fileSizeInput = resourceForm.querySelector('input[name$="[file_size]"]');
+            const fileUrl = fileUrlInput.value.trim();
+
+            if (!fileUrl) {
+                fileTypeSpan.textContent = 'Not detected';
+                fileSizeSpan.textContent = '0 Bytes';
+                fileSizeInput.value = 0;
+                return;
+            }
+
+            fileTypeSpan.textContent = 'Detecting...';
+            fileSizeSpan.textContent = 'Calculating...';
+
+            fetch(fileUrl, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        const contentType = response.headers.get('content-type');
+                        const contentLength = response.headers.get('content-length');
+                        
+                        if (contentLength) {
+                            const fileExtension = getFileExtensionFromUrl(fileUrl);
+                            fileTypeSpan.textContent = contentType || fileExtension || 'Unknown';
+                            fileSizeSpan.textContent = formatFileSize(contentLength);
+                            fileSizeInput.value = contentLength;
+                            return;
+                        }
+                    }
+                    
+                    // Fallback to fetch the entire file if HEAD fails
+                    return fetch(fileUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            fileTypeSpan.textContent = blob.type || getFileExtensionFromUrl(fileUrl) || 'Unknown';
+                            fileSizeSpan.textContent = formatFileSize(blob.size);
+                            fileSizeInput.value = blob.size;
+                        });
+                })
+                .catch(() => {
+                    const fileExtension = getFileExtensionFromUrl(fileUrl);
+                    fileTypeSpan.textContent = fileExtension || 'Unknown';
+                    fileSizeSpan.textContent = '0 Bytes';
+                    fileSizeInput.value = 0;
+                });
+        }
+
+        function getFileExtensionFromUrl(url) {
+            const filename = url.split('/').pop();
+            const extension = filename.split('.').pop();
+            return extension ? `.${extension}` : '';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function handleResourceDrop(event, inputElement) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/uri-list') || event.dataTransfer.getData('text/plain');
+            
+            if (data.startsWith('http://') || data.startsWith('https://')) {
+                inputElement.value = data;
+                const event = new Event('change');
+                inputElement.dispatchEvent(event);
+            }
         }
         
         init();

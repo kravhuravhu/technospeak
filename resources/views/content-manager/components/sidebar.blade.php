@@ -41,7 +41,13 @@
             </a>
         </li>
 
-        
+        <li>
+            <a href="{{ route('content-manager.other-features.index') }}" class="{{ request()->routeIs('content-manager.other-features.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-square-caret-down" style="border-radius:50px;"></i>
+                <span>Other</span>
+            </a>
+        </li>
+
         <div class="menu-divider"></div>
         
         <li>

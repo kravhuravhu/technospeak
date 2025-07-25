@@ -81,18 +81,19 @@ class TrainingSession extends Model
     }
 
     // convert seconds to readable
-    public function getDurationAttribute()
+    public function getFormattedDurationAttribute()
     {
-        $seconds = $this->duration_seconds;
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-        $seconds = $seconds % 60;
+        $totalSeconds = $this->duration_seconds;
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+        $seconds = $totalSeconds % 60;
 
-        $parts = [];
-        if ($hours > 0) $parts[] = $hours . 'h';
-        if ($minutes > 0) $parts[] = $minutes . 'm';
-        if ($seconds > 0 || empty($parts)) $parts[] = $seconds . 's';
-
-        return implode(' ', $parts);
+        if ($hours > 0) {
+            return "{$hours}h{$minutes}m";
+        } elseif ($minutes > 0) {
+            return "{$minutes}m{$seconds}s";
+        } else {
+            return "0m{$seconds}s";
+        }
     }
 }

@@ -463,6 +463,28 @@ textarea.form-control {
     }
 }
 
+/* resources */
+.resource-form {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border-left: 3px solid #6c757d;
+}
+
+.resource-form .form-row {
+    margin-bottom: 10px;
+}
+
+.remove-resource-btn {
+    float: right;
+}
+
+.file-info {
+    color: #6c757d;
+    font-size: 0.85em;
+}
+
 /* Issues */
 .badge-low {
     background: #cce5ff;

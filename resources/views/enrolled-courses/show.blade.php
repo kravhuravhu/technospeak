@@ -1126,7 +1126,7 @@
                                 </div>
                                 <div class="resource-meta">
                                     <span class="resource-type-badge">{{ strtoupper($resource->file_type) }}</span>
-                                    <span>{{ number_format($resource->file_size / 1024, 1) }} MB</span>
+                                    <span>{{ number_format($resource->file_size / 1048576, 1) }} MB</span>
                                     <a href="{{ $resource->file_url }}" download class="resource-download-btn">
                                         <i class="fas fa-download"></i> Download
                                     </a>

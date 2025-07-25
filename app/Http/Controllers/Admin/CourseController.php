@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\CourseEpisode;
 use App\Models\Instructor;
+use App\Models\ResourceType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,13 +35,12 @@ class CourseController extends Controller
     {
         $categories = CourseCategory::all();
         $instructors = Instructor::all();
-        return view('content-manager.courses.create', compact('categories', 'instructors'));
+        $resourceTypes = ResourceType::all();
+        return view('content-manager.courses.create', compact('categories', 'instructors', 'resourceTypes'));
     }
 
     public function store(Request $request)
     {
-        \Log::info('Course creation started', ['request' => $request->all()]);
-
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:course_categories,id',
@@ -59,6 +59,13 @@ class CourseController extends Controller
             'episodes.*.video_url' => 'required|url',
             'episodes.*.duration' => 'required|numeric|min:1',
             'episodes.*.episode_number' => 'required|integer|min:1',
+            'resources' => 'nullable|array',
+            'resources.*.title' => 'required_with:resources|string|max:255',
+            'resources.*.resource_type_id' => 'nullable|exists:resource_types,id',
+            'resources.*.description' => 'nullable|string',
+            'resources.*.file_url' => 'required_with:resources|url',
+            'resources.*.file_size' => 'required_with:resources|integer|min:0',
+            'resources.*.thumbnail_url' => 'nullable|url',
         ]);
 
         \DB::beginTransaction();
@@ -95,6 +102,24 @@ class CourseController extends Controller
                 \Log::debug('Episode created', ['episode_id' => $episode->id]);
             }
 
+            if ($request->has('resources')) {
+                foreach ($request->resources as $resourceData) {
+                    $fileUrl = $resourceData['file_url'];
+                    $fileExtension = pathinfo(parse_url($fileUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+                    
+                    $course->resources()->create([
+                        'title' => $resourceData['title'],
+                        'category_id' => $course->category_id,
+                        'resource_type_id' => $resourceData['resource_type_id'] ?? null,
+                        'description' => $resourceData['description'] ?? null,
+                        'file_url' => $fileUrl,
+                        'file_type' => $fileExtension,
+                        'file_size' => $resourceData['file_size'] ?? 0,
+                        'thumbnail_url' => $resourceData['thumbnail_url'] ?? null,
+                    ]);
+                }
+            }
+
             \DB::commit();
             
             \Log::info('Course creation completed successfully');
@@ -119,10 +144,17 @@ class CourseController extends Controller
     }
 
     public function edit(Course $course)
-    {
+    {    
+        $course->load([
+            'category',
+            'instructor',
+            'episodes',
+            'resources'
+        ]);
         $categories = CourseCategory::all();
         $instructors = Instructor::all();
-        return view('content-manager.courses.edit', compact('course', 'categories', 'instructors'));
+        $resourceTypes = ResourceType::all(); 
+        return view('content-manager.courses.edit', compact('course', 'categories', 'instructors', 'resourceTypes'));
     }
 
     public function update(Request $request, Course $course)
@@ -148,12 +180,14 @@ class CourseController extends Controller
             'episodes.*.duration' => 'required|numeric|min:1',
             'episodes.*.id' => 'nullable|integer',
             'episodes.*.episode_number' => 'required|integer|min:1',
-        ]);
-
-        \Log::debug('Raw episode data from request:', [
-            'episodes' => $request->input('episodes'),
-            'first_episode_id' => $request->input('episodes.1.id') ?? 'not found',
-            'first_episode_data' => $request->input('episodes.1') ?? 'not found'
+            'resources' => 'nullable|array',
+            'resources.*.id' => 'nullable|integer|exists:course_resources,id', 
+            'resources.*.title' => 'required_with:resources|string|max:255',
+            'resources.*.resource_type_id' => 'nullable|exists:resource_types,id',
+            'resources.*.description' => 'nullable|string',
+            'resources.*.file_url' => 'required_with:resources|url',
+            'resources.*.file_size' => 'required_with:resources|integer|min:0',
+            'resources.*.thumbnail_url' => 'nullable|url',
         ]);
 
         \DB::beginTransaction();
@@ -177,16 +211,11 @@ class CourseController extends Controller
             $submittedEpisodeIds = [];
 
             foreach ($validatedData['episodes'] as $episodeData) {
-                \Log::debug('Processing episode', [
-                    'id' => $episodeData['id'] ?? null,
-                    'type' => (isset($episodeData['id']) && $episodeData['id'] > 0) ? 'existing' : 'new',
-                    'data' => $episodeData
-                ]);
                 if (!isset($episodeData['id'])) {
-                    continue; // Skip if no ID (shouldn't happen with our form)
+                    continue;
                 }
 
-                // Existing episode (positive ID)
+                // Existing episode
                 if ($episodeData['id'] > 0) {
                     $episode = CourseEpisode::where('id', $episodeData['id'])
                         ->where('course_id', $course->id)
@@ -201,7 +230,6 @@ class CourseController extends Controller
                             'video_url' => $episodeData['video_url'],
                         ]);
                         $submittedEpisodeIds[] = $episode->id;
-                        \Log::debug('Updated existing episode', ['id' => $episode->id]);
                     }
                 } 
                 // New episode (negative ID)
@@ -214,7 +242,6 @@ class CourseController extends Controller
                         'video_url' => $episodeData['video_url'],
                     ]);
                     $submittedEpisodeIds[] = $newEpisode->id;
-                    \Log::debug('Created new episode', ['id' => $newEpisode->id]);
                 }
             }
 
@@ -224,6 +251,59 @@ class CourseController extends Controller
                 CourseEpisode::where('course_id', $course->id)
                     ->whereIn('id', $episodesToDelete)
                     ->delete();
+            }
+
+            // Handle resources
+            if ($request->has('resources')) {
+                $existingResourceIds = $course->resources->pluck('id')->toArray();
+                $submittedResourceIds = [];
+
+                foreach ($request->resources as $resourceData) {
+                    $fileUrl = $resourceData['file_url'];
+                    $fileExtension = pathinfo(parse_url($fileUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+                    
+                    // Existing resource
+                    if (isset($resourceData['id']) && $resourceData['id'] > 0) {
+                        $resource = $course->resources()
+                            ->where('id', $resourceData['id'])
+                            ->first();
+
+                        if ($resource) {
+                            $resource->update([
+                                'title' => $resourceData['title'],
+                                'category_id' => $course->category_id,
+                                'resource_type_id' => $resourceData['resource_type_id'] ?? null,
+                                'description' => $resourceData['description'] ?? null,
+                                'file_url' => $fileUrl,
+                                'file_type' => $fileExtension,
+                                'file_size' => $resourceData['file_size'] ?? 0,
+                                'thumbnail_url' => $resourceData['thumbnail_url'] ?? null,
+                            ]);
+                            $submittedResourceIds[] = $resource->id;
+                        }
+                    } 
+                    // New resource
+                    else {
+                        $newResource = $course->resources()->create([
+                            'title' => $resourceData['title'],
+                            'category_id' => $course->category_id,
+                            'resource_type_id' => $resourceData['resource_type_id'] ?? null,
+                            'description' => $resourceData['description'] ?? null,
+                            'file_url' => $fileUrl,
+                            'file_type' => $fileExtension,
+                            'file_size' => $resourceData['file_size'] ?? 0,
+                            'thumbnail_url' => $resourceData['thumbnail_url'] ?? null,
+                        ]);
+                        $submittedResourceIds[] = $newResource->id;
+                    }
+                }
+
+                $resourcesToDelete = array_diff($existingResourceIds, $submittedResourceIds);
+                if (!empty($resourcesToDelete)) {
+                    $course->resources()
+                        ->whereIn('id', $resourcesToDelete)
+                        ->delete();
+                }
             }
 
             \DB::commit();
@@ -398,6 +478,8 @@ class CourseController extends Controller
 
     public function destroy(Course $course)
     {
+        $course->episodes()->delete();
+        $course->resources()->delete();
         $course->delete();
 
         return redirect()->route('content-manager.courses.index')

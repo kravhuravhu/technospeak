@@ -71,19 +71,19 @@
             <img id="iconPreview" src="" alt="Icon Preview" style="margin-top: 0.5rem; max-width: 48px; display: none; border-radius: 4px; border: 1px solid #ccc;">
         </div>
     </div>
-<div class="form-row">
-    <div class="form-group">
-        <label for="total_episodes" class="form-label">Total Episodes</label>
-        <input type="number" id="total_episodes" name="noEpisodes" class="form-control" value="0" readonly>
-    </div>
-    <div class="form-group">
-        <label class="form-label">Total Duration</label>
-        <input type="hidden" id="total_duration_seconds" name="total_duration" value="0">
-        <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
-            <span id="total_duration_display">0 s</span>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="total_episodes" class="form-label">Total Episodes</label>
+            <input type="number" id="total_episodes" name="noEpisodes" class="form-control" value="0" readonly>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Total Duration</label>
+            <input type="hidden" id="total_duration_seconds" name="total_duration" value="0">
+            <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
+                <span id="total_duration_display">0 s</span>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Episodes Section -->
@@ -135,6 +135,62 @@
     </button>
 </div>
 
+<!-- Resources Section -->
+<div class="form-card" style="border-left: 4px solid var(--skGreen);">
+    <h3 class="section-title">Course Resources <i>(optional)</i></h3>
+    
+    <template id="resourceTemplate">
+        <div class="resource-form" data-resource-index="__INDEX__">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Resource Title</label>
+                    <input type="text" name="resources[__INDEX__][title]" class="form-control" placeholder="Course Workbook PDF">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">File URL</label>
+                    <input type="url" name="resources[__INDEX__][file_url]" class="form-control resource-file-url" 
+                           placeholder="https://example.com/resource.pdf" 
+                           ondrop="handleResourceDrop(event, this)" 
+                           ondragover="event.preventDefault();">
+                    <input type="hidden" name="resources[__INDEX__][file_size]" value="0">
+                    <div class="file-info" style="margin-top: 5px;">
+                        <small>Type: <span class="file-type">Not detected</span> | Size: <span class="file-size">0 Bytes</span></small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Resource Type</label>
+                    <select name="resources[__INDEX__][resource_type_id]" class="form-control resource-type">
+                        <option value="">Select Type</option>
+                        @foreach($resourceTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Thumbnail URL <i>(optional)</i></label>
+                    <input type="url" name="resources[__INDEX__][thumbnail_url]" class="form-control" placeholder="https://example.com/thumbnail.jpg">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="resources[__INDEX__][description]" class="form-control" rows="2" placeholder="Brief description of this resource"></textarea>
+                </div>
+            </div>
+            <button type="button" class="remove-resource-btn btn btn-danger btn-sm mt-2">Remove Resource</button>
+            <hr>
+        </div>
+    </template>
+
+    <div id="resourcesContainer"></div>
+
+    <button type="button" id="addResourceBtn" class="btn btn-outline mt-3">
+        <i class="fas fa-plus"></i> Add Resource
+    </button>
+</div>
+
 <div class="form-actions">
     <button type="submit" class="btn btn-primary">Create Course</button>
     <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">Cancel</a>
@@ -145,6 +201,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let episodeCount = 0;
+        let resourceCount = 0;
 
         function init() {
             initImagePreview();
@@ -154,6 +211,7 @@
             handleVideoUrlChange();
             bindRemoveEpisode();
             addEpisode(); 
+            bindAddResourceButton();
             Sortable.create(document.getElementById('episodesContainer'), {
                 handle: '.episode_id',
                 animation: 150,
@@ -405,6 +463,132 @@
             video.onerror = function() {
                 callback(null);
             };
+        }
+
+        // resourse handle
+        function bindAddResourceButton() {
+            const btn = document.getElementById('addResourceBtn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    addResource();
+                });
+            }
+        }
+
+        function addResource() {
+            resourceCount++;
+            
+            const template = document.getElementById('resourceTemplate');
+            const newResource = template.content.firstElementChild.cloneNode(true);
+            
+            newResource.dataset.resourceIndex = resourceCount;
+            
+            newResource.querySelectorAll('input, textarea, select').forEach(input => {
+                input.name = input.name.replace(/__INDEX__/g, resourceCount);
+            });
+            
+            const removeBtn = newResource.querySelector('.remove-resource-btn');
+            removeBtn.addEventListener('click', function() {
+                newResource.remove();
+            });
+
+            const fileUrlInput = newResource.querySelector('.resource-file-url');
+            fileUrlInput.addEventListener('change', function() {
+                const fileInfo = newResource.querySelector('.file-info');
+                if (this.value) {
+                    getFileInfoFromUrl(this.value, function(info) {
+                        if (info) {
+                            newResource.querySelector('.file-type').textContent = info.type || 'Unknown';
+                            newResource.querySelector('.file-size').textContent = formatFileSize(info.size);
+
+                            let sizeInput = newResource.querySelector('input[name$="[file_size]"]');
+                            if (!sizeInput) {
+                                sizeInput = document.createElement('input');
+                                sizeInput.type = 'hidden';
+                                sizeInput.name = this.name.replace('file_url', 'file_size');
+                                newResource.appendChild(sizeInput);
+                            }
+                            sizeInput.value = info.size;
+                        }
+                    });
+                }
+            });
+            
+            document.getElementById('resourcesContainer').appendChild(newResource);
+        }
+
+        function getFileInfoFromUrl(url, callback) {
+            fetch(url, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        const contentType = response.headers.get('content-type');
+                        const contentLength = response.headers.get('content-length');
+                        
+                        if (contentLength) {
+                            callback({
+                                type: contentType || getFileExtensionFromUrl(url),
+                                size: parseInt(contentLength)
+                            });
+                            return;
+                        }
+                    }
+                    
+                    fetch(url)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            callback({
+                                type: blob.type || getFileExtensionFromUrl(url),
+                                size: blob.size
+                            });
+                        })
+                        .catch(() => {
+                            callback({
+                                type: getFileExtensionFromUrl(url),
+                                size: 0
+                            });
+                        });
+                })
+                .catch(() => {
+                    fetch(url)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            callback({
+                                type: blob.type || getFileExtensionFromUrl(url),
+                                size: blob.size
+                            });
+                        })
+                        .catch(() => {
+                            callback({
+                                type: getFileExtensionFromUrl(url),
+                                size: 0
+                            });
+                        });
+                });
+        }
+
+        function getFileExtensionFromUrl(url) {
+            const filename = url.split('/').pop();
+            const extension = filename.split('.').pop();
+            return extension ? `.${extension}` : 'Unknown';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function handleResourceDrop(event, inputElement) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/uri-list') || event.dataTransfer.getData('text/plain');
+            
+            if (data.startsWith('http://') || data.startsWith('https://')) {
+                inputElement.value = data;
+                const event = new Event('change');
+                inputElement.dispatchEvent(event);
+            }
         }
         
         init();

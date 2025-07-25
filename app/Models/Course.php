@@ -75,12 +75,7 @@ class Course extends Model
     {
         return ucfirst($value);
     }
-
-    // public function getPlanTypeAttribute($value)
-    // {
-    //     return ucfirst($value);
-    // }
-
+    
     public function getLevelAttribute($value) 
     {
         return ucwords($value);

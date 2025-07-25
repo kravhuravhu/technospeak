@@ -104,6 +104,18 @@ class Payment extends Model
                     'title' => $this->payable->title,
                     'category' => $this->payable->category->name ?? 'N/A'
                 ];
+            case 'subscription':
+                return [
+                    'type' => 'Subscription',
+                    'title' => $this->payable->name,
+                    'duration' => 'Quarterly'
+                ];
+            case 'service':
+                return [
+                    'type' => 'Service',
+                    'title' => $this->payable->name,
+                    'hours' => $this->metadata['hours'] ?? null
+                ];
             default:
                 return [
                     'type' => ucfirst($this->payable_type),

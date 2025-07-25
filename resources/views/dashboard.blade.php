@@ -919,7 +919,7 @@
                                 <div class="swiper-slide">
                                     <div class="coach-header">
                                         <div class="coach-avatar">
-                                            <img src="images/tsTeam/ts2/rose.png" alt="Coach Rose">
+                                            <img src="images/tsTeam/ts2/rose22.jpeg" alt="Coach Rose">
                                         </div>
                                         <div class="coach-intro">
                                             <h2>Meet Your Personal Tech Coach</h2>

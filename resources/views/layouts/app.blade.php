@@ -32,7 +32,11 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                <div id="app">
+                    @yield('content')  <!-- For traditional layouts -->
+                    OR
+                    {{ $slot }}        <!-- For Blade components -->
+                </div>
             </main>
         </div>
     </body>

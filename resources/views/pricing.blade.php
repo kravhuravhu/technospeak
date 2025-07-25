@@ -22,6 +22,8 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
+        
+
         <section class="price_container">
             <div class="main-container">
                 <div class="title_container">
@@ -79,7 +81,11 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            <button>GET STARTED</button>
+                                            @if(Auth::check())
+                                                <a href="{{ route('subscription.subscribe.free') }}" class="btn btn-primary">GET STARTED</a>
+                                            @else
+                                                <a href="{{ route('login') }}" class="btn btn-primary">GET STARTED</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -139,10 +145,14 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            <button>SUBSCRIBE</button>
-                                        </div>
+                                        @if(Auth::check())
+                                            <a href="#" class="subscription-trigger" data-plan-id="2">SUBSCRIBE</a>
+                                        @else
+                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">SUBSCRIBE</a>
+                                        @endif
                                     </div>
                                 </div>
+                            </div>
                                 
                                 <!-- Plan 3 -->
                                 <div class="card_container">
@@ -198,7 +208,11 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            <button>ENROLL NOW</button>
+                                            @if(Auth::check())
+                                                <a href="#" class="service-trigger" data-service-id="3">ENROLL NOW</a>
+                                            @else
+                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}">ENROLL NOW</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -227,8 +241,13 @@
                                                 </div>
                                             </div>
                                             <div class="bttn">
-                                                <button onclick="openModal('modal-guide')">Personal Guide</button>
-                                                <button onclick="openModal('modal-task')">Task Assistance</button>
+                                                @if(Auth::check())
+                                                    <a href="#" class="service-trigger" data-service-id="4">Personal Guide</a>
+                                                    <a href="#" class="service-trigger" data-service-id="5">Task Assistance</a>
+                                                @else
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Personal Guide</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Task Assistance</a>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -311,9 +330,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="bttn">
-                                                <button onclick="openModal('modal-qa')">Group Q/A</button>
-                                                <button onclick="openModal('modal-consult')">Consultation</button>
+                                             <div class="bttn">
+                                                @if(Auth::check())
+                                                    <a href="#" class="service-trigger" data-service-id="6">Group Q/A</a>
+                                                    <a href="#" class="service-trigger" data-service-id="7">Consultation</a>
+                                                @else
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Group Q/A</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Consultation</a>
+                                                @endif
                                             </div>
                                         </div>
                                         <!-- Modal: Group Q/A -->
@@ -371,7 +395,22 @@
                     </div>
                 </div>
             </div>
+            <!-- Subscription Modal -->
+                 @php
+                $premiumPlan = App\Models\ServicePlan::find(2);
+                $services = \App\Models\ServicePlan::whereIn('id', [3,4,5,6,7])->get();
+                @endphp
+
+                @include('components.subscription_modal', [
+                    'planId' => $premiumPlan->id,
+                    'planName' => $premiumPlan->name,
+                    'plan' => $premiumPlan
+                ])
+
+                @include('components.service_modal')
+
         </section>
+
 
         <!-- Main Content Section -->
         <main class="main-container-pricing">
@@ -646,4 +685,85 @@
         <script src="script/pop-up.js"></script>
 
     </body>
+
+<!-- Style for Modal -->
+<style>
+.session-registration-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.session-registration-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.session-registration-modal .modal-content {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 10000;
+}
+
+.session-registration-modal .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.session-registration-modal .form-group {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.session-registration-modal .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.session-registration-modal .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.session-registration-modal .submit-btn {
+    background-color: #38b6ff;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+</style>
 </html>

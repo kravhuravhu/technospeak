@@ -21,6 +21,8 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
 use App\Http\Controllers\CourseAccessController; 
 use App\Http\Controllers\IssueController; 
+use App\Http\Controllers\SubscriptionController; 
+use App\Http\Controllers\ServiceController; 
 
 // Public routes
 Route::get('/', [WelcomeController::class, 'index']);
@@ -32,6 +34,24 @@ Route::get('/terms', function () { return view('terms'); });
 
 // Training registration
 Route::post('/training/register', [TrainingRegistrationController::class, 'store'])->name('training.register');
+
+// Subscription routes
+Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
+->middleware('auth');
+
+Route::post('/service/purchase', [ServiceController::class, 'purchase'])
+    ->name('service.purchase')
+    ->middleware('auth');
+
+Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
+    ->name('subscription.subscribe.free')
+    ->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // Auth routes
 Route::middleware(['auth', 'verified'])->group(function () {

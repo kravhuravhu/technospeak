@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     icon: 'info',
                     title: 'Info',
-                    text: 'You are already enrolled in this course',
-                    timer: 3000,
+                    text: 'You are already enrolled in this course, return to Dashboard to confirm.',
+                    timer: 5000,
                     showConfirmButton: false
                 });
                 return;
@@ -156,35 +156,40 @@ function showSwalNotification(type, title, message) {
 }
 
 function enrollInCourse(courseId) {
-    fetch('/courses/enroll', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({ course_id: courseId })
-    })
-    .then(async response => {
-        const data = await response.json();
-        
-        if (data.success) {
-            showSwalNotification('success', 'Success', data.message);
-            updateEnrollmentUI(courseId);
-            closeModal();
-            refreshMyTrainings();
-        } else {
-            showSwalNotification('error', 'Error', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Enrollment error:', error);
-        showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+    fetch('/clear-cache')
+        .then(() => {
+            fetch('/courses/enroll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ course_id: courseId })
+            })
+            .then(async response => {
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSwalNotification('success', 'Success', data.message);
+                    updateEnrollmentUI(courseId);
+                    closeModal();
+                    refreshMyTrainings();
+                } else {
+                    showSwalNotification('error', 'Error', data.message);
+                }
+            })
+            .catch(error => {
+                showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+            });
     });
 }
 
 function refreshMyTrainings() {
-    fetch('/dashboard')
+    fetch('/clear-cache')
+        .then(() => {
+            return fetch('/dashboard', { cache: 'no-store' });
+        })
         .then(response => response.text())
         .then(html => {
             const parser = new DOMParser();
@@ -195,7 +200,6 @@ function refreshMyTrainings() {
             }
         })
         .catch(error => {
-            console.error('Error updating trainings:', error);
             showSwalNotification('error', 'Error', 'Could not refresh trainings.');
         });
 }

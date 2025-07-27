@@ -367,6 +367,7 @@ class CourseController extends Controller
 
                 return [
                     'id' => $course->id,
+                    'uuid' => $course->uuid,
                     'title' => $course->title,
                     'description' => $course->description,
                     'thumbnail' => $course->thumbnail,
@@ -428,6 +429,7 @@ class CourseController extends Controller
 
                 return [
                     'id' => $course->id,
+                    'uuid' => $course->uuid,
                     'title' => $course->title,
                     'description' => $course->description,
                     'thumbnail' => $course->thumbnail,
@@ -456,7 +458,7 @@ class CourseController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'required|file|max:100240'
+            'file' => 'required|file|max:200240'
         ]);
 
         $file = $request->file('file');
@@ -465,7 +467,7 @@ class CourseController extends Controller
         $resource = $course->resources()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'file_url' => Storage::url($path),
+            'file_url' => $validated['file_url'],
             'file_type' => $file->getClientMimeType(),
             'file_size' => $file->getSize()
         ]);

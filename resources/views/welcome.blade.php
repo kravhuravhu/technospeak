@@ -263,9 +263,19 @@
                                                 </div>
                                                 <div class="bttn">
                                                     @if(Auth::check())
-                                                        <a href="/dashboard?{{ $course->id }}">Watch Here</a>
+                                                        @php
+                                                            $url = $course['is_enrolled'] 
+                                                                ? url("/enrolled-courses/{$course['uuid']}") 
+                                                                : url("/unenrolled-courses/{$course['uuid']}");
+                                                        @endphp
+                                                        <a href="{{ $url }}">Watch Here</a>
                                                     @else
-                                                        <a href="{{ url('/login') }}">Watch Here</a>
+                                                        @php
+                                                            $url = $course['is_enrolled'] 
+                                                                ? url("/enrolled-courses/{$course['uuid']}") 
+                                                                : url("/unenrolled-courses/{$course['uuid']}");
+                                                        @endphp
+                                                        <a href="{{ url('/login?redirect=' . urlencode($url)) }}">Watch Here</a>
                                                     @endif
                                                 </div>
                                             </div> 

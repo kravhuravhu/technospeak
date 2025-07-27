@@ -203,7 +203,7 @@
                             </div>
                             <div class="card-grid">
                                 @forelse($enrolledCourses ?? [] as $course)
-                                    <a href="{{ route('enrolled-courses.show', $course->id) }}" class="enrolled-course-link">
+                                    <a href="{{ route('enrolled-courses.show', $course->uuid) }}" class="enrolled-course-link">
                                         <div class="card">
                                             <div class="thmbnail">
                                                 <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
@@ -245,7 +245,7 @@
                             <div class="card-grid thn_grid_cd">
                                 @forelse($recommendedCourses as $course)
                                     <a href="#" class="training-card"
-                                        data-course-id="{{ $course->id }}"    
+                                        data-course-id="{{ $course->uuid }}"    
                                         data-training-type="{{ $course->plan_type }}"
                                         data-title="{{ $course->title }}"
                                         data-description="{{ $course->description }}"
@@ -254,7 +254,7 @@
                                         data-level="{{ ucfirst($course->level) }}"
                                         data-instructor="{{ $course->instructor->name ?? 'Unknown' }}"
                                         data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                         data-category="{{ $course->category->name ?? 'Uncategorized' }}"
                                         data-price="{{ $course->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"
                                         data-episodes='@json($course->episodes->map(function($episode) {
@@ -314,6 +314,7 @@
                             <div class="section-header">
                                 <div class="title">
                                     <h1>Free Trainings</h1>
+                                    <p class="subtitle">Free mini-trainings and quick how-to videos</p>
                                 </div>
                                 <div class="search-filter-container">
                                     <div class="search-box">
@@ -341,7 +342,7 @@
                                 @if($freeCourses->count() > 0)
                                     @foreach($freeCourses->take(4) as $course) 
                                         <a href="#" class="training-card"
-                                            data-course-id="{{ $course['id'] }}"    
+                                            data-course-id="{{ $course['uuid'] }}"    
                                             data-training-type="free"
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
@@ -353,7 +354,7 @@
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -399,7 +400,7 @@
                                     @foreach($freeCourses->slice(4) as $course)
                                         <a href="#" class="training-card" 
                                             data-training-type="free"
-                                            data-course-id="{{ $course['id'] }}" 
+                                            data-course-id="{{ $course['uuid'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -410,7 +411,7 @@
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -484,7 +485,7 @@
                                     @foreach($paidCourses->take(4) as $course) 
                                         <a href="#" class="training-card" 
                                             data-training-type="paid"
-                                            data-course-id="{{ $course['id'] }}" 
+                                            data-course-id="{{ $course['uuid'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -496,7 +497,7 @@
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -542,7 +543,7 @@
                                     @foreach($paidCourses->slice(4) as $course)
                                         <a href="#" class="training-card" 
                                             data-training-type="paid"
-                                            data-course-id="{{ $course['id'] }}" 
+                                            data-course-id="{{ $course['uuid'] }}" 
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -554,7 +555,7 @@
                                             data-episodes='@json($course['episodes'])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                             data-created="{{ $course['created_at']->toDateTimeString() }}">
                                             <div class="card rcmmd_cd">
                                                 <div class="thmbnail thn_rcmm">
@@ -1110,14 +1111,18 @@
                             
                             <!-- Swiper Navigation -->
                             <div class="swiper-nav-btns">
-                                <button class="swiper-nav-btn swiper-button-prev">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
                                 <div class="swiper-pagination"></div>
-                                <button class="swiper-nav-btn swiper-button-next">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
                             </div>
+                        </div>
+
+                        <!-- Swiper Navigation -->
+                        <div class="swiper-nav-btns">
+                            <button class="swiper-nav-btn swiper-button-prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="swiper-nav-btn swiper-button-next">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -1138,7 +1143,7 @@
                                     </div>
                                     <a href="#" 
                                         class="start-btn training-card"
-                                        data-course-id="{{ $singleCourse->id }}"
+                                        data-course-id="{{ $singleCourse->uuid }}"
                                         data-training-type="{{ $singleCourse->plan_type }}"
                                         data-title="{{ $singleCourse->title }}"
                                         data-description="{{ $singleCourse->description }}"
@@ -1147,8 +1152,9 @@
                                         data-level="{{ ucfirst($singleCourse->level) }}"
                                         data-instructor="{{ $singleCourse->instructor->name ?? 'Unknown' }}"
                                         data-category="{{ $singleCourse->category->name ?? 'Uncategorized' }}"
-                                        data-price="{{ $singleCourse->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['id']) : '' }}"
+                                        data-price="{{ $singleCourse->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"
+                                        data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
+                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
                                         data-episodes='@json($singleCourse->episodes->map(function($episode) {
                                                 return [
                                                     'number' => $episode->episode_number,
@@ -1187,7 +1193,7 @@
                                     </p>
                                     <div class="recommendation-meta">
                                         <span class="date">
-                                            <i class="fas fa-clock"></i> Duration: {{ $latestSession->duration }}
+                                            <i class="fas fa-clock"></i> Duration: {{ $latestSession->formatted_duration }}
                                         </span>
                                         <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
                                     </div>
@@ -1894,7 +1900,6 @@
             });
         </script>
 
-        <!-- Scripts -->
         <!-- Swiper JS -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script>

@@ -115,10 +115,11 @@ class CourseAccessController extends Controller
             $user = Auth::user();
             
             // Validate course exists
-            $course = Course::findOrFail($courseId);
+            //$course = Course::findOrFail($courseId);
+            $course = Course::where('uuid', $courseId)->firstOrFail();
             
             // Check if already enrolled
-            if ($user->isSubscribedTo($courseId)) {
+            if ($user->isSubscribedTo($course->id)) { 
                 return response()->json([
                     'success' => false,
                     'message' => 'You are already enrolled in this course'
@@ -130,7 +131,7 @@ class CourseAccessController extends Controller
             }
             
             $subscription = $user->courseSubscriptions()->create([
-                'course_id' => $courseId,
+                'course_id' => $course->id,
                 'payment_status' => 'free',
                 'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id')
             ]);
@@ -181,7 +182,7 @@ class CourseAccessController extends Controller
         $user = Auth::user();
 
         if (!$user->isSubscribedTo($course->id)) {
-            abort(403, 'You are not enrolled in this course');
+            return redirect()->route('unenrolled-courses.show', $course->uuid);
         }
 
         $totalSeconds = $course->total_duration;
@@ -222,17 +223,43 @@ class CourseAccessController extends Controller
         return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources'));
     }
 
+    // view while unenrolled
+    public function showUnenrolled(Course $course)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->isSubscribedTo($course->id)) {
+            return redirect()->route('enrolled-courses.show', $course->uuid);
+        }
+
+        $course->load(['category', 'instructor', 'episodes' => function($query) {
+            $query->orderBy('episode_number');
+        }]);
+
+        $course->resources_count = $course->resources()->count();
+        $course->episodes_count = $course->episodes()->count();
+
+        $hasActiveSubscription = $user ? $user->hasActiveSubscription() : false;
+        $payEnroll = $course->plan_type == 'paid' || $hasActiveSubscription;
+
+        return view('unenrolled-courses.show', [
+            'course' => $course,
+            'payEnroll' => $payEnroll,
+            'hasActiveSubscription' => $hasActiveSubscription
+        ]);
+    }
+
     public function markEpisodeCompleted(Course $course, CourseEpisode $episode)
     {
         $user = Auth::user();
         
         // Verify user is enrolled in this course
-        if (!$user->isSubscribedTo($course->id)) {
+        if (!$user->isSubscribedTo($course->uuid)) {
             abort(403, 'You are not enrolled in this course');
         }
 
         // Verify episode belongs to this course
-        if ($episode->course_id !== $course->id) {
+        if ($episode->course_id !== $course->uuid) {
             abort(400, 'Episode does not belong to this course');
         }
 
@@ -241,7 +268,7 @@ class CourseAccessController extends Controller
             ->first();
 
         // Mark episode as completed
-        $subscription->completedEpisodes()->syncWithoutDetaching([$episode->id]);
+        $subscription->completedEpisodes()->syncWithoutDetaching([$episode->uuid]);
 
         // Update progress
         $completedCount = $subscription->completedEpisodes()->count();

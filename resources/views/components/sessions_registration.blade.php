@@ -28,7 +28,7 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
             <h3>Register for {{ $latestSession->title }}</h3>
             <div class="session-details">
                 <p><strong>Date & Time:</strong> {{ $latestSession->scheduled_for->format('F j, Y g:i A') }}</p>
-                <p><strong>Duration:</strong> {{ $latestSession->duration }}</p>
+                <p><strong>Duration:</strong> {{ $latestSession->formatted_duration }}</p>
                 <p><strong>Instructor:</strong> {{ $latestSession->instructor->name ?? 'TBA' }}</p>
                 <p><strong>Available Spots:</strong> 
                     {{ $latestSession->available_spots ?? 'Unlimited' }}

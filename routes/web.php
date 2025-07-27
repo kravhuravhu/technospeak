@@ -23,7 +23,8 @@ use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\IssueController; 
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Http\Controllers\SubscriptionController; 
-use App\Http\Controllers\ServiceController; 
+use App\Http\Controllers\ServiceController;
+use Illuminate\Support\Facades\Artisan;
 
 // Public routes
 Route::get('/', [WelcomeController::class, 'index']);
@@ -70,6 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 
                 return (object) [
                     'id' => $course->id,
+                    'uuid' => $course->uuid,
                     'title' => $course->title,
                     'thumbnail' => $course->thumbnail,
                     'formatted_duration' => $course->formatted_duration,
@@ -93,6 +95,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
             [CourseAccessController::class, 'markEpisodeCompleted'])
             ->name('enrolled-courses.episodes.complete');
     });
+
+    // view while unenrolled
+    Route::prefix('unenrolled-courses')->group(function () {
+        Route::get('/{course}', [CourseAccessController::class, 'showUnenrolled'])->name('unenrolled-courses.show');
+    });
+    
+    // rating & cert
+    Route::prefix('api/courses/{course}')->group(function() {
+        Route::get('/ratings', [CourseAccessController::class, 'getRatings']);
+        Route::post('/ratings', [CourseAccessController::class, 'submitRating']);
+        Route::put('/ratings/{rating}', [CourseAccessController::class, 'updateRating']);
+    });
+
+    // Enrollments
+    Route::delete('client-courses/delete', [ClientController::class, 'destroyEnrollment'])->name('content-manager.client-courses.destroy');
 
     // Email Verification
     Route::post('/email/verify/send', function (Request $request) {
@@ -123,13 +140,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
 
-});
-
-// rating & cert
-Route::prefix('api/courses/{course}')->group(function() {
-    Route::get('/ratings', [CourseAccessController::class, 'getRatings']);
-    Route::post('/ratings', [CourseAccessController::class, 'submitRating']);
-    Route::put('/ratings/{rating}', [CourseAccessController::class, 'updateRating']);
 });
 
 // Subscription routes
@@ -287,7 +297,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 
-    // routes/web.php (admin)
     Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::resource('issues', AdminIssueController::class)->except(['create', 'store']);
         Route::post('issues/{issue}/assign', [AdminIssueController::class, 'assign'])->name('issues.assign');
@@ -296,10 +305,13 @@ Route::prefix('content')->name('content-manager.')->group(function() {
     });
 });
 
-// Enrollments
-Route::delete('client-courses/delete', [ClientController::class, 'destroyEnrollment'])->name('content-manager.client-courses.destroy');
-
 // success payment
 Route::get('/success-payment', function() {
     return view('success-payment'); 
 })->name('payment.success');
+
+// clear-cache
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear');
+    return response()->json(['message' => 'Cache cleared']);
+});

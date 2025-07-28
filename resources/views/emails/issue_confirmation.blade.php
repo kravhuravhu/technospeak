@@ -74,7 +74,7 @@
                             <!-- Salutation -->
                             <p style="margin:30px 0 0;font-size:16px;line-height:1.5;color:#333;">
                                 Best regards,<br>TechnoSpeak Support Team<br><br>
-                                Support: admin@technospeak.co.za | info@technospeak.co.za
+                                Support: admin@technospeak.co.za
                             </p>
                         </td>
                     </tr>

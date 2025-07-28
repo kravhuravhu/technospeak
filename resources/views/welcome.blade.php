@@ -338,9 +338,13 @@
                 </div>
                 <div class="view-more-container">
                     @if(Auth::check())
-                        <a href="{{ url('/dashboard') }}" class="view-more-btn">View More Courses</a>
+                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="view-more-btn">View More Courses</a>
                     @else
-                        <a href="{{ url('/login') }}" class="view-more-btn">View More Courses</a>
+                        @php
+                            $url = url("/dashboard#usr_alltrainings");
+                        @endphp
+                        <a href="{{ url('/login?redirect=' . urlencode($url)) }}" class="view-more-btn">View More Courses</a>
+
                     @endif
                 </div>
             </div>

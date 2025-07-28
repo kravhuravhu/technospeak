@@ -177,58 +177,62 @@
     <div class="tab-content active" id="instructors-tab">
         <div class="data-table">
             <div class="data-table-header">
-    <div class="data-table-title">
-        <h3>All Instructors</h3>
-    </div>
-    <div class="table-actions">
-        <div class="search-box">
-            <input type="text" placeholder="Search instructors..." class="form-control" id="instructors-search">
-        </div>
-    </div>
-</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Bio</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($instructors as $instructor)
-        <tr>
-            <td>{{ $instructor->name }} {{ $instructor->surname }}</td> <!-- Added surname -->
-            <td>{{ $instructor->email }}</td>
-            <td>{{ $instructor->bio }}</td>
-            <td>
-                <div class="btn-group">
-                    <a href="{{ route('content-manager.other-features.instructors.edit', $instructor) }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <form action="{{ route('content-manager.other-features.instructors.destroy', $instructor) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
+                <div class="data-table-title">
+                    <h3>All Instructors</h3>
                 </div>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="4" class="empty-state">
-                <i class="fas fa-user-tie"></i>
-                <p>No instructors found</p>
-            </td>
-        </tr>
-        @endforelse
-    </tbody>
-</table>
+                <div class="table-actions">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search instructors..." class="form-control" id="instructors-search">
+                    </div>
+                </div>
+            </div>
 
-            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Profession</th>
+                        <th>Assigned Tickets</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($instructors as $instructor)
+                    <tr>
+                        <td>{{ $instructor->name }}, {{ $instructor->surname }}</td>
+                        <td>{{ $instructor->email }}</td>
+                        <td>{{ $instructor->job_title }}</td>
+                        <td><i>{{ $instructor->assignedIssues->count() }}</i></td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ route('content-manager.other-features.instructors.show', $instructor) }}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('content-manager.other-features.instructors.edit', $instructor) }}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('content-manager.other-features.instructors.destroy', $instructor) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            <i class="fas fa-user-tie"></i>
+                            <p>No instructors found</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
             <div class="data-table-footer">
                 {{ $instructors->links() }}
             </div>
@@ -272,7 +276,7 @@
                                 <form action="{{ route('content-manager.other-features.categories.destroy', $category) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure? This will affect all associated courses.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -331,7 +335,7 @@
                                 <form action="{{ route('content-manager.other-features.resource-types.destroy', $type) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure? This will affect all associated resources.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -402,7 +406,7 @@
                                 <form action="{{ route('content-manager.other-features.training-types.destroy', $type) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure? This will affect all associated sessions.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -429,22 +433,18 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab switching functionality
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Remove active class from all buttons and contents
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             
-            // Add active class to clicked button and corresponding content
             button.classList.add('active');
             const tabId = button.getAttribute('data-tab');
             document.getElementById(`${tabId}-tab`).classList.add('active');
-            
-            // Update create button link
+
             updateCreateButtonLink(tabId);
         });
     });
@@ -507,5 +507,27 @@ document.addEventListener('DOMContentLoaded', function() {
     setupTableSearch('resource-types-search', 3);
     setupTableSearch('training-types-search', 4);
 });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete() {
+        Swal.fire({
+            title: 'Are you sure? This will also remove all associated items!',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#38b6ff',
+            confirmButtonText: 'Yes, delete it!',
+            customClass: {
+                popup: 'swal-border'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm').submit();
+            }
+        });
+    }
 </script>
 @endsection

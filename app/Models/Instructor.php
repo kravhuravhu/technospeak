@@ -12,6 +12,7 @@ class Instructor extends Model
         'job_title', 
         'email', 
         'bio', 
+        'thumbnail',
         'features', 
         'created_at', 
         'updated_at'

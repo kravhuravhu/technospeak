@@ -22,6 +22,7 @@ use App\Http\Controllers\TrainingRegistrationController;
 use App\Http\Controllers\CourseAccessController; 
 use App\Http\Controllers\IssueController; 
 use App\Http\Controllers\Admin\CourseResourceController;
+use App\Models\Instructor;
 use App\Http\Controllers\SubscriptionController; 
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Artisan;
@@ -79,11 +80,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
 
+        // show instrs data too
+        $instructors = Instructor::all();
+        
         return view('dashboard', [
             'freeCourses' => $freeCourses,
             'paidCourses' => $paidCourses,
             'enrolledCourses' => $enrolledCourses,
-            'recommendedCourses' => $recommendedCourses
+            'recommendedCourses' => $recommendedCourses,
+            'instructors' => $instructors         
         ]);
     })->name('dashboard');
 
@@ -247,7 +252,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
             
             // other features routes
             Route::resource('instructors', \App\Http\Controllers\Admin\InstructorController::class)
-                ->except(['show'])
                 ->names([
                     'index' => 'instructors.index',
                     'create' => 'instructors.create',
@@ -258,7 +262,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                 ]);
                 
             Route::resource('categories', \App\Http\Controllers\Admin\CourseCategoryController::class)
-                ->except(['show'])
                 ->names([
                     'index' => 'categories.index',
                     'create' => 'categories.create',
@@ -269,7 +272,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                 ]);
                 
             Route::resource('resource-types', \App\Http\Controllers\Admin\ResourceTypeController::class)
-                ->except(['show'])
                 ->names([
                     'index' => 'resource-types.index',
                     'create' => 'resource-types.create',
@@ -280,7 +282,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                 ]);
                 
             Route::resource('training-types', \App\Http\Controllers\Admin\TrainingTypeController::class)
-                ->except(['show'])
                 ->names([
                     'index' => 'training-types.index',
                     'create' => 'training-types.create',

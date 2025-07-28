@@ -2,7 +2,7 @@
     auth()->user() &&
     (
         (is_null(auth()->user()->preferred_category_id) && !session('skipped_preference')) ||
-        (is_null(auth()->user()->userType) && !session('skipped_userType') && !is_null(auth()->user()->preferred_category_id))
+        ((empty(auth()->user()->userType) || is_null(auth()->user()->userType)) && !session('skipped_userType') && !is_null(auth()->user()->preferred_category_id))
     )
 )
     <div id="onboarding-modal">
@@ -10,7 +10,7 @@
             @if(is_null(auth()->user()->preferred_category_id))
                 <h2>Tell us what you're into</h2>
                 <p>Select a category that best fits your interests.</p>
-            @elseif(is_null(auth()->user()->userType))
+            @elseif(empty(auth()->user()->userType) || is_null(auth()->user()->userType))
                 <h2>What's Your Employment Status?</h2>
                 <p>Help us understand where you are in your journey.</p>
             @endif
@@ -27,7 +27,7 @@
                             @endforeach
                         </select>
                     </div>
-                @elseif(is_null(auth()->user()->userType))
+                @elseif(empty(auth()->user()->userType) || is_null(auth()->user()->userType))
                     <div>
                         <select name="userType" required>
                             <option value="" disabled selected>-- Select Your Status --</option>

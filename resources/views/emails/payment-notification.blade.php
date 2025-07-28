@@ -96,7 +96,7 @@
 
                             <!-- Salutation -->
                             <p style="margin:30px 0 0;font-size:16px;line-height:1.5;color:#333;">
-                                {{ $salutation ?? __('Regards,') }}<br>{{ $payment->detailed_service_name['instructor'] }} <br><br>Support: admin@technospeak.co.za | info@technospeak.co.za
+                                {{ $salutation ?? __('Regards,') }}<br>{{ $payment->detailed_service_name['instructor'] }} <br><br>Support: admin@technospeak.co.za
                             </p>
                         </td>
                     </tr>

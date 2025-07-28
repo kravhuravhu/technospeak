@@ -177,56 +177,57 @@
     <div class="tab-content active" id="instructors-tab">
         <div class="data-table">
             <div class="data-table-header">
-                <div class="data-table-title">
-                    <h3>All Instructors</h3>
+    <div class="data-table-title">
+        <h3>All Instructors</h3>
+    </div>
+    <div class="table-actions">
+        <div class="search-box">
+            <input type="text" placeholder="Search instructors..." class="form-control" id="instructors-search">
+        </div>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Bio</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($instructors as $instructor)
+        <tr>
+            <td>{{ $instructor->name }} {{ $instructor->surname }}</td> <!-- Added surname -->
+            <td>{{ $instructor->email }}</td>
+            <td>{{ $instructor->bio }}</td>
+            <td>
+                <div class="btn-group">
+                    <a href="{{ route('content-manager.other-features.instructors.edit', $instructor) }}" class="btn btn-outline btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{{ route('content-manager.other-features.instructors.destroy', $instructor) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
                 </div>
-                <div class="table-actions">
-                    <div class="search-box">
-                        <input type="text" placeholder="Search instructors..." class="form-control" id="instructors-search">
-                    </div>
-                </div>
-            </div>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Assigned Issues</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($instructors as $instructor)
-                    <tr>
-                        <td>{{ $instructor->name }}</td>
-                        <td>{{ $instructor->email }}</td>
-                        <td>{{ $instructor->assignedIssues->count() }}</td>
-                        <td>
-                            <div class="btn-group">
-                                <a href="{{ route('content-manager.other-features.instructors.edit', $instructor) }}" class="btn btn-outline btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('content-manager.other-features.instructors.destroy', $instructor) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="empty-state">
-                            <i class="fas fa-user-tie"></i>
-                            <p>No instructors found</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="4" class="empty-state">
+                <i class="fas fa-user-tie"></i>
+                <p>No instructors found</p>
+            </td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+
             
             <div class="data-table-footer">
                 {{ $instructors->links() }}

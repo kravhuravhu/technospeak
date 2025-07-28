@@ -1,7 +1,7 @@
 <div class="ntfc_name">
-    <div class="ntfc nt_nm">
+    <!-- <div class="ntfc nt_nm">
         <i class="fa-solid fa-bell"></i>
-    </div>
+    </div> -->
     <div class="name nt_nm name_rightbar_tr_active">
         <div class="cont">
             <p>{{ Auth::user()->name }} {{ Auth::user()->surname }}</p>

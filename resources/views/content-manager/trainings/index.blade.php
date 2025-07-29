@@ -53,7 +53,7 @@
                 <td>
                     {{ $session->scheduled_for->format('M d, Y') }}
                 </td>
-                <td>{{ $session->duration }}</td>
+                <td>{{ $session->formatted_duration }}</td>
                 <td>{{ $session->instructor ? $session->instructor->name : 'Not assigned' }}</td>
                 <td>
                     {{ $session->registrations_count }} / {{ $session->max_participants ?? '∞' }}

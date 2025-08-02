@@ -166,9 +166,16 @@ Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
 // Stripe routes
 Route::prefix('stripe')->group(function () {
     Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
-        ->name('stripe.checkout');
+        ->name('stripe.checkout')
+        ->middleware('auth');
+        
     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
-    Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+    
+    // Separate success handlers
+    Route::get('/success', [StripeController::class, 'success'])->name('stripe.success'); // For training sessions
+    Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
+        ->name('stripe.subscription.success')
+        ->middleware('auth');
 });
 
 require __DIR__.'/auth.php';

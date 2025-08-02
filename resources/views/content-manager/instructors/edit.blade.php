@@ -181,6 +181,17 @@
 
         <div class="form-row">
             <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Repeat password">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
                 <label for="thumbnail" class="form-label">Thumbnail URL</label>
                 <input type="url" id="thumbnail" name="thumbnail" class="form-control" value="{{ old('thumbnail', $instructor->thumbnail) }}" placeholder="https://example.com/image.jpg">
                 <small class="text-muted">Enter a valid URL for the instructor's thumbnail image</small><br>

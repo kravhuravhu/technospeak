@@ -172,6 +172,17 @@
                 <input type="text" id="job_title" name="job_title" class="form-control" required>
             </div>
         </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+            </div>
+        </div>
         
         <div class="form-row">
             <div class="form-group">

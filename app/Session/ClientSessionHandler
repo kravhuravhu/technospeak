@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Session;
+
+use Illuminate\Session\DatabaseSessionHandler;
+use Illuminate\Support\Facades\Auth;
+
+class ClientSessionHandler extends DatabaseSessionHandler
+{
+    protected function getUserId()
+    {
+        // Return client_id instead of user_id
+        return Auth::check() ? Auth::id() : null;
+    }
+
+    protected function getDefaultPayload($session)
+    {
+        $payload = parent::getDefaultPayload($session);
+        
+        // Replace user_id with client_id in payload
+        $payload['client_id'] = $this->getUserId();
+        unset($payload['user_id']);
+        
+        return $payload;
+    }
+
+    public function write($sessionId, $data)
+    {
+        $session = $this->getSessionById($sessionId);
+
+        $payload = $this->getDefaultPayload($session);
+        $payload['payload'] = base64_encode($data);
+        $payload['last_activity'] = time();
+
+        // Save client_id instead of user_id
+        $payload['client_id'] = $this->getUserId();
+
+        if ($session) {
+            $this->getQuery()->where('id', $sessionId)->update($payload);
+        } else {
+            $payload['id'] = $sessionId;
+            $this->getQuery()->insert($payload);
+        }
+
+        return true;
+    }
+
+    protected function getSessionById($sessionId)
+    {
+        return $this->getQuery()->where('id', $sessionId)->first();
+    }
+}

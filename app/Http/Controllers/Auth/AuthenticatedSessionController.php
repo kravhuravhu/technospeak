@@ -28,6 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        session(['client_id' => auth()->id()]);
+        session(['user_id' => auth()->id()]);
+
         // redirect session to where user was
         if ($request->filled('redirect')) {
             return redirect($request->input('redirect'));
@@ -42,6 +45,8 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+        
+        session()->forget(['client_id', 'user_id']);
 
         $request->session()->invalidate();
 

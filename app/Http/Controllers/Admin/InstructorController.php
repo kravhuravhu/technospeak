@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Instructor;
+use App\Models\ResourceType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class InstructorController extends Controller
 {
     public function index()
     {
-        $instructors = Instructor::all();
-        return view('content-manager.other-features.index', compact('instructors'));
+        $instructors = Instructor::paginate(10);
+        $resourceTypes = ResourceType::withCount('resources')->get();
+        return view('content-manager.other-features.index', compact('instructors','resourceTypes'));
     }
 
     public function create()
@@ -26,12 +29,15 @@ class InstructorController extends Controller
             'surname' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
             'email' => 'required|email|unique:instructors,email',
+            'password' => 'required|string|confirmed|min:6',
             'bio' => 'nullable|string',
             'thumbnail' => 'nullable|url',
             'features' => 'nullable|json',
         ]);
 
         $data = $request->all();
+
+        $data['password'] = bcrypt($request->password);
 
         if (!empty($data['features'])) {
             $data['features'] = json_decode($data['features'], true);
@@ -61,11 +67,20 @@ class InstructorController extends Controller
             'surname' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
             'email' => 'required|email|unique:instructors,email,' . $id,
+            'password' => 'required|string|confirmed|min:6',
             'bio' => 'nullable|string',
             'thumbnail' => 'nullable|url',
             'features' => 'nullable|json',
         ]);
+
         $data = $request->all();
+
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+            Log::info("Password set: " . $data['password']);
+        } else {
+            unset($data['password']);
+        }
 
         if (!empty($data['features'])) {
             $data['features'] = json_decode($data['features'], true);

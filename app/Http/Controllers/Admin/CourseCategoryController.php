@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CourseCategory;
 use Illuminate\Http\Request;
+use App\Models\ResourceType;
+use App\Models\TrainingType;
+use App\Models\Instructor;
 
 class CourseCategoryController extends Controller
 {
@@ -13,14 +16,19 @@ class CourseCategoryController extends Controller
     {
         Auth::shouldUse('admin');
     }
-
+    
     public function index()
     {
+        $instructors = Instructor::paginate(10);
+        $trainingTypes = TrainingType::paginate(10);
+        $resourceTypes = ResourceType::withCount('resources')
+            ->paginate(10);
         $categories = CourseCategory::withCount('courses')
+            ->withSum('courses as total_duration', 'total_duration')
             ->orderBy('name')
             ->paginate(10);
 
-        return view('content-manager.categories.index', compact('categories'));
+        return view('content-manager.other-features.index', compact('instructors','categories','trainingTypes','resourceTypes'));
     }
 
     public function create()
@@ -30,28 +38,40 @@ class CourseCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:100|unique:course_categories,name',
         ]);
 
-        CourseCategory::create($validated);
+        CourseCategory::create($request->all());
 
-        return redirect()->route('content-manager.categories.index')
+        return redirect()->route('content-manager.other-features.categories.index')
             ->with('success', 'Category created successfully!');
+    }
+
+    public function show(CourseCategory $category)
+    {
+        $category->load(['courses' => function($query) {
+            $query->withCount('episodes');
+        }]);
+
+        return view('content-manager.categories.show', compact('category'));
     }
 
     public function edit(CourseCategory $category)
     {
+        $category->loadCount('courses');
+        $category->loadSum('courses as total_duration', 'total_duration');
+
         return view('content-manager.categories.edit', compact('category'));
     }
 
     public function update(Request $request, CourseCategory $category)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:100|unique:course_categories,name,'.$category->id,
         ]);
 
-        $category->update($validated);
+        $category->update($request->all());
 
         return redirect()->route('content-manager.categories.index')
             ->with('success', 'Category updated successfully!');

@@ -33,4 +33,14 @@ class TrainingType extends Model
     {
         return $userType === 'Student' ? $this->student_price : $this->professional_price;
     }
+
+    public function getFormattedStudentPriceAttribute()
+    {
+        return 'R' . number_format($this->student_price, 2);
+    }
+
+    public function getFormattedProfessionalPriceAttribute()
+    {
+        return 'R' . number_format($this->professional_price, 2);
+    }
 }

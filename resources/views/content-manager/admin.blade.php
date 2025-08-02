@@ -3,17 +3,23 @@
 @section('title', 'Dashboard')
 
 @section('content')
+
+@php
+    $adminUser = Auth::guard('admin')->user();
+    $instructorUser = Auth::guard('instructor')->user();
+@endphp
+
 <div class="admin-header">
     <div class="page-title">
         <h1>Dashboard</h1>
-        <p>Welcome back, {{ Auth::guard('admin')->user()->name }}</p>
+        <p>Welcome back, {{ $adminUser->name ?? $instructorUser->name ?? 'Guest' }}</p>
     </div>
     <div class="user-menu">
         <div class="user-info">
-            <h4>{{ Auth::guard('admin')->user()->name }}</h4>
-            <p>Admin</p>
+            <h4>{{ $adminUser->name ?? $instructorUser->name ?? 'Guest' }}</h4>
+            <p>{{ $adminUser ? 'Super Admin' : ($instructorUser ? 'Instructor Admin' : 'Guest') }}</p>
         </div>
-        <img src="{{ Auth::user()->avatar ?? asset('images/icons/circle-user-solid.svg') }}" alt="User Avatar">
+        <img src="{{ (Auth::guard('admin')->check() ? $adminUser->avatar : ($instructorUser->thumbnail ?? null)) ?? asset('images/icons/circle-user-solid.svg') }}" alt="User Avatar">
     </div>
 </div>
 

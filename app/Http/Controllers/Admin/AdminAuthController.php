@@ -25,18 +25,18 @@ class AdminAuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
-             Auth::shouldUse('admin');
-            $request->session()->regenerate();
-            return redirect()->intended(route('content-manager.admin'));
-        }
+        // super admin
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
             Auth::shouldUse('admin');
             $request->session()->regenerate();
+            return redirect()->intended(route('content-manager.admin'));
+        }
 
-            $request->session()->forget('url.intended');
-
-            return redirect()->route('content-manager.admin');
+        // instructors
+        if (Auth::guard('instructor')->attempt($credentials, $request->remember)) {
+            Auth::shouldUse('instructor');
+            $request->session()->regenerate();
+            return redirect()->intended(route('content-manager.admin'));
         }
 
         return back()->withErrors([

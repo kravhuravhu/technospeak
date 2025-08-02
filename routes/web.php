@@ -26,6 +26,7 @@ use App\Models\Instructor;
 use App\Http\Controllers\SubscriptionController; 
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Middleware\AdminOrInstructorAuth;
 
 // Public routes
 Route::get('/', [WelcomeController::class, 'index']);
@@ -168,9 +169,9 @@ Route::prefix('stripe')->group(function () {
     Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
         ->name('stripe.checkout')
         ->middleware('auth');
-        
+
     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
-    
+
     // Separate success handlers
     Route::get('/success', [StripeController::class, 'success'])->name('stripe.success'); // For training sessions
     Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
@@ -186,7 +187,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
     Route::post('login', [AdminAuthController::class, 'login']);
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     
-    Route::middleware([AdminAuth::class])->group(function() {
+    Route::middleware([AdminOrInstructorAuth::class])->group(function () {
         Route::get('admin', [AdminController::class, 'admin'])->name('admin');
         
         // Courses
@@ -273,6 +274,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                     'index' => 'categories.index',
                     'create' => 'categories.create',
                     'store' => 'categories.store',
+                    'show' => 'categories.show',
                     'edit' => 'categories.edit',
                     'update' => 'categories.update',
                     'destroy' => 'categories.destroy'
@@ -283,6 +285,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                     'index' => 'resource-types.index',
                     'create' => 'resource-types.create',
                     'store' => 'resource-types.store',
+                    'show' => 'resource-types.show',
                     'edit' => 'resource-types.edit',
                     'update' => 'resource-types.update',
                     'destroy' => 'resource-types.destroy'
@@ -293,6 +296,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                     'index' => 'training-types.index',
                     'create' => 'training-types.create',
                     'store' => 'training-types.store',
+                    'show' => 'training-types.show',
                     'edit' => 'training-types.edit',
                     'update' => 'training-types.update',
                     'destroy' => 'training-types.destroy'

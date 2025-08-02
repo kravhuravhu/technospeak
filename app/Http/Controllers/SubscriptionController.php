@@ -10,43 +10,32 @@ use App\Models\ServicePlan;
 
 class SubscriptionController extends Controller
 {
-    public function subscribe(Request $request)
-    {
-        $validated = $request->validate([
-            'plan_id' => 'required|exists:service_plans,id',
-            'name' => 'required',
-            'email' => 'required|email',
-        ]);
+   public function subscribe(Request $request)
+{
+    $validated = $request->validate([
+        'plan_id' => 'required|exists:service_plans,id',
+        'name' => 'required',
+        'email' => 'required|email',
+    ]);
 
-        $plan = ServicePlan::find($request->plan_id);
-        $user = auth()->user();
-
-        // Calculate price
-        $price = $user->userType === 'Student' ? $plan->rate_student : $plan->rate_business;
-
-        // Create payment record
-        $payment = Payment::create([
-            'client_id' => $user->id,
-            'amount' => $price,
-            'payment_method' => 'pending',
-            'status' => 'pending',
-            'payable_type' => 'subscription',
-            'payable_id' => $plan->id,
-        ]);
-
-        // Redirect to Stripe checkout
-        return redirect()->route('stripe.checkout', [
-            'clientId' => $user->id,
-            'planId' => 'subscription_' . $plan->id
-        ]);
+    $plan = ServicePlan::findOrFail($request->plan_id);
+    
+    if (!$plan->is_subscription) {
+        return redirect()->back()->with('error', 'Selected plan is not a subscription');
     }
+
+    return redirect()->route('stripe.checkout', [
+        'clientId' => auth()->id(),
+        'planId' => 'subscription_' . $plan->id
+    ]);
+}
 
     public function subscribeFree()
     {
         $client = auth()->user();
         $client->update([
             'subscription_type' => 'free',
-            'subscription_expiry' => null //do not expire free subscriptions
+            'subscription_expiry' => null
         ]);
         
         return redirect()->route('dashboard')

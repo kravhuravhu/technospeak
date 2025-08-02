@@ -11,6 +11,8 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Models\TrainingRegistration;
 use App\Notifications\PaymentProcessed;
+use App\Models\ServicePlan;
+use Illuminate\Support\Facades\Auth;
 
 class StripeController extends Controller
 {
@@ -18,24 +20,68 @@ class StripeController extends Controller
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $client = Client::findOrFail($clientId);
-        $isStudent = $client->userType === 'Student';
-
-        if (str_starts_with($planId, 'training_')) {
-            return $this->handleTrainingPayment($client, $planId);
+        // Parse plan type and ID
+        list($planType, $planDbId) = explode('_', $planId);
+        
+        $plan = ServicePlan::findOrFail($planDbId);
+        $user = Auth::user();
+        
+        // Verify the requesting user matches the clientId
+        if ($user->id !== $clientId) {
+            abort(403, 'Unauthorized action.');
         }
 
-        if (str_starts_with($planId, 'subscription_')) {
-            return $this->handleSubscriptionPayment($client, $planId);
+        // Get the correct price based on user type
+        $price = $user->userType === 'Student' ? $plan->rate_student : $plan->rate_business;
+        
+        // Create payment record
+        $payment = Payment::create([
+            'client_id' => $user->id,
+            'amount' => $price,
+            'payment_method' => 'stripe',
+            'payable_type' => 'subscription',
+            'payable_id' => $plan->id,
+            'status' => 'pending'
+        ]);
+
+        try {
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'zar',
+                        'product_data' => [
+                            'name' => $plan->name,
+                            'description' => $plan->description,
+                        ],
+                        'unit_amount' => $price * 100, // Convert to cents
+                        'recurring' => $plan->is_subscription ? [
+                            'interval' => 'month',
+                            'interval_count' => 3 // Quarterly
+                        ] : null,
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => $plan->is_subscription ? 'subscription' : 'payment',
+                'success_url' => route('stripe.subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => url()->previous(),
+                'client_reference_id' => $payment->id,
+                'metadata' => [
+                    'payment_id' => $payment->id,
+                    'plan_id' => $plan->id,
+                    'client_id' => $user->id
+                ]
+            ]);
+
+            // Update payment with Stripe session ID
+            $payment->update(['stripe_session_id' => $session->id]);
+
+            return redirect($session->url);
+
+        } catch (\Exception $e) {
+            \Log::error('Stripe checkout error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error processing payment');
         }
-
-        if (str_starts_with($planId, 'service_')) {
-            return $this->handleServicePayment($client, $planId);
-        }
-
-        return redirect()->back()->with('error', 'Invalid payment type');
-
-        // other methods later
     }
 
     protected function handleTrainingPayment(Client $client, string $planId)
@@ -240,6 +286,45 @@ class StripeController extends Controller
 
             
 
+        }
+    }
+
+        public function subscriptionSuccess(Request $request)
+    {
+        $sessionId = $request->get('session_id');
+        
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+            $session = \Stripe\Checkout\Session::retrieve($sessionId);
+
+            // Find and update payment
+            $payment = Payment::find($session->client_reference_id);
+            if ($payment) {
+                $payment->update([
+                    'status' => 'paid',
+                    'paid_at' => now(),
+                    'transaction_id' => $session->payment_intent
+                ]);
+
+                // Update user subscription
+                $user = Auth::user();
+                $user->update([
+                    'subscription_type' => 'premium',
+                    'subscription_expiry' => now()->addMonths(3)
+                ]);
+                
+                $plan = ServicePlan::find($payment->payable_id);
+                return view('success-subscription', [
+                    'payment' => $payment,
+                    'plan' => $plan
+                ]);
+            }
+
+            return redirect()->route('dashboard')->with('error', 'Payment record not found');
+
+        } catch (\Exception $e) {
+            \Log::error('Stripe success error: ' . $e->getMessage());
+            return redirect()->route('dashboard')->with('error', 'Error verifying payment');
         }
     }
 

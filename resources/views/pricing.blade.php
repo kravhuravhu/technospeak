@@ -105,10 +105,10 @@
                                                     <sub class="sub context">from</sub>
                                                     <sup class="context">R</sup>
                                                 </span>
-                                                400
-                                                <span class="dur">/ year</span>
+                                                350
+                                                <span class="dur">/ quarterly</span>
                                             </p>
-                                            <!-- <p style="font-size:0.8em;color:#666;margin-top:5px;">(R430 for business)</p> -->
+                                            <!-- <p style="font-size:0.8em;color:#666;margin-top:5px;">(R400 for business)</p> -->
                                         </div>
                                         <div class="dscpt_container">
                                             <div class="dscpt">
@@ -682,8 +682,42 @@
             }
         </script>
 
-        <script src="script/pop-up.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+    // Handle subscription triggers
+    document.querySelectorAll('.subscription-trigger').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const planId = this.getAttribute('data-plan-id');
+            const modal = document.getElementById(`subscription-modal-${planId}`);
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+    
+    // Close modals
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        const closeBtn = modal.querySelector('.close-modal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        }
+    });
+});
+        </script>
 
+        <script src="script/pop-up.js"></script
     </body>
 
 <!-- Style for Modal -->

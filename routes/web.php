@@ -23,6 +23,7 @@ use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\IssueController; 
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Models\Instructor;
+use App\Models\TrainingSession;
 use App\Http\Controllers\SubscriptionController; 
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Artisan;
@@ -83,13 +84,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // show instrs data too
         $instructors = Instructor::all();
-        
+
+        // get upcoming sessions
+        $now = now();
+
+        $future = TrainingSession::with('type')
+            ->where('scheduled_for', '>', $now)
+            ->orderBy('scheduled_for')
+            ->limit(4)
+            ->get();
+
+        if ($future->count() < 4) {
+            $remaining = 4 - $future->count();
+
+            $past = TrainingSession::with('type')
+                ->where('scheduled_for', '<=', $now)
+                ->orderByDesc('scheduled_for')
+                ->limit($remaining)
+                ->get();
+
+            $upcomingSessions = $future->concat($past);
+        } else {
+            $upcomingSessions = $future;
+        }
+
         return view('dashboard', [
             'freeCourses' => $freeCourses,
             'paidCourses' => $paidCourses,
             'enrolledCourses' => $enrolledCourses,
             'recommendedCourses' => $recommendedCourses,
-            'instructors' => $instructors         
+            'instructors' => $instructors,
+            'upcomingSessions' => $upcomingSessions,
         ]);
     })->name('dashboard');
 
@@ -101,6 +126,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             [CourseAccessController::class, 'markEpisodeCompleted'])
             ->name('enrolled-courses.episodes.complete');
     });
+
+    // view enrolled resource
+    Route::get('/api/user/resources', [CourseAccessController::class, 'getUserResources']);
 
     // view while unenrolled
     Route::prefix('unenrolled-courses')->group(function () {
@@ -150,7 +178,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Subscription routes
 Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
-->middleware('auth');
+    ->middleware('auth');
 
 Route::post('/service/purchase', [ServiceController::class, 'purchase'])
     ->name('service.purchase')
@@ -309,12 +337,12 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 
-    Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
-        Route::resource('issues', AdminIssueController::class)->except(['create', 'store']);
-        Route::post('issues/{issue}/assign', [AdminIssueController::class, 'assign'])->name('issues.assign');
-        Route::post('issues/{issue}/close', [AdminIssueController::class, 'close'])->name('issues.close');
-        Route::post('issues/{issue}/response', [AdminIssueController::class, 'addResponse'])->name('issues.response');
-    });
+    // Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    //     Route::resource('issues', AdminIssueController::class)->except(['create', 'store']);
+    //     Route::post('issues/{issue}/assign', [AdminIssueController::class, 'assign'])->name('issues.assign');
+    //     Route::post('issues/{issue}/close', [AdminIssueController::class, 'close'])->name('issues.close');
+    //     Route::post('issues/{issue}/response', [AdminIssueController::class, 'addResponse'])->name('issues.response');
+    // });
 });
 
 // success payment

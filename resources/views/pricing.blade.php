@@ -359,8 +359,12 @@
                                                     <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Various tech topics covered</p></div></div>
                                                 </div>
                                                 <div class="bttn">
-                                                    <button>Register</button>
-                                                    <button onclick="document.getElementById('modal-qa').style.display='none'">Close</button>
+                                                    @if(Auth::check())
+                                                        <a href="#" class="registration-trigger" data-type-id="4">Register</a>
+                                                    @else
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}">Register</a>
+                                                    @endif
+                                                    <button onclick="document.getElementById('modal-session1').style.display='none'">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,8 +387,12 @@
                                                     <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Skill-building sessions</p></div></div>
                                                 </div>
                                                 <div class="bttn">
-                                                    <button>Register</button>
-                                                    <button onclick="document.getElementById('modal-consult').style.display='none'">Close</button>
+                                                    @if(Auth::check())
+                                                        <a href="#" class="registration-trigger" data-type-id="5">Register</a>
+                                                    @else
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}">Register</a>
+                                                    @endif
+                                                    <button onclick="document.getElementById('modal-session2').style.display='none'">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -408,6 +416,16 @@
                 ])
 
                 @include('components.service_modal')
+
+                @include('components.sessions_registration', [
+                    'typeId' => 4,
+                    'typeName' => 'Group Session 1'
+                ])
+
+                @include('components.sessions_registration', [
+                    'typeId' => 5, 
+                    'typeName' => 'Group Session 2'
+                ])
 
         </section>
 
@@ -682,42 +700,10 @@
             }
         </script>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-    // Handle subscription triggers
-    document.querySelectorAll('.subscription-trigger').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const planId = this.getAttribute('data-plan-id');
-            const modal = document.getElementById(`subscription-modal-${planId}`);
-            if (modal) {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    });
-    
-    // Close modals
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-        
-        const closeBtn = modal.querySelector('.close-modal');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-        }
-    });
-});
-        </script>
 
-        <script src="script/pop-up.js"></script
+        <script src="script/pricing.js"></script>
+
+        <script src="script/pop-up.js"></script>
     </body>
 
 <!-- Style for Modal -->

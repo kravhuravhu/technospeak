@@ -174,6 +174,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
 
+    // Personal Guide routes
+    Route::post('/personal-guide', [PersonalGuideController::class, 'store'])->name('personal-guide.store');
+    Route::post('/personal-guide/{id}/process-payment', [PersonalGuideController::class, 'processPayment'])->name('personal-guide.payment');
+    
+    // Task Assistance routes
+    Route::post('/task-assistance', [TaskAssistanceController::class, 'store'])->name('task-assistance.store');
+    Route::post('/task-assistance/{id}/process-payment', [TaskAssistanceController::class, 'processPayment'])->name('task-assistance.payment');
+
 });
 
 // Subscription routes

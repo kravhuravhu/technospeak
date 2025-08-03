@@ -808,6 +808,9 @@
                             </div>
                             
                             <div class="resource-grid" id="resourceGrid">
+                                <div id="loader" style="display:none; text-align:center; padding:20px;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 2em; color: #555;"></i>
+                                </div>
                                 <!-- Resource cards will be inserted here by JavaScript -->
                             </div>
                         </div>
@@ -1407,42 +1410,41 @@
                         <div class="title">
                             <h4>Upcoming Sessions</h4>
                         </div>
-                        <div class="up_session_bar">
-                            <div class="icon up_container if-qa-session-background-color">
-                                <i class="fa fa-comments" aria-hidden="true"></i>
+
+                        @forelse ($upcomingSessions as $i => $session)
+                            @php
+                                $bgClass = $i % 2 === 0 ? 'if-qa-session-background-color' : 'if-new-video-background-color';
+
+                                $typeIcon = match($session->type->name) {
+                                    'Formal Training' => 'fa-graduation-cap',
+                                    'Task Assistance' => 'fa-tasks',
+                                    'Personal Guide' => 'fa-user',
+                                    'Group Session 1' => 'fa-users',
+                                    'Group Session 2' => 'fa-users',
+                                    default => 'fa-calendar',
+                                };
+
+                                $formattedDate = \Carbon\Carbon::parse($session->scheduled_for)->format('d M Y, l');
+                            @endphp
+
+                            <div class="up_session_bar">
+                                <div class="icon up_container {{ $bgClass }}">
+                                    <i class="fa {{ $typeIcon }}" aria-hidden="true"></i>
+                                </div>
+                                <div class="content_sbar up_container">
+                                    <strong>{{ $session->title }} - {{ $session->type->name }}</strong>
+                                    <p>{{ $formattedDate }} - 
+                                        @if ($session->scheduled_for->isFuture())
+                                            <span class="text-green-600 text-sm" style="color:#1fb12b;"><i>Upcoming</i></span>
+                                        @else
+                                            <span class="text-gray-500 text-sm" style="color:#d36262;"><i>Completed</i></span>
+                                        @endif
+                                    </p>
+                                </div>
                             </div>
-                            <div class="content_sbar up_container">
-                                <strong>Q/A Session - Constant BlueScreen Errors</strong>
-                                <p>21 Aug 2025, Friday</p>
-                            </div>
-                        </div>
-                        <div class="up_session_bar">
-                            <div class="icon up_container if-new-video-background-color">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </div>
-                            <div class="content_sbar up_container">
-                                <strong>Introduction to Microsoft Office, manage your productivity</strong>
-                                <p>01 Oct 2025, Saturday</p>
-                            </div>
-                        </div>
-                        <div class="up_session_bar">
-                            <div class="icon up_container if-qa-session-background-color">
-                                <i class="fa fa-comments" aria-hidden="true"></i>
-                            </div>
-                            <div class="content_sbar up_container">
-                                <strong>Q/A Session - Constant BlueScreen Errors</strong>
-                                <p>21 Aug 2025, Friday</p>
-                            </div>
-                        </div>
-                        <div class="up_session_bar">
-                            <div class="icon up_container if-new-video-background-color">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </div>
-                            <div class="content_sbar up_container">
-                                <strong>Introduction to Microsoft Office, manage your productivity</strong>
-                                <p>01 Oct 2025, Saturday</p>
-                            </div>
-                        </div>
+                        @empty
+                            <p class="text-gray-500 p-2">No upcoming sessions.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>

@@ -66,38 +66,58 @@ const allResources = [
 // User current plan IDs
 let userResourceIds = [1, 2];
 
-function renderResources() {
+function fetchAndRenderUserResources() {
     const container = document.getElementById('resourceGrid');
-    container.innerHTML = '';
-    
-    allResources.forEach(resource => {
-        const isLocked = !userResourceIds.includes(resource.requiredPlan);
-        
-        const card = document.createElement('div');
-        card.className = `resource-card ${isLocked ? 'locked' : ''}`;
-        card.innerHTML = `
-            <div class="resource-thumbnail">
-                <img src="${resource.thumbnail}" alt="${resource.title}">
-                ${isLocked ? '<div class="resource-lock-indicator"><i class="fas fa-lock"></i></div>' : ''}
-            </div>
-            
-            <div class="resource-content">
-                <span class="resource-category">${resource.category}</span>
-                <h3>${resource.title}</h3>
-                <p>${resource.description}</p>
+    const loader = document.getElementById('loader');
 
-                <div class="resource-meta">
-                    <span><i class="fas fa-file-alt"></i> ${resource.type}</span>
-                    <span><i class="fas fa-ruler"></i> ${resource.length}</span>
-                </div>
-            </div>
-            
-            ${isLocked ? `<button class="upgrade-button" onclick="showUpgradeOptions(${resource.requiredPlan})">
-                <i class="fas fa-unlock-alt"></i> Register
-            </button>` : ''}
-        `;
-        container.appendChild(card);
-    });
+    loader.style.display = 'block';
+    container.innerHTML = '';
+
+    fetch('/api/user/resources')
+        .then(res => res.json())
+        .then(resources => {
+            loader.style.display = 'none';
+
+            if (resources.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px;">
+                        <i class="fas fa-paperclip" style="max-width:150px; opacity:0.6;font-size:3em;"></i>
+                        <h3 style="color:#666; margin-top:20px;">No Resources Found</h3>
+                        <p style="color:#999;">You're either not enrolled in any courses or your courses don't have resources yet.</p>
+                        <a href="/dashboard#usr_alltrainings" style="display:inline-block; margin-top:20px; padding:10px 20px; background:#38b6ff; color:#fff; border-radius:25px; text-decoration:none;">Explore Courses</a>
+                    </div>
+                `;
+                return;
+            }
+
+            resources.forEach(resource => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+
+                card.innerHTML = `
+                    <div class="resource-thumbnail">
+                        <img src="${resource.thumbnail}" alt="${resource.title}">
+                    </div>
+
+                    <div class="resource-content">
+                        <span class="resource-category">${resource.category}</span>
+                        <h3>${resource.title}</h3>
+                        <p>${resource.description}</p>
+                        <div class="resource-meta">
+                            <span><i class="fas fa-file-alt"></i> ${resource.type.toUpperCase()}</span>
+                        </div>
+                        <button class="view-button" style="margin: 10px 0;background-color: #38b6ff;border: none;padding: 7px 20px;border-radius: 50px;color: #ffffff;cursor:pointer;" onclick="window.open('${resource.url}', '_blank')">View →</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            loader.style.display = 'none';
+            console.error('Failed to fetch resources:', error);
+            container.innerHTML = '<p>Failed to load resources.</p>';
+        });
 }
 
 function getPlanName(planId) {
@@ -131,7 +151,7 @@ function showUpgradeOptions(planId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    renderResources();
+    fetchAndRenderUserResources();
 });
 
 function filterResources(searchTerm) {

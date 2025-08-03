@@ -471,4 +471,33 @@ class CourseAccessController extends Controller
             'rating' => $rating
         ]);
     }
+
+    // resources if enrolled
+    public function getUserResources()
+    {
+        $user = Auth::user();
+
+        $resources = $user->courseSubscriptions()
+            ->with(['course.resources'])
+            ->get()
+            ->flatMap(function($subscription) {
+                return $subscription->course->resources;
+            })
+            ->map(function($resource) {
+                return [
+                    'id' => $resource->id,
+                    'title' => $resource->title,
+                    'description' => $resource->description,
+                    'thumbnail' => $resource->thumbnail_url,
+                    'url' => $resource->file_url,
+                    'type' => $resource->file_type,
+                    'category' => $resource->category->name ?? 'Course Resource',
+                    'course_id' => $resource->course_id,
+                    'locked' => false
+                ];
+            })
+            ->values();
+
+        return response()->json($resources);
+    }
 }

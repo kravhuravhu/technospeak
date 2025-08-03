@@ -432,7 +432,7 @@ section.bar-lt-rt {
         }
         & > .up_session_bar {
           margin: 10px 0;
-          padding: 5px 0;
+          padding: 0 5px;
           border-radius: 15px;
           background-color: #ffffff;
           display: flex;
@@ -441,9 +441,8 @@ section.bar-lt-rt {
           flex-wrap: wrap;
           & > .up_container {
             margin: 0 3px;
-            height: 65px;
+            padding: 12px 8px;
             &.icon {
-              width: 65px;
               border-radius: 15px;
               font-size: 2.2em;
               color: #eeeeee;
@@ -463,6 +462,9 @@ section.bar-lt-rt {
               display: flex;
               flex-direction: column;
               justify-content: space-between;
+              & > p, strong {
+                margin: 3px 0;
+              }
             }
           }
         }
@@ -1814,6 +1816,12 @@ section.bar-lt-rt {
                                 font-size: 0.9em;
                                 margin: 0 0 15px 0;
                                 line-height: 1.5;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                line-clamp: 2;
+                                -webkit-line-clamp: 2;
                             }
                             
                             .resource-features {

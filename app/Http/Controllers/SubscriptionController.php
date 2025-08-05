@@ -13,12 +13,12 @@ class SubscriptionController extends Controller
    public function subscribe(Request $request)
 {
     $validated = $request->validate([
-        'plan_id' => 'required|exists:service_plans,id',
+        'plan_id' => 'required|exists:training_types,id', 
         'name' => 'required',
         'email' => 'required|email',
     ]);
 
-    $plan = ServicePlan::findOrFail($request->plan_id);
+    $plan = TrainingType::findOrFail($request->plan_id);
     
     if (!$plan->is_subscription) {
         return redirect()->back()->with('error', 'Selected plan is not a subscription');
@@ -26,7 +26,7 @@ class SubscriptionController extends Controller
 
     return redirect()->route('stripe.checkout', [
         'clientId' => auth()->id(),
-        'planId' => 'subscription_' . $plan->id
+        'planId' => 'training_' . $plan->id 
     ]);
 }
 
@@ -38,7 +38,7 @@ class SubscriptionController extends Controller
             'subscription_expiry' => null
         ]);
         
-        return redirect()->route('dashboard')
+        return redirect()->route('dashboard', ['section' => 'usr_alltrainings'])
             ->with('success', 'Free subscription activated!');
     }
 

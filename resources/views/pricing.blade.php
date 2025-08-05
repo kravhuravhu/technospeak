@@ -145,14 +145,14 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                        @if(Auth::check())
-                                            <a href="#" class="subscription-trigger" data-plan-id="2">SUBSCRIBE</a>
-                                        @else
-                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">SUBSCRIBE</a>
-                                        @endif
+                                            @if(Auth::check())
+                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_6']) }}" class="btn btn-primary">SUBSCRIBE</a>
+                                            @else
+                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">SUBSCRIBE</a>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                                 
                                 <!-- Plan 3 -->
                                 <div class="card_container">
@@ -209,9 +209,9 @@
                                         </div>
                                         <div class="bttn">
                                             @if(Auth::check())
-                                                <a href="#" class="service-trigger" data-service-id="3">ENROLL NOW</a>
+                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_1']) }}" class="btn btn-primary">ENROLL NOW</a>
                                             @else
-                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}">ENROLL NOW</a>
+                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">ENROLL NOW</a>
                                             @endif
                                         </div>
                                     </div>
@@ -242,11 +242,14 @@
                                             </div>
                                             <div class="bttn">
                                                 @if(Auth::check())
-                                                    <a href="#" class="service-trigger" data-service-id="4">Personal Guide</a>
-                                                    <a href="#" class="service-trigger" data-service-id="5">Task Assistance</a>
+                                                    <!-- Personal Guide -->
+                                                    <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'service_4']) }}" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                    
+                                                    <!-- Task Assistance -->
+                                                    <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'service_5']) }}" class="btn btn-primary">TASK ASSISTANCE</a>
                                                 @else
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Personal Guide</a>
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Task Assistance</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">TASK ASSISTANCE</a>
                                                 @endif
                                             </div>
                                         </div>
@@ -270,8 +273,11 @@
                                                     <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Additional hours available</p></div></div>
                                                 </div>
                                                 <div class="bttn">
-                                                    <button>BOOK NOW</button>
-                                                    <button onclick="document.getElementById('modal-guide').style.display='none'">Close</button>
+                                                    @if(Auth::check())
+                                                        <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_3']) }}" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                    @else
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -295,8 +301,12 @@
                                                     <div class="dscpt"><div class="tick"><img src="../images/icons/quality.png" /></div><div class="dscpt-p"><p>Tech-related solutions</p></div></div>
                                                 </div>
                                                 <div class="bttn">
-                                                    <button>REQUEST HELP</button>
-                                                    <button onclick="document.getElementById('modal-task').style.display='none'">Close</button>
+                                                    @if(Auth::check())
+                                                        <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_2']) }}" class="btn btn-primary">TASK ASSISTANCE</a>
+                                                    @else
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">TASK ASSISTANCE</a>
+                                                    @endif
+                                                    <button class="btn btn-secondary" onclick="document.getElementById('modal-task').style.display='none'">CLOSE</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -331,12 +341,44 @@
                                                 </div>
                                             </div>
                                              <div class="bttn">
+                                                @php
+                                                    // Get the latest upcoming sessions
+                                                    $qaSession = \App\Models\TrainingSession::where('type_id', 4)
+                                                        ->where('scheduled_for', '>', now())
+                                                        ->orderBy('scheduled_for')
+                                                        ->first();
+                                                        
+                                                    $consultSession = \App\Models\TrainingSession::where('type_id', 5)
+                                                        ->where('scheduled_for', '>', now())
+                                                        ->orderBy('scheduled_for')
+                                                        ->first();
+                                                @endphp
+
                                                 @if(Auth::check())
-                                                    <a href="#" class="service-trigger" data-service-id="6">Group Q/A</a>
-                                                    <a href="#" class="service-trigger" data-service-id="7">Consultation</a>
+                                                    <!-- Group Q/A Button -->
+                                                    @if($qaSession)
+                                                        <a href="#" class="btn btn-primary registration-trigger" 
+                                                        data-type-id="4" 
+                                                        data-session-id="{{ $qaSession->id }}">
+                                                            GROUP Q/A
+                                                        </a>
+                                                    @else
+                                                        <button class="btn btn-primary" disabled>GROUP Q/A</button>
+                                                    @endif
+                                                    
+                                                    <!-- Consultation Button -->
+                                                    @if($consultSession)
+                                                        <a href="#" class="btn btn-primary registration-trigger" 
+                                                        data-type-id="5" 
+                                                        data-session-id="{{ $consultSession->id }}">
+                                                            CONSULTATION
+                                                        </a>
+                                                    @else
+                                                        <button class="btn btn-primary" disabled>CONSULTATION</button>
+                                                    @endif
                                                 @else
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Group Q/A</a>
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}">Consultation</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">GROUP Q/A</a>
+                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">CONSULTATION</a>
                                                 @endif
                                             </div>
                                         </div>
@@ -403,30 +445,25 @@
                     </div>
                 </div>
             </div>
-            <!-- Subscription Modal -->
-                 @php
-                $premiumPlan = App\Models\ServicePlan::find(2);
-                $services = \App\Models\ServicePlan::whereIn('id', [3,4,5,6,7])->get();
-                @endphp
 
-                @include('components.subscription_modal', [
-                    'planId' => $premiumPlan->id,
-                    'planName' => $premiumPlan->name,
-                    'plan' => $premiumPlan
-                ])
+                <!-- Modals and Includes -->
+                    @if(isset($premiumPlan))
+                        @include('components.subscription_modal', [
+                            'planId' => $premiumPlan->id,
+                            'planName' => $premiumPlan->name,
+                            'plan' => $premiumPlan
+                        ])
+                    @endif
 
-                @include('components.service_modal')
-
-                @include('components.sessions_registration', [
-                    'typeId' => 4,
-                    'typeName' => 'Group Session 1'
-                ])
-
-                @include('components.sessions_registration', [
-                    'typeId' => 5, 
-                    'typeName' => 'Group Session 2'
-                ])
-
+                    @include('components.training_modal')
+                    @include('components.sessions_registration', [
+                        'typeId' => 4,
+                        'typeName' => 'Group Session 1'
+                    ])
+                    @include('components.sessions_registration', [
+                        'typeId' => 5, 
+                        'typeName' => 'Group Session 2'
+                    ])
         </section>
 
 
@@ -700,6 +737,33 @@
             }
         </script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Handle registration triggers
+                document.querySelectorAll('.registration-trigger').forEach(trigger => {
+                    trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const typeId = this.dataset.typeId;
+                        
+                        // Show the appropriate modal based on typeId
+                        if(typeId == 4) {
+                            document.getElementById('modal-qa').style.display = 'flex';
+                        } else if(typeId == 5) {
+                            document.getElementById('modal-consult').style.display = 'flex';
+                        }
+                        
+                        document.body.classList.add('no-scroll');
+                    });
+                });
+                
+                // Close modal handlers (keep your existing ones)
+                function closeModal(event, modalId) {
+                    event.stopPropagation();
+                    document.getElementById(modalId).style.display = 'none';
+                    document.body.classList.remove('no-scroll');
+                }
+            });
+            </script>
 
         <script src="script/pricing.js"></script>
 

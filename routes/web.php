@@ -24,8 +24,7 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Models\Instructor;
 use App\Models\TrainingSession;
-use App\Http\Controllers\SubscriptionController; 
-use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
 
@@ -33,7 +32,14 @@ use App\Http\Middleware\AdminOrInstructorAuth;
 Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/about', function () { return view('about'); });
 Route::get('/trainings', function () { return view('trainings'); });
-Route::get('/pricing', function () { return view('pricing'); });
+Route::get('/pricing', function () {
+    $premiumPlan = \App\Models\TrainingType::find(6); 
+    $services = \App\Models\TrainingType::whereIn('id', [1, 2, 3, 4, 5])->get();
+    return view('pricing', [
+        'premiumPlan' => $premiumPlan,
+        'services' => $services
+    ]);
+});
 Route::get('/privacy', function () { return view('privacy'); });
 Route::get('/terms', function () { return view('terms'); });
 
@@ -43,10 +49,6 @@ Route::post('/training/register', [TrainingRegistrationController::class, 'store
 // Subscription routes
 Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
 ->middleware('auth');
-
-Route::post('/service/purchase', [ServiceController::class, 'purchase'])
-    ->name('service.purchase')
-    ->middleware('auth');
 
 Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
     ->name('subscription.subscribe.free')
@@ -186,10 +188,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Subscription routes
 Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
-    ->middleware('auth');
-
-Route::post('/service/purchase', [ServiceController::class, 'purchase'])
-    ->name('service.purchase')
     ->middleware('auth');
 
 Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])

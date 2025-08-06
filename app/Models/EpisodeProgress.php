@@ -12,6 +12,7 @@ class EpisodeProgress extends Model
     protected $fillable = [
         'subscription_id',
         'episode_id',
+        'watched_seconds',
         'progress_percent',
         'is_completed',
         'last_played_at',

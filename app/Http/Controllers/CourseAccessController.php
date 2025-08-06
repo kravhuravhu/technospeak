@@ -8,6 +8,7 @@ use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CourseRating;
+use App\Models\CourseEpisode;use Illuminate\Support\Facades\Log;
 
 class CourseAccessController extends Controller
 {
@@ -129,11 +130,13 @@ class CourseAccessController extends Controller
             if ($course->plan_type === 'paid') {
                 return $this->handlePaidEnrollment($user, $course);
             }
-            
+
             $subscription = $user->courseSubscriptions()->create([
                 'course_id' => $course->id,
                 'payment_status' => 'free',
-                'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id')
+                'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id'),
+                'started_at' => now(),
+                'last_accessed_at' => now()
             ]);
             
             return response()->json([
@@ -194,9 +197,13 @@ class CourseAccessController extends Controller
 
         $subscription = $user->courseSubscriptions()->where('course_id', $course->id)->first();
         $progress = $subscription ? $subscription->progress : 0;
-        $completedEpisodes = $subscription->completedEpisodes ?? collect();
 
-        $episodes = $course->episodes->map(function($episode) use ($completedEpisodes) {
+        // get the episode that is completed
+        $completedEpisodeIds = $subscription->episodeProgress()
+            ->where('is_completed', true)
+            ->pluck('episode_id');
+
+        $episodes = $course->episodes->map(function($episode) use ($completedEpisodeIds) {
             $duration = $episode->duration;
             $h = floor($duration / 3600);
             $m = floor(($duration % 3600) / 60);
@@ -211,8 +218,8 @@ class CourseAccessController extends Controller
                 'description' => $episode->description,
                 'duration' => $durationFormatted,
                 'video_url' => $episode->video_url,
-                'completed' => $completedEpisodes->contains($episode->id),
-                'is_free' => $episode->is_free
+                'completed' => $completedEpisodeIds->contains($episode->id),
+                'is_free' => $episode->is_free,
             ];
         });
 
@@ -220,7 +227,7 @@ class CourseAccessController extends Controller
 
         $resources = $course->resources()->get();
 
-        return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources'));
+        return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
     }
 
     // view while unenrolled
@@ -254,12 +261,12 @@ class CourseAccessController extends Controller
         $user = Auth::user();
         
         // Verify user is enrolled in this course
-        if (!$user->isSubscribedTo($course->uuid)) {
+        if (!$user->isSubscribedTo($course->id)) {
             abort(403, 'You are not enrolled in this course');
         }
 
         // Verify episode belongs to this course
-        if ($episode->course_id !== $course->uuid) {
+        if ($episode->course_id !== $course->id) {
             abort(400, 'Episode does not belong to this course');
         }
 
@@ -267,15 +274,27 @@ class CourseAccessController extends Controller
             ->where('course_id', $course->id)
             ->first();
 
+        if (!$subscription) {
+            abort(404, 'Subscription not found');
+        }
+
         // Mark episode as completed
-        $subscription->completedEpisodes()->syncWithoutDetaching([$episode->uuid]);
+        $subscription->episodeProgress()->updateOrCreate(
+            ['episode_id' => $episode->id],
+            ['is_completed' => true, 'completed_at' => now()]
+        );
 
         // Update progress
-        $completedCount = $subscription->completedEpisodes()->count();
+        $completedCount = $subscription->episodeProgress()->where('is_completed', true)->count();
         $totalEpisodes = $course->episodes()->count();
-        $progress = round(($completedCount / $totalEpisodes) * 100);
+        $progress = $totalEpisodes > 0 ? round(($completedCount / $totalEpisodes) * 100) : 0;
 
         $subscription->update(['progress' => $progress]);
+
+        // Check if course is completed
+        if ($progress >= 100) {
+            $subscription->markAsCompleted();
+        }
 
         return response()->json([
             'success' => true,
@@ -292,7 +311,9 @@ class CourseAccessController extends Controller
             'is_completed' => 'sometimes|boolean'
         ]);
 
-        $subscription = Auth::user()->courseSubscriptions()
+        $user = Auth::user();
+        
+        $subscription = $user->courseSubscriptions()
             ->where('course_id', $course->id)
             ->firstOrFail();
 
@@ -311,12 +332,29 @@ class CourseAccessController extends Controller
             ]
         );
 
-        // overall progress
-        $totalEpisodes = $course->episodes()->count();
-        $completedEpisodes = $subscription->episodeProgress()->where('is_completed', true)->count();
-        $overallProgress = round(($completedEpisodes / $totalEpisodes) * 100);
+        if ($progressPercent > 0) {
+            $subscription->update(['current_episode_id' => $episode->id]);
+        }
 
-        $subscription->update(['progress' => $overallProgress]);
+        // overall course progress
+        // based on watched seconds & total_duration
+        $totalWatched = $subscription->episodeProgress()->sum('watched_seconds');
+        $totalDuration = $course->total_duration;
+
+        if ($totalDuration > 0) {
+            $overallProgress = round(($totalWatched / $totalDuration) * 100);
+        } else {
+            $overallProgress = 0;
+        }
+
+        $subscription->update([
+            'progress' => $overallProgress,
+            'last_accessed_at' => now()
+        ]);
+
+        if ($overallProgress >= 100) {
+            $subscription->markAsCompleted();
+        }
 
         return response()->json([
             'success' => true,

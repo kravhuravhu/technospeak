@@ -13,7 +13,10 @@ class ClientCourseSubscription extends Model
         'client_id',
         'course_id',
         'payment_status',
+        'progress',
         'current_episode_id',
+        'started_at',
+        'last_accessed_at',
         'completed',
         'completed_at'
     ];

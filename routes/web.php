@@ -124,10 +124,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('enrolled-courses')->group(function () {
         Route::get('/{course}', [CourseAccessController::class, 'show'])->name('enrolled-courses.show');
         Route::delete('/{course}', [CourseAccessController::class, 'destroy'])->name('enrolled-courses.destroy');
-        Route::post('/{course}/episodes/{episode}/complete', 
-            [CourseAccessController::class, 'markEpisodeCompleted'])
-            ->name('enrolled-courses.episodes.complete');
+
+    Route::post('/{course}/episodes/{episode}/complete', 
+        [CourseAccessController::class, 'markEpisodeCompleted'])
+        ->name('enrolled-courses.episodes.complete');
     });
+
+    // update
+    Route::post('/enrolled-courses/{course}/episodes/{episode}/progress', 
+        [CourseAccessController::class, 'updateProgress'])
+        ->name('enrolled-courses.episodes.progress');
 
     // view enrolled resource
     Route::get('/api/user/resources', [CourseAccessController::class, 'getUserResources']);

@@ -281,7 +281,7 @@
             background: rgba(255, 255, 255, 0.2);
             border-radius: 2px;
             cursor: pointer;
-            opacity: 0;
+            opacity: .7;
             transition: width 0.2s, opacity 0.2s;
         }
 
@@ -623,10 +623,18 @@
         
         .episode-item.completed {
             opacity: 0.7;
+            border-left: 4px solid var(--success-color);
         }
         
         .episode-item.completed .episode-number {
             background-color: var(--success-color);
+        }
+
+        .episode-item.completed .episode-info p::after {
+            content: " - Watched";
+            color: var(--success-color);
+            font-weight: 400;
+            font-style: italic;
         }
         
         .rating-stars {
@@ -1200,10 +1208,10 @@
                         <div class="progress-container-rt">
                             <div class="progress-header">
                                 <h3>Your Progress</h3>
-                                <div class="progress-percent">{{ $course['progress'] > 0 ? $course['progress'] : 30 }}%</div>
+                                <div class="progress-percent">{{ $progress }}%</div>
                             </div>
                             <div class="progress-bar" style="height:10px;width:100%;margin:12px 0;border-radius:15px;background:#38b6ff9c">
-                                <div class="progress-fill" style="width: {{ $course->progress > 0 ? $course->progress : 30 }}%; height:10px; background:#38b6ff; border-radius:15px;"></div>
+                                <div class="progress-fill" style="width: {{ $progress }}%; height:10px; background:#38b6ff; border-radius:15px;"></div>
                             </div>
                             <div class="progress-actions">
                                 <button class="btn mark-complete-btn" id="mark-complete-btn">
@@ -1216,7 +1224,7 @@
                             <h3>Course Episodes</h3>
                             <ul id="course-episodes-list">
                                 @foreach($course['episodes'] as $episode)
-                                <li class="episode-item {{ $episode['completed'] ? 'completed' : '' }}" 
+                                <li class="episode-item {{ $completedEpisodeIds->contains($episode->id) ? 'completed' : '' }}" 
                                     data-episode-id="{{ $episode['id'] }}"
                                     data-video-url="{{ $episode['video_url'] }}"
                                     data-episode-title="{{ $episode['title'] }}">
@@ -1396,7 +1404,7 @@
                 }, 500);
             }
 
-            // Custom YouTube-like video player implementation
+            // YouTube-like video player implementation
             function createCustomVideoPlayer(videoUrl) {
                 const videoContainer = document.getElementById('video-container');
                 
@@ -1517,6 +1525,41 @@
                 video.addEventListener('playing', function() {
                     loadingSpinner.style.display = 'none';
                 });
+
+                video.addEventListener('keydown', function(e) {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                        const video = document.querySelector('#video-container video');
+                        if (video) {
+                            e.preventDefault();
+                            if (video.paused) {
+                                video.play().catch(error => {
+                                    showToast('Click on the video to start playback', 'info');
+                                });
+                            } else {
+                                video.pause();
+                            }
+                        }
+                    }
+                });
+
+                videoContainer.addEventListener('click', function() {
+                    const video = this.querySelector('video');
+                    if (video) {
+                        if (video.paused) {
+                            video.play().catch(error => {
+                                showToast('Click on the video to start playback', 'info');
+                            });
+                        } else {
+                            video.pause();
+                        }
+                    }
+                });
                 
                 // Progress bar click handler
                 progressContainer.addEventListener('click', function(e) {
@@ -1583,7 +1626,96 @@
                 video.play().catch(e => {
                     showToast('Click on the video to start playback', 'info');
                 });
+
+                // Track video progress
+                video.addEventListener('timeupdate', function() {
+                    const currentTime = video.currentTime;
+                    const duration = video.duration;
+                    
+                    // send progress updates every 5 sec
+                    if (currentTime % 5 < 0.1 || currentTime > duration - 5) {
+                        const isCompleted = currentTime >= duration - 2;
+                        
+                        fetch(`/enrolled-courses/${window.currentCourseId}/episodes/${window.currentEpisodeId}/progress`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                watched_seconds: Math.floor(currentTime),
+                                is_completed: isCompleted
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.overall_progress) {
+                                // overall progress display
+                                const progressPercent = document.querySelector('.progress-percent');
+                                const progressFill = document.querySelector('.progress-fill');
+                                
+                                progressPercent.textContent = `${data.overall_progress}%`;
+                                progressFill.style.width = `${data.overall_progress}%`;
+                                
+                                // If completed, update UI
+                                if (data.progress.is_completed) {
+                                    const activeEpisode = document.querySelector('.episode-item.active');
+                                    if (activeEpisode && !activeEpisode.classList.contains('completed')) {
+                                        activeEpisode.classList.add('completed');
+                                        if (!activeEpisode.querySelector('.fa-check-circle')) {
+                                            activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
+                                        }
+                                    }
+                                }
+                            }
+                            if (data.success) {
+                                const bar = document.querySelector('.progress-bar');
+                                const text = document.querySelector('.progress-percent');
+
+                                if (bar) bar.style.width = data.overall_progress + '%';
+                                if (text) text.textContent = data.overall_progress + '%';
+                            }
+                        });
+                    }
+                });              
                 
+                // auto completion when vid ends
+                video.addEventListener('ended', function() {
+                    fetch(`/enrolled-courses/${currentCourseId}/episodes/${currentEpisodeId}/progress`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            watched_seconds: video.duration,
+                            is_completed: true
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const activeEpisode = document.querySelector('.episode-item.active');
+                            if (activeEpisode && !activeEpisode.classList.contains('completed')) {
+                                activeEpisode.classList.add('completed');
+                                if (!activeEpisode.querySelector('.fa-check-circle')) {
+                                    activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
+                                }
+                                
+                                // progress display
+                                const progressPercent = document.querySelector('.progress-percent');
+                                const progressFill = document.querySelector('.progress-fill');
+                                progressPercent.textContent = `${data.overall_progress}%`;
+                                progressFill.style.width = `${data.overall_progress}%`;
+                                
+                                showToast('Episode marked as completed!');
+                            }
+                        }
+                    });
+                });
+
                 return video;
             }
 
@@ -1591,10 +1723,15 @@
             function handleEpisodeSelection(item) {
                 const videoUrl = item.getAttribute('data-video-url');
                 const episodeTitle = item.getAttribute('data-episode-title');
+                const episodeId = item.getAttribute('data-episode-id');
 
                 const videoContainer = document.getElementById('video-container');
 
                 videoContainer.innerHTML = '<div class="loading-spinner"></div>';
+
+                // store progress tracking
+                window.currentEpisodeId = episodeId;
+                window.currentCourseId = {{ $course->id }};
 
                 document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
                 item.classList.add('active');
@@ -1696,14 +1833,6 @@
                                 timer: 2500,
                                 showConfirmButton: false
                             });
-                            
-                            // Check if certificate tab should be shown
-                            if (targetProgress === 100) {
-                                const certificateTab = document.getElementById('certificate-tab');
-                                if (certificateTab) {
-                                    certificateTab.style.display = 'block';
-                                }
-                            }
                         } else {
                             Swal.fire({
                                 icon: 'error',

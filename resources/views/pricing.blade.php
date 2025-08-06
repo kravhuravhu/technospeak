@@ -146,9 +146,14 @@
                                         </div>
                                         <div class="bttn">
                                             @if(Auth::check())
-                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_6']) }}" class="btn btn-primary">SUBSCRIBE</a>
+                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'subscription_6']) }}" 
+                                                class="btn btn-primary">
+                                                SUBSCRIBE
+                                                </a>
                                             @else
-                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">SUBSCRIBE</a>
+                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">
+                                                    SUBSCRIBE
+                                                </a>
                                             @endif
                                         </div>
                                     </div>

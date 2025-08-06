@@ -203,6 +203,10 @@ Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'
 Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')
     ->name('courses.enroll');
+
+Route::get('/stripe/subscription/success', [StripeController::class, 'subscriptionSuccess'])
+    ->name('stripe.subscription.success')
+    ->middleware('auth');
  
 // Stripe routes
 Route::prefix('stripe')->group(function () {

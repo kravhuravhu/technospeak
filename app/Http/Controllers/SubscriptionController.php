@@ -10,23 +10,24 @@ use App\Models\ServicePlan;
 
 class SubscriptionController extends Controller
 {
-   public function subscribe(Request $request)
+
+public function subscribe(Request $request)
 {
     $validated = $request->validate([
-        'plan_id' => 'required|exists:training_types,id', 
+        'plan_id' => 'required|exists:training_types,id',
         'name' => 'required',
         'email' => 'required|email',
     ]);
 
     $plan = TrainingType::findOrFail($request->plan_id);
     
-    if (!$plan->is_subscription) {
-        return redirect()->back()->with('error', 'Selected plan is not a subscription');
+    if ($plan->id == 7) { // Tech Teasers (free)
+        return redirect()->route('subscription.subscribe.free');
     }
 
     return redirect()->route('stripe.checkout', [
         'clientId' => auth()->id(),
-        'planId' => 'training_' . $plan->id 
+        'planId' => 'subscription_' . $plan->id
     ]);
 }
 

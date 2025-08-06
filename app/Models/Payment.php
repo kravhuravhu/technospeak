@@ -30,9 +30,8 @@ class Payment extends Model
 
     const PAYABLE_TYPES = [
         'training' => \App\Models\TrainingSession::class,
-        'course' => \App\Models\Course::class,
-        'subscription' => \App\Models\Subscription::class,
-        'task' => \App\Models\Task::class,
+        'course' => \App\Models\Course::class,  // premium courses
+        'subscription' => \App\Models\TrainingType::class,
     ];
 
     public function payable(): MorphTo

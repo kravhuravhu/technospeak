@@ -202,25 +202,30 @@
                                 <h1>My Trainings</h1>
                             </div>
                             <div class="card-grid">
-                                @forelse($enrolledCourses ?? [] as $course)
-                                    <a href="{{ route('enrolled-courses.show', $course->uuid) }}" class="enrolled-course-link">
+                                @php
+                                    $progressData = app('App\Http\Controllers\CourseAccessController')->getOverallProgressData();
+                                    $enrolledCourses = $progressData['courses']; // This is the array of courses with progress info
+                                @endphp
+
+                                @forelse($enrolledCourses as $course)
+                                    <a href="{{ route('enrolled-courses.show', $course['uuid']) }}" class="enrolled-course-link">
                                         <div class="card">
                                             <div class="thmbnail">
-                                                <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
+                                                <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
                                                 <div class="trnsprnt"></div>
                                             </div>
                                             <div class="details">
                                                 <div class="title content">
-                                                    <h1>{{ $course->title }}</h1>
+                                                    <h1>{{ $course['title'] }}</h1>
                                                 </div>
                                                 <div class="dur content">
-                                                    <p><i>Duration: {{ $course->formatted_duration }}</i></p>
+                                                    <p><i>Duration: {{ $course['formatted_duration'] }}</i></p>
                                                 </div>
                                                 <div class="progress_bar content">
                                                     <div class="main-bar">
-                                                        <div class="progress" style="width: {{ $course->progress }}%"></div>
+                                                        <div class="progress" style="width: {{ $course['progress'] }}%"></div>
                                                     </div>
-                                                    <div class="cr-bar">{{ $course->progress }}%</div>
+                                                    <div class="cr-bar">{{ $course['progress'] }}%</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -259,9 +264,9 @@
                                         data-price="{{ $course->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"
                                         data-episodes='@json($course->episodes->map(function($episode) {
                                             return [
-                                                'number' => $episode->episode_number,
-                                                'name' => $episode->title,
-                                                'duration' => $episode->duration_formatted
+                                                "number" => $episode->episode_number,
+                                                "name" => $episode->title,
+                                                "duration" => $episode->duration_formatted
                                             ];
                                         }))'
                                         data-time="{{ $course->formatted_duration }}"
@@ -351,7 +356,7 @@
                                             data-level="{{ ucfirst($course['level']) }}"
                                             data-instructor="{{ $course['instructor_name'] }}"
                                             data-category="{{ $course['category_name'] }}"
-                                            data-episodes='@json($course['episodes'])'
+                                            data-episodes='@json($course["episodes"])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
                                             data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
@@ -408,7 +413,7 @@
                                             data-level="{{ ucfirst($course['level']) }}"
                                             data-instructor="{{ $course['instructor_name'] }}"
                                             data-category="{{ $course['category_name'] }}"
-                                            data-episodes='@json($course['episodes'])'
+                                            data-episodes='@json($course["episodes"])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
                                             data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
@@ -494,7 +499,7 @@
                                             data-instructor="{{ $course['instructor_name'] }}"
                                             data-category="{{ $course['category_name'] }}"
                                             data-price="{{ $course['price'] }}"
-                                            data-episodes='@json($course['episodes'])'
+                                            data-episodes='@json($course["episodes"])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
                                             data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
@@ -552,7 +557,7 @@
                                             data-instructor="{{ $course['instructor_name'] }}"
                                             data-category="{{ $course['category_name'] }}"
                                             data-price="{{ $course['price'] }}"
-                                            data-episodes='@json($course['episodes'])'
+                                            data-episodes='@json($course["episodes"])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
                                             data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
@@ -1380,19 +1385,28 @@
                     {{-- Include the right bar profile tag --}}
                     @include('layouts.profileTag', ['showDropdown' => true])
 
+                    @php
+                        $progressData = app('App\Http\Controllers\CourseAccessController')->getOverallProgressData();
+                        $progressPercent = $progressData['overall_progress'];
+
+                        \Log::info("Message for average before showing to overalll: " . $progressPercent);
+                        $progressMessage = $progressData['message'];
+                        $activeLevel = $progressData['level'];
+                    @endphp
+
                     <div class="progress_box">
                         <div class="progress-container">
                             <div class="progress-header">
                                 <h1 class="progress-title">Your Overall Progress</h1>
-                                <p class="progress-percent">25%</p>
+                                <p class="progress-percent">{{ $progressPercent }}%</p>
                             </div>
+                            <p>{{\Log::info("Message for average after showing to overalll: " . $progressPercent);}}</p>
                             <div class="progress-track">
-                                <div class="progress-fill" style="width: 25%;"></div>
-                                <div class="level-marker active"></div>
-                                <div class="level-marker active"></div>
-                                <div class="level-marker"></div>
-                                <div class="level-marker"></div>
-                                <div class="level-marker"></div>
+                                <div class="progress-fill" style="width: {{ $progressPercent }}%;"></div>
+
+                                @for ($i = 0; $i < 5; $i++)
+                                    <div class="level-marker {{ $i <= $activeLevel ? 'active' : '' }}"></div>
+                                @endfor
                             </div>
                             <div class="progress-labels">
                                 <div class="label">0%<br><span></span></div>
@@ -1402,10 +1416,11 @@
                                 <div class="label">100%<br><span>Expert</span></div>
                             </div>
                             <div class="progress-message">
-                                <p>You're making great progress in the course! Keep up the fantastic work <span class="emoji">💯</span>! You've got this! Keep learning, and you'll be amazed at what you can accomplish.</p>
+                                <p>{{ $progressMessage }}</p>
                             </div>
                         </div>
                     </div>
+
                     <div class="upcoming_box">
                         <div class="title">
                             <h4>Upcoming Sessions</h4>
@@ -1460,7 +1475,8 @@
                 });
             });
             document.addEventListener('DOMContentLoaded', () => {
-                updateProgress(50);
+                const progressPercent = {{ $progressPercent }};
+                updateProgress(progressPercent);
 
                 function updateProgress(percent) {
                     const fill = document.querySelector('.progress-fill');
@@ -1471,12 +1487,12 @@
                     percentText.textContent = percent + '%';
 
                     markers.forEach((marker, index) => {
-                    const thresholds = [0, 25, 50, 75, 100];
-                    if (percent >= thresholds[index]) {
-                        marker.classList.add('active');
-                    } else {
-                        marker.classList.remove('active');
-                    }
+                        const thresholds = [0, 25, 50, 75, 100];
+                        if (percent >= thresholds[index]) {
+                            marker.classList.add('active');
+                        } else {
+                            marker.classList.remove('active');
+                        }
                     });
                 }
 

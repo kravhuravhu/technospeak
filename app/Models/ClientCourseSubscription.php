@@ -12,6 +12,7 @@ class ClientCourseSubscription extends Model
     protected $fillable = [
         'client_id',
         'course_id',
+        'course_uuid',
         'payment_status',
         'progress',
         'current_episode_id',

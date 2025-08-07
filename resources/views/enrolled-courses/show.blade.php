@@ -10,6 +10,7 @@
     <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         :root {
             --primary-color: #38b6ff;
@@ -1107,6 +1108,152 @@
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
+
+        /* Celebration Animation */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            background-color: #000000a6;
+        }
+
+        .celebration-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .close-celebration {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+
+        .close-celebration:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            animation: confetti-fall 5s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 5px;
+            animation: firework-explode 2s ease-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes firework-explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(20);
+                opacity: 0;
+            }
+        }
+
+        .celebration-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #000;
+            z-index: 10000;
+            text-align: center;
+            opacity: 0;
+            animation: text-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes text-pulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            animation: balloon-float 8s ease-in infinite;
+        }
+        
+        @keyframes balloon-float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .emoji-rain {
+            position: absolute;
+            font-size: 24px;
+            animation: emoji-fall 5s linear infinite;
+        }
+        
+        @keyframes emoji-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1351,6 +1498,69 @@
 
         <div class="toast" id="toast"></div>
     </div>
+
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <button class="close-celebration" id="close-celebration">×</button>
+            <div class="celebration-text">Congratulations! 🎉</div>
+        </div>
+    </div>
+
+    <div class="celebration-settings" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;">
+        <button id="change-celebration-style" style="background: #38b6ff; color: white; border: none; padding: 10px; border-radius: 50%; cursor: pointer;">
+            🎛️
+        </button>
+    </div>
+
+    <script>
+        document.getElementById('change-celebration-style').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Celebration Style',
+            html: `
+            <div style="text-align: left; margin: 15px 0;">
+                <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="celebration-style" value="confetti" checked> Classic Confetti
+                </label>
+                <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="celebration-style" value="emoji"> Emoji Rain
+                </label>
+                <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="celebration-style" value="balloons"> Balloons
+                </label>
+                <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="celebration-style" value="all"> All Effects
+                </label>
+            </div>
+            `,
+            confirmButtonText: 'Save Preference',
+            showCancelButton: true,
+            preConfirm: () => {
+            const selected = document.querySelector('input[name="celebration-style"]:checked');
+            if (!selected) {
+                Swal.showValidationMessage('Please select a celebration style');
+            }
+            return selected ? selected.value : null;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+            localStorage.setItem('celebrationStyle', result.value);
+            showToast('Celebration style saved!');
+            }
+        });
+        });
+
+        function showToast(message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -1657,6 +1867,8 @@
                                 
                                 progressPercent.textContent = `${data.overall_progress}%`;
                                 progressFill.style.width = `${data.overall_progress}%`;
+
+                                checkProgressFromResponse(data.overall_progress);
                                 
                                 // If completed, update UI
                                 if (data.progress.is_completed) {
@@ -1822,6 +2034,8 @@
                                     progressPercent.textContent = `${currentProgress}%`;
                                     progressFill.style.width = `${currentProgress}%`;
                                     setTimeout(increment, 20);
+                                } else {
+                                    checkProgressFromResponse(currentProgress);
                                 }
                             };
 
@@ -1863,7 +2077,7 @@
 
                     Swal.fire({
                         title: 'Confirm Unenrollment',
-                        html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.`,
+                        html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.<br><br><i style="font-size:small;">Including your certificates, progress report will be reset...</i>`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#e53e3e',
@@ -2353,6 +2567,209 @@
 
             // all ratings
             loadAllReviews();
+
+            // Celebration animation functions
+            function createConfetti() {
+                const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (3 + Math.random() * 5) + 's';
+                document.querySelector('.celebration-content').appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+
+                confetti.style.willChange = 'transform, opacity';
+    
+                requestAnimationFrame(() => {
+                    document.querySelector('.celebration-content').appendChild(confetti);
+                });
+                
+                setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    });
+                }, 5000);
+            }
+
+            function createFirework() {
+                const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = Math.random() * 100 + 'vw';
+                firework.style.top = Math.random() * 100 + 'vh';
+                firework.style.boxShadow = `0 0 10px 5px ${colors[Math.floor(Math.random() * colors.length)]}`;
+                document.querySelector('.celebration-content').appendChild(firework);
+                
+                setTimeout(() => {
+                    firework.remove();
+                }, 2000);
+            }
+
+            function startCelebration() {
+                const celebration = document.getElementById('celebration');
+                celebration.style.display = 'block';
+                
+                // Create initial particles
+                for (let i = 0; i < 50; i++) {
+                    createConfetti();
+                    if (i % 5 === 0) createFirework();
+                }
+                
+                // creating more particles
+                const confettiInterval = setInterval(createConfetti, 200);
+                const fireworkInterval = setInterval(createFirework, 1000);
+                
+                return () => {
+                    clearInterval(confettiInterval);
+                    clearInterval(fireworkInterval);
+                    celebration.style.display = 'none';
+                    window.celebrationActive = false;
+                };
+            }
+
+            // Close celebration button
+            document.getElementById('close-celebration').addEventListener('click', function() {
+                if (window.stopCelebration) {
+                    window.stopCelebration();
+                }
+            });
+
+            function checkProgressFromResponse(progress) {
+                if (progress >= 100) {
+                    if (!window.celebrationActive) {
+                        window.stopCelebration = startCelebration();
+                        window.celebrationActive = true;
+                    }
+                } else {
+                    if (window.celebrationActive) {
+                        window.stopCelebration?.();
+                        window.celebrationActive = false;
+                    }
+                }
+            }
+
+            // Initial check
+            const progressText = document.querySelector('.progress-percent');
+            if (progressText) {
+                const progress = parseInt(progressText.textContent);
+                checkProgressFromResponse(progress);
+            }
+
+            function checkProgress() {
+                const progressText = document.querySelector('.progress-percent');
+                if (progressText) {
+                    const progress = parseInt(progressText.textContent);
+                    if (progress >= 100) {
+                        if (!window.celebrationActive) {
+                            window.stopCelebration = startCelebration();
+                            window.celebrationActive = true;
+                        }
+                    } else {
+                        if (window.celebrationActive) {
+                            window.stopCelebration?.();
+                            window.celebrationActive = false;
+                        }
+                    }
+                }
+            }
+
+            function createBalloon() {
+                const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5'];
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animationDuration = (5 + Math.random() * 10) + 's';
+                document.querySelector('.celebration-content').appendChild(balloon);
+                
+                setTimeout(() => {
+                    balloon.remove();
+                }, 8000);
+            }
+
+            function createEmojiRain() {
+                const emojis = ['🎉', '🎊', '🥳', '🎈', '🏆', '✨', '👏', '💯'];
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-rain';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animationDuration = (3 + Math.random() * 7) + 's';
+                emoji.style.fontSize = (20 + Math.random() * 30) + 'px';
+                document.querySelector('.celebration-content').appendChild(emoji);
+                
+                setTimeout(() => {
+                    emoji.remove();
+                }, 5000);
+            }
+
+            function startCelebration() {
+                const celebration = document.getElementById('celebration');
+                celebration.style.display = 'block';
+                
+                // Create initial particles
+                for (let i = 0; i < 100; i++) {
+                    if (i % 3 === 0) createConfetti();
+                    if (i % 5 === 0) createFirework();
+                    if (i % 7 === 0) createBalloon();
+                    if (i % 4 === 0) createEmojiRain();
+                }
+                
+                // Continue creating particles
+                const intervals = {
+                    confetti: setInterval(createConfetti, 200),
+                    firework: setInterval(createFirework, 1000),
+                    balloon: setInterval(createBalloon, 1500),
+                    emoji: setInterval(createEmojiRain, 300)
+                };
+                
+                return () => {
+                    clearInterval(intervals.confetti);
+                    clearInterval(intervals.firework);
+                    clearInterval(intervals.balloon);
+                    clearInterval(intervals.emoji);
+                    celebration.style.display = 'none';
+                    window.celebrationActive = false;
+                    
+                    // Clear all existing particles
+                    document.querySelectorAll('.confetti, .firework, .balloon, .emoji-rain').forEach(el => el.remove());
+                };
+            }
+
+            // In close button handler:
+            document.getElementById('close-celebration').addEventListener('click', function() {
+                localStorage.setItem('celebrationDisabled', 'true');
+                if (window.stopCelebration) {
+                    window.stopCelebration();
+                }
+            });
+
+            // In checkProgressFromResponse:
+            function checkProgressFromResponse(progress) {
+                if (progress >= 100 && !localStorage.getItem('celebrationDisabled')) {
+                    if (!window.celebrationActive) {
+                        window.stopCelebration = startCelebration();
+                        window.celebrationActive = true;
+                    }
+                } else {
+                    if (window.celebrationActive) {
+                        window.stopCelebration?.();
+                        window.celebrationActive = false;
+                    }
+                }
+            }
+
+            // Clear the setting when leaving the page
+            window.addEventListener('beforeunload', () => {
+                localStorage.removeItem('celebrationDisabled');
+            });
+
+            checkProgress();
         });
     </script>
 </body>

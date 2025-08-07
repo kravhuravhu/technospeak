@@ -1,13 +1,13 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const trainingCards = document.querySelectorAll('.training-card');
     const modal = document.getElementById('training-modal');
     const closeBtn = document.querySelector('.close-btn');
     const episodeList = document.getElementById('episode-list');
-    
+
     trainingCards.forEach(card => {
-        card.addEventListener('click', function(e) {
+        card.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const isFree = this.getAttribute('data-training-type') === 'free';
             const title = this.getAttribute('data-title');
             const description = this.getAttribute('data-description');
@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const category = this.getAttribute('data-category');
             const price = this.getAttribute('data-price') || 'Free';
             const episodes = JSON.parse(this.getAttribute('data-episodes'));
-            
-            // Set modal content
+
             document.getElementById('modal-title-cs').textContent = title;
             document.getElementById('modal-price').textContent = isFree ? 'Free' : price;
             document.getElementById('modal-image').src = image;
@@ -29,8 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('modal-level').textContent = level;
             document.getElementById('modal-instructor').textContent = instructor;
             document.getElementById('modal-category').textContent = category;
-            
-            // Clear and populate episodes
+
             episodeList.innerHTML = '';
             episodes.forEach(episode => {
                 const li = document.createElement('li');
@@ -42,26 +40,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 episodeList.appendChild(li);
             });
-            
-            // Set enroll button & URL
+
             const enrollBtn = document.getElementById('enroll-btn');
             const isEnrolled = this.getAttribute('data-enrolled') === 'true';
             const showLink = this.getAttribute('data-show-link');
 
             if (isEnrolled && showLink) {
-                enrollBtn.textContent = 'Open';
+                enrollBtn.textContent = 'Open →';
                 enrollBtn.href = showLink;
                 enrollBtn.classList.add('open-btn');
+                enrollBtn.style.backgroundColor = '#062644';
                 enrollBtn.removeAttribute('target');
                 enrollBtn.removeAttribute('data-enroll');
             } else {
                 enrollBtn.textContent = isFree ? 'Enroll Now' : 'Unlock All';
                 enrollBtn.href = '#';
+                enrollBtn.style.backgroundColor = '#38b6ff';
                 enrollBtn.classList.remove('open-btn');
                 enrollBtn.setAttribute('data-enroll', 'true');
             }
-            
-            // Show modal
+
             const courseId = this.getAttribute('data-course-id');
 
             modal.setAttribute('data-course-id', courseId);
@@ -71,32 +69,23 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
         });
     });
-    
-    // Close modal
+
     closeBtn.addEventListener('click', closeModal);
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', function (e) {
         if (e.target === modal) {
             closeModal();
         }
     });
-    
+
     function closeModal() {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
     }
-});
 
-// enroll button click
-document.addEventListener('DOMContentLoaded', function() {
     const enrollBtn = document.getElementById('enroll-btn');
-    
     if (enrollBtn) {
-        enrollBtn.addEventListener('click', function(e) {
-            // open link
-            if (!this.hasAttribute('data-enroll')) {
-                return;
-            }
-
+        enrollBtn.addEventListener('click', function (e) {
+            if (!this.hasAttribute('data-enroll')) return;
             e.preventDefault();
 
             if (this.textContent === 'Enrolled') {
@@ -110,26 +99,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const modal = document.getElementById('training-modal');
-            const courseId = modal.getAttribute('data-course-id');
-            
-            if (!courseId) {
-                console.error('No course ID found');
-                return;
-            }
+            const courseId = document.getElementById('training-modal').getAttribute('data-course-id');
+            if (!courseId) return console.error('No course ID found');
 
-            enrollInCourse(courseId);
+            enrollInCourse(courseId, enrollBtn);
         });
     }
 
-    document.querySelectorAll('.thmb_enrll label').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+    document.querySelectorAll('.thmb_enrll label').forEach(labelBtn => {
+        labelBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             const card = this.closest('.training-card');
-            if (card) {
-                const courseId = card.dataset.courseId;
-                enrollInCourse(courseId);
-            }
+            if (!card) return;
+
+            const courseId = card.dataset.courseId;
+
+            labelBtn.disabled = true;
+            const originalText = labelBtn.textContent;
+            labelBtn.innerHTML = `Enrolling <i class="fas fa-spinner fa-spin"></i>`;
+            labelBtn.style.cursor = 'not-allowed';
+
+            enrollInCourse(courseId, labelBtn, originalText);
         });
     });
 });
@@ -143,7 +133,7 @@ function showSwalNotification(type, title, message) {
     };
 
     Swal.fire({
-        icon: iconMap[type] || 'info',
+        icon: type,
         title: title,
         text: message,
         timer: 7000,
@@ -155,10 +145,10 @@ function showSwalNotification(type, title, message) {
     });
 }
 
-function enrollInCourse(courseId) {
+function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll Now') {
     fetch('/clear-cache')
         .then(() => {
-            fetch('/courses/enroll', {
+            return fetch('/courses/enroll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -166,30 +156,38 @@ function enrollInCourse(courseId) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({ course_id: courseId })
-            })
-            .then(async response => {
-                const data = await response.json();
-                
-                if (data.success) {
-                    showSwalNotification('success', 'Success', data.message);
-                    updateEnrollmentUI(courseId);
-                    closeModal();
-                    refreshMyTrainings();
-                } else {
-                    showSwalNotification('error', 'Error', data.message);
-                }
-            })
-            .catch(error => {
-                showSwalNotification('error', 'Error', 'An error occurred during enrollment');
             });
-    });
+        })
+        .then(async response => {
+            const data = await response.json();
+
+            if (data.success) {
+                showSwalNotification('success', 'Success', data.message);
+                updateEnrollmentUI(courseId);
+                closeModal();
+                refreshMyTrainings();
+            } else {
+                showSwalNotification('error', 'Error', data.message);
+                if (buttonElement) {
+                    buttonElement.disabled = false;
+                    buttonElement.innerHTML = originalText;
+                    buttonElement.style.cursor = 'pointer';
+                }
+            }
+        })
+        .catch(() => {
+            showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+            if (buttonElement) {
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = originalText;
+                buttonElement.style.cursor = 'pointer';
+            }
+        });
 }
 
 function refreshMyTrainings() {
     fetch('/clear-cache')
-        .then(() => {
-            return fetch('/dashboard', { cache: 'no-store' });
-        })
+        .then(() => fetch('/dashboard', { cache: 'no-store' }))
         .then(response => response.text())
         .then(html => {
             const parser = new DOMParser();
@@ -199,29 +197,42 @@ function refreshMyTrainings() {
                 document.querySelector('.my_learnings').innerHTML = newContent.innerHTML;
             }
         })
-        .catch(error => {
+        .catch(() => {
             showSwalNotification('error', 'Error', 'Could not refresh trainings.');
         });
 }
 
 function updateEnrollmentUI(courseId) {
-    document.querySelectorAll(`.training-card[data-course-id="${courseId}"] .thmb_enrll label`).forEach(btn => {
-        btn.textContent = 'Enrolled';
-        btn.classList.add('enrolled');
-        btn.style.backgroundColor = '#062644';
-        btn.style.cursor = 'default';
-    });
+    const courseUUID = courseId;
+    const card = document.querySelector(`.training-card[data-course-id="${courseUUID}"]`);
+    if (!card) return;
+
+    const labelBtn = card.querySelector('.thmb_enrll label');
+    if (labelBtn) {
+        labelBtn.textContent = 'Open →';
+        labelBtn.classList.add('open-btn');
+        labelBtn.disabled = false;
+        labelBtn.style.cursor = 'pointer';
+
+        const newLabelBtn = labelBtn.cloneNode(true);
+        labelBtn.parentNode.replaceChild(newLabelBtn, labelBtn);
+        newLabelBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            window.location.href = `/enrolled-courses/${courseUUID}`;
+        });
+    }
 
     const modal = document.getElementById('training-modal');
-    if (modal && modal.style.display === 'block') {
-        const modalCourseId = modal.getAttribute('data-course-id');
-        if (modalCourseId === courseId) {
-            const modalEnrollBtn = document.getElementById('enroll-btn');
-            if (modalEnrollBtn) {
-                modalEnrollBtn.textContent = 'Enrolled';
-                modalEnrollBtn.style.backgroundColor = '#062644';
-                modalEnrollBtn.style.cursor = 'default';
-            }
+    if (modal.getAttribute('data-course-id') === courseUUID) {
+        const modalEnrollBtn = document.getElementById('enroll-btn');
+        if (modalEnrollBtn) {
+            modalEnrollBtn.textContent = 'Open →';
+            modalEnrollBtn.href = `/enrolled-courses/${courseUUID}`;
+            modalEnrollBtn.removeAttribute('data-enroll');
+            modalEnrollBtn.classList.add('open-btn');
+            modalEnrollBtn.style.backgroundColor = '#062644';
+            modalEnrollBtn.style.cursor = 'pointer';
+            modalEnrollBtn.disabled = false;
         }
     }
 }

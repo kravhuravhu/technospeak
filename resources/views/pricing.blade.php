@@ -213,8 +213,23 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
+                                            @php
+                                            $formalSession = \App\Models\TrainingSession::where('type_id', 1)
+                                                ->where('scheduled_for', '>', now())
+                                                ->orderBy('scheduled_for')
+                                                ->first();
+                                            @endphp
+
                                             @if(Auth::check())
-                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'training_1']) }}" class="btn btn-primary">ENROLL NOW</a>
+                                                @if($formalSession)
+                                                    <a href="#" class="btn btn-primary registration-trigger" 
+                                                    data-type-id="1" 
+                                                    data-session-id="{{ $formalSession->id }}">
+                                                        ENROLL NOW
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-primary" disabled>ENROLL NOW</button>
+                                                @endif
                                             @else
                                                 <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">ENROLL NOW</a>
                                             @endif
@@ -246,21 +261,41 @@
                                                 </div>
                                             </div>
                                             <div class="bttn">
+                                               @php
+                                                $guideSession = \App\Models\TrainingSession::where('type_id', 3)
+                                                    ->orderBy('scheduled_for')
+                                                    ->first();
+                                                @endphp
+
                                                 @if(Auth::check())
-                                                    <!-- Personal Guide -->
-                                                    <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'service_4']) }}" class="btn btn-primary">PERSONAL GUIDE</a>
-                                                    
-                                                    <!-- Task Assistance -->
-                                                    <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'service_5']) }}" class="btn btn-primary">TASK ASSISTANCE</a>
+                                                    <a href="#" class="btn btn-primary registration-trigger" 
+                                                    data-type-id="3" 
+                                                    data-session-id="{{ $guideSession->id }}">
+                                                        PERSONAL GUIDE
+                                                    </a>
                                                 @else
                                                     <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                @endif
+                                                @php
+                                                $taskSession = \App\Models\TrainingSession::where('type_id', 2)
+                                                    ->orderBy('scheduled_for')
+                                                    ->first();
+                                                @endphp
+
+                                                @if(Auth::check())
+                                                    <a href="#" class="btn btn-primary registration-trigger" 
+                                                    data-type-id="2" 
+                                                    data-session-id="{{ $taskSession->id }}">
+                                                        TASK ASSISTANCE
+                                                    </a>
+                                                @else
                                                     <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">TASK ASSISTANCE</a>
                                                 @endif
                                             </div>
                                         </div>
 
                                         <!-- Modal: Personal Guide -->
-                                        <div id="modal-guide" class="modal" onclick="closeModal(event, 'modal-guide')">
+                                        <!-- <div id="modal-guide" class="modal" onclick="closeModal(event, 'modal-guide')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
                                                 <div class="plan_title">
                                                     <h2>Personal Guide</h2>
@@ -285,10 +320,10 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- Modal: Task Assistance -->
-                                        <div id="modal-task" class="modal" onclick="closeModal(event, 'modal-task')">
+                                        <!-- <div id="modal-task" class="modal" onclick="closeModal(event, 'modal-task')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
                                                 <div class="plan_title">
                                                     <h2>Task Assistance</h2>
@@ -314,7 +349,7 @@
                                                     <button class="btn btn-secondary" onclick="document.getElementById('modal-task').style.display='none'">CLOSE</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!-- Group Session -->
                                     <div class="card_container row2">
@@ -388,7 +423,7 @@
                                             </div>
                                         </div>
                                         <!-- Modal: Group Q/A -->
-                                        <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
+                                        <!-- <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
                                                 <div class="plan_title">
                                                     <h2>Group Q/A</h2>
@@ -414,9 +449,9 @@
                                                     <button onclick="document.getElementById('modal-session1').style.display='none'">Close</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!-- Modal: Consultation -->
-                                        <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
+                                        <!-- <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
                                                 <div class="plan_title">
                                                     <h2>Consultation</h2>
@@ -442,7 +477,7 @@
                                                     <button onclick="document.getElementById('modal-session2').style.display='none'">Close</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -468,6 +503,21 @@
                     @include('components.sessions_registration', [
                         'typeId' => 5, 
                         'typeName' => 'Group Session 2'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 1,
+                        'typeName' => 'Formal Training'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 2, 
+                        'typeName' => 'Task Assistance'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 3,
+                        'typeName' => 'Personal Guide'
                     ])
         </section>
 

@@ -8,7 +8,8 @@ use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CourseRating;
-use App\Models\CourseEpisode;use Illuminate\Support\Facades\Log;
+use App\Models\CourseEpisode;
+use Illuminate\Support\Facades\Log;
 
 class CourseAccessController extends Controller
 {
@@ -133,6 +134,7 @@ class CourseAccessController extends Controller
 
             $subscription = $user->courseSubscriptions()->create([
                 'course_id' => $course->id,
+                'course_uuid' => $course->uuid,
                 'payment_status' => 'free',
                 'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id'),
                 'started_at' => now(),
@@ -158,6 +160,7 @@ class CourseAccessController extends Controller
         if ($user->hasActiveSubscription()) {
             $subscription = $user->courseSubscriptions()->create([
                 'course_id' => $course->id,
+                'course_uuid' => $course->uuid,
                 'payment_status' => 'paid',
                 'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id')
             ]);
@@ -186,48 +189,50 @@ class CourseAccessController extends Controller
 
         if (!$user->isSubscribedTo($course->id)) {
             return redirect()->route('unenrolled-courses.show', $course->uuid);
-        }
-
-        $totalSeconds = $course->total_duration;
-        $hours = floor($totalSeconds / 3600);
-        $minutes = floor(($totalSeconds % 3600) / 60);
-        $seconds = $totalSeconds % 60;
-        
-        $formattedDuration = ($hours > 0 ? "{$hours}h" : "") . ($minutes > 0 ? "{$minutes}m" : "") . "{$seconds}s";
-
-        $subscription = $user->courseSubscriptions()->where('course_id', $course->id)->first();
-        $progress = $subscription ? $subscription->progress : 0;
-
-        // get the episode that is completed
-        $completedEpisodeIds = $subscription->episodeProgress()
-            ->where('is_completed', true)
-            ->pluck('episode_id');
-
-        $episodes = $course->episodes->map(function($episode) use ($completedEpisodeIds) {
-            $duration = $episode->duration;
-            $h = floor($duration / 3600);
-            $m = floor(($duration % 3600) / 60);
-            $s = $duration % 60;
+        } else {
+            $totalSeconds = $course->total_duration;
+            $hours = floor($totalSeconds / 3600);
+            $minutes = floor(($totalSeconds % 3600) / 60);
+            $seconds = $totalSeconds % 60;
             
-            $durationFormatted = ($h > 0 ? "{$h}h" : "") . ($m > 0 ? "{$m}m" : "") . "{$s}s";
+            $formattedDuration = ($hours > 0 ? "{$hours}h" : "") . ($minutes > 0 ? "{$minutes}m" : "") . "{$seconds}s";
 
-            return [
-                'id' => $episode->id,
-                'number' => $episode->episode_number,
-                'title' => $episode->title,
-                'description' => $episode->description,
-                'duration' => $durationFormatted,
-                'video_url' => $episode->video_url,
-                'completed' => $completedEpisodeIds->contains($episode->id),
-                'is_free' => $episode->is_free,
-            ];
-        });
+            $subscription = $user->courseSubscriptions()->where('course_id', $course->id)->first();
+            $progress = $subscription ? $subscription->progress : 0;
 
-        $certificate = $subscription->certificate;
+            // get the episode that is completed
+            $completedEpisodeIds = $subscription && $subscription->episodeProgress()
+                ? $subscription->episodeProgress()
+                    ->where('is_completed', true)
+                    ->pluck('episode_id')
+                : collect();
 
-        $resources = $course->resources()->get();
+            $episodes = $course->episodes->map(function($episode) use ($completedEpisodeIds) {
+                $duration = $episode->duration;
+                $h = floor($duration / 3600);
+                $m = floor(($duration % 3600) / 60);
+                $s = $duration % 60;
+                
+                $durationFormatted = ($h > 0 ? "{$h}h" : "") . ($m > 0 ? "{$m}m" : "") . "{$s}s";
 
-        return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
+                return [
+                    'id' => $episode->id,
+                    'number' => $episode->episode_number,
+                    'title' => $episode->title,
+                    'description' => $episode->description,
+                    'duration' => $durationFormatted,
+                    'video_url' => $episode->video_url,
+                    'completed' => $completedEpisodeIds->contains($episode->id),
+                    'is_free' => $episode->is_free,
+                ];
+            });
+
+            $certificate = $subscription ? $subscription->certificate : null;
+
+            $resources = $course->resources()->get();
+
+            return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
+        }
     }
 
     // view while unenrolled
@@ -237,23 +242,23 @@ class CourseAccessController extends Controller
 
         if ($user && $user->isSubscribedTo($course->id)) {
             return redirect()->route('enrolled-courses.show', $course->uuid);
+        } else {
+            $course->load(['category', 'instructor', 'episodes' => function($query) {
+                $query->orderBy('episode_number');
+            }]);
+
+            $course->resources_count = $course->resources()->count();
+            $course->episodes_count = $course->episodes()->count();
+
+            $hasActiveSubscription = $user ? $user->hasActiveSubscription() : false;
+            $payEnroll = $course->plan_type == 'paid' || $hasActiveSubscription;
+
+            return view('unenrolled-courses.show', [
+                'course' => $course,
+                'payEnroll' => $payEnroll,
+                'hasActiveSubscription' => $hasActiveSubscription
+            ]);
         }
-
-        $course->load(['category', 'instructor', 'episodes' => function($query) {
-            $query->orderBy('episode_number');
-        }]);
-
-        $course->resources_count = $course->resources()->count();
-        $course->episodes_count = $course->episodes()->count();
-
-        $hasActiveSubscription = $user ? $user->hasActiveSubscription() : false;
-        $payEnroll = $course->plan_type == 'paid' || $hasActiveSubscription;
-
-        return view('unenrolled-courses.show', [
-            'course' => $course,
-            'payEnroll' => $payEnroll,
-            'hasActiveSubscription' => $hasActiveSubscription
-        ]);
     }
 
     public function markEpisodeCompleted(Course $course, CourseEpisode $episode)
@@ -271,7 +276,7 @@ class CourseAccessController extends Controller
         }
 
         $subscription = $user->courseSubscriptions()
-            ->where('course_id', $course->id)
+            ->where('course_uuid', $course->uuid)
             ->first();
 
         if (!$subscription) {
@@ -314,7 +319,7 @@ class CourseAccessController extends Controller
         $user = Auth::user();
         
         $subscription = $user->courseSubscriptions()
-            ->where('course_id', $course->id)
+            ->where('course_uuid', $course->uuid)
             ->firstOrFail();
 
         $duration = $episode->duration;
@@ -363,6 +368,7 @@ class CourseAccessController extends Controller
         ]);
     }
 
+    // delete and can unenroll too
     public function destroy(Course $course)
     {
         $user = Auth::user();
@@ -377,8 +383,12 @@ class CourseAccessController extends Controller
         }
 
         $subscription = $user->courseSubscriptions()
-            ->where('course_id', $course->id)
+            ->where('course_uuid', $course->uuid)
             ->firstOrFail();
+
+        $subscription->episodeProgress()->delete();
+
+        $subscription->episodeProgress()->delete();
 
         $subscription->delete();
 
@@ -432,7 +442,7 @@ class CourseAccessController extends Controller
     public function getCertificate(Course $course)
     {
         $subscription = Auth::user()->courseSubscriptions()
-            ->where('course_id', $course->id)
+            ->where('course_uuid', $course->uuid)
             ->where('completed', true)
             ->first();
 
@@ -537,5 +547,72 @@ class CourseAccessController extends Controller
             ->values();
 
         return response()->json($resources);
+    }
+
+    // overall for tracking all enrolled progress
+    public function getOverallProgressData()
+    {
+        $user = Auth::user();
+
+        $subscriptions = $user->courseSubscriptions()->with('course')->get();
+        $enrolledCount = $subscriptions->count();
+
+        if ($enrolledCount === 0) {
+            return [
+                'overall_progress' => 0,
+                'message' => "Start your learning journey today! 🚀",
+                'level' => 0,
+                'courses' => []
+            ];
+        }
+
+        $totalProgress = 0;
+
+        $courses = $subscriptions->map(function ($subscription) use (&$totalProgress) {
+            $course = $subscription->course;
+            $progress = $subscription->progress;
+            $totalProgress += $progress;
+
+            $totalDuration = $course->total_duration;
+            $watched = floor(($progress / 100) * $totalDuration);
+            $left = max(0, $totalDuration - $watched);
+
+            return [
+                'uuid' => $course->uuid,
+                'title' => $course->title,
+                'thumbnail' => $course->thumbnail,
+                'formatted_duration' => $course->formatted_duration,
+                'progress' => $progress,
+                'watched_seconds' => $watched,
+                'left_seconds' => $left,
+            ];
+        });
+
+        $averageProgress = round($totalProgress / $enrolledCount);
+
+        // message and level
+        if ($averageProgress >= 100) {
+            $message = "Congratulations! 🏆 You’ve reached expert status. Keep pushing boundaries 🪵, mastering new skills, and inspiring others on your journey! 🎖️";
+            $level = 4;
+        } elseif ($averageProgress >= 75) {
+            $message = "You’re almost there! 🌟 Keep up the amazing work 🧸 and continue refining your knowledge 🪵. Your dedication is paying off beautifully!";
+            $level = 3;
+        } elseif ($averageProgress >= 50) {
+            $message = "Great job reaching the halfway mark! 🔥 Stay motivated 🐻 and keep building your skills steadily — the best is yet to come 🪵!";
+            $level = 2;
+        } elseif ($averageProgress >= 25) {
+            $message = "Nice progress! 💪 Keep your momentum strong 🦫 and consistent. Every step forward brings you closer to your goals 🪵.";
+            $level = 1;
+        } else {
+            $message = "Welcome to your learning journey! 🚀 Every expert started just like you 🧸. Take your first steps with confidence and curiosity 🍂.";
+            $level = 0;
+        }
+
+        return [
+            'overall_progress' => $averageProgress,
+            'message' => $message,
+            'level' => $level,
+            'courses' => $courses->toArray(),
+        ];
     }
 }

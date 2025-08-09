@@ -25,6 +25,7 @@ class Client extends Authenticatable implements MustVerifyEmail
         'password',
         'preferred_category_id',
         'subscription_type',
+        'subscription_paid_at',
         'subscription_expiry',
         'registered_date',
         'registered_time',
@@ -41,7 +42,8 @@ class Client extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'subscription_expiry' => 'date',
-        'registered_date' => 'date'
+        'registered_date' => 'date',
+        'subscription_paid_at' => 'datetime',
     ];
 
     public function setNameAttribute($value)

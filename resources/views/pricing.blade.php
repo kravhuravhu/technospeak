@@ -416,14 +416,14 @@
                                                     @else
                                                         <button class="btn btn-primary" disabled>CONSULTATION</button>
                                                     @endif
-                                                @else
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">GROUP Q/A</a>
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">CONSULTATION</a>
-                                                @endif
+                                                    @else
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">GROUP Q/A</a>
+                                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">CONSULTATION</a>
+                                                    @endif
                                             </div>
                                         </div>
                                         <!-- Modal: Group Q/A -->
-                                        <!-- <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
+                                         <!-- <div id="modal-qa" class="modal" onclick="closeModal(event, 'modal-qa')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
                                                 <div class="plan_title">
                                                     <h2>Group Q/A</h2>
@@ -449,7 +449,7 @@
                                                     <button onclick="document.getElementById('modal-session1').style.display='none'">Close</button>
                                                 </div>
                                             </div>
-                                        </div> -->
+                                        </div>  -->
                                         <!-- Modal: Consultation -->
                                         <!-- <div id="modal-consult" class="modal" onclick="closeModal(event, 'modal-consult')">
                                             <div class="card popup-content" onclick="event.stopPropagation();">
@@ -477,7 +477,7 @@
                                                     <button onclick="document.getElementById('modal-session2').style.display='none'">Close</button>
                                                 </div>
                                             </div>
-                                        </div> -->
+                                        </div>  -->
                                     </div>
                                 </div>
                             </div>

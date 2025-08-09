@@ -202,10 +202,17 @@ class StripeController extends Controller
                 'payable_id' => $trainingType->id
             ]);
 
-            // Update client's subscription status
+            // Update client's subscription status with payment date
             $client->update([
                 'subscription_type' => strtolower($trainingType->name),
-                'subscription_expiry' => now()->addQuarter() // Assuming quarterly subscription
+                'subscription_paid_at' => now(), 
+                'subscription_expiry' => now()->addQuarter() 
+            ]);
+
+            // Update all course subscriptions to paid status
+            $client->courseSubscriptions()->update([
+                'payment_status' => 'paid',
+                'updated_at' => now()
             ]);
 
             return view('success-subscription', [

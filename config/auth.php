@@ -47,7 +47,7 @@ return [
         'instructor' =>  [
             'driver' => 'session',
             'provider' => 'instructors'
-            ]
+        ]
     ],
 
     /*

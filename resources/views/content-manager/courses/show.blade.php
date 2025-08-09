@@ -422,7 +422,7 @@
                         <div class="stat-label">Duration</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">0</div>
+                        <div class="stat-value"><td>{{ $course->subscriptions()->count() ?: '0' }}</td></div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="stat-card">
@@ -535,25 +535,84 @@
             </div>
         </div>
 
-        @if($course->episodes->count() > 0)
-            <div class="card mt-6">
-                <div class="card-header">
-                    <h3 class="card-title">Featured Episode</h3>
-                    <i class="fas fa-play-circle text-gray-400"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="font-medium text-gray-800 mb-2">{{ $course->episodes->first()->title }}</h4>
-                    <div class="video-container">
-                        <iframe src="{{ $course->episodes->first()->video_url }}" allowfullscreen></iframe>
-                    </div>
-                    <div class="mt-3 text-sm text-gray-600">
-                        <p><strong>Duration:</strong> {{ gmdate('i:s', $course->episodes->first()->duration) }}</p>
-                        @if($course->episodes->first()->description)
-                        <p class="mt-1">{{ $course->episodes->first()->description }}</p>
-                        @endif
-                    </div>
+        @if($course->subscriptions()->count() > 0)
+        <div class="card mt-6">
+            <div class="card-header">
+                <h3 class="card-title">Enrolled Students ({{ $course->subscriptions()->count() }})</h3>
+                <i class="fas fa-users text-gray-400"></i>
+            </div>
+            <div class="card-body">
+                <div class="overflow-x-auto">
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Email</th>
+                                <th>Client Subscription</th>
+                                <th>Enrolled At</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($course->subscriptions as $subscription)
+                            @php
+                                $client = $subscription->client;
+                                $progress = $subscription->progress;
+                                $enrolledAt = $subscription->created_at;
+                                $isCompleted = $subscription->completed;
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ $client->full_name }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-sm text-gray-500">{{ $client->email }}</td>
+                                <td class="text-sm text-gray-500">{{ $client->subscription_type }}</td>
+                                <td class="text-sm text-gray-500">{{ $enrolledAt->format('M d, Y') }}</td>
+                                <td>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-blue-600 h-2.5 rounded-full" 
+                                            style="width: {{ $progress }}%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">{{ round($progress) }}% <i style="font-size:small;">Complete</i></span>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-{{ $isCompleted ? 'active' : 'pending' }}">
+                                        {{ $isCompleted ? 'Completed' : 'In Progress' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('content-manager.clients.show', $client->id) }}" 
+                                    class="action-btn" 
+                                    title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+        @else
+        <div class="card mt-6">
+            <div class="card-header">
+                <h3 class="card-title">Enrolled Students</h3>
+                <i class="fas fa-users text-gray-400"></i>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-4 text-gray-500">
+                    <i class="fas fa-user-slash fa-2x mb-2"></i>
+                    <p>No students enrolled yet</p>
+                </div>
+            </div>
+        </div>
         @endif
     </div>
 </div>
@@ -562,11 +621,6 @@
     <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">
         <i class="fas fa-arrow-left"></i> Back to All Courses
     </a>
-    <div>
-        <a href="{{ route('content-manager.courses.edit', $course->id) }}" class="btn btn-primary">
-            <i class="fas fa-edit"></i> Edit Course
-        </a>
-    </div>
 </div>
 
 @endsection

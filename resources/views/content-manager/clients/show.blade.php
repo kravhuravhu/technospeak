@@ -153,8 +153,8 @@
                                 <span class="status-badge status-active">Completed</span>
                             @else
                                 <div class="progress-bar">
-                                    <div class="progress" style="width: {{ $subscription->progress_percent }}%"></div>
-                                    <span>{{ $subscription->progress_percent }}%</span>
+                                    <div class="progress" style="width: {{ $subscription->progress }}%"></div>
+                                    <span>{{ $subscription->progress }}%</span>
                                 </div>
                             @endif
                         </td>

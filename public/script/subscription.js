@@ -13,8 +13,8 @@ const allPlans = [
     },
     {
         id: 2,
-        title: "Annual Subscription",
-        price: "R350/year",
+        title: "Premium Subscription",
+        price: "R350/quarterly",
         description: "Full access to all resources for committed learners",
         features: [
             "All clickbait-style videos",
@@ -40,7 +40,7 @@ const allPlans = [
     {
         id: 4,
         title: "Formal Training",
-        price: "From R400/course",
+        price: "From R1500/training",
         description: "Structured learning with professional instructors",
         features: [
             "Comprehensive EUC training",
@@ -52,8 +52,8 @@ const allPlans = [
     },
     {
         id: 5,
-        title: "Freelance Tutoring",
-        price: "From R80/hour",
+        title: "Task Assistance ",
+        price: "From R100/hour",
         description: "Get help with specific challenges or tasks",
         features: [
             "Tutoring and consultations",

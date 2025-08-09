@@ -249,7 +249,9 @@ section.price_container {
                                     padding: 25px 0;
                                     display: flex;
                                     flex-wrap: wrap;
-                                    & > button {
+                                    justify-content: center;
+                                    
+                                    & > button, & > a.btn {
                                         padding: 15px 30px;
                                         border: 2px solid #38b6ff;
                                         background-color: #ffffff;
@@ -260,6 +262,44 @@ section.price_container {
                                         margin: 0 auto;
                                         font-weight: 600;
                                         transition: all .3s ease-in-out;
+                                        text-decoration: none;
+                                        text-align: center;
+                                        border-radius: 5px;
+                                        font-size: 1em;
+                                        
+                                        &:hover {
+                                            background-color: #38b6ff;
+                                            color: #fafafa;
+                                        }
+                                        
+                                        &.btn-primary {
+                                            background-color: #38b6ff;
+                                            color: #fafafa;
+                                            
+                                            &:hover {
+                                                background-color: #2a8fd6;
+                                                border-color: #2a8fd6;
+                                            }
+                                        }
+                                        
+                                        &:disabled {
+                                            opacity: 0.6;
+                                            cursor: not-allowed;
+                                        }
+                                    }
+                                    
+                                    /* Specific styles for row2 buttons */
+                                    .row2 & {
+                                        gap: 10px;
+                                        padding: 15px 0;
+                                        
+                                        & > button, & > a.btn {
+                                            padding: 12px 20px;
+                                            margin: 0;
+                                            flex: 1;
+                                            max-width: 150px;
+                                            font-size: 0.9em;
+                                        }
                                     }
                                 }
                             }

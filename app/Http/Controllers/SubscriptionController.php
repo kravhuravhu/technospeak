@@ -36,6 +36,7 @@ public function subscribe(Request $request)
         $client = auth()->user();
         $client->update([
             'subscription_type' => 'free',
+            'subscription_paid_at' => null,
             'subscription_expiry' => null
         ]);
         

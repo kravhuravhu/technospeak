@@ -75,7 +75,7 @@
                     <strong>{{ $course->title }}</strong>
                 </td>
                 <td>{{ $course->category->name }}</td>
-                <td>{!! $course->students_count ?? '<i>None enrolled </i>' !!}</td>
+                <td>{{ $course->subscriptions()->count() ?: 'None enrolled' }}</td>
                 <td>
                     @if($course->plan_type == 'paid')
                         <span class="status-badge status-active">Premium Plan</span>

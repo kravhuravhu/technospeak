@@ -227,11 +227,12 @@ class CourseAccessController extends Controller
                 ];
             });
 
+            $showCertificateTab = $course->has_certificate;
             $certificate = $subscription ? $subscription->certificate : null;
 
             $resources = $course->resources()->get();
 
-            return view('enrolled-courses.show', compact('course', 'subscription', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
+            return view('enrolled-courses.show', compact('course', 'subscription', 'showCertificateTab', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
         }
     }
 

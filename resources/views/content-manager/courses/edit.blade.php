@@ -193,6 +193,13 @@
                 <div class="old-value">Current: {{ ucfirst($course->level) }}</div>
             </div>
         </div>
+        <div class="form-row" style="padding:20px 0">
+            <label for="has_certificate" class="form-label">
+                <input type="checkbox" id="has_certificate" name="has_certificate" value="1"
+                    {{ old('has_certificate', $course->has_certificate ?? false) ? 'checked' : '' }}>
+                Course has certificate?
+            </label>
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label for="thumbnail" class="form-label">Thumbnail URL</label>

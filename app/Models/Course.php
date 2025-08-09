@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Course extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     protected $fillable = [
         'uuid',
@@ -24,13 +24,15 @@ class Course extends Model
         'level',
         'total_duration',
         'noEpisodes',
+        'has_certificate',
+
     ];
 
     protected $casts = [
         'total_duration' => 'integer',
         'noEpisodes' => 'integer',
         'is_active' => 'boolean',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -116,8 +118,14 @@ class Course extends Model
     }
 
     public function resources()
-{
-    return $this->hasMany(CourseResource::class, 'course_id');
-}
+    {
+        return $this->hasMany(CourseResource::class, 'course_id');
+    }
+
+    // enrolled users count
+    public function subscriptions()
+    {
+        return $this->hasMany(ClientCourseSubscription::class, 'course_id');
+    }
 
 }

@@ -53,6 +53,7 @@ class CourseController extends Controller
             'software_app_icon' => 'required|url',
             'noEpisodes' => 'required|integer|min:1',
             'total_duration' => 'required|integer|min:1',
+            'has_certificate' => 'sometimes|boolean',
             'episodes' => 'required|array|min:1',
             'episodes.*.title' => 'required|string|max:255',
             'episodes.*.description' => 'required|string',
@@ -84,6 +85,7 @@ class CourseController extends Controller
                 'software_app_icon' => $validatedData['software_app_icon'],
                 'total_duration' => $validatedData['total_duration'],
                 'noEpisodes' => $validatedData['noEpisodes'],
+                'has_certificate' => $request->has('has_certificate') ? 1 : 0,
             ]);
 
             \Log::info('Course created', ['course_id' => $course->id]);
@@ -173,6 +175,7 @@ class CourseController extends Controller
             'software_app_icon' => 'required|url',
             'noEpisodes' => 'required|integer|min:1',
             'total_duration' => 'required|integer|min:1',
+            'has_certificate' => 'sometimes|boolean',
             'episodes' => 'required|array|min:1',
             'episodes.*.title' => 'required|string|max:255',
             'episodes.*.description' => 'required|string',
@@ -205,6 +208,7 @@ class CourseController extends Controller
                 'software_app_icon' => $validatedData['software_app_icon'],
                 'total_duration' => $validatedData['total_duration'],
                 'noEpisodes' => $validatedData['noEpisodes'],
+                'has_certificate' => $request->has('has_certificate') ? 1 : 0,
             ]);
 
             $existingEpisodeIds = $course->episodes->pluck('id')->toArray();

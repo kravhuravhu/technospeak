@@ -1289,7 +1289,7 @@
             <div class="course-tabs">
                 <button class="tab-btn active" data-tab="episodes">Episodes</button>
                 <button class="tab-btn" data-tab="resources">Resources</button>
-                @if($certificate)
+                @if($showCertificateTab)
                     <button class="tab-btn" data-tab="certificate">Certificate</button>
                 @endif
             </div>
@@ -1486,11 +1486,8 @@
                 @else
                     <div class="no-certificate">
                         <i class="fas fa-certificate"></i>
-                        <h3>No Certificate Available</h3>
-                        <p>Complete all course episodes to earn your certificate of completion.</p>
-                        <button class="btn mark-complete-btn" onclick="document.querySelector('.tab-btn[data-tab=\"episodes\"]').click()">
-                            <i class="fas fa-play-circle"></i> Continue Learning
-                        </button>
+                        <h3>No Certificate Available Yet</h3>
+                        <p>Complete all course trainings to earn your certificate of completion.</p>
                     </div>
                 @endif
             </div>

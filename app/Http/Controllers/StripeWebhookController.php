@@ -28,26 +28,29 @@ class StripeWebhookController extends Controller
         Log::info('Stripe webhook received: ' . $event->type);
 
         if ($event->type === 'checkout.session.completed') {
-        $session = $event->data->object;
-        
-        // Handle subscription payments
-        if (isset($session->metadata->training_type_id)) {
-            $trainingType = TrainingType::find($session->metadata->training_type_id);
-            $client = Client::find($session->metadata->client_id);
+            $session = $event->data->object;
+            
+            // Validate subscription payments
+            if (isset($session->metadata->training_type_id)) {
+                $trainingType = TrainingType::find($session->metadata->training_type_id);
+                $client = Client::find($session->metadata->client_id);
 
-            if ($client && $trainingType) {
-                // Update client subscription with payment date
-                $client->update([
-                    'subscription_type' => strtolower($trainingType->name),
-                    'subscription_paid_at' => now(),
-                    'subscription_expiry' => now()->addQuarter()
-                ]);
+                if ($client && $trainingType) {
+                    // Verify the payment amount matches expected
+                    $expectedAmount = $trainingType->getPriceForUserType($client->userType) * 100;
+                    if ($session->amount_total != $expectedAmount) {
+                        Log::error("Payment amount mismatch for subscription", [
+                            'expected' => $expectedAmount,
+                            'actual' => $session->amount_total
+                        ]);
+                        return response('Payment amount mismatch', 400);
+                    }
 
-                // Update all course subscriptions to paid status
-                $client->courseSubscriptions()->update([
-                    'payment_status' => 'paid',
-                    'updated_at' => now()
-                ]);
+                    // Update all course subscriptions to paid status
+                    $client->courseSubscriptions()->update([
+                        'payment_status' => 'paid',
+                        'updated_at' => now()
+                    ]);
 
                 // Create or update payment record
                 Payment::updateOrCreate(

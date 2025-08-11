@@ -96,4 +96,27 @@ class TrainingSession extends Model
             return "0m{$seconds}s";
         }
     }
+
+    public static function getUpcomingSessions()
+    {
+        $now = now();
+        
+        $future = self::with('type')
+            ->where('scheduled_for', '>', $now)
+            ->orderBy('scheduled_for')
+            ->limit(4)
+            ->get();
+
+        if ($future->count() < 4) {
+            $remaining = 4 - $future->count();
+            $past = self::with('type')
+                ->where('scheduled_for', '<=', $now)
+                ->orderByDesc('scheduled_for')
+                ->limit($remaining)
+                ->get();
+            return $future->concat($past);
+        }
+
+        return $future;
+    }
 }

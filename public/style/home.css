@@ -467,10 +467,8 @@ body {
                             & > .cr-img {
                                 height: 200px; 
                                 width: 200px;
-                                border-radius: 50%;
                                 margin-bottom: 25px;
                                 overflow: hidden;
-                                border: 5px solid #f0f0f0;
                                 transition: all 0.3s ease;
                                 
                                 & > img {
@@ -479,8 +477,8 @@ body {
                                     object-fit: cover;
                                     position: relative;
                                     border-radius: 50%;
-                                    transition: transform 0.4s ease;
-                                    
+                                    transition: transform 0.4s ease-in-out;
+                                    border: 5px solid #f0f0f0;
                                     &:hover {
                                         transform: scale(1.03) rotate(5deg);
                                     }
@@ -1454,19 +1452,28 @@ body {
                         & > .cards {
                             & > .card {
                                 width: 280px;
+                                height: 450px;
                                 margin: 0 20px;
                                 &.active {
                                     height: 500px;
+                                    & > .cr-img {
+                                        height: 200px;
+                                        width: 200px;
+                                        & > img {
+                                            height: 200px;
+                                            width: 200px;
+                                        }
+                                    }
                                 }
                                 &:nth-child(3) {
                                     background-color: #f4f4f4;
                                 }
                                 & > .cr-img {
-                                    height: 200px;
-                                    width: 200px;
+                                    height: 180px;
+                                    width: 180px;
                                     & > img {
-                                        height: 200px;
-                                        width: 200px;
+                                        height: 180px;
+                                        width: 180px;
                                     }
                                 }
                                 & > .st_title_container {
@@ -1494,7 +1501,6 @@ body {
                     align-items: center;
                     & > .arrow-btn {
                         background: none;
-                        border: 1.5px solid #000;
                         border-radius: 50px;
                         padding: 1px 10px;
                         font-size: 2rem;
@@ -1543,6 +1549,7 @@ body {
         padding: 20px;
         & > .main_container {
             width: 90%;
+            padding: 20px 0;
             & > .title_container {
                 padding: 10px;
                 & > h2 {
@@ -1862,7 +1869,14 @@ body {
                             & > .header {
                                 margin: 5px 0;
                                 & > h3{
-                                    font-size: 2.5em;
+                                    font-size: 2.3em;
+                                }
+                            }
+                            & > .cta {
+                                & > a {
+                                    & > div {
+                                        padding: 15px 20px;
+                                    }
                                 }
                             }
                         }
@@ -1892,6 +1906,17 @@ body {
                             & > .card {
                                 width: 230px;
                                 height: 370px;
+                                &.active {
+                                    height: 400px;
+                                    & > .cr-img {
+                                        height: 150px;
+                                        width: 150px;
+                                        & > img {
+                                            height: 150px;
+                                            width: 150px;
+                                        }
+                                    }
+                                }
                                 & > .cr-img {
                                     height: 150px;
                                     width: 150px;
@@ -1900,19 +1925,17 @@ body {
                                         width: 150px;
                                     }
                                 }
+                                
                                 & > .st_title_container {
                                     width: 100%;
                                     & > h3 {
-                                        font-size: 1.4em;
+                                        font-size: 1.3em;
                                     }
                                 }
                                 & > .st_dscrpt {
                                     & > p {
-                                        font-size: 1em;
+                                        font-size: .9em;
                                     }
-                                }
-                                &.active {
-                                    height: 400px;
                                 }
                             }
                         }

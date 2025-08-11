@@ -100,7 +100,7 @@
                 
                 <div class="image-content">
                     <div class="image-wrapper">
-                        <img src="images/teamCollaborative.avif" alt="Technospeak team collaborating">
+                        <img src="images/teamCollaborative.avif" alt="Technospeak team collaborating" class="responsive-image">
                         <div class="image-overlay">
                             <span>Quality</span>
                             <span>Efficiency</span>

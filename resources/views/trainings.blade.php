@@ -7,9 +7,9 @@
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
         <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="style/trainings.css">
-        <link rel="stylesheet" href="style/home.css">
-        <link rel="stylesheet" href="style/footer.css">
+        <link rel="stylesheet" href="{{ asset('style/trainings.css') }}">
+        <link rel="stylesheet" href="{{ asset('style/home.css') }}">
+        <link rel="stylesheet" href="{{ asset('style/footer.css') }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -27,75 +27,113 @@
 
             <!-- Trainings Landing Page - Video section -->
             <section class="content">
-                <div class="video-main">
-                    <div class="video-player">
-                        <iframe src="../images/masteringAI-PoweredLearning.png"/ frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
+                <div class="video-card">
+                    <div class="video-container">
+                        <video poster="{{ asset('images/teams/two_team.jpeg') }}">
+                        <source src="{{ asset('vids/intro.mp4') }}" type="video/mp4">
+                        </video>
+                        
+                        <div class="video-overlay">
+                        <button class="play-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+                            </svg>
+                        </button>
+                        </div>
+                        
+                        <div class="video-controls">
+                        <div class="progress-container">
+                            <div class="progress-bar"></div>
+                            <div class="hover-time">0:00</div>
+                        </div>
+                        
+                        <div class="controls-bottom">
+                            <div class="left-controls">
+                            <button class="control-btn play-pause">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M8,19V5H12V19H8M14,19V5H18V19H14Z"/>
+                                </svg>
+                            </button>
+                            
+                            <div class="volume-control">
+                                <button class="control-btn volume-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"/>
+                                </svg>
+                                </button>
+                                <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1">
+                            </div>
+                            
+                            <div class="time-display">0:00 / 0:00</div>
+                            </div>
+                            
+                            <div class="right-controls">
+                            <button class="control-btn fullscreen-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z"/>
+                                </svg>
+                            </button>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                    <div class="video-meta">
-                        <div class="video-title">Mastering AI-Powered Learning</div>
-                        <div class="video-stats">
-                            <span class="date"><i class="far fa-calendar-alt"></i> June 15, 2023</span>
-                            <span class="date"><i class="far fa-calendar-alt"></i> 10 mins</span>
+                    
+                    <div class="video-info">
+                        <h3 class="video-title">Behind Technospeak Minds</h3>
+                        <div class="video-meta">
+                        <span class="meta-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,7H16V17H12V12H7V17H5V7H7V10H12V7Z"/>
+                            </svg>
+                            1 min
+                        </span>
                         </div>
-                        <div class="video-description">
-                            <p>Video desciption here.. We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        </div>
+                        
+                        <p class="video-description">
+                        We use AI to help you create a personalized learning plan that considers your unique needs. 
+                        Meet the intelligence behind Technospeak as we share actionable tips for AI-powered education.
+                        </p>
                     </div>
                 </div>
 
                 <aside class="sidebar">
                     <div class="sidebar-section latest-videos">
-                        <h3>Latest Videos</h3>
+                        <h3>Trending Videos</h3>
                         <div class="video-list">
-                            <div class="video-item">
-                                <div class="thumbnail">
-                                    <img src="../images/AdvancedAITechniques.png"/>
-                                </div>
-                                <div class="video-info">
-                                    <h4>AI Learning Fundamentals</h4>
-                                    <p class="duration">Duration: 12:30 min</p>
-                                    <p class="description">We use AI to help you create a personalized plan</p>
-                                </div>
-                            </div>
-                            <div class="video-item">
-                                <div class="thumbnail">
-                                    <img src="../images/CompleteAILearningCourse.png"/>
-                                </div>
-                                <div class="video-info">
-                                    <h4>Personalized Learning Plans</h4>
-                                    <p class="duration">Duration: 25:15 min</p>
-                                    <p class="description">We use AI to help you create a personalized plan</p>
-                                </div>
-                            </div>
-                            <div class="video-item">
-                                <div class="thumbnail">
-                                    <img src="../images/PersonalizedLearningPlans.png"/>
-                                </div>
-                                <div class="video-info">
-                                    <h4>Advanced AI Techniques</h4>
-                                    <p class="duration">Duration: 18:42 min</p>
-                                    <p class="description">We use AI to help you create a personalized plan</p>
-                                </div>
-                            </div>
+                            @foreach($courses as $course)
+                                <a href="{{ route('unenrolled-courses.show', $course->uuid) }}" class="video-item">
+                                    <div class="video-item">
+                                        <div class="thumbnail">
+                                            <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}"/>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4>{{ $course->title }}</h4>
+                                            <p class="duration">Duration: {{ $course->formatted_duration }}</p>
+                                            <p class="description">{{ $course->description }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
                     </div>
 
                     <div class="sidebar-section recommended-training">
                         <h3>Recommended Training</h3>
-                        <div class="training-item">
-                            <div class="thumbnail">
-                                <img src="../images/master-AIcompletecourse.jpg"/>
+                        @if($recommendedTraining)
+                            <div class="training-item">
+                                <div class="thumbnail">
+                                    <img src="{{ $recommendedTraining->thumbnail }}" alt="{{ $recommendedTraining->title }}"/>
+                                </div>
+                                <div class="training-info">
+                                    <h4>{{ $recommendedTraining->title }}</h4>
+                                    <p class="duration">Duration: {{ $recommendedTraining->formatted_duration }}</p>
+                                    <p class="description">{{ $recommendedTraining->description }}</p>
+                                    <a href="{{ route('unenrolled-courses.show', $recommendedTraining->uuid) }}" class="btn enroll-btn">Check it out</a>
+                                </div>
                             </div>
-                            <div class="training-info">
-                                <h4>Complete AI Learning Course</h4>
-                                <p class="duration">Duration: 2 hours</p>
-                                <p class="description">Comprehensive course covering all AI learning techniques</p>
-                                <button class="btn enroll-btn">Enroll Now</button>
-                            </div>
-                        </div>
+                        @else
+                            <p>No recommended course available at the moment.</p>
+                        @endif
                     </div>
                 </aside>
             </section>
@@ -378,6 +416,108 @@
         </script>
 
         <script src="script/trainings.js"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function() {
+  const videoContainer = document.querySelector('.video-container');
+  const video = document.querySelector('video');
+  const playOverlay = document.querySelector('.video-overlay');
+  const playButton = document.querySelector('.play-button');
+  const playPauseBtn = document.querySelector('.play-pause');
+  const progressBar = document.querySelector('.progress-bar');
+  const progressContainer = document.querySelector('.progress-container');
+  const hoverTime = document.querySelector('.hover-time');
+  const timeDisplay = document.querySelector('.time-display');
+  const volumeBtn = document.querySelector('.volume-btn');
+  const volumeSlider = document.querySelector('.volume-slider');
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
+  
+  // Toggle play/pause
+  function togglePlay() {
+    if (video.paused) {
+      video.play();
+      videoContainer.classList.add('playing');
+      playPauseBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z"/>
+        </svg>
+      `;
+    } else {
+      video.pause();
+      videoContainer.classList.remove('playing');
+      playPauseBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+        </svg>
+      `;
+    }
+  }
+  
+  playButton.addEventListener('click', togglePlay);
+  playPauseBtn.addEventListener('click', togglePlay);
+  video.addEventListener('click', togglePlay);
+  
+  // Update progress bar
+  video.addEventListener('timeupdate', () => {
+    const progress = (video.currentTime / video.duration) * 100;
+    progressBar.style.width = `${progress}%`;
+    
+    // Update time display
+    const currentTime = formatTime(video.currentTime);
+    const duration = formatTime(video.duration);
+    timeDisplay.textContent = `${currentTime} / ${duration}`;
+  });
+  
+  // Seek on progress bar click
+  progressContainer.addEventListener('click', (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
+    video.currentTime = pos * video.duration;
+  });
+  
+  // Hover time preview
+  progressContainer.addEventListener('mousemove', (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
+    const time = pos * video.duration;
+    hoverTime.textContent = formatTime(time);
+    hoverTime.style.left = `${e.offsetX}px`;
+  });
+  
+  // Volume controls
+  volumeSlider.addEventListener('input', () => {
+    video.volume = volumeSlider.value;
+    video.muted = volumeSlider.value == 0;
+  });
+  
+  volumeBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    volumeSlider.value = video.muted ? 0 : video.volume;
+  });
+  
+  // Fullscreen
+  fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      videoContainer.requestFullscreen().catch(err => {
+        console.log(`Fullscreen error: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  });
+  
+  // Format time as MM:SS
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+  
+  // Set initial volume
+  video.volume = volumeSlider.value;
+});
+        </script>
         
     </body>
 </html>

@@ -29,9 +29,18 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
 
 // Public routes
-Route::get('/', [WelcomeController::class, 'index']);
-Route::get('/about', function () { return view('about'); });
-Route::get('/trainings', function () { return view('trainings'); });
+Route::get('/', [
+    WelcomeController::class, 'index'
+]);
+
+Route::get('/about', function () { 
+    return view('about'); 
+});
+
+Route::get('/trainings', [
+    WelcomeController::class, 'trainingsPage'
+]);
+
 Route::get('/pricing', function () {
     $premiumPlan = \App\Models\TrainingType::find(6); 
     $services = \App\Models\TrainingType::whereIn('id', [1, 2, 3, 4, 5])->get();

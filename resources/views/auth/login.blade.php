@@ -3,7 +3,7 @@
 @section('welcome')
 <div class="welcome_" id="welcomeSwapArea">
     <div class="logo_container">
-        <a href="#"><img src="../images/white-no-logo.png" alt="technospeak white logo"/></a>
+        <a href="#"><img src="@secureAsset('/images/white-no-logo.png')" alt="technospeak white logo"/></a>
     </div>
     <div class="title_content">
         <h2>New here?</h2>

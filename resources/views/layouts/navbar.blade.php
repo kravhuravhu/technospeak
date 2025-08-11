@@ -25,7 +25,7 @@
             @if(Auth::check())
                 <div class="user-info">
                     <a href="/dashboard" class="active {{ $whiteBg ? 'bg-wt' : '' }}">
-                        {{ Auth::user()->name }} {{ Auth::user()->surname }}
+                        {{ Auth::user()->name }}
                     </a>
                 </div>
             @endif

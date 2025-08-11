@@ -92,7 +92,7 @@
             <tr data-user-type="{{ $client->userType ?? 'unknown' }}" data-verified="{{ $client->email_verified_at ? '1' : '0' }}">
                 <td>
                     <div style="display: flex; align-items: center;">
-                        <img src="{{ $client->avatar ?? asset('images/icons/circle-user-solid.svg') }}" 
+                        <img src="{{ $client->avatar ?? ('/images/icons/circle-user-solid.svg') }}" 
                              alt="{{ $client->name }}" 
                              style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;opacity: .75;filter:brightness(50%);">
                         {{ $client->surname }}, {{ $client->name }}

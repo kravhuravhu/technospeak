@@ -6,8 +6,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="TechnoSpeak">
-    <meta http-equiv="Content-Security-Policy" content="child-src 'none'">
-    <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' blob: data: https:;
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+        img-src 'self' data: https: 
+        http://*.cloudlet.cloud:*;
+        media-src 'self' blob: https:;
+        connect-src 'self' https:;
+        frame-src 'none';
+        object-src 'none'">
+    <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -267,6 +277,22 @@
             font-size: 14px;
             font-family: 'Roboto', sans-serif;
             margin: 0 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .separator-pipe {
+            font-size: 22px;
+            margin: 0 5px;
+            color: #adadad;
+            font-weight: bold;
+        }
+        .title-current-pipe {
+            color: #8c9bab;
         }
 
         /* Volume control */
@@ -1287,7 +1313,7 @@
             </div>
 
             <div class="course-tabs">
-                <button class="tab-btn active" data-tab="episodes">Episodes</button>
+                <button class="tab-btn active" data-tab="episodes">Current Course</button>
                 <button class="tab-btn" data-tab="resources">Resources</button>
                 @if($showCertificateTab)
                     <button class="tab-btn" data-tab="certificate">Certificate</button>
@@ -1427,7 +1453,7 @@
                                 <div class="resource-meta">
                                     <span class="resource-type-badge">{{ strtoupper($resource->file_type) }}</span>
                                     <span>{{ number_format($resource->file_size / 1048576, 1) }} MB</span>
-                                    <a href="{{ $resource->file_url }}" download class="resource-download-btn">
+                                    <a href="{{ $resource->file_url }}" target="_blank" download class="resource-download-btn">
                                         <i class="fas fa-download"></i> Download
                                     </a>
                                 </div>
@@ -1511,51 +1537,51 @@
 
     <script>
         document.getElementById('change-celebration-style').addEventListener('click', () => {
-        Swal.fire({
-            title: 'Celebration Style',
-            html: `
-            <div style="text-align: left; margin: 15px 0;">
-                <label style="display: block; margin: 10px 0;">
-                <input type="radio" name="celebration-style" value="confetti" checked> Classic Confetti
-                </label>
-                <label style="display: block; margin: 10px 0;">
-                <input type="radio" name="celebration-style" value="emoji"> Emoji Rain
-                </label>
-                <label style="display: block; margin: 10px 0;">
-                <input type="radio" name="celebration-style" value="balloons"> Balloons
-                </label>
-                <label style="display: block; margin: 10px 0;">
-                <input type="radio" name="celebration-style" value="all"> All Effects
-                </label>
-            </div>
-            `,
-            confirmButtonText: 'Save Preference',
-            showCancelButton: true,
-            preConfirm: () => {
-            const selected = document.querySelector('input[name="celebration-style"]:checked');
-            if (!selected) {
-                Swal.showValidationMessage('Please select a celebration style');
-            }
-            return selected ? selected.value : null;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-            localStorage.setItem('celebrationStyle', result.value);
-            showToast('Celebration style saved!');
-            }
-        });
+            Swal.fire({
+                title: 'Celebration Style',
+                html: `
+                <div style="text-align: left; margin: 15px 0;">
+                    <label style="display: block; margin: 10px 0;">
+                    <input type="radio" name="celebration-style" value="confetti" checked> Classic Confetti
+                    </label>
+                    <label style="display: block; margin: 10px 0;">
+                    <input type="radio" name="celebration-style" value="emoji"> Emoji Rain
+                    </label>
+                    <label style="display: block; margin: 10px 0;">
+                    <input type="radio" name="celebration-style" value="balloons"> Balloons
+                    </label>
+                    <label style="display: block; margin: 10px 0;">
+                    <input type="radio" name="celebration-style" value="all"> All Effects
+                    </label>
+                </div>
+                `,
+                confirmButtonText: 'Save Preference',
+                showCancelButton: true,
+                preConfirm: () => {
+                const selected = document.querySelector('input[name="celebration-style"]:checked');
+                if (!selected) {
+                    Swal.showValidationMessage('Please select a celebration style');
+                }
+                return selected ? selected.value : null;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                localStorage.setItem('celebrationStyle', result.value);
+                showToast('Celebration style saved!');
+                }
+            });
         });
 
         function showToast(message) {
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: message,
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-        });
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            });
         }
     </script>
 
@@ -1579,6 +1605,27 @@
                     timerProgressBar: true
                 });
             }
+
+            // Disable right-click and context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showToast('Right-click is disabled to protect content', 'info');
+            });
+            
+            // Disable keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Disable Ctrl+S, Ctrl+Shift+S
+                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                    e.preventDefault();
+                    showToast('Saving is disabled to protect content', 'info');
+                }
+                
+                // Disable F12, Ctrl+Shift+I
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                    showToast('Developer tools are disabled to protect content', 'info');
+                }
+            });
 
             // episode selection
             function handleEpisodeSelection(item) {
@@ -1646,10 +1693,12 @@
                 const playPauseBtn = document.createElement('button');
                 playPauseBtn.className = 'control-btn play-pause-btn';
                 playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                
+                 
                 const timeDisplay = document.createElement('span');
                 timeDisplay.className = 'time-display';
-                timeDisplay.textContent = '0:00 / 0:00';
+                const activeEpisode = document.querySelector('.episode-item.active');
+                const episodeTitle = activeEpisode ? activeEpisode.getAttribute('data-episode-title') : 'Current Episode';
+                timeDisplay.innerHTML = `0:00 / 0:00 <span class="separator-pipe">|</span> <span class="title-current-pipe">${episodeTitle}</span>`;
                 
                 leftControls.appendChild(playPauseBtn);
                 leftControls.appendChild(timeDisplay);
@@ -1826,7 +1875,13 @@
                 }
                 
                 function updateTimeDisplay() {
-                    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+                    const activeEpisode = document.querySelector('.episode-item.active');
+                    const episodeTitle = activeEpisode ? activeEpisode.getAttribute('data-episode-title') : 'Current Episode';
+                    timeDisplay.innerHTML = `
+                        ${formatTime(video.currentTime)} / ${formatTime(video.duration)}
+                        <span class="separator-pipe">|</span>
+                        <span class="title-current-pipe">${episodeTitle}</span>
+                    `;
                 }
                 
                 // Start playing the video
@@ -1948,6 +2003,11 @@
                 setTimeout(() => {
                     createCustomVideoPlayer(videoUrl);
                     document.querySelector('.video-description h3').textContent = episodeTitle;
+
+                    const timeDisplay = document.querySelector('.time-display');
+                    if (timeDisplay) {
+                        timeDisplay.innerHTML = `0:00 / 0:00 <span class="separator-pipe">|</span> <span class="title-current-pipe">${episodeTitle}</span>`;
+                    }
                 }, 500);
             }
 

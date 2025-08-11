@@ -6,10 +6,10 @@
         <title>Technospeak - About us</title>
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="style/about.css">
-        <link rel="stylesheet" href="style/home.css">
-        <link rel="stylesheet" href="style/footer.css">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
+        <link rel="stylesheet" href="@secureAsset('style/about.css')">
+        <link rel="stylesheet" href="@secureAsset('style/home.css')">
+        <link rel="stylesheet" href="@secureAsset('style/footer.css')">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">

@@ -1,1 +1,1 @@
-<img src="{{ asset('/images/default-no-logo.png') }}"/>
+<img src="@secureAsset('/images/default-no-logo.png')"/>

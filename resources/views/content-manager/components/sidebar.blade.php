@@ -1,6 +1,6 @@
 <div class="sidebar_nav_container">
     <div class="sidebar-header">
-        <img src="{{ asset('images/logo-primary-navy-cr.png') }}" alt="TechnoSpeak Logo">
+        <img src="@secureAsset('images/logo-primary-navy-cr.png')" alt="TechnoSpeak Logo">
     </div>
 
     <ul class="sidebar-menu">

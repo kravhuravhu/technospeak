@@ -6,10 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="style/home.css">
-        <link rel="stylesheet" href="style/about.css">
-        <link rel="stylesheet" href="style/footer.css">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
+        <link rel="stylesheet" href="@secureAsset('style/home.css')">
+        <link rel="stylesheet" href="@secureAsset('style/about.css')">
+        <link rel="stylesheet" href="@secureAsset('style/footer.css')">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -220,7 +220,7 @@
         <section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
-                    <img src="{{ asset('/images/teams/two_team.jpeg') }}" alt="office_technospeak"/>
+                    <img src="@secureAsset('images/teams/two_team.jpeg')" alt="office_technospeak"/>
                 </div>
                 <div class="about_brief block">
                     <div class="title_container">

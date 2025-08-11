@@ -8,7 +8,7 @@
         <title>{{ config('app.name', 'Technospeak Strategies') }}</title>
 
         <!-- Favicon -->
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

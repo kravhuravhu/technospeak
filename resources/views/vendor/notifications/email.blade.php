@@ -10,7 +10,7 @@
         <tr>
             <td align="center" style="padding:20px 0;">
                 <!-- Logo / Banner -->
-                <img src="{{ asset('images/default-no-logo.png') }}"
+                <img src="@secureAsset('images/default-no-logo.png')">
                      alt="{{ config('app.name') }} Logo"
                      width="150"
                      style="display:block;border:none;outline:none;text-decoration:none;">

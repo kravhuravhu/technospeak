@@ -10,6 +10,7 @@
             @endif
         </title>
         <meta charset="UTF-8">
+        <meta name="user-id" content="{{ auth()->id() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
@@ -784,8 +785,39 @@
                                 <h2>Your Active Plans</h2>
                                 <p>These are the plans you're currently subscribed to</p>
                             </div>
-                            <div class="card-grid" id="userPlans">
-                                <!-- Plans inserted by JavaScript -->
+                            <div class="card-grid">
+                                @foreach($allPlans as $plan)
+                                    @if(in_array($plan->id, $userPlanIds))
+                                    <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : 'current-plan' }}">
+                                        <span class="plan-badge {{ $plan->id == 7 ? 'free-badge' : '' }}">
+                                            {{ $plan->id == 7 ? 'Always Active' : 'Active' }}
+                                        </span>
+                                        <h3>{{ $plan->name }}</h3>
+                                        <div class="plan-price">
+                                            @if($plan->id == 7)
+                                                Free
+                                            @else
+                                                R{{ $plan->student_price }} (students) | R{{ $plan->professional_price }} (business)
+                                            @endif
+                                        </div>
+                                        <p class="plan-description">{{ $plan->description }}</p>
+                                        <div class="plan-actions">
+                                            <button class="btn details-btn">
+                                                <i class="fas fa-info-circle"></i> Details
+                                            </button>
+                                            @if($plan->id != 7)
+                                            <form method="POST" action="{{ route('subscription.unsubscribe') }}">
+                                                @csrf
+                                                <input type="hidden" name="plan_id" value="{{ $plan->id }}">
+                                                <button type="submit" class="btn unsubscribe-btn">
+                                                    <i class="fas fa-times"></i> Unsubscribe
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -796,8 +828,27 @@
                                 <h2>Available Plans</h2>
                                 <p>Upgrade your experience with these additional options</p>
                             </div>
-                            <div class="card-grid" id="otherPlans">
-                                <!-- Other plans will be inserted here by JavaScript -->
+                            <div class="card-grid">
+                                @foreach($allPlans as $plan)
+                                    @if(!in_array($plan->id, $userPlanIds))
+                                    <div class="plan-card other-plan">
+                                        <h3>{{ $plan->name }}</h3>
+                                        <div class="plan-price">
+                                            R{{ $plan->student_price }} (students) | R{{ $plan->professional_price }} (business)
+                                        </div>
+                                        <p class="plan-description">{{ $plan->description }}</p>
+                                        <div class="plan-actions">
+                                            <button class="btn details-btn">
+                                                <i class="fas fa-info-circle"></i> Details
+                                            </button>
+                                            <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'subscription_' . $plan->id]) }}" 
+                                            class="btn subscribe-btn">
+                                                <i class="fas fa-check"></i> Subscribe
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>

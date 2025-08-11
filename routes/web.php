@@ -24,6 +24,8 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Models\Instructor;
 use App\Models\TrainingSession;
+use App\Models\Payment;
+use App\Models\TrainingType;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
@@ -68,11 +70,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user();
         
+        // Existing course data...
         $courseAccess = new CourseAccessController();
         $freeCourses = $courseAccess->getFreeCourses();
         $paidCourses = $courseAccess->getPaidCourses();
         $recommendedCourses = $courseAccess->getrecommendedCourses();
-
+        
         $enrolledCourses = $user->courseSubscriptions()
             ->with(['course' => function($query) {
                 $query->with(['category', 'instructor', 'episodes']);
@@ -80,9 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->get()
             ->map(function($subscription) {
                 $course = $subscription->course;
-                
                 $progress = $subscription->progress_percent ?? 0;
-                
                 return (object) [
                     'id' => $course->id,
                     'uuid' => $course->uuid,
@@ -93,30 +94,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
 
-        // show instrs data too
-        $instructors = Instructor::all();
-
-        // get upcoming sessions
+        // Get upcoming sessions
         $now = now();
-
-        $future = TrainingSession::with('type')
+        $upcomingSessions = TrainingSession::with('type')
             ->where('scheduled_for', '>', $now)
             ->orderBy('scheduled_for')
             ->limit(4)
             ->get();
 
-        if ($future->count() < 4) {
-            $remaining = 4 - $future->count();
-
-            $past = TrainingSession::with('type')
+        if ($upcomingSessions->count() < 4) {
+            $remaining = 4 - $upcomingSessions->count();
+            $pastSessions = TrainingSession::with('type')
                 ->where('scheduled_for', '<=', $now)
                 ->orderByDesc('scheduled_for')
                 ->limit($remaining)
                 ->get();
+            $upcomingSessions = $upcomingSessions->concat($pastSessions);
+        }
 
-            $upcomingSessions = $future->concat($past);
+        // Get all available plans
+        $allPlans = TrainingType::all();
+        
+        // Determine which plans the user has
+        $userPlanIds = [7];
+        if ($user->subscription_type) {
+            // For premium users
+            if ($user->subscription_type === 'premium') {
+                $userPlanIds[] = 6; // Premium + Free
+            }
+            // Add other subscription types as needed
         } else {
-            $upcomingSessions = $future;
+            $userPlanIds = [7]; // Just free
         }
 
         return view('dashboard', [
@@ -124,8 +132,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'paidCourses' => $paidCourses,
             'enrolledCourses' => $enrolledCourses,
             'recommendedCourses' => $recommendedCourses,
-            'instructors' => $instructors,
+            'instructors' => Instructor::all(),
             'upcomingSessions' => $upcomingSessions,
+            'allPlans' => $allPlans,
+            'userPlanIds' => $userPlanIds
         ]);
     })->name('dashboard');
 
@@ -202,8 +212,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Subscription routes
-Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe')
+Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
+    ->name('subscription.subscribe')
     ->middleware('auth');
+
+Route::post('/subscription/unsubscribe', [SubscriptionController::class, 'unsubscribe'])
+->name('subscription.unsubscribe')
+->middleware('auth');
 
 Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
     ->name('subscription.subscribe.free')

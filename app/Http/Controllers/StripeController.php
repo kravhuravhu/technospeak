@@ -155,26 +155,43 @@ class StripeController extends Controller
         $price = $trainingType->getPriceForUserType($client->userType);
         $description = "Subscription: " . $trainingType->name;
 
+        // Create consistent product information
+        $productData = [
+            'name' => $trainingType->name,
+            'description' => $trainingType->description,
+            'metadata' => [
+                'type' => 'subscription',
+                'plan_id' => $trainingType->id,
+                'duration' => 'Quarterly',
+                'user_type' => $client->userType
+            ]
+        ];
+
         $stripeSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'zar',
-                    'product_data' => [
-                        'name' => $description,
-                    ],
+                    'product_data' => $productData,
                     'unit_amount' => $price * 100,
+                    'recurring' => [
+                        'interval' => 'month',
+                    ],
                 ],
                 'quantity' => 1,
             ]],
-            'mode' => 'payment',
+            'mode' => 'subscription',
             'success_url' => route('stripe.subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => url()->previous(),
             'customer_email' => $client->email,
             'metadata' => [
                 'client_id' => $client->id,
                 'training_type_id' => $trainingType->id,
-                'user_type' => $client->userType
+                'user_type' => $client->userType,
+                'plan_name' => $trainingType->name,
+                'plan_description' => $trainingType->description,
+                'plan_price' => $price,
+                'plan_duration' => 'Quarterly'
             ]
         ]);
 
@@ -191,6 +208,11 @@ class StripeController extends Controller
             $trainingType = TrainingType::findOrFail($stripeSession->metadata->training_type_id);
             $client = Client::findOrFail($stripeSession->metadata->client_id);
 
+            // Verify the payment matches what was requested
+            if ($stripeSession->amount_total / 100 != $trainingType->getPriceForUserType($client->userType)) {
+                throw new \Exception("Payment amount doesn't match expected price");
+            }
+
             // Create payment record
             $payment = Payment::create([
                 'transaction_id' => $stripeSession->payment_intent,
@@ -199,7 +221,12 @@ class StripeController extends Controller
                 'payment_method' => 'stripe',
                 'status' => 'completed',
                 'payable_type' => 'subscription',
-                'payable_id' => $trainingType->id
+                'payable_id' => $trainingType->id,
+                'metadata' => [
+                    'plan_name' => $trainingType->name,
+                    'description' => $trainingType->description,
+                    'duration' => 'Quarterly'
+                ]
             ]);
 
             // Update client's subscription status with payment date

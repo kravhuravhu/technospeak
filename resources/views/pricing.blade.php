@@ -22,8 +22,6 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
-        
-
         <section class="price_container">
             <div class="main-container">
                 <div class="title_container">
@@ -521,7 +519,6 @@
                     ])
         </section>
 
-
         <!-- Main Content Section -->
         <main class="main-container-pricing">
             <!-- One-on-One Sessions Section -->
@@ -825,84 +822,84 @@
         <script src="script/pop-up.js"></script>
     </body>
 
-<!-- Style for Modal -->
-<style>
-.session-registration-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
+    <!-- Style for Modal -->
+    <style>
+        .session-registration-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
 
-.session-registration-modal .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-}
+        .session-registration-modal .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
 
-.session-registration-modal .modal-content {
-    position: relative;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    z-index: 10000;
-}
+        .session-registration-modal .modal-content {
+            position: relative;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            z-index: 10000;
+        }
 
-.session-registration-modal .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #333;
-}
+        .session-registration-modal .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
 
-.session-registration-modal .form-group {
-    margin-bottom: 1rem;
-    width: 100%;
-}
+        .session-registration-modal .form-group {
+            margin-bottom: 1rem;
+            width: 100%;
+        }
 
-.session-registration-modal .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
+        .session-registration-modal .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
 
-.session-registration-modal .form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
+        .session-registration-modal .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
 
-.session-registration-modal .submit-btn {
-    background-color: #38b6ff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-    margin-top: 1rem;
-}
+        .session-registration-modal .submit-btn {
+            background-color: #38b6ff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
 
-.no-scroll {
-    overflow: hidden;
-}
-</style>
+        .no-scroll {
+            overflow: hidden;
+        }
+    </style>
 </html>

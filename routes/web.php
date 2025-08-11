@@ -29,7 +29,6 @@ use App\Models\TrainingType;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
-<<<<<<< Updated upstream
 
 // Public routes
 Route::get('/', [

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class Client extends Authenticatable implements MustVerifyEmail
 {
@@ -48,7 +49,7 @@ class Client extends Authenticatable implements MustVerifyEmail
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = ucfirst(strtolower($value));
+        $this->attributes['name'] = Str::title($value);
     }
 
     public function setSurnameAttribute($value)

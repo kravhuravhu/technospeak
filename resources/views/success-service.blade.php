@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Service Purchase Success</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('style/home.css') }}" type="text/css">
-    <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="@secureAsset('style/home.css')" type="text/css">
+    <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
     <style>
         :root {
             --success: #FF9800;

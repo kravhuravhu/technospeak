@@ -6,10 +6,10 @@
         <title>Technospeak - Pricing</title>
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="style/pricing.css">
-        <link rel="stylesheet" href="style/home.css">
-        <link rel="stylesheet" href="style/footer.css">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
+        <link rel="stylesheet" href="@secureAsset('style/pricing.css')" type="text/css">
+        <link rel="stylesheet" href="@secureAsset('style/home.css')" type="text/css">
+        <link rel="stylesheet" href="@secureAsset('style/footer.css')" type="text/css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -169,6 +169,7 @@
                                         <div class="price">
                                             <p>
                                                 <span>
+                                                    <sub class="sub context">from</sub>
                                                     <sup class="context">R</sup>
                                                 </span>
                                                 2,500

@@ -7,8 +7,8 @@
     <title>@yield('title') | TechnoSpeak Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('style/admin.css') }}" type="text/css">
-    <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="@secureAsset('style/admin.css')" type="text/css">
+    <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('styles')
 </head>

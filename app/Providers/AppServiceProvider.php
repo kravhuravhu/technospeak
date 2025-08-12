@@ -8,6 +8,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Session;
 use App\Session\ClientSessionHandler;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
             $minutes = config('session.lifetime');
 
             return new ClientSessionHandler($connection, $table, $minutes, $app['events']);
+        });
+
+        Blade::directive('secureAsset', function ($expression) {
+            return "<?php echo env('APP_ENV') === 'local' ? asset($expression) : secure_asset($expression); ?>";
         });
     }
 }

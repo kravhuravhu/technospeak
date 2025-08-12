@@ -19,7 +19,7 @@
             <h4>{{ $adminUser->name ?? $instructorUser->name ?? 'Guest' }}</h4>
             <p>{{ $adminUser ? 'Super Admin' : ($instructorUser ? 'Instructor Admin' : 'Guest') }}</p>
         </div>
-        <img src="{{ (Auth::guard('admin')->check() ? $adminUser->avatar : ($instructorUser->thumbnail ?? null)) ?? asset('images/icons/circle-user-solid.svg') }}" alt="User Avatar">
+        <img src="{{ (Auth::guard('admin')->check() ? $adminUser->avatar : ($instructorUser->thumbnail ?? null)) ?? ('/images/icons/circle-user-solid.svg') }}" alt="User Avatar">
     </div>
 </div>
 

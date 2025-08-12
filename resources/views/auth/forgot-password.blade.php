@@ -4,7 +4,7 @@
     @if (!Request::is('forgot-password'))
     <div class="welcome_" id="welcomeSwapArea">
             <div class="logo_container">
-                <a href="#"><img src="../images/white-no-logo.png" alt="technospeak white logo"/></a>
+                <a href="#"><img src="@secureAsset('/images/white-no-logo.png')" alt="technospeak white logo"/></a>
             </div>
     </div>
     @endif
@@ -13,7 +13,7 @@
 @section('form')
 <div class="form_container" id="formSwapArea" style="border-radius: 15px;margin:0 auto;padding:15px 25px;">
     <div class="logo_container">
-        <a href="#"><img src="../images/default-no-logo.png" height="60px" alt="technospeak white logo"/></a>
+        <a href="#"><img src="@secureAsset('/images/default-no-logo.png')" height="60px" alt="technospeak white logo"/></a>
     </div>
 
     <div class="title_container" style="flex-direction:column;">

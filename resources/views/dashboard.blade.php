@@ -14,9 +14,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
-        <link rel="stylesheet" href="{{ asset('style/dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('style/footer.css') }}">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
+        <link rel="stylesheet" href="@secureAsset('style/dashboard.css')">
+        <link rel="stylesheet" href="@secureAsset('style/footer.css')">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +41,7 @@
             <div class="main_container">
                 <div class="logo_container">
                     <a href="#">
-                        <img src="{{ asset('/images/default-no-logo.png')}}" alt="technospeak_icon">
+                        <img src="@secureAsset('/images/default-no-logo.png')" alt="technospeak_icon">
                     </a>
                 </div>
                 <div class="nav-bar">

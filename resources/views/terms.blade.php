@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechnoSpeak - Terms & Conditions</title>
-    <link rel="stylesheet" href="style/policy&terms.css">
-    <link rel="stylesheet" href="style/home.css">
-    <link rel="stylesheet" href="style/about.css">
-    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="@secureAsset('style/policy&terms.css')" type="text/css">
+    <link rel="stylesheet" href="@secureAsset('style/home.css')" type="text/css">
+    <link rel="stylesheet" href="@secureAsset('style/about.css')" type="text/css">
+    <link rel="stylesheet" href="@secureAsset('style/footer.css')" type="text/css">
+    <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
 </head>
 <body>
     {{-- Include the navbar --}}

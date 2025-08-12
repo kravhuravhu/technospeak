@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta http-equiv="Content-Security-Policy" content="child-src 'none'">
-        <link rel="icon" href="{{ asset('/images/icon.png') }}" type="image/x-icon">
+        <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <style>
@@ -683,7 +683,7 @@
                                     <h4>Instructor</h4>
                                     <div class="instructor-details">
                                         <div class="instructor-avatar">
-                                            <img src="{{ asset('images/icons/circle-user-solid.svg') }}" alt="Instructor Avatar">
+                                            <img src="{{ secure_asset('images/icons/circle-user-solid.svg') }}" alt="Instructor Avatar">
                                         </div>
                                         <div class="instructor-text">
                                             <h5>{{ $course->instructor->name }}</h5>

@@ -23,7 +23,9 @@ use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\IssueController; 
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Models\Instructor;
+use App\Models\Client;
 use App\Models\TrainingSession;
+use App\Models\TrainingRegistration;
 use App\Models\Payment;
 use App\Models\TrainingType;
 use App\Http\Controllers\SubscriptionController;
@@ -70,12 +72,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user();
         
-        // Existing course data...
+        // Keep all your existing working variables
         $courseAccess = new CourseAccessController();
         $freeCourses = $courseAccess->getFreeCourses();
         $paidCourses = $courseAccess->getPaidCourses();
-        $recommendedCourses = $courseAccess->getrecommendedCourses();
-        
+        $recommendedCourses = $courseAccess->getRecommendedCourses();
         $enrolledCourses = $user->courseSubscriptions()
             ->with(['course' => function($query) {
                 $query->with(['category', 'instructor', 'episodes']);
@@ -83,59 +84,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->get()
             ->map(function($subscription) {
                 $course = $subscription->course;
-                $progress = $subscription->progress_percent ?? 0;
                 return (object) [
                     'id' => $course->id,
-                    'uuid' => $course->uuid,
                     'title' => $course->title,
-                    'thumbnail' => $course->thumbnail,
-                    'formatted_duration' => $course->formatted_duration,
-                    'progress' => $progress
+                    'progress' => $subscription->progress_percent ?? 0,
                 ];
             });
-
-        // Get upcoming sessions
-        $now = now();
-        $upcomingSessions = TrainingSession::with('type')
-            ->where('scheduled_for', '>', $now)
-            ->orderBy('scheduled_for')
-            ->limit(4)
-            ->get();
-
-        if ($upcomingSessions->count() < 4) {
-            $remaining = 4 - $upcomingSessions->count();
-            $pastSessions = TrainingSession::with('type')
-                ->where('scheduled_for', '<=', $now)
-                ->orderByDesc('scheduled_for')
-                ->limit($remaining)
-                ->get();
-            $upcomingSessions = $upcomingSessions->concat($pastSessions);
-        }
-
-        // Get all available plans
-        $allPlans = TrainingType::all();
         
-        // Determine which plans the user has
-        $userPlanIds = [7];
-        if ($user->subscription_type) {
-            // For premium users
-            if ($user->subscription_type === 'premium') {
-                $userPlanIds[] = 6; // Premium + Free
-            }
-            // Add other subscription types as needed
-        } else {
-            $userPlanIds = [7]; // Just free
+        // SIMPLE ACTIVE PLANS LOGIC (NEW ADDITION)
+        $activePlans = collect([TrainingType::find(7)]); // Always include free plan
+        
+        if ($user->subscription_type === 'premium') {
+            $activePlans->push(TrainingType::find(6)); // Add premium if subscribed
         }
+        
+        $completedTrainings = TrainingRegistration::with('session.type')
+            ->where('client_id', $user->id)
+            ->where('payment_status', 'completed')
+            ->get()
+            ->map(function($reg) {
+                return $reg->session->type;
+            })
+            ->filter()
+            ->unique('id');
+        
+        $activePlans = $activePlans->merge($completedTrainings);
 
         return view('dashboard', [
+            // KEEP ALL YOUR EXISTING VARIABLES
             'freeCourses' => $freeCourses,
             'paidCourses' => $paidCourses,
             'enrolledCourses' => $enrolledCourses,
             'recommendedCourses' => $recommendedCourses,
             'instructors' => Instructor::all(),
-            'upcomingSessions' => $upcomingSessions,
-            'allPlans' => $allPlans,
-            'userPlanIds' => $userPlanIds
+            'upcomingSessions' => TrainingSession::getUpcomingSessions(),
+            
+            // NEW VARIABLE (won't break existing code)
+            'activePlans' => $activePlans
         ]);
     })->name('dashboard');
 

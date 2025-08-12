@@ -38,10 +38,10 @@ class StripeController extends Controller
     {
         $sessionId = str_replace('training_', '', $planId);
         $session = TrainingSession::with('type')->findOrFail($sessionId);
- 
+
         $price = $session->type->getPriceForUserType($client->userType);
-        $description = "Training: " . $session->title;
- 
+        $description = $session->title; // Just show the session title
+
         $stripeSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
@@ -64,7 +64,7 @@ class StripeController extends Controller
                 'user_type' => $client->userType
             ]
         ]);
- 
+
         return redirect($stripeSession->url);
     }
  
@@ -77,6 +77,11 @@ class StripeController extends Controller
         try {
             Stripe::setApiKey(env('STRIPE_SECRET'));
             $stripeSession = Session::retrieve($request->get('session_id'));
+
+            // Ensure transaction ID exists
+            if (empty($stripeSession->payment_intent)) {
+                throw new \Exception("No transaction ID received from Stripe");
+            }
  
             if (isset($stripeSession->metadata->training_session_id)) {
                 return $this->handleTrainingPaymentSuccess($stripeSession);
@@ -150,32 +155,24 @@ class StripeController extends Controller
     protected function handleSubscriptionPayment(Client $client, string $planId)
     {
         $typeId = str_replace('subscription_', '', $planId);
-        $trainingType = TrainingType::findOrFail($typeId);
+        $trainingType = TrainingType::findOrFail($typeId); // Fix: Define $trainingType here
 
         $price = $trainingType->getPriceForUserType($client->userType);
-        $description = "Subscription: " . $trainingType->name;
-
-        // Create consistent product information
-        $productData = [
-            'name' => $trainingType->name,
-            'description' => $trainingType->description,
-            'metadata' => [
-                'type' => 'subscription',
-                'plan_id' => $trainingType->id,
-                'duration' => 'Quarterly',
-                'user_type' => $client->userType
-            ]
-        ];
+        $description = "Premium Quarterly Subscription"; // Simplified description
 
         $stripeSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'zar',
-                    'product_data' => $productData,
+                    'product_data' => [
+                        'name' => $trainingType->name,
+                        'description' => $description,
+                    ],
                     'unit_amount' => $price * 100,
                     'recurring' => [
                         'interval' => 'month',
+                        'interval_count' => 3, // Quarterly
                     ],
                 ],
                 'quantity' => 1,
@@ -189,7 +186,7 @@ class StripeController extends Controller
                 'training_type_id' => $trainingType->id,
                 'user_type' => $client->userType,
                 'plan_name' => $trainingType->name,
-                'plan_description' => $trainingType->description,
+                'plan_description' => $description,
                 'plan_price' => $price,
                 'plan_duration' => 'Quarterly'
             ]

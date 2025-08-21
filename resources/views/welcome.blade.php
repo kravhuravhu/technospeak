@@ -437,8 +437,7 @@
         <!-- Footer Section -->
         {{-- Include the footer --}}
         @include('layouts.footer')
-    </body>
 
-    <script src="script/home_slider.js"></script>
-    
+        <script src="script/home_slider.js"></script>
+    </body> 
 </html>

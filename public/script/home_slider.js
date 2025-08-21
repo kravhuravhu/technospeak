@@ -86,13 +86,17 @@ document.addEventListener("DOMContentLoaded", function () {
         ani_header.textContent = '';
         ani_header.dataset.animated = "true";
 
-        ani_text.split('').forEach((char, i) => {
-            const span = document.createElement('span');
-            span.textContent = char === ' ' ? '\u00A0' : char;
-            span.style.display = 'inline-block';
-            span.style.animation = 'ani_header_drop 0.5s ease forwards';
-            span.style.animationDelay = `${i * 0.1}s`;
-            ani_header.appendChild(span);
+        ani_text.split(' ').forEach((word, i) => {
+            const wordSpan = document.createElement('span');
+            wordSpan.textContent = word;
+            wordSpan.style.display = 'inline-block';
+            wordSpan.style.transform = 'translateY(-100%)';
+            wordSpan.style.opacity = 0;
+            wordSpan.style.animation = 'ani_header_drop 0.5s ease forwards';
+            wordSpan.style.animationDelay = `${i * 0.2}s`;
+            ani_header.appendChild(wordSpan);
+
+            ani_header.appendChild(document.createTextNode(' '));
         });
     }
 

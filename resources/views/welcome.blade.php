@@ -129,200 +129,309 @@
             </div>
         </section>
 
-        <!-- Services category section -->
-<!-- Replace the entire Service Categories section with this Product Plans section -->
-<section class="categories_cont">
-    <div class="main_container">
-        <div class="title_container">
-            <h2>Our Product Plans</h2>
-        </div>
-        <div class="main_cont">
-            <div class="rt_arrw control_arrows">
-                <button class="arrow-btn arrow-btn-prev" tabindex="0">←</button>
-            </div>
-            <div class="container">
-                <div class="cards-wrapper">
-                    <div class="cards">
-                        <!-- Card 1: Free Subscription -->
-                        <div class="card card1">
-                            <div class="cr-img">
-                                <img src="../images/plans/" alt="Free Subscription"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Free Subscription</h3>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Access our free clickbait videos on social media. Ask questions in comments and get brief answers with links to full details on our website.</p>
-                                <ul>
-                                    <li>Free access to social media content</li>
-                                    <li>Brief answers to your questions</li>
-                                    <li>Links to detailed explanations</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/dashboard#usr_alltrainings') : url('/login') }}">Get Started</a>
-                            </div>
-                        </div>
-
-                        <!-- Card 2: Premium Subscription -->
-                        <div class="card card2 active">
-                            <div class="cr-img">
-                                <img src="../images/plans/" alt="Premium Subscription"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Premium Subscription</h3>
-                                <div class="price-tag">
-                                    <span>From R350/quarter</span>
+        <!-- Product Plans section -->
+        <section class="categories_cont">
+            <div class="main_container">
+                <div class="title_container">
+                    <h2>Our Product Plans</h2>
+                </div>
+                <div class="main_cont">
+                    <div class="rt_arrw control_arrows">
+                        <button class="arrow-btn arrow-btn-prev" tabindex="0">←</button>
+                    </div>
+                    <div class="container">
+                        <div class="cards-wrapper">
+                            <div class="cards">
+                                <!-- Card 1: Free Subscription -->
+                                <div class="card card1">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/Free subscription.png')" alt="Free Subscription"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Free Subscription</h3>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Access our free clickbait videos on social media. Ask questions in comments and get brief answers with links to full details on our website.</p>
+                                        <ul>
+                                            <li>Free access to social media content</li>
+                                            <li>Brief answers to your questions</li>
+                                            <li>Links to detailed explanations</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_alltrainings') : url('/login') }}">Get Started</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
-                                <ul>
-                                    <li>All clickbait-style videos</li>
-                                    <li>Downloadable resources & cheat sheets</li>
-                                    <li>Monthly curated tech newsletters</li>
-                                    <li>Student and business pricing options</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/subscription/premium') : url('/login?redirect=subscription/premium') }}">Subscribe Now</a>
-                            </div>
-                        </div>
 
-                        <!-- Card 3: Formal Training -->
-                        <div class="card card3">
-                            <div class="cr-img">
-                                <img src="../images/plans/" alt="Formal Training"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Formal Training</h3>
-                                <div class="price-tag">
-                                    <span>From R1500/training</span>
+                                <!-- Card 3: Formal Training -->
+                                <div class="card card3">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/Formal training.png')" alt="Formal Training"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Formal Training</h3>
+                                        <div class="price-tag">
+                                            <span>From R1500/training</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Comprehensive 40-hour training programs in End-User Computing and web development for all skill levels.</p>
+                                        <ul>
+                                            <li>Structured 8-hour daily sessions</li>
+                                            <li>Tailored to students & professionals</li>
+                                            <li>Portfolio development support</li>
+                                            <li>Partnership opportunities</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/training/enroll') : url('/login?redirect=training/enroll') }}">Enroll Now</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Comprehensive 40-hour training programs in End-User Computing and web development for all skill levels.</p>
-                                <ul>
-                                    <li>Structured 8-hour daily sessions</li>
-                                    <li>Tailored to students & professionals</li>
-                                    <li>Portfolio development support</li>
-                                    <li>Partnership opportunities</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/training/enroll') : url('/login?redirect=training/enroll') }}">Enroll Now</a>
-                            </div>
-                        </div>
 
-                        <!-- Card 4: Personal Guide -->
-                        <div class="card card4">
-                            <div class="cr-img">
-                                <img src="../images/plans/personal-guide.png" alt="Personal Guide"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Personal Guide</h3>
-                                <div class="price-tag">
-                                    <span>From R110/hour</span>
+                                <!-- Card 4: Personal Guide -->
+                                <div class="card card4">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/Personal guide.png')" alt="Personal Guide"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Personal Guide</h3>
+                                        <div class="price-tag">
+                                            <span>From R110/hour</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>One-on-one sessions with expert tutors for personalized attention and focused learning.</p>
+                                        <ul>
+                                            <li>Submit requests in advance</li>
+                                            <li>Video call or chat sessions</li>
+                                            <li>Flexible scheduling</li>
+                                            <li>Additional hours available</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/personal-guide') : url('/login?redirect=personal-guide') }}">Get Guide</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>One-on-one sessions with expert tutors for personalized attention and focused learning.</p>
-                                <ul>
-                                    <li>Submit requests in advance</li>
-                                    <li>Video call or chat sessions</li>
-                                    <li>Flexible scheduling</li>
-                                    <li>Additional hours available</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/personal-guide') : url('/login?redirect=personal-guide') }}">Get Guide</a>
-                            </div>
-                        </div>
 
-                        <!-- Card 5: Task Assistance -->
-                        <div class="card card5">
-                            <div class="cr-img">
-                                <img src="../images/plans/task-assistance.png" alt="Task Assistance"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Task Assistance</h3>
-                                <div class="price-tag">
-                                    <span>From R100/hour</span>
+                                <!-- Card 2: Premium Subscription -->
+                                <div class="card card2 active">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/premium subscription.png')" alt="Premium Subscription"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Premium Subscription</h3>
+                                        <div class="price-tag">
+                                            <span>From R350/quarter</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
+                                        <ul>
+                                            <li>All clickbait-style videos</li>
+                                            <li>Downloadable resources & cheat sheets</li>
+                                            <li>Monthly curated tech newsletters</li>
+                                            <li>Student and business pricing options</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/subscription/premium') : url('/login?redirect=subscription/premium') }}">Subscribe Now</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Hands-on help with your technical tasks from coding to system configurations.</p>
-                                <ul>
-                                    <li>Coding & web development help</li>
-                                    <li>System configuration support</li>
-                                    <li>Direct task completion</li>
-                                    <li>Student and business rates</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/task-assistance') : url('/login?redirect=task-assistance') }}">Get Assistance</a>
-                            </div>
-                        </div>
 
-                        <!-- Card 6: Group Session 1 -->
-                        <div class="card card6">
-                            <div class="cr-img">
-                                <img src="../images/plans/group-session1.png" alt="Group Session 1"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Live Q&A Sessions</h3>
-                                <div class="price-tag">
-                                    <span>From R130/hour</span>
+                                <!-- Card 5: Task Assistance -->
+                                <div class="card card5">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/Personal guide.png')" alt="Task Assistance"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Task Assistance</h3>
+                                        <div class="price-tag">
+                                            <span>From R100/hour</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Hands-on help with your technical tasks from coding to system configurations.</p>
+                                        <ul>
+                                            <li>Coding & web development help</li>
+                                            <li>System configuration support</li>
+                                            <li>Direct task completion</li>
+                                            <li>Student and business rates</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/task-assistance') : url('/login?redirect=task-assistance') }}">Get Assistance</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Interactive group sessions where you can ask questions and get immediate expert answers.</p>
-                                <ul>
-                                    <li>Live Q&A with experts</li>
-                                    <li>Submit questions via chat</li>
-                                    <li>Various tech topics covered</li>
-                                    <li>Different pricing for students/business</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/group-sessions/qa') : url('/login?redirect=group-sessions/qa') }}">Book Now</a>
-                            </div>
-                        </div>
 
-                        <!-- Card 7: Group Session 2 -->
-                        <div class="card card7">
-                            <div class="cr-img">
-                                <img src="../images/plans/group-session2.png" alt="Group Session 2"/>
-                            </div>
-                            <div class="st_title_container">
-                                <h3>Response Consultations</h3>
-                                <div class="price-tag">
-                                    <span>From R130/hour</span>
+                                <!-- Card 6: Group Session 1 -->
+                                <div class="card card6">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/live Q&A session.png')" alt="Group Session 1"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Live Q&A Sessions</h3>
+                                        <div class="price-tag">
+                                            <span>From R130/hour</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Interactive group sessions where you can ask questions and get immediate expert answers.</p>
+                                        <ul>
+                                            <li>Live Q&A with experts</li>
+                                            <li>Submit questions via chat</li>
+                                            <li>Various tech topics covered</li>
+                                            <li>Different pricing for students/business</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/group-sessions/qa') : url('/login?redirect=group-sessions/qa') }}">Book Now</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="st_dscrpt">
-                                <p>Focused sessions addressing comments and questions from our video content.</p>
-                                <ul>
-                                    <li>Answers to video comments</li>
-                                    <li>Programming & cybersecurity focus</li>
-                                    <li>Interactive skill-building</li>
-                                    <li>Live response to questions</li>
-                                </ul>
-                            </div>
-                            <div class="plan-button">
-                                <a href="{{ Auth::check() ? url('/group-sessions/consultation') : url('/login?redirect=group-sessions/consultation') }}">Book Now</a>
+
+                                <!-- Card 7: Group Session 2 -->
+                                <div class="card card7">
+                                    <div class="cr-img">
+                                    <img src="@secureAsset('/images/live consultation.png')" alt="Group Session 2"/>
+                                    </div>
+                                    <div class="st_title_container">
+                                        <h3>Response Consultations</h3>
+                                        <div class="price-tag">
+                                            <span>From R130/hour</span>
+                                        </div>
+                                    </div>
+                                    <div class="st_dscrpt">
+                                        <p>Focused sessions addressing comments and questions from our video content.</p>
+                                        <ul>
+                                            <li>Answers to video comments</li>
+                                            <li>Programming & cybersecurity focus</li>
+                                            <li>Interactive skill-building</li>
+                                            <li>Live response to questions</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-button">
+                                        <a href="{{ Auth::check() ? url('/group-sessions/consultation') : url('/login?redirect=group-sessions/consultation') }}">Book Now</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="lt_arrw control_arrows">
+                        <button class="arrow-btn arrow-btn-next" tabindex="0">→</button>
+                    </div>
                 </div>
             </div>
-            <div class="lt_arrw control_arrows">
-                <button class="arrow-btn arrow-btn-next" tabindex="0">→</button>
+        </section>
+
+        <!-- Service Categories Section -->
+        <section class="services-categories">
+        <div class="services-container">
+            <div class="services-header">
+            <h2 class="services-title">Service Categories</h2>
+            <p class="services-subtitle">
+                Explore our wide range of done-for-you services designed to make your life easier. 
+                From professional design and content creation to technical support, web development, 
+                and digital marketing, we deliver ready-to-use solutions—no learning, no hassle, just results.
+            </p>
+            </div>
+
+            <div class="services-content">
+            <!-- Left Categories - Visual Cards -->
+            <div class="services-visual">
+                <div class="service-cards">
+                <div class="service-card" data-service="design">
+                    <div class="card-icon">🎨</div>
+                    <h3>Graphic Design Tools</h3>
+                    <p>Professional visuals for your brand</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="ai">
+                    <div class="card-icon">🤖</div>
+                    <h3>AI Content Creation</h3>
+                    <p>Smart content generation</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="office">
+                    <div class="card-icon">📊</div>
+                    <h3>Office Admin (ICT)</h3>
+                    <p>Streamline office tasks</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="support">
+                    <div class="card-icon">🔧</div>
+                    <h3>Technical Support</h3>
+                    <p>Reliable IT assistance</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="web">
+                    <div class="card-icon">💻</div>
+                    <h3>Web & App Programming</h3>
+                    <p>Custom digital solutions</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="network">
+                    <div class="card-icon">🌐</div>
+                    <h3>Networking Essentials</h3>
+                    <p>Secure connectivity solutions</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="service-card" data-service="marketing">
+                    <div class="card-icon">📢</div>
+                    <h3>Digital Marketing</h3>
+                    <p>Grow your online presence</p>
+                    <div class="card-hover-content">
+                    <span>Explore</span>
+                    <div class="arrow">→</div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Right Content - Details Panel -->
+            <div class="services-details" id="service-details">
+                <div class="details-content">
+                <div class="details-header">
+                    <div class="details-icon">🎨</div>
+                    <h3>Bring Your Ideas to Life with Stunning Designs</h3>
+                </div>
+                <div class="details-text">
+                    <p>We provide a full spectrum of design services tailored to your business or personal needs. From eye-catching logos, professional business cards, and polished brochures to posters, flyers, and social media graphics, we deliver ready-to-use, high-quality visuals.</p>
+                    <p>Every design is crafted with your brand and audience in mind—no learning, no trial-and-error. You receive professional results, ready for print or online publication, helping your brand make a lasting impression instantly.</p>
+                    <p class="highlight">✨ Ready to stand out? Let us create your next masterpiece today!</p>
+                </div>
+                <button class="details-btn">
+                    <span>Need Assistance?</span>
+                    <div class="btn-arrow">→</div>
+                </button>
+                </div>
+            </div>
             </div>
         </div>
-    </div>
-</section>
-
+        </section>
+`
         <!-- About Us section -->
         <section class="about_summ">
             <div class="main_container">

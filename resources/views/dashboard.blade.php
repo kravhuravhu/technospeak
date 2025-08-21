@@ -56,6 +56,51 @@
                                 </div>
                             </a>
                         </div>
+
+                        <div class="nav-item" data-section="usr_tips">
+                            <a href="">
+                                <div class="icon">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                </div>
+                                <div class="title">
+                                    <span>Tips/Tricks</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="nav-item" data-section="usr_formalTraining">
+                            <a href="">
+                                <div class="icon">
+                                    <i class="fa-solid fa-computer"></i>
+                                </div>
+                                <div class="title">
+                                    <span>Formal Training</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="nav-item" data-section="usr_taskAssistance">
+                            <a href="">
+                                <div class="icon">
+                                    <i class="fa-solid fa-handshake-angle"></i>
+                                </div>
+                                <div class="title">
+                                    <span>Task Assistance</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="nav-item" data-section="usr_guides">
+                            <a href="">
+                                <div class="icon">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                                <div class="title">
+                                    <span>Personal Guides</span>
+                                </div>
+                            </a>
+                        </div>
+
                         <div class="nav-item" data-section="usr_alltrainings">
                             <a href="">
                             <div class="icon">
@@ -648,6 +693,109 @@
                     </div>
                 </div>
 
+                <!-- Task assistance -->
+                <div class="content-section taskassistance_content" id="usr_taskAssistance">
+                    <div class="task_assistance">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="title">
+                                    <h1>Task Assistance Request</h1>
+                                    <p class="subtitle">Please fill out this form so we can better understand your needs and provide the right assistance.</p>
+                                </div>
+                            </div>
+                            
+                            <form id="taskAssistanceForm" class="task-assistance-form">
+                                <div class="form-section">
+                                    <h2 class="form-section-title">PERSONAL INFO</h2>
+                                    <div class="form-row">
+                                        <div class="form-group half-width">
+                                            <label for="firstName">First Name:</label>
+                                            <input type="text" id="firstName" name="firstName" required>
+                                        </div>
+                                        <div class="form-group half-width">
+                                            <label for="lastName">Last Name:</label>
+                                            <input type="text" id="lastName" name="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email Address:</label>
+                                        <input type="email" id="email" name="email" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h2 class="form-section-title">TASK OBJECTIVE</h2>
+                                    <div class="form-group fm-g-rw">
+                                        <label>Type of Task:</label>
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="taskType" value="administrative">
+                                                <span class="checkmark"></span>
+                                                Administrative (e.g. emails, scheduling, data-entry)
+                                            </label>
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="taskType" value="research">
+                                                <span class="checkmark"></span>
+                                                Research (e.g. internet research, data gathering, analysis, etc)
+                                            </label>
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="taskType" value="writing">
+                                                <span class="checkmark"></span>
+                                                Writing (e.g. copywriting, reports, articles, etc)
+                                            </label>
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="taskType" value="technical">
+                                                <span class="checkmark"></span>
+                                                Technical Assistance (e.g. IT Support, software help, etc.)
+                                            </label>
+                                            <label class="checkbox-container other-option">
+                                                <input type="radio" name="taskType" value="other" id="otherTaskType">
+                                                <span class="checkmark"></span>
+                                                Other
+                                                <input type="text" id="otherTaskTypeInput" class="other-input" placeholder="Specify other task type">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="goal">What's the main goal or outcome you want to achieve?</label>
+                                        <textarea id="goal" name="goal" rows="1"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="mustHaves">Are there any must-have features, functions, or elements?</label>
+                                        <textarea id="mustHaves" name="mustHaves" rows="1"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="taskDescription">Task Description:</label>
+                                        <textarea id="taskDescription" name="taskDescription" rows="1" placeholder="---"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h2 class="form-section-title">MORE DETAILS <i>(ATTACHMENTS OPTIONAL)</i></h2>
+                                    <div class="form-group fm-g-rw">
+                                        <label for="additionalInfo">Any other specifics you'd like to add:</label>
+                                        <textarea id="additionalInfo" name="additionalInfo" rows="1"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="fileUpload" class="file-upload-label">
+                                            <i class="fas fa-paperclip"></i>
+                                            Attach Files
+                                        </label>
+                                        <input type="file" id="fileUpload" name="fileUpload" multiple style="display: none;">
+                                        <div id="fileList" class="file-list"></div>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Submit Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Share Your Issue Section -->
                 <div class="content-section shareIssue_content" id="usr_shareIssue">
                     <div class="issue-header">
@@ -995,7 +1143,7 @@
                         @endif
 
                         <!-- pop up for register -->
-                         @include('components.sessions_registration', [
+                        @include('components.sessions_registration', [
                             'typeId' => 4,
                             'typeName' => 'Q/A Session'
                         ])
@@ -1482,6 +1630,9 @@
                             <p class="text-gray-500 p-2">No upcoming sessions.</p>
                         @endforelse
                     </div>
+
+                    <!-- task assistance bar -->
+                     
                 </div>
             </div>
         </section>
@@ -1733,7 +1884,7 @@
         <script src="/script/pop-up.js"></script>
 
         <!-- search functions for courses -->
-         <script src="/script/trainings-filtering.js"></script>
+        <script src="/script/trainings-filtering.js"></script>
 
         <!-- pop up swal -->
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

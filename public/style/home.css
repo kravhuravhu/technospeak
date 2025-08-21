@@ -234,7 +234,7 @@ body {
     background-attachment: fixed;
     background-position: bottom;
     & > .main_container {
-        background-color: rgba(0, 0, 0, .6);
+        background-color: rgba(0, 0, 0, .8);
         height: 100%;
         width: 100%;
         display: flex;
@@ -275,7 +275,9 @@ body {
                                 font-family: 'Roboto', sans-serif;
                                 color: #cccccc;
                                 display: inline-block;
-                                overflow: hidden;
+                                white-space: normal;
+                                overflow-wrap: break-word;
+                                word-break: normal;
                                 & > span {
                                     display: inline-block;
                                     transform: translateY(-100%);

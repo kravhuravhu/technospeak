@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Session;
 use App\Session\ClientSessionHandler;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,5 +47,10 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('secureAsset', function ($expression) {
             return "<?php echo env('APP_ENV') === 'local' ? asset($expression) : secure_asset($expression); ?>";
         });
+
+        // forse HTTPS when load from oxide
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
     }
 }

@@ -117,7 +117,7 @@
                                 <i class="fa-solid fa-bug"></i>
                             </div>
                             <div class="title">
-                                <span>Get Help</span>
+                                <span>Help Center</span>
                             </div>
                             </a>
                         </div>
@@ -127,7 +127,7 @@
                                 <i class="fa-solid fa-tags"></i>
                             </div>
                             <div class="title">
-                                <span>My Subscriptions</span>
+                                <span>Product Plan</span>
                             </div>
                             </a>
                         </div>
@@ -894,7 +894,7 @@
                         
                         <div class="form-footer">
                         <button type="submit" class="submit-btn">
-                            <span>Get Help Now</span>
+                            <span>Help Center</span>
                             <i class="fas fa-paper-plane"></i>
                         </button>
                         <p class="assurance">
@@ -978,7 +978,7 @@
                         <div class="container">
                             <div class="title">
                                 <h2>Available Resources</h2>
-                                <p>Browse through materials available with your current subscription</p>
+                                <p>Browse through materials available with your current product plan</p>
                             </div>
                             
                             <div class="resource-grid" id="resourceGrid">

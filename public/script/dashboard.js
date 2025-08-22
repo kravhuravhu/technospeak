@@ -1,79 +1,79 @@
 
 // Issue section 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('issueForm');
-    const confirmation = document.getElementById('confirmation');
-    const backBtn = document.querySelector('.back-btn');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const form = document.getElementById('issueForm');
+//     const confirmation = document.getElementById('confirmation');
+//     const backBtn = document.querySelector('.back-btn');
 
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+//     form.addEventListener('submit', async function(e) {
+//         e.preventDefault();
         
-        // Form validation
-        const title = document.getElementById('issueTitle').value.trim();
-        const description = document.getElementById('issueDescription').value.trim();
-        const category = document.getElementById('issueCategory').value;
-        const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
+//         // Form validation
+//         const title = document.getElementById('issueTitle').value.trim();
+//         const description = document.getElementById('issueDescription').value.trim();
+//         const category = document.getElementById('issueCategory').value;
+//         const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
         
-        if (!title || !description || !category || !urgency) {
-            alert('Please fill in all required fields');
-            return;
-        }
+//         if (!title || !description || !category || !urgency) {
+//             alert('Please fill in all required fields');
+//             return;
+//         }
 
-        const submitBtn = form.querySelector('.submit-btn');
-        const originalBtnText = submitBtn.innerHTML;
+//         const submitBtn = form.querySelector('.submit-btn');
+//         const originalBtnText = submitBtn.innerHTML;
         
-        // Show loading state
-        submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
-        submitBtn.disabled = true;
+//         // Show loading state
+//         submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
+//         submitBtn.disabled = true;
 
-        try {
-            // Get CSRF token from meta tag
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+//         try {
+//             // Get CSRF token from meta tag
+//             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             
-            const response = await fetch('/issues', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({
-                    issueTitle: title,
-                    issueDescription: description,
-                    issueCategory: category,
-                    urgency: urgency
-                })
-            });
+//             const response = await fetch('/issues', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Accept': 'application/json',
+//                     'X-Requested-With': 'XMLHttpRequest',
+//                     'X-CSRF-TOKEN': csrfToken
+//                 },
+//                 body: JSON.stringify({
+//                     issueTitle: title,
+//                     issueDescription: description,
+//                     issueCategory: category,
+//                     urgency: urgency
+//                 })
+//             });
 
-            const data = await response.json();
+//             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Server returned an error');
-            }
+//             if (!response.ok) {
+//                 throw new Error(data.message || 'Server returned an error');
+//             }
 
-            if (data.success) {
-                form.style.display = 'none';
-                confirmation.style.display = 'block';
-                confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-                throw new Error(data.message || 'There was an error submitting your issue');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert(`Error: ${error.message}`);
-            submitBtn.innerHTML = originalBtnText;
-            submitBtn.disabled = false;
-        }
-    });
+//             if (data.success) {
+//                 form.style.display = 'none';
+//                 confirmation.style.display = 'block';
+//                 confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//             } else {
+//                 throw new Error(data.message || 'There was an error submitting your issue');
+//             }
+//         } catch (error) {
+//             console.error('Error:', error);
+//             alert(`Error: ${error.message}`);
+//             submitBtn.innerHTML = originalBtnText;
+//             submitBtn.disabled = false;
+//         }
+//     });
     
-    backBtn.addEventListener('click', function() {
-        confirmation.style.display = 'none';
-        form.style.display = 'block';
-        form.reset();
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-});
+//     backBtn.addEventListener('click', function() {
+//         confirmation.style.display = 'none';
+//         form.style.display = 'block';
+//         form.reset();
+//         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//     });
+// });
 
 /* script for Support section */
 document.addEventListener('DOMContentLoaded', function() {

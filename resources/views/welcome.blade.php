@@ -499,7 +499,7 @@
                                         <div class="caption">
                                             <div class="ctgry_dur">
                                                 <div class="ctgry">
-                                                    <p>Instructor: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
+                                                    <p>Technos: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
                                                 </div>
                                                 <div class="dur">
                                                     @php
@@ -572,6 +572,7 @@
                 <div class="title_container">
                     <h3>Real Questions. Real Answers.</h3>
                     <h2>Join Our Weekly Q/A Sessions</h2>
+                    <p>Our weekly Q/A sessions put your conversations in the spotlight—shaped by questions and feedback from our community across social channels—so every discussion stays relevant, focused, and practical.</p>
                 </div>
                 <div class="button">
                     @if(Auth::check())

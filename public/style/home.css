@@ -234,7 +234,7 @@ body {
     background-attachment: fixed;
     background-position: bottom;
     & > .main_container {
-        background-color: rgba(0, 0, 0, .8);
+        background-color: rgba(0, 0, 0, .7);
         height: 100%;
         width: 100%;
         display: flex;
@@ -558,6 +558,7 @@ body {
                 }
               }
               
+              /* Card-specific colors */
               &.card1 {
                 & > .plan-button > a {
                   background-color: #4CAF50;
@@ -1583,7 +1584,7 @@ body {
                                 justify-content: center;
                                 
                                 & > a {
-                                    padding: 12px 30px;
+                                    padding: 15px 30px;
                                     background-color: #38b6ff;
                                     color: #ffffff;
                                     border: none;
@@ -1705,7 +1706,6 @@ body {
     }
 }
 
-
 /* weekly session pop-up */
 .wkly_sessions {
     width: 100%;
@@ -1773,7 +1773,8 @@ body {
             z-index: 1;
             margin: -17px 0 0 0;
             & > h2, 
-            & > h3 {
+            & > h3,
+            & > p {
                 font-size: 2em;
                 font-family: "Roboto", sans-serif;
                 color: var(--darkBlue-color);
@@ -1782,6 +1783,10 @@ body {
             & > h2 {
                 font-size: 3.5em;
                 color: #ffffff;
+            }
+            & > p {
+                font-size: 1.2em;
+                color: #ededed;
             }
         }
         & > .button {

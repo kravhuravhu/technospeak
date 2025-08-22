@@ -27,7 +27,7 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-container">
-                <img src="../images/techBackground.jpg" alt="Technology background"/>
+                <img src="@secureAsset('images/techBackground.jpg')" alt="Technology background"/>
                 <div class="overlay"></div>
                 <div class="hero-content">
                     <h1>Empowering Through Technology</h1>
@@ -112,63 +112,70 @@
         </section>
 
         <!-- Team Section -->
-        <section class="team-section">
+        <div class="techCoach_content">
             <div class="section-header">
                 <h2>Meet Our Team</h2>
                 <p>The passionate professionals behind Technospeak</p>
             </div>
-            
-            <div class="slider-container swiper">
-                <div class="slider-wrapper">
-                    <ul class="team-list swiper-wrapper">
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/Norris.jpg" alt="Team1" class="team-image">
-                            <h3 class="name">Norris Dzotizeyi</h3>
-                            <i class="description">TS - Trainer & IT Team</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/omega.jpg" alt="Team2" class="team-image">
-                            <h3 class="name">Nkosingiphile Omega Sithebe</h3>
-                            <i class="description">TS - Project Manager</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/hloks.jpeg" alt="Team3" class="team-image">
-                            <h3 class="name">Lehlogonolo Chauke</h3>
-                            <i class="description">TS - Content Creation</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/rose.jpeg" alt="Team4" class="team-image">
-                            <h3 class="name">Rose Tebogo Ndhlovu</h3>
-                            <i class="description">TS - Marketing Team</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/zinhle.jpeg" alt="Team5" class="team-image">
-                            <h3 class="name">Zinhle Bridgette Ngobeni</h3>
-                            <i class="description">TS - Marketing Team</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/junior.jpg" alt="Khuliso J. Ravhuravhu" class="team-image">
-                            <h3 class="name">Khuliso J. Ravhuravhu</h3>
-                            <i class="description">TS - Business Manager</i>
-                        </li>
-                        <!-- <li class="team swiper-slide">
-                            <img src="images/tsTeam/phuti.jpeg" alt="Team7" class="team-image">
-                            <h3 class="name">Phuti Palesa Rammutla</h3>
-                            <i class="description">TS - Analysis & Sales Team</i>
-                        </li>
-                        <li class="team swiper-slide">
-                            <img src="images/tsTeam/faith.jpeg" alt="Team10" class="team-image">
-                            <h3 class="name">Faith Maswangayi</h3>
-                            <i class="description">TS - Sales Team</i>
-                        </li> -->
-                    </ul>
+            <div class="coach-swiper-container">
+                <div class="swiper coachSwiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($instructors as $instructor)
+                            <div class="swiper-slide">
+                                <div class="coach-header">
+                                    <div class="coach-avatar">
+                                        <img src="{{ $instructor->thumbnail }}" alt="Coach {{ $instructor->name }}">
+                                    </div>
+                                    <div class="coach-intro">
+                                        <h2>{{ $instructor->name }} {{ $instructor->surname }}</h2>
+                                        <p class="coach-tagline">{{ $instructor->job_title }}</p>
+                                        <div class="coach-bio">
+                                            <p>
+                                                <strong>Technite {{ $instructor->name }}</strong>,
+                                                {{ $instructor->bio }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                @php
+                                    $features = $instructor->features ?? [];
+                                @endphp
+
+                                <div class="coach-features">
+                                    @foreach ($features as $feature)
+                                        <div class="feature-card">
+                                            <div class="feature-icon">
+                                                <i class="{{ $feature['icon'] ?? '' }}"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h3>{{ $feature['title'] ?? '' }}</h3>
+                                                <p>{{ $feature['description'] ?? '' }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>                   
+                </div>
+
+                <!-- Swiper Navigation -->
+                <div class="swiper-nav-btns">
                     <div class="swiper-pagination"></div>
-                    <div class="swiper-slide-button swiper-button-prev"></div>
-                    <div class="swiper-slide-button swiper-button-next"></div>
+                </div>
+
+                <!-- Swiper Navigation -->
+                <div class="swiper-nav-btns">
+                    <button class="swiper-nav-btn swiper-button-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="swiper-nav-btn swiper-button-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Brand Identity Section -->
         <section class="branding-section">
@@ -385,32 +392,34 @@
         </main>
 
         <!-- Linking Swiper script -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> 
+        
+         <!-- Swiper JS -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
+        
+        <!-- Technos/Coaches section-->
         <script>
-            // Initialize Swiper if Swiper is available
-            if (typeof Swiper !== 'undefined') {
-                const swiper = new Swiper('.slider-wrapper', {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Swiper
+                const swiper = new Swiper('.coachSwiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
                     loop: true,
-                    grabCursor: true,
-                    spaceBetween: 25,
                     pagination: {
                         el: '.swiper-pagination',
                         clickable: true,
-                        dynamicBullets: true,
                     },
                     navigation: {
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev',
                     },
-                    breakpoints: {
-                        0: { slidesPerView: 1 },
-                        768: { slidesPerView: 2 },
-                        1024: { slidesPerView: 3 },
-                    }
+                    // Autoplay
+                    autoplay: {
+                        delay: 10000,
+                        disableOnInteraction: false,
+                    },
                 });
-            }
-        </script>    
-        
+            });
+        </script> 
     </body>
 </html>

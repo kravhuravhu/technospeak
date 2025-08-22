@@ -16,7 +16,7 @@
                     <li><a href="/" class="{{ request()->is('/') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Home</a></li>
                     <li><a href="/about" class="{{ request()->is('about') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">About Us</a></li>
                     <li><a href="/trainings" class="{{ request()->is('trainings') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Trainings</a></li>
-                    <li><a href="/pricing" class="{{ request()->is('pricing') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Pricing</a></li>
+                    <li><a href="/pricing" class="{{ request()->is('pricing') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Product Plans</a></li>
                     @unless(Auth::check())
                         <li><a href="/register" class="{{ request()->is('register') ? 'active' : '' }} {{ $whiteBg ? 'bg-wt' : '' }}">Sign Up/In</a></li>
                     @endunless

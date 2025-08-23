@@ -138,78 +138,6 @@
                 </aside>
             </section>
 
-
-            <!-- Quick Tips & Tricks Section -->
-            <section class="tips-container">
-                <div class="section-header">
-                    <h2 class="section-title">Quick Tips & Tricks</h2>
-                    <p class="section-subtitle">Boost your productivity with these expert-curated resources</p>
-                </div>
-                <div class="tips-grid">
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                            </svg>
-                        </div>
-                        <h3>Create a personalized learning plan with AI</h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">Watch Tutorial <span>&rarr;</span></button>
-                    </div>
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                            </svg>
-                        </div>
-                        <h3>Look for hiring companies using AI</h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">Watch Demo <span>&rarr;</span></button>
-                    </div>
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                            </svg>
-                        </div>
-                        <h3>Edit PDF files with iLovePDF.com</h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">View Guide <span>&rarr;</span></button>
-                    </div>
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
-                            </svg>
-                        </div>
-                        <h3>Coding</h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">View Tips <span>&rarr;</span></button>
-                    </div>
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                            </svg>
-                        </div>
-                        <h3>Edit a PDF file using Ilovepdf.com </h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">Learn More <span>&rarr;</span></button>
-                    </div>
-                    <div class="tip-card">
-                        <div class="tip-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00aaff">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                            </svg>
-                        </div>
-                        <h3>Coding</h3>
-                        <p>We use AI to help you create a personalized and tailored learning plan that considers your unique needs and provides the most relevant content.</p>
-                        <button class="tip-btn">View Strategies <span>&rarr;</span></button>
-                    </div>
-                </div>
-            </section>
-
-
             <!-- Upcoming Live Sessions & Webinars Section -->
             <section class="webinars-section">
                 <div class="section-header">
@@ -293,7 +221,6 @@
                 </div>
             </section>
 
-
             <!-- Cheatsheet Section -->
             <section class="cheatsheet-section">
                 <div class="cheatsheet-container">
@@ -348,63 +275,12 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/>
                             </svg>
-                            Sign up or join a course to access full content
+                            Get full access to every cheatsheet with our quarterly Tips & Tricks subscription.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <!-- Newsletter Section -->
-            <section class="newsletter-section">
-                <div class="newsletter-container">
-                    <div class="newsletter-header">
-                        <div class="newsletter-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                        </div>
-                        <h2 class="newsletter-title">Stay Updated With Our Newsletter</h2>
-                        <p class="newsletter-description">
-                            Join our community and get exclusive access to:<br>
-                            <span class="highlight">Workshop invites • Course updates • Expert tips • Special offers</span>
-                        </p>
-                    </div>
-
-                    <form class="newsletter-form" id="newsletterForm" action="">
-                        <div class="form-group">
-                            <div class="input-container">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                                <input type="email" id="email" name="email" placeholder="Enter your email" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input-container">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M17 2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 1.99 2 1.99L17 22c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 14H8v-1c0-1.33 2.67-2 4-2s4 .67 4 2v1zm-1-5h-6V9h6v5z"/>
-                                </svg>
-                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required />
-                            </div>
-                        </div>
-
-                        <button type="submit" class="submit-btn">
-                            <span>Subscribe Now</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                            </svg>
-                        </button>
-
-                        <div class="privacy-note">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                            </svg>
-                            <span>We respect your privacy. Unsubscribe at any time.</span>
-                        </div>
-                    </form>
-                </div>
-            </section>
             <!-- Footer Section -->
             {{-- Include the footer --}}
             @include('layouts.footer')

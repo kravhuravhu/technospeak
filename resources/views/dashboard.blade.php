@@ -90,7 +90,7 @@
                             </a>
                         </div>
 
-                        <div class="nav-item" data-section="usr_guides">
+                        <div class="nav-item" data-section="usr_guide">
                             <a href="">
                                 <div class="icon">
                                     <i class="fa-solid fa-user-graduate"></i>
@@ -111,7 +111,8 @@
                             </div>
                             </a>
                         </div>
-                        <div class="nav-item" data-section="usr_shareIssue">
+                        <!-- Replaced by task assitance tab section -->
+                        <!-- <div class="nav-item" data-section="usr_shareIssue">
                             <a href="">
                             <div class="icon">
                                 <i class="fa-solid fa-bug"></i>
@@ -120,7 +121,7 @@
                                 <span>Help Center</span>
                             </div>
                             </a>
-                        </div>
+                        </div> -->
                         <div class="nav-item" data-section="usr_mysubscriptions">
                             <a href="">
                             <div class="icon">
@@ -140,17 +141,7 @@
                                 <span>Resources</span>
                             </div>
                             </a>
-                        </div>                                                                                                                                                                                                        
-                        <div class="nav-item" data-section="usr_techCoach">
-                            <a href="">
-                            <div class="icon">
-                                <i class="fa-solid fa-person-chalkboard"></i>
-                            </div>
-                            <div class="title">
-                                <span>Coaching</span>
-                            </div>
-                            </a>
-                        </div>
+                        </div>   
                         <div class="nav-item" data-section="usr_support">
                             <a href="">
                             <div class="icon">
@@ -694,8 +685,8 @@
                 </div>
 
                 <!-- Task assistance -->
-                <div class="content-section taskassistance_content" id="usr_taskAssistance">
-                    <div class="task_assistance">
+                <div class="content-section assistance_content" id="usr_taskAssistance">
+                    <div class="assistance">
                         <div class="container">
                             <div class="section-header">
                                 <div class="title">
@@ -709,17 +700,17 @@
                                     <h2 class="form-section-title">PERSONAL INFO</h2>
                                     <div class="form-row">
                                         <div class="form-group half-width">
-                                            <label for="firstName">First Name:</label>
-                                            <input type="text" id="firstName" name="firstName" required>
+                                            <label for="firstName-task">First Name:</label>
+                                            <input type="text" id="firstName-task" name="firstName" required>
                                         </div>
                                         <div class="form-group half-width">
-                                            <label for="lastName">Last Name:</label>
-                                            <input type="text" id="lastName" name="lastName" required>
+                                            <label for="lastName-task">Last Name:</label>
+                                            <input type="text" id="lastName-task" name="lastName" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Email Address:</label>
-                                        <input type="email" id="email" name="email" required>
+                                        <label for="email-task">Email Address:</label>
+                                        <input type="email" id="email-task" name="email" required>
                                     </div>
                                 </div>
                                 
@@ -749,44 +740,44 @@
                                                 Technical Assistance (e.g. IT Support, software help, etc.)
                                             </label>
                                             <label class="checkbox-container other-option">
-                                                <input type="radio" name="taskType" value="other" id="otherTaskType">
+                                                <input type="radio" name="taskType" value="other" id="otherTaskType-task">
                                                 <span class="checkmark"></span>
                                                 Other
-                                                <input type="text" id="otherTaskTypeInput" class="other-input" placeholder="Specify other task type">
+                                                <input type="text" id="otherTaskTypeInput-task" class="other-input" placeholder="Specify other task type">
                                             </label>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-                                        <label for="goal">What's the main goal or outcome you want to achieve?</label>
-                                        <textarea id="goal" name="goal" rows="1"></textarea>
+                                        <label for="goal-task">What's the main goal or outcome you want to achieve?</label>
+                                        <textarea id="goal-task" name="goal" rows="1"></textarea>
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-                                        <label for="mustHaves">Are there any must-have features, functions, or elements?</label>
-                                        <textarea id="mustHaves" name="mustHaves" rows="1"></textarea>
+                                        <label for="mustHaves-task">Are there any must-have features, functions, or elements?</label>
+                                        <textarea id="mustHaves-task" name="mustHaves" rows="1"></textarea>
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-                                        <label for="taskDescription">Task Description:</label>
-                                        <textarea id="taskDescription" name="taskDescription" rows="1" placeholder="---"></textarea>
+                                        <label for="taskDescription-task">Task Description:</label>
+                                        <textarea id="taskDescription-task" name="taskDescription" rows="1" placeholder="---"></textarea>
                                     </div>
                                 </div>
                                 
                                 <div class="form-section">
                                     <h2 class="form-section-title">MORE DETAILS <i>(ATTACHMENTS OPTIONAL)</i></h2>
                                     <div class="form-group fm-g-rw">
-                                        <label for="additionalInfo">Any other specifics you'd like to add:</label>
-                                        <textarea id="additionalInfo" name="additionalInfo" rows="1"></textarea>
+                                        <label for="additionalInfo-task">Any other specifics you'd like to add:</label>
+                                        <textarea id="additionalInfo-task" name="additionalInfo" rows="1"></textarea>
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-                                        <label for="fileUpload" class="file-upload-label">
+                                        <label for="fileUpload-task" class="file-upload-label">
                                             <i class="fas fa-paperclip"></i>
                                             Attach Files
                                         </label>
-                                        <input type="file" id="fileUpload" name="fileUpload" multiple style="display: none;">
-                                        <div id="fileList" class="file-list"></div>
+                                        <input type="file" id="fileUpload-task" name="fileUpload" multiple style="display: none;">
+                                        <div id="fileList-task" class="file-list"></div>
                                     </div>
                                 </div>
                                 
@@ -796,8 +787,128 @@
                     </div>
                 </div>
 
+                <!-- Personal guide -->
+                <div class="content-section assistance_content" id="usr_guide">
+                    <div class="assistance">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="title">
+                                    <h1>Personal Guide Request Form</h1>
+                                    <p class="subtitle">Please fill in this form so we can guide you step-by-step through your task while you learn to do it yourself.</p>
+                                </div>
+                            </div>
+                            
+                            <form id="personalGuideForm" class="assistance-form">
+                                <div class="form-section">
+                                    <h2 class="form-section-title">PERSONAL INFO</h2>
+                                    <div class="form-row">
+                                        <div class="form-group half-width">
+                                            <label for="firstName-guide">First Name:</label>
+                                            <input type="text" id="firstName-guide" name="firstName" required>
+                                        </div>
+                                        <div class="form-group half-width">
+                                            <label for="lastName-guide">Last Name:</label>
+                                            <input type="text" id="lastName-guide" name="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group half-width">
+                                            <label for="email-guide">Email Address:</label>
+                                            <input type="email" id="email-guide" name="email" required>
+                                        </div>
+                                        <div class="form-group half-width">
+                                            <label for="preferredMethod-guide">Preferred Method:</label>
+                                            <div class="checkbox-group">
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="preferredMethod" value="zoom">
+                                                    <span class="checkmark"></span>
+                                                    Zoom
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="preferredMethod" value="gmeet">
+                                                    <span class="checkmark"></span>
+                                                    Google Meet
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="preferredMethod" value="teams">
+                                                    <span class="checkmark"></span>
+                                                    Microsoft Teams
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="preferredMethod" value="whatsapp">
+                                                    <span class="checkmark"></span>
+                                                    WhatsApp
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h2 class="form-section-title">GUIDANCE OBJECTIVE</h2>
+                                    <div class="form-group">
+                                        <label for="guideType-guide">What Kind Of Guidance You Need Help With? <i>(Briefly describe what you need help with.)</i></label>
+                                        <input type="text" id="guideType-guide" name="guide_type" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Your Current Skill Level In This Task:</label>
+                                        <br>
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="skillLevel" value="beginner">
+                                                <span class="checkmark"></span>
+                                                Beginner
+                                            </label>
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="skillLevel" value="intermediate">
+                                                <span class="checkmark"></span>
+                                                Intermediate
+                                            </label>
+                                            <label class="checkbox-container">
+                                                <input type="radio" name="skillLevel" value="advanced">
+                                                <span class="checkmark"></span>
+                                                Advanced
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group fm-g-rw">
+                                        <label for="goal-guide">Task Guide Description:</label>
+                                        <textarea id="goal-guide" name="goal" rows="1"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="mustHaves-guide">When would you like to start</label>
+                                        <textarea placeholder="dd-mm-yyyy, hh:mm" id="mustHaves-guide" name="mustHaves" rows="1"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h2 class="form-section-title">MORE DETAILS <i>(ATTACHMENTS OPTIONAL)</i></h2>
+                                    <div class="form-group fm-g-rw">
+                                        <label for="additionalInfo-guide">Any other specifics you'd like to add:</label>
+                                        <textarea id="additionalInfo-guide" name="additionalInfo" rows="1"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group fm-g-rw">
+                                        <label for="fileUpload-guide" class="file-upload-label">
+                                            <i class="fas fa-paperclip"></i>
+                                            Attach Files
+                                        </label>
+                                        <input type="file" id="fileUpload-guide" name="fileUpload" multiple style="display: none;">
+                                        <div id="fileList-guide" class="file-list"></div>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Submit Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Replacing by Task Assistance -->
                 <!-- Share Your Issue Section -->
-                <div class="content-section shareIssue_content" id="usr_shareIssue">
+                <!-- <div class="content-section shareIssue_content" id="usr_shareIssue">
                     <div class="issue-header">
                         <div class="issue-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38b6ff">
@@ -923,7 +1034,7 @@
                         </div>
                         <button class="back-btn">Report Another Issue</button>
                     </div>
-                </div>               
+                </div>-->
 
                 <!-- subscriptions containers -->
                 @isset($activePlans)
@@ -990,10 +1101,10 @@
                         </div>
                     </div>
                 </div>
-
+                
+                <!-- Moved to about MEET the TEAM -->
                 <!-- Tech Coach containers -->
-                <div class="content-section techCoach_content" id="usr_techCoach">
-                    <!-- Swiper Container for Coaches -->
+                <!-- <div class="content-section techCoach_content" id="usr_techCoach">
                     <div class="coach-swiper-container">
                         <div class="swiper coachSwiper">
                             <div class="swiper-wrapper">
@@ -1004,7 +1115,7 @@
                                                 <img src="{{ $instructor->thumbnail }}" alt="Coach {{ $instructor->name }}">
                                             </div>
                                             <div class="coach-intro">
-                                                <h2>Meet Your Personal Tech Coach</h2>
+                                                <h2>{{ $instructor->name }} {{ $instructor->surname }}</h2>
                                                 <p class="coach-tagline">{{ $instructor->job_title }}</p>
                                                 <div class="coach-bio">
                                                     <p>
@@ -1035,13 +1146,11 @@
                                     </div>
                                 @endforeach
                             </div>                   
-                            <!-- Swiper Navigation -->
                             <div class="swiper-nav-btns">
                                 <div class="swiper-pagination"></div>
                             </div>
                         </div>
 
-                        <!-- Swiper Navigation -->
                         <div class="swiper-nav-btns">
                             <button class="swiper-nav-btn swiper-button-prev">
                                 <i class="fas fa-chevron-left"></i>
@@ -1052,7 +1161,6 @@
                         </div>
                     </div>
 
-                    <!-- Coaching - Lower Part -->
                     <div class="coach-recommendations">
                         <h3 class="recommendations-title">Your Personalised Recommendations</h3>
                         @php $singleCourse = app('App\Http\Controllers\CourseAccessController')->getSingleRecommendedCourse(); @endphp
@@ -1142,7 +1250,6 @@
                             </div>
                         @endif
 
-                        <!-- pop up for register -->
                         @include('components.sessions_registration', [
                             'typeId' => 4,
                             'typeName' => 'Q/A Session'
@@ -1160,7 +1267,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Support Section -->
                 <div class="content-section support_content" id="usr_support">
@@ -1563,7 +1670,7 @@
                         $activeLevel = $progressData['level'];
                     @endphp
 
-                    <div class="progress_box">
+                    <div class="progress_box" id="fml-progress-boxx">
                         <div class="progress-container">
                             <div class="progress-header">
                                 <h1 class="progress-title">Your Overall Progress</h1>
@@ -1590,7 +1697,7 @@
                         </div>
                     </div>
 
-                    <div class="upcoming_box">
+                    <div class="upcoming_box" id="up-coming-boxx">
                         <div class="title">
                             <h4>Upcoming Sessions</h4>
                         </div>
@@ -1632,7 +1739,54 @@
                     </div>
 
                     <!-- task assistance bar -->
-                     
+                    <div class="rt-ts-asst rt-ts-asst_rt-ps-guide" id="rt-ts-asst-fnc">
+                        <div class="inner_container">
+                            <div class="title_container">
+                                <h3>About Task Assitance Product:</h3>
+                            </div>
+                            <div class="description">
+                                <p>Something about the types of assistance we provide. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
+                                <p><br>Something about the types of assistance we provide. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
+                            </div>
+                            <div class="title_container">
+                                <h3>Purpose:</h3>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            </div>
+                            <div class="title_container">
+                                <h3>Price:</h3>
+                            </div>
+                            <div class="button">
+                                <a href="">R100</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- personal guide bar -->
+                    <div class="rt-ps-guide rt-ts-asst_rt-ps-guide" id="rt-ps-guide-fnc">
+                        <div class="inner_container">
+                            <div class="title_container">
+                                <h3>About Personal Guide Product:</h3>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                <p><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <div class="title_container">
+                                <h3>Purpose:</h3>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            </div>
+                            <div class="title_container">
+                                <h3>Price:</h3>
+                            </div>
+                            <div class="button">
+                                <a href="">R120</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1669,13 +1823,16 @@
                 }
 
                 function handleInitialLoad() {
-                    // Check for hash first, then localStorage, then default to dashboard
+                    // hash first, then localStorage, then default to dashboard
                     const hash = window.location.hash.substring(1);
                     const storedSection = localStorage.getItem('activeSection');
                     const defaultSection = 'usr_dashboard';
                     
                     const targetSection = hash || storedSection || defaultSection;
                     switchToSection(targetSection);
+                    
+                    // global activeSection variable
+                    window.activeSection = targetSection;
                 }
 
                 // allow # if called
@@ -1694,12 +1851,19 @@
                     document.getElementById(sectionId).classList.add('active');
 
                     localStorage.setItem('activeSection', sectionId);
+                    window.activeSection = sectionId;
 
                     const rightbar = document.getElementById('rightbar-container');
                     const profile_tag = document.getElementById('profile_tag');
                     const txt_btn_rm = document.getElementById('txt_btn_rm');
                     
+                    const up_coming_box = document.getElementById('up-coming-boxx');
+                    const fml_progress_box = document.getElementById('fml-progress-boxx');
+                    const rt_ts_asst_fnc = document.getElementById('rt-ts-asst-fnc');
+                    const rt_ps_guide_fnc = document.getElementById('rt-ps-guide-fnc');
+
                     if (rightbar) {
+                        // hide the whole right bar when all trainings section is active
                         if (sectionId === 'usr_alltrainings') {
                             rightbar.style.display = 'none';
                             profile_tag.style.display = 'block';
@@ -1708,6 +1872,28 @@
                             rightbar.style.display = 'block';
                             profile_tag.style.display = 'none';
                             txt_btn_rm.style.display = 'flex';
+                        }
+
+                        // Hide only upcoming and progress, show task assistance container
+                        if (sectionId === 'usr_taskAssistance') {
+                            if (up_coming_box) up_coming_box.style.display = 'none';
+                            if (fml_progress_box) fml_progress_box.style.display = 'none';
+                            if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = 'block';
+                        } else {
+                            if (up_coming_box) up_coming_box.style.display = 'block';
+                            if (fml_progress_box) fml_progress_box.style.display = 'block';
+                            if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = "none";
+                        }
+
+                        // hide and only show personal guide
+                        if (sectionId === 'usr_guide') {
+                            if (up_coming_box) up_coming_box.style.display = 'none';
+                            if (fml_progress_box) fml_progress_box.style.display = 'none';
+                            if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = 'block';
+                        }  else {
+                            if (up_coming_box) up_coming_box.style.display = 'block';
+                            if (fml_progress_box) fml_progress_box.style.display = 'block';
+                            if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "none";
                         }
                     }
 
@@ -1767,11 +1953,18 @@
 
                     if (activeSection) {
                         activeSection.classList.add('active');
-
+                        
                         const rightbar = document.getElementById('rightbar-container');
                         const profile_tag = document.getElementById('profile_tag');
                         const txt_btn_rm = document.getElementById('txt_btn_rm');
+                        
+                        const up_coming_box = document.getElementById('up-coming-boxx');
+                        const fml_progress_box = document.getElementById('fml-progress-boxx');
+                        const rt_ts_asst_fnc = document.getElementById('rt-ts-asst-fnc');
+                        const rt_ps_guide_fnc = document.getElementById('rt-ps-guide-fnc');
+
                         if (rightbar) {
+                            // hide the whole right bar and tips & tips are active
                             if (window.activeSection === 'usr_alltrainings') {
                                 rightbar.style.display = 'none';
                                 profile_tag.style.display = 'block';
@@ -1780,6 +1973,27 @@
                                 rightbar.style.display = 'block';
                                 profile_tag.style.display = 'none';
                                 txt_btn_rm.style.display = 'flex';
+                            }
+                            // hide only upcoming and progress, show task assistance cont
+                            if (window.activeSection === 'usr_taskAssistance') {
+                                up_coming_box.style.display = 'none';
+                                fml_progress_box.style.display = 'none';
+                                rt_ts_asst_fnc.style.display = 'block';
+                            } else {
+                                up_coming_box.style.display = 'block';
+                                fml_progress_box.style.display = 'block';
+                                rt_ts_asst_fnc.style.display = "none";
+                            }
+
+                            // hide and only show personal guide
+                            if (window.activeSection === 'usr_guide') {
+                                if (up_coming_box) up_coming_box.style.display = 'none';
+                                if (fml_progress_box) fml_progress_box.style.display = 'none';
+                                if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = 'block';
+                            }  else {
+                                if (up_coming_box) up_coming_box.style.display = 'block';
+                                if (fml_progress_box) fml_progress_box.style.display = 'block';
+                                if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "none";
                             }
                         }
                     }
@@ -1802,23 +2016,6 @@
                         });
 
                         document.getElementById(sectionId).classList.add('active');
-
-                        // rightbar, profile_tag, txt_btn_rm toggle
-                        const rightbar = document.getElementById('rightbar-container');
-                        const profile_tag = document.getElementById('profile_tag');
-                        const txt_btn_rm = document.getElementById('txt_btn_rm');
-
-                        if (rightbar) {
-                            if (sectionId === 'usr_alltrainings') {
-                                rightbar.style.display = 'none';
-                                profile_tag.style.display = 'block';
-                                txt_btn_rm.style.display = 'none';
-                            } else {
-                                rightbar.style.display = 'block';
-                                profile_tag.style.display = 'none';
-                                txt_btn_rm.style.display = 'flex';
-                            }
-                        }
                     });
                 });
             });

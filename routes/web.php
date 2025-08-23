@@ -37,9 +37,9 @@ Route::get('/', [
     WelcomeController::class, 'index'
 ]);
 
-Route::get('/about', function () { 
-    return view('about'); 
-});
+Route::get('/about', [
+    WelcomeController::class, 'aboutPage'
+])->name('about');
 
 Route::get('/trainings', [
     WelcomeController::class, 'trainingsPage'
@@ -72,7 +72,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user();
         
-        // Keep all your existing working variables
         $courseAccess = new CourseAccessController();
         $freeCourses = $courseAccess->getFreeCourses();
         $paidCourses = $courseAccess->getPaidCourses();
@@ -91,11 +90,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ];
             });
         
-        // SIMPLE ACTIVE PLANS LOGIC (NEW ADDITION)
-        $activePlans = collect([TrainingType::find(7)]); // Always include free plan
+        $activePlans = collect([TrainingType::find(7)]);
         
         if ($user->subscription_type === 'premium') {
-            $activePlans->push(TrainingType::find(6)); // Add premium if subscribed
+            $activePlans->push(TrainingType::find(6));
         }
         
         $completedTrainings = TrainingRegistration::with('session.type')
@@ -111,15 +109,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $activePlans = $activePlans->merge($completedTrainings);
 
         return view('dashboard', [
-            // KEEP ALL YOUR EXISTING VARIABLES
             'freeCourses' => $freeCourses,
             'paidCourses' => $paidCourses,
             'enrolledCourses' => $enrolledCourses,
             'recommendedCourses' => $recommendedCourses,
             'instructors' => Instructor::all(),
             'upcomingSessions' => TrainingSession::getUpcomingSessions(),
-            
-            // NEW VARIABLE (won't break existing code)
             'activePlans' => $activePlans
         ]);
     })->name('dashboard');

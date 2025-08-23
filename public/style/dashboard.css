@@ -337,6 +337,47 @@ section.bar-lt-rt {
       }
 
       /* task assistance right bar */
+      & > .rt-ts-asst_rt-ps-guide {
+        display: none;
+        background-color: var(--darkBlue-color);
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        color: var(--lightWhite-color);
+        & > .inner_container {
+          padding: 35px 20px;
+          & > .title_container {
+            padding: 15px 0;
+            & > h3 {
+              font-size: 1.3em;
+              text-transform: uppercase;
+              padding: 7px 0;
+            }
+          }
+          & > .description {
+            & > p {
+              font-size: 1em;
+              text-transform: capitalize;
+            }
+          }
+          & > .button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            & > a {
+              background-color: #38b6ff;
+              padding: 17px 70px;
+              cursor: pointer;
+              font-size: 1.2em;
+              color: var(--lightWhite-color);
+              width: fit-content;
+              border-radius: 50px;
+              text-decoration: none;
+            }
+          }
+        }
+      }
 
       /* only for formal trainings */
       & > .progress_box {
@@ -1168,10 +1209,10 @@ section.bar-lt-rt {
         }
       }
 
-      /* style for task assistance */
-      &.taskassistance_content {
+      /* style for task assistance AND personal guide*/
+      &.assistance_content {
         width: 90%;
-        & > .task_assistance {
+        & > .assistance {
           & > .container {
             display: flex;
             flex: 1;
@@ -1410,8 +1451,9 @@ section.bar-lt-rt {
         }
       }
 
+      /* replaced by Task Assistance */
       /* Issue Section Styles */
-      &.shareIssue_content {
+      /* &.shareIssue_content {
         margin: 0 auto;
         position: relative;
         overflow: hidden;
@@ -1462,7 +1504,6 @@ section.bar-lt-rt {
           line-height: 1.5;
         }
 
-        /* Steps Section */
         .issue-steps {
           display: flex;
           justify-content: space-between;
@@ -1504,7 +1545,6 @@ section.bar-lt-rt {
           line-height: 1.5;
         }
 
-        /* Form Styles */
         .issue-form {
           margin-top: 30px;
         }
@@ -1570,7 +1610,6 @@ section.bar-lt-rt {
           pointer-events: none;
         }
 
-        /* Urgency Levels */
         .urgency-levels {
           display: flex;
           gap: 10px;
@@ -1615,7 +1654,6 @@ section.bar-lt-rt {
           color: #38b6ff;
         }
 
-        /* Submit Button */
         .form-footer {
           margin-top: 30px;
           text-align: center;
@@ -1664,7 +1702,6 @@ section.bar-lt-rt {
           color: #38b6ff;
         }
 
-        /* Confirmation Message */
         .confirmation-message {
           text-align: center;
           padding: 30px;
@@ -1747,7 +1784,6 @@ section.bar-lt-rt {
           background-color: #cbd5e0;
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) {
           .issue-header {
             flex-direction: column;
@@ -1796,7 +1832,7 @@ section.bar-lt-rt {
             top: 35px;
           }
         }
-      } 
+      }  */
 
       /* style for all subscriptions */
       &.subscriptions_content {
@@ -2134,8 +2170,9 @@ section.bar-lt-rt {
         }
       }
 
+      /* Moved to meet the team */
       /* Coach Section Styles */
-      &.techCoach_content {
+      /* &.techCoach_content {
         background: white;
         border-radius: 20px;
         padding: 30px;
@@ -2154,14 +2191,12 @@ section.bar-lt-rt {
           background: linear-gradient(to bottom, #38b6ff, #25f4ee);
         }
 
-        /* Swiper Container */
         .coach-swiper-container {
             width: 100%;
             position: relative;
             padding: 0 60px;
         }
 
-        /* Coach Header */
         .coach-header {
             display: flex;
             align-items: flex-start;
@@ -2215,7 +2250,6 @@ section.bar-lt-rt {
             color: #2d3748;
         }
 
-        /* Coach Features */
         .coach-features {
             display: flex;
             justify-content: space-between;
@@ -2267,7 +2301,6 @@ section.bar-lt-rt {
             margin: 0;
         }
 
-        /* Swiper Navigation */
         .swiper-nav-btns {
             display: flex;
             justify-content: center;
@@ -2438,7 +2471,6 @@ section.bar-lt-rt {
             background-color: #2d3748;
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .coach-header {
                 flex-direction: column;
@@ -2478,8 +2510,7 @@ section.bar-lt-rt {
                 padding: 15px;
             }
         }
-        
-        /* Upcomming RSVP Now section */
+
         .notify-btn {
             padding: 10px 20px;
             border: none;
@@ -2497,11 +2528,10 @@ section.bar-lt-rt {
             background-color: #F57C00;
         }
 
-        /* Loading spinner */
         .fa-spinner.fa-spin {
             margin-right: 8px;
         }
-      }
+      } */
       
       /* support/faq section */
       &.support_content {

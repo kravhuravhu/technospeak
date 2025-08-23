@@ -59,17 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email-task-assistance').value;
         const taskType = document.querySelector('input[name="taskType"]:checked');
         
         if (!firstName || !lastName || !email || !taskType) {
             alert('Please fill in all required fields');
-            return;
-        }
-        
-        if (taskType.value === 'other' && !otherTaskTypeInput.value) {
-            alert('Please specify the task type');
-            otherTaskTypeInput.focus();
             return;
         }
         

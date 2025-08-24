@@ -184,7 +184,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/training/enroll') : url('/login?redirect=training/enroll') }}">Enroll Now</a>
+                                        <a href="#" onclick="openComingSoonModal(); return false;">Enroll Now</a>
                                     </div>
                                 </div>
 
@@ -209,7 +209,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/personal-guide') : url('/login?redirect=personal-guide') }}">Get Guide</a>
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_guide') : url('/login') }}">Get Guide</a>
                                     </div>
                                 </div>
 
@@ -241,7 +241,7 @@
                                 <!-- Card 5: Task Assistance -->
                                 <div class="card card5">
                                     <div class="cr-img">
-                                    <img src="@secureAsset('/images/Personal guide.png')" alt="Task Assistance"/>
+                                    <img src="@secureAsset('/images/Task assistance.png')" alt="Task Assistance"/>
                                     </div>
                                     <div class="st_title_container">
                                         <h3>Task Assistance</h3>
@@ -259,7 +259,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/task-assistance') : url('/login?redirect=task-assistance') }}">Get Assistance</a>
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_taskAssistance') : url('/login') }}">Get Assistance</a>
                                     </div>
                                 </div>
 
@@ -283,8 +283,8 @@
                                             <li>Different pricing for students/business</li>
                                         </ul>
                                     </div>
-                                    <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/group-sessions/qa') : url('/login?redirect=group-sessions/qa') }}">Book Now</a>
+                                     <div class="plan-button">
+                                        <a href="#" onclick="openGroupSession1Modal(); return false;">Book Now</a>
                                     </div>
                                 </div>
 
@@ -309,7 +309,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/group-sessions/consultation') : url('/login?redirect=group-sessions/consultation') }}">Book Now</a>
+                                        <a href="#" onclick="openGroupSession2Modal(); return false;">Book Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -343,8 +343,6 @@
                     <h3>Graphic Design Tools</h3>
                     <p>Professional visuals for your brand</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
                     </div>
                 </div>
 
@@ -353,8 +351,7 @@
                     <h3>AI Content Creation</h3>
                     <p>Smart content generation</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
 
@@ -363,8 +360,7 @@
                     <h3>Office Admin (ICT)</h3>
                     <p>Streamline office tasks</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
 
@@ -373,8 +369,7 @@
                     <h3>Technical Support</h3>
                     <p>Reliable IT assistance</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
 
@@ -383,8 +378,7 @@
                     <h3>Web & App Programming</h3>
                     <p>Custom digital solutions</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
 
@@ -393,8 +387,7 @@
                     <h3>Networking Essentials</h3>
                     <p>Secure connectivity solutions</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
 
@@ -403,8 +396,7 @@
                     <h3>Digital Marketing</h3>
                     <p>Grow your online presence</p>
                     <div class="card-hover-content">
-                    <span>Explore</span>
-                    <div class="arrow">→</div>
+                    
                     </div>
                 </div>
                 </div>
@@ -590,7 +582,7 @@
         ])
 
         <!-- Get in touch section -->
-        <section class="gtch">
+        <section class="gtch" id="contact-section">
             <div class="main_container">
                 <div class="title_container">
                     <h2>Get In Touch</h2>
@@ -656,5 +648,63 @@
         @include('layouts.footer')
 
         <script src="script/home_slider.js"></script>
+        <script src="script/pop-up.js"></script>
+
+
+
+        <!-- Coming Soon Modal -->
+        <div id="coming-soon-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Coming Soon</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">⏱️</div>
+                    <p>Our Formal Training program is currently in development and will be available soon.</p>
+                    <p>We're working hard to create the best learning experience for you. Please check back later or contact us for more information.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel" id="modal-close-btn">Close</button>
+                    <button class="modal-btn confirm" id="modal-contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Session 1 Modal -->
+        <div id="group-session1-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Coming Soon</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">⏱️</div>
+                    <p>Our Live Q&A Sessions are currently in development and will be available soon.</p>
+                    <p>We're creating an interactive platform where you can ask questions and get immediate expert answers. Please check back later or contact us for more information.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel" id="group-session1-close-btn">Close</button>
+                    <button class="modal-btn confirm" id="group-session1-contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Session 2 Modal -->
+        <div id="group-session2-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Coming Soon</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon">⏱️</div>
+                    <p>Our Response Consultations are currently in development and will be available soon.</p>
+                    <p>We're building focused sessions to address comments and questions from our video content. Please check back later or contact us for more information.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel" id="group-session2-close-btn">Close</button>
+                    <button class="modal-btn confirm" id="group-session2-contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </div>
+
     </body> 
 </html>

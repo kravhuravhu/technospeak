@@ -92,7 +92,7 @@
                                 <div class="card_container">
                                     <div class="card card-2 highlight">
                                         <div class="plan_title">
-                                            <h2>TechVault Access</h2>
+                                            <h2>Premium</h2>
                                         </div>
                                         <div class="icon">
                                             <img src="../images/icons/quality-service.png"/>
@@ -143,8 +143,9 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
+                                            {{-- For subscription --}}
                                             @if(Auth::check())
-                                                <a href="{{ route('stripe.checkout', ['clientId' => auth()->id(), 'planId' => 'subscription_6']) }}" 
+                                                <a href="{{ route('yoco.checkout', ['clientId' => auth()->id(), 'planId' => 'subscription_6']) }}" 
                                                 class="btn btn-primary">
                                                 SUBSCRIBE
                                                 </a>

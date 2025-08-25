@@ -178,6 +178,7 @@
                 <select id="plan_type" name="plan_type" class="form-control" required>
                     <option value="free" {{ old('plan_type', $course->plan_type) == 'free' ? 'selected' : '' }}>Free</option>
                     <option value="paid" {{ old('plan_type', $course->plan_type) == 'paid' ? 'selected' : '' }}>Paid</option>
+                    <option value="frml_training" {{ old('plan_type', $course->plan_type) == 'frml_training' ? 'selected' : '' }}>Formal Training</option>
                 </select>
                 <div class="old-value">Current: {{ ucfirst($course->plan_type) }}</div>
             </div>
@@ -191,6 +192,11 @@
                     @endforeach
                 </select>
                 <div class="old-value">Current: {{ ucfirst($course->level) }}</div>
+            </div>
+            <!-- price appears only if plan is formal-->
+            <div class="form-group" id="price-group" style="display:none;">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" step="0.01" id="price" name="price" class="form-control" placeholder="Rands">
             </div>
         </div>
         <div class="form-row" style="padding:20px 0">
@@ -453,7 +459,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{{ route('content-manager.courses.show', $course->id) }}" class="btn btn-outline">Cancel</a>
+        <a href="{{ route('content-manager.courses.index') }}" class="btn btn-outline">Cancel</a>
     </div>
 </form>
 
@@ -500,6 +506,17 @@
             document.querySelectorAll('.resource-file-url').forEach(input => {
                 if (input.value) {
                     updateFileInfo(input);
+                }
+            });
+
+            // add price if type is formal trainings
+            document.getElementById('plan_type').addEventListener('change', function() {
+                let priceGroup = document.getElementById('price-group');
+                if (this.value === 'frml_training') {
+                    priceGroup.style.display = 'block';
+                } else {
+                    priceGroup.style.display = 'none';
+                    document.getElementById('price').value = '';
                 }
             });
         }

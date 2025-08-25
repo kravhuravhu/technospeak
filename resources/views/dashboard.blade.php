@@ -57,7 +57,7 @@
                             </a>
                         </div>
 
-                        <div class="nav-item" data-section="usr_tips">
+                        <div class="nav-item" data-section="usr_alltricks">
                             <a href="">
                                 <div class="icon">
                                     <i class="fa-solid fa-lightbulb"></i>
@@ -68,7 +68,7 @@
                             </a>
                         </div>
 
-                        <div class="nav-item" data-section="usr_formalTraining">
+                        <div class="nav-item" data-section="usr_formaltraining">
                             <a href="">
                                 <div class="icon">
                                     <i class="fa-solid fa-computer"></i>
@@ -101,27 +101,6 @@
                             </a>
                         </div>
 
-                        <div class="nav-item" data-section="usr_alltrainings">
-                            <a href="">
-                            <div class="icon">
-                                <i class="fa-solid fa-computer"></i>
-                            </div>
-                            <div class="title">
-                                <span>Training Library</span>
-                            </div>
-                            </a>
-                        </div>
-                        <!-- Replaced by task assitance tab section -->
-                        <!-- <div class="nav-item" data-section="usr_shareIssue">
-                            <a href="">
-                            <div class="icon">
-                                <i class="fa-solid fa-bug"></i>
-                            </div>
-                            <div class="title">
-                                <span>Help Center</span>
-                            </div>
-                            </a>
-                        </div> -->
                         <div class="nav-item" data-section="usr_mysubscriptions">
                             <a href="">
                             <div class="icon">
@@ -193,7 +172,7 @@
         <section class="main">
             <div class="container">
                 <!-- dashboard containers -->
-                <div class="content-section active dashboard_content" id="usr_dashboard">
+                <div class="content-section active dashboard_content with_current_learnings" id="usr_dashboard">
                     <div class="topbar search-bar">
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Search...">
@@ -213,17 +192,18 @@
                                 @endphp
                                 {{ Auth::user()->name }}!
                             </h1>
-                            @if($enrolledCourses->count() > 0)
+
+                            @if(isset($tipsAndTricksCourses) && $tipsAndTricksCourses->isNotEmpty())
+                                <p>Dive back into your favorite Tips & Tricks videos or explore more Formal Trainings to level up your skills.</p>
                                 @php
-                                    $completedCount = 0;
-                                    $inProgressCount = $enrolledCourses->count() - $completedCount;
-                                    $nextCourse = $enrolledCourses->first();
+                                    $nextCourse = $tipsAndTricksCourses->first() ?? ($formalTrainingCourses->first() ?? null);
                                 @endphp
-                                <p>You have <strong>{{ $inProgressCount }}</strong> course{{ $inProgressCount === 1 ? '' : 's' }} in progress and <strong>{{ $completedCount }}</strong> completed.</p>
-                                <p><i class="fas fa-arrow-circle-right"></i> {{ $inProgressCount > 0 ? 'Pick up where you left off with' : 'Explore new learning with' }} <strong>{{ $nextCourse->title }}</strong>.</p>
+                                @if($nextCourse)
+                                    <p><i class="fas fa-arrow-circle-right"></i> Why not continue with <strong>{{ $nextCourse->title }}</strong>?</p>
+                                @endif
                             @else
-                                <p>You’ve got <strong>{{ $freeCourses->count() + $paidCourses->count() }}</strong> exciting trainings waiting to explore.</p>
-                                <p>Start your first one and unlock new skills today!</p>
+                                <p><span>Explore our Tips & Tricks and Formal Trainings to unlock new skills & knowledge.</p>
+                                <p>Start your first trainings today and make progress toward your goals!</p>
                             @endif
                         </div>
                         <div class="welcome-illustration">
@@ -236,41 +216,31 @@
                     <div class="my_learnings ln_rcmm">
                         <div class="container">
                             <div class="title">
-                                <h1>My Trainings</h1>
+                                <h1>Your Current Tips&Tricks</h1>
                             </div>
                             <div class="card-grid">
-                                @php
-                                    $progressData = app('App\Http\Controllers\CourseAccessController')->getOverallProgressData();
-                                    $enrolledCourses = $progressData['courses']; // This is the array of courses with progress info
-                                @endphp
-
-                                @forelse($enrolledCourses as $course)
-                                    <a href="{{ route('enrolled-courses.show', $course['uuid']) }}" class="enrolled-course-link">
+                                @forelse($tipsAndTricksCurrent as $course)
+                                    <a href="{{ route('enrolled-courses.show', $course->uuid) }}" class="enrolled-course-link">
                                         <div class="card">
                                             <div class="thmbnail">
-                                                <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
+                                                <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
                                                 <div class="trnsprnt"></div>
                                             </div>
                                             <div class="details">
                                                 <div class="title content">
-                                                    <h1>{{ $course['title'] }}</h1>
+                                                    <h1>{{ $course->title }}</h1>
                                                 </div>
+
                                                 <div class="dur content">
-                                                    <p><i>Duration: {{ $course['formatted_duration'] }}</i></p>
-                                                </div>
-                                                <div class="progress_bar content">
-                                                    <div class="main-bar">
-                                                        <div class="progress" style="width: {{ $course['progress'] }}%"></div>
-                                                    </div>
-                                                    <div class="cr-bar">{{ $course['progress'] }}%</div>
+                                                    <p>{{ $course->catch_phrase }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 @empty
                                     <div class="empty-state">
-                                        <p>You haven't enrolled in any trainings yet.</p>
-                                        <a href="#usr_alltrainings" class="browse-btn">Browse Courses → </a>
+                                        <p>You're currently not watching any tips and tricks videos yet.</p>
+                                        <a href="#usr_alltricks" class="browse-btn">Browse Tips&Tricks → </a>
                                     </div>
                                 @endforelse
                             </div>
@@ -287,7 +257,7 @@
                             <div class="card-grid thn_grid_cd">
                                 @forelse($recommendedCourses as $course)
                                     <a href="#" class="training-card"
-                                        data-course-id="{{ $course->uuid }}"    
+                                        data-course-id="{{ $course->uuid }}"
                                         data-training-type="{{ $course->plan_type }}"
                                         data-title="{{ $course->title }}"
                                         data-description="{{ $course->description }}"
@@ -328,7 +298,7 @@
                                                     </div>
                                                     <div class="cont right-side">
                                                         <i class="fa-solid fa-video"></i>
-                                                        <span>{{ $course->episodes->count() }} Episodes</span>
+                                                        <span>{{ $course->episodes->count() }} Video<i>(s)</i></span>
                                                     </div>
                                                 </div>
                                                 <div class="thmb_enrll content">
@@ -349,166 +319,22 @@
                     </div>
                 </div>
 
-                <!-- trainings containers -->
-                <div class="content-section alltrainings_content" id="usr_alltrainings">
-                    <div class="rcmmnd_trngs free_tr all_tr ln_rcmm">
+                <!-- tips and tricks containers -->
+                <div class="content-section alltricks_content" id="usr_alltricks">
+                    <div class="rcmmnd_trngs tips_tricks all_tr ln_rcmm">
                         <div class="container">
                             <div class="section-header">
                                 <div class="title">
-                                    <h1>Free Trainings</h1>
-                                    <p class="subtitle">Free mini-trainings and quick how-to videos</p>
+                                    <h1>Tips & Tricks</h1>
+                                    <p class="subtitle">Collections of Tips and tricks designed to boost your skills efficiently.</p>
                                 </div>
                                 <div class="search-filter-container">
                                     <div class="search-box">
                                         <i class="fas fa-search search-icon"></i>
-                                        <input type="text" id="freeSearchInput" placeholder="Search free trainings..." class="search-control">
+                                        <input type="text" id="tipsSearchInput" placeholder="Search tips and tricks..." class="search-control">
                                     </div>
                                     <div class="filter-dropdown">
-                                        <select id="freeFilterSelect" class="search-control">
-                                            <option value="">All Categories</option>
-                                            @foreach(\App\Models\CourseCategory::all() as $category)
-                                                <option value="{{ $category->name }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <i class="fas fa-filter filter-icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="courseNoResultsMessagePaid" style="display:none;" class="no-results-message">
-                                No free trainings match your criteria. Try a different search
-                            </div>
-                            <div id="courseNoResultsMessageFree" style="display:none;" class="no-results-message">
-                                No free trainings match your criteria. Try a different search
-                            </div>
-                            <div class="card-grid thn_grid_cd" id="free-trainings">
-                                @if($freeCourses->count() > 0)
-                                    @foreach($freeCourses->take(4) as $course) 
-                                        <a href="#" class="training-card"
-                                            data-course-id="{{ $course['uuid'] }}"    
-                                            data-training-type="free"
-                                            data-title="{{ $course['title'] }}"
-                                            data-description="{{ $course['description'] }}"
-                                            data-image="{{ $course['thumbnail'] }}"
-                                            data-duration="{{ $course['formatted_duration'] }}"
-                                            data-level="{{ ucfirst($course['level']) }}"
-                                            data-instructor="{{ $course['instructor_name'] }}"
-                                            data-category="{{ $course['category_name'] }}"
-                                            data-episodes='@json($course["episodes"])'
-                                            data-time="{{ $course['formatted_duration'] }}"
-                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
-                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
-                                            <div class="card rcmmd_cd">
-                                                <div class="thmbnail thn_rcmm">
-                                                    <div class="trnsprnt thmb_img">
-                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
-                                                    </div>
-                                                </div>
-                                                <div class="details thmb_dt">
-                                                    <div class="title content thmb_cnt">
-                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
-                                                    </div>
-                                                    <div class="ctprs content thmb_cnt">
-                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
-                                                    </div>
-                                                    <div class="thmb_dur_ep_container content thmb_cnt">
-                                                        <div class="cont left-side">
-                                                            <i class="fa-solid fa-stopwatch"></i>
-                                                            <span>{{ $course['formatted_duration'] }}</span>
-                                                        </div>
-                                                        <div class="cont right-side">
-                                                            <i class="fa-solid fa-video"></i>
-                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="thmb_enrll content">
-                                                        <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
-                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Enroll Free' }}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @endforeach
-                                @else
-                                    <div class="no-courses-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
-                                        <p>No free courses available at the moment. Please check back later!</p>
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="card-grid thn_grid_cd hidden" id="more-free-trainings">
-                                @if($freeCourses->count() > 4)
-                                    @foreach($freeCourses->slice(4) as $course)
-                                        <a href="#" class="training-card" 
-                                            data-training-type="free"
-                                            data-course-id="{{ $course['uuid'] }}" 
-                                            data-title="{{ $course['title'] }}"
-                                            data-description="{{ $course['description'] }}"
-                                            data-image="{{ $course['thumbnail'] }}"
-                                            data-duration="{{ $course['formatted_duration'] }}"
-                                            data-level="{{ ucfirst($course['level']) }}"
-                                            data-instructor="{{ $course['instructor_name'] }}"
-                                            data-category="{{ $course['category_name'] }}"
-                                            data-episodes='@json($course["episodes"])'
-                                            data-time="{{ $course['formatted_duration'] }}"
-                                            data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                            data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
-                                            data-created="{{ $course['created_at']->toDateTimeString() }}">
-                                            <div class="card rcmmd_cd">
-                                                <div class="thmbnail thn_rcmm">
-                                                    <div class="trnsprnt thmb_img">
-                                                        <img src="{{ $course['thumbnail'] }}" alt="{{ $course['title'] }}">
-                                                    </div>
-                                                </div>
-                                                <div class="details thmb_dt">
-                                                    <div class="title content thmb_cnt">
-                                                        <h1 class="thmb_h1">{{ Str::limit($course['title'], 20) }}</h1>
-                                                    </div>
-                                                    <div class="ctprs content thmb_cnt">
-                                                        <p class="thmb_ct">{{ Str::limit($course['description'], 150) }}...</p>
-                                                    </div>
-                                                    <div class="thmb_dur_ep_container content thmb_cnt">
-                                                        <div class="cont left-side">
-                                                            <i class="fa-solid fa-stopwatch"></i>
-                                                            <span>{{ $course['formatted_duration'] }}</span>
-                                                        </div>
-                                                        <div class="cont right-side">
-                                                            <i class="fa-solid fa-video"></i>
-                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="thmb_enrll content">
-                                                        <label>Enroll Free</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @endforeach
-                                @endif
-                            </div>
-                            
-                            @if($freeCourses->count() > 4)
-                                <button class="toggle-btn" id="toggle-free">More Free Trainings</button>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Paid Trainings Section -->
-                    <div class="rcmmnd_trngs paid_tr all_tr ln_rcmm">
-                        <div class="container">
-                            <div class="section-header">
-                                <div class="title">
-                                    <h1>Premium Trainings</h1>
-                                    <p class="subtitle">Unlock all premium trainings with a single payment</p>
-                                </div>
-                                <div class="search-filter-container">
-                                    <div class="search-box">
-                                        <i class="fas fa-search search-icon"></i>
-                                        <input type="text" id="paidSearchInput" placeholder="Search premium trainings..." class="search-control">
-                                    </div>
-                                    <div class="filter-dropdown">
-                                        <select id="paidFilterSelect" class="search-control">
+                                        <select id="tipsFilterSelect" class="search-control">
                                             <option value="">All Categories</option>
                                             @foreach(\App\Models\CourseCategory::all() as $category)
                                                 <option value="{{ $category->name }}">{{ $category->name }}</option>
@@ -519,15 +345,16 @@
                                 </div>
                             </div>
 
-                            <div id="courseNoResultsMessagePaid" style="display:none;" class="no-results-message">
-                                No premium trainings match your criteria. Try a different search
+                            <div id="courseNoResultsMessageTips" style="display:none;" class="no-results-message">
+                                No trainings match your criteria. Try a different search
                             </div>
-                            <div class="card-grid thn_grid_cd" id="paid-trainings">
-                                @if($paidCourses->count() > 0)
-                                    @foreach($paidCourses->take(4) as $course) 
-                                        <a href="#" class="training-card" 
-                                            data-training-type="paid"
-                                            data-course-id="{{ $course['uuid'] }}" 
+
+                            <div class="card-grid thn_grid_cd" id="tips-trainings">
+                                @if($allTipsTricks->count() > 0)
+                                    @foreach($allTipsTricks as $course)
+                                        <a href="#" class="training-card"
+                                            data-course-id="{{ $course['uuid'] }}"
+                                            data-training-type="{{ $course['plan_type'] }}"
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -535,7 +362,6 @@
                                             data-level="{{ ucfirst($course['level']) }}"
                                             data-instructor="{{ $course['instructor_name'] }}"
                                             data-category="{{ $course['category_name'] }}"
-                                            data-price="{{ $course['price'] }}"
                                             data-episodes='@json($course["episodes"])'
                                             data-time="{{ $course['formatted_duration'] }}"
                                             data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
@@ -561,12 +387,12 @@
                                                         </div>
                                                         <div class="cont right-side">
                                                             <i class="fa-solid fa-video"></i>
-                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                            <span>{{ $course['episodes_count'] }} Video<i>(s)</i></span>
                                                         </div>
                                                     </div>
                                                     <div class="thmb_enrll content">
                                                         <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
-                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Unlock' }}
+                                                            {{ $course['is_enrolled'] ? 'Continue Watching' : 'Watch Now' }}
                                                         </label>
                                                     </div>
                                                 </div>
@@ -574,18 +400,90 @@
                                         </a>
                                     @endforeach
                                 @else
-                                    <div class="no-courses-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
-                                        <p>No premium courses available at the moment. Please check back later!</p>
+                                    <div class="no-results-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
+                                        <p>There are no Tips & Tricks available at the moment. Please check back later!</p>
                                     </div>
                                 @endif
                             </div>
-                            
-                            <div class="card-grid thn_grid_cd hidden" id="more-paid-trainings">
-                                @if($paidCourses->count() > 4)
-                                    @foreach($paidCourses->slice(4) as $course)
-                                        <a href="#" class="training-card" 
-                                            data-training-type="paid"
-                                            data-course-id="{{ $course['uuid'] }}" 
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formal Trainings -->
+                <div class="content-section formaltrainings_content with_current_learnings" id="usr_formaltraining">
+                    <div class="my_learnings ln_rcmm">
+                        <div class="container">
+                            <div class="title">
+                                <h1>My Trainings</h1>
+                            </div>
+                            <div class="card-grid">
+                                @forelse($formalTrainingCurrent as $course)
+                                    <a href="{{ route('enrolled-courses.show', $course->uuid) }}" class="enrolled-course-link">
+                                        <div class="card">
+                                            <div class="thmbnail">
+                                                <img src="{{ $course->thumbnail }}" alt="{{ $course->title }}">
+                                                <div class="trnsprnt"></div>
+                                            </div>
+                                            <div class="details">
+                                                <div class="title content">
+                                                    <h1>{{ $course->title }}</h1>
+                                                </div>
+                                                <div class="dur content">
+                                                    <p><i>Duration: {{ $course->formatted_duration }}</i></p>
+                                                </div>
+                                                <div class="progress_bar content">
+                                                    <div class="main-bar">
+                                                        <div class="progress" style="width: {{ $course->progress }}%"></div>
+                                                    </div>
+                                                    <div class="cr-bar">{{ $course->progress }}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="empty-state">
+                                        <p>You haven't enrolled in any formal trainings yet.</p>
+                                        <a href="#usr_formaltraining" class="browse-btn">Browse All Trainings → </a>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rcmmnd_trngs formal_tr all_tr ln_rcmm">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="title">
+                                    <h1>More Trainings</h1>
+                                    <p class="subtitle">Structured courses for in-depth learning</p>
+                                </div>
+                                <div class="search-filter-container">
+                                    <div class="search-box">
+                                        <i class="fas fa-search search-icon"></i>
+                                        <input type="text" id="formalSearchInput" placeholder="Search formal trainings..." class="search-control">
+                                    </div>
+                                    <div class="filter-dropdown">
+                                        <select id="formalFilterSelect" class="search-control">
+                                            <option value="">All Categories</option>
+                                            @foreach(\App\Models\CourseCategory::all() as $category)
+                                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <i class="fas fa-filter filter-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="courseNoResultsMessageFormal" style="display:none;" class="no-results-message">
+                                No formal trainings match your criteria. Try a different search.
+                            </div>
+
+                            <div class="card-grid thn_grid_cd" id="formal-trainings">
+                                @if($formalTrainings->count() > 0)
+                                    @foreach($formalTrainings as $course)
+                                        <a href="#" class="training-card"
+                                            data-course-id="{{ $course['uuid'] }}"
+                                            data-training-type="{{ $course['plan_type'] }}"
                                             data-title="{{ $course['title'] }}"
                                             data-description="{{ $course['description'] }}"
                                             data-image="{{ $course['thumbnail'] }}"
@@ -619,23 +517,34 @@
                                                         </div>
                                                         <div class="cont right-side">
                                                             <i class="fa-solid fa-video"></i>
-                                                            <span>{{ $course['episodes_count'] }} Episodes</span>
+                                                            <span>{{ $course['episodes_count'] }} Video<i>(s)</i></span>
                                                         </div>
                                                     </div>
-                                                    <div class="thmb_enrll content">
-                                                        <label class="{{ $course['is_enrolled'] ? 'enrolled' : '' }}">
-                                                            {{ $course['is_enrolled'] ? 'Enrolled' : 'Unlock' }}
-                                                        </label>
+                                                    <div class="thmb_enrll thmb_formal_enrll content">
+                                                        @if($course['is_enrolled'])
+                                                            <label class="enrolled">Enrolled</label>
+                                                        @else
+                                                            <div class="price-formal">
+                                                                <span>R{{ $course['price'] }}</span>
+                                                            </div>
+                                                            <div>
+                                                                <label>Enroll Now</label>
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
                                         </a>
                                     @endforeach
+                                @else
+                                    <div class="no-results-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
+                                        <p>No formal trainings available at the moment. Please check back later!</p>
+                                    </div>
                                 @endif
                             </div>
-                            
-                            @if($paidCourses->count() > 4)
-                                <button class="toggle-btn paid-btn" id="toggle-paid">More Trainings</button>
+
+                            @if($formalTrainings->count() > 4)
+                                <button class="toggle-btn formal-btn" id="toggle-formal">More Formal Trainings</button>
                             @endif
                         </div>
                     </div>
@@ -646,35 +555,33 @@
                     <div class="modal-content">
                         <span class="close-btn">&times;</span>
                         <div class="modal-header">
-                            <h2 class="modal-title" id="modal-title-cs">Training Title</h2>
-                            <div class="modal-price" id="modal-price">Free</div>
+                            <h2 class="modal-title" id="modal-title-cs"></h2>
+                            <div class="modal-price" id="modal-price"></div>
                         </div>
                         <img src="" alt="Training Image" class="modal-image" id="modal-image">
-                        <div class="modal-description" id="modal-description">
-                            Detailed description of the training will appear here.
-                        </div>
+                        <div class="modal-description" id="modal-description"></div>
                         <div class="modal-meta">
                             <div class="meta-item">
                                 <span class="meta-label"><i class="fas fa-stopwatch"></i> Duration:</span>
-                                <span id="modal-duration">4 weeks</span>
+                                <span id="modal-duration"></span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label"><i class="fas fa-chart-line"></i> Level:</span>
-                                <span id="modal-level">Beginner</span>
+                                <span id="modal-level"></span>
                             </div>
                             <div class="meta-item">
-                                <span class="meta-label"><i class="fas fa-user-tie"></i> Instructor:</span>
-                                <span id="modal-instructor">John Doe</span>
+                                <span class="meta-label"><i class="fas fa-user-tie"></i> Technite:</span>
+                                <span id="modal-instructor"></span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label"><i class="fas fa-tag"></i> Category:</span>
-                                <span id="modal-category">Business</span>
+                                <span id="modal-category"></span>
                             </div>
                         </div>
                         
                         <!-- Episode List Section -->
                         <div class="episodes-container">
-                            <h3 class="episodes-title"><i class="fas fa-list-ol"></i> Training Episodes</h3>
+                            <h3 class="episodes-title"><i class="fas fa-list-ol"></i> Training Videos</h3>
                             <ul class="episode-list" id="episode-list">
                                 <!-- by JavaScript -->
                             </ul>
@@ -816,7 +723,9 @@
                                             <label for="email-guide">Email Address:</label>
                                             <input type="email" id="email-guide" name="email" required>
                                         </div>
-                                        <div class="form-group half-width">
+                                    </div>
+                                    <div class="form-group half-width">
+                                        <div class="form-group fm-g-rw">
                                             <label for="preferredMethod-guide">Preferred Method:</label>
                                             <div class="checkbox-group">
                                                 <label class="checkbox-container">
@@ -851,24 +760,25 @@
                                         <input type="text" id="guideType-guide" name="guide_type" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Your Current Skill Level In This Task:</label>
-                                        <br>
-                                        <div class="checkbox-group">
-                                            <label class="checkbox-container">
-                                                <input type="radio" name="skillLevel" value="beginner">
-                                                <span class="checkmark"></span>
-                                                Beginner
-                                            </label>
-                                            <label class="checkbox-container">
-                                                <input type="radio" name="skillLevel" value="intermediate">
-                                                <span class="checkmark"></span>
-                                                Intermediate
-                                            </label>
-                                            <label class="checkbox-container">
-                                                <input type="radio" name="skillLevel" value="advanced">
-                                                <span class="checkmark"></span>
-                                                Advanced
-                                            </label>
+                                        <div class="form-group fm-g-rw">
+                                            <label>Your Current Skill Level In This Task:</label>
+                                            <div class="checkbox-group">
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="skillLevel" value="beginner">
+                                                    <span class="checkmark"></span>
+                                                    Beginner
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="skillLevel" value="intermediate">
+                                                    <span class="checkmark"></span>
+                                                    Intermediate
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="radio" name="skillLevel" value="advanced">
+                                                    <span class="checkmark"></span>
+                                                    Advanced
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -878,9 +788,10 @@
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-                                        <label for="mustHaves-guide">When would you like to start</label>
-                                        <textarea placeholder="dd-mm-yyyy, hh:mm" id="mustHaves-guide" name="mustHaves" rows="1"></textarea>
-                                    </div>
+    <label for="startDateTime-guide">When would you like to start</label>
+    <input type="datetime-local" id="startDateTime-guide" name="startDateTime" required>
+</div>
+
                                 </div>
                                 
                                 <div class="form-section">
@@ -905,136 +816,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Replacing by Task Assistance -->
-                <!-- Share Your Issue Section -->
-                <!-- <div class="content-section shareIssue_content" id="usr_shareIssue">
-                    <div class="issue-header">
-                        <div class="issue-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38b6ff">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                        </svg>
-                        </div>
-                        <div class="issue-title">
-                        <h2>Tech Troubles? We've Got Your Back!</h2>
-                        <p>Share your tech challenge and we'll create a personalised solution just for you.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="issue-steps">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h3>Describe Your Issue</h3>
-                                <p>Tell us what's happening in as much detail as possible</p>
-                            </div>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h3>We Analyse & Respond</h3>
-                                <p>Our experts review and prepare a customised solution</p>
-                        </div>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h3>Receive Your Solution</h3>
-                                <p>Get a video tutorial, step-by-step guide, or personal session</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <form id="issueForm" class="issue-form">
-                        <div class="form-group">
-                            <label for="issueTitle">What's the main problem?</label>
-                            <input type="text" id="issueTitle" placeholder="E.g., 'Excel formulas not working'" required>
-                            <div class="input-icon">
-                                <i class="fas fa-heading"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="issueDescription">Tell us more details</label>
-                            <textarea id="issueDescription" rows="5" placeholder="Describe what's happening, any error messages you see, and what you've tried so far..." required></textarea>
-                            <div class="input-icon">
-                                <i class="fas fa-align-left"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="issueCategory">What category does this fall under?</label>
-                            <div class="select-wrapper">
-                                <select id="issueCategory" required>
-                                <option value="" disabled selected>Select a category</option>
-                                <option value="microsoft">Microsoft Products (Word, Excel, etc.)</option>
-                                <option value="google">Google Workspace</option>
-                                <option value="canva">Canva Design</option>
-                                <option value="system">Computer/System Issues</option>
-                                <option value="general">General Tech Problem</option>
-                                <option value="other">Other</option>
-                                </select>
-                                <div class="select-icon">
-                                <i class="fas fa-chevron-down"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="urgency">How urgent is this?</label>
-                            <div class="urgency-levels">
-                                <input type="radio" name="urgency" id="low" value="low" checked>
-                                <label for="low" class="urgency-label">
-                                <i class="far fa-clock"></i>
-                                <span>Low (Whenever you can)</span>
-                                </label>
-                                
-                                <input type="radio" name="urgency" id="medium" value="medium">
-                                <label for="medium" class="urgency-label">
-                                <i class="fas fa-exclamation"></i>
-                                <span>Medium (Need help soon)</span>
-                                </label>
-                                
-                                <input type="radio" name="urgency" id="high" value="high">
-                                <label for="high" class="urgency-label">
-                                <i class="fas fa-fire"></i>
-                                <span>High (Critical issue!)</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-footer">
-                        <button type="submit" class="submit-btn">
-                            <span>Help Center</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                        <p class="assurance">
-                            <i class="fas fa-shield-alt"></i> Your issue will be kept confidential and addressed by our certified experts
-                        </p>
-                        </div>
-                    </form>
-                    
-                    <div id="confirmation" class="confirmation-message">
-                        <div class="confirmation-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4CAF50">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                        </div>
-                        <h3>Help is on the way!</h3>
-                        <p>We've received your issue and our team is preparing your personalised solution.</p>
-                        <div class="next-steps">
-                        <div class="next-step">
-                            <i class="fas fa-envelope"></i>
-                            <span>Check your email for confirmation</span>
-                        </div>
-                        <div class="next-step">
-                            <i class="fas fa-clock"></i>
-                            <span>Typical response time: 24-48 hours</span>
-                        </div>
-                        </div>
-                        <button class="back-btn">Report Another Issue</button>
-                    </div>
-                </div>-->
 
                 <!-- subscriptions containers -->
                 @isset($activePlans)
@@ -1101,173 +882,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Moved to about MEET the TEAM -->
-                <!-- Tech Coach containers -->
-                <!-- <div class="content-section techCoach_content" id="usr_techCoach">
-                    <div class="coach-swiper-container">
-                        <div class="swiper coachSwiper">
-                            <div class="swiper-wrapper">
-                                @foreach ($instructors as $instructor)
-                                    <div class="swiper-slide">
-                                        <div class="coach-header">
-                                            <div class="coach-avatar">
-                                                <img src="{{ $instructor->thumbnail }}" alt="Coach {{ $instructor->name }}">
-                                            </div>
-                                            <div class="coach-intro">
-                                                <h2>{{ $instructor->name }} {{ $instructor->surname }}</h2>
-                                                <p class="coach-tagline">{{ $instructor->job_title }}</p>
-                                                <div class="coach-bio">
-                                                    <p>
-                                                        <strong>Coach {{ $instructor->name }}</strong>,
-                                                        {{ $instructor->bio }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        @php
-                                            $features = $instructor->features ?? [];
-                                        @endphp
-
-                                        <div class="coach-features">
-                                            @foreach ($features as $feature)
-                                                <div class="feature-card">
-                                                    <div class="feature-icon">
-                                                        <i class="{{ $feature['icon'] ?? '' }}"></i>
-                                                    </div>
-                                                    <div class="feature-content">
-                                                        <h3>{{ $feature['title'] ?? '' }}</h3>
-                                                        <p>{{ $feature['description'] ?? '' }}</p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>                   
-                            <div class="swiper-nav-btns">
-                                <div class="swiper-pagination"></div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-nav-btns">
-                            <button class="swiper-nav-btn swiper-button-prev">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="swiper-nav-btn swiper-button-next">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="coach-recommendations">
-                        <h3 class="recommendations-title">Your Personalised Recommendations</h3>
-                        @php $singleCourse = app('App\Http\Controllers\CourseAccessController')->getSingleRecommendedCourse(); @endphp
-
-                        @if($singleCourse)
-                            <div class="recommendation-card priority">
-                                <div class="recommendation-badge">Priority</div>
-                                <div class="recommendation-content">
-                                    <h4><i class="fas fa-star"></i> {{ $singleCourse->title }}</h4>
-                                    <p class="recommendation-desc">{{ $singleCourse->description }}</p>
-                                    <div class="recommendation-meta">
-                                        <span class="duration"><i class="far fa-clock"></i>{{ $singleCourse->formatted_duration }}</span>
-                                        <span class="difficulty"><i class="fas fa-bolt"></i>{{ ucfirst($singleCourse->level) }}</span>
-                                    </div>
-                                    <a href="#" 
-                                        class="start-btn training-card"
-                                        data-course-id="{{ $singleCourse->uuid }}"
-                                        data-training-type="{{ $singleCourse->plan_type }}"
-                                        data-title="{{ $singleCourse->title }}"
-                                        data-description="{{ $singleCourse->description }}"
-                                        data-image="{{ $singleCourse->thumbnail }}"
-                                        data-duration="{{ $singleCourse->formatted_duration }}"
-                                        data-level="{{ ucfirst($singleCourse->level) }}"
-                                        data-instructor="{{ $singleCourse->instructor->name ?? 'Unknown' }}"
-                                        data-category="{{ $singleCourse->category->name ?? 'Uncategorized' }}"
-                                        data-price="{{ $singleCourse->plan_type === 'paid' ? 'Premium Training' : 'Free' }}"
-                                        data-enrolled="{{ $course['is_enrolled'] ? 'true' : 'false' }}"
-                                        data-show-link="{{ $course['is_enrolled'] ? route('enrolled-courses.show', $course['uuid']) : '' }}"
-                                        data-episodes='@json($singleCourse->episodes->map(function($episode) {
-                                                return [
-                                                    'number' => $episode->episode_number,
-                                                    'name' => $episode->title,
-                                                    'duration' => $episode->duration_formatted
-                                                ];
-                                            }))'
-                                        >
-                                        Start Learning
-                                        </a>
-                                </div>
-                            </div>
-                        @endif
-                        
-                        @php
-                            $typeId = 4;
-                            $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
-                                ->orderBy('scheduled_for', 'desc')
-                                ->first();
-                        @endphp
-
-                        @if($latestSession)
-                            @php
-                                $isPast = $latestSession->scheduled_for->isPast();
-                            @endphp
-
-                            <div class="recommendation-card {{ $isPast ? 'dimmed-session' : '' }}" data-session-id="{{ $latestSession->id }}">
-                                <div class="recommendation-content">
-                                    <h4><i class="fas fa-users"></i> {{ $latestSession->title }}</h4>
-                                    <p class="recommendation-desc">
-                                        Live training on 
-                                        <span class="session-date">{{ $latestSession->scheduled_for->format('F j, Y') }}</span> 
-                                        at 
-                                        <span class="session-time">{{ $latestSession->scheduled_for->format('g:i A') }}</span> 
-                                        - {{ $latestSession->description }}
-                                    </p>
-                                    <div class="recommendation-meta">
-                                        <span class="date">
-                                            <i class="fas fa-clock"></i> Duration: {{ $latestSession->formatted_duration }}
-                                        </span>
-                                        <span class="type"><i class="fas fa-chalkboard-teacher"></i> Live Session</span>
-                                    </div>
-                                    @if(!$isPast)
-                                        <button class="rsvp-btn registration-trigger" data-type-id="4" data-session-id="{{ $latestSession->id }}">RSVP Now</button>
-                                    @else
-                                        <button class="rsvp-btn" disabled style="opacity: 0.8; cursor: not-allowed;background:#062644;">Session Ended</button>
-                                    @endif
-                                </div>
-                            </div>
-                        @else
-                            <div class="recommendation-card">
-                                <div class="recommendation-content">
-                                    <h4><i class="fas fa-users-slash"></i> No Upcoming Group Sessions</h4>
-                                    <p class="recommendation-desc">We'll notify you when the next session is scheduled. Stay tuned!</p>
-                                    <div class="recommendation-meta">
-                                        <span class="type"><i class="fas fa-clock"></i> Last checked: {{ now()->format('F j, Y g:i A') }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
-                        @include('components.sessions_registration', [
-                            'typeId' => 4,
-                            'typeName' => 'Q/A Session'
-                        ])
-                
-                        <div class="recommendation-card">
-                            <div class="recommendation-content">
-                                <h4><i class="fas fa-laptop-medical"></i> Fixing Common Laptop Errors</h4>
-                                <p class="recommendation-desc">New video tutorial covering the top 5 laptop issues our students face and how to solve them.</p>
-                                <div class="recommendation-meta">
-                                    <span class="duration"><i class="far fa-clock"></i> 42 min</span>
-                                    <span class="new-badge">New!</span>
-                                </div>
-                                <button class="watch-btn">Watch Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <!-- Support Section -->
                 <div class="content-section support_content" id="usr_support">
@@ -1286,7 +900,6 @@
                                         <i class="fas fa-filter"></i>
                                     </div>
                                 </div>
-                                
                                 <div class="faq-tabs">
                                     <button class="faq-tab active" data-category="all">All</button>
                                     <button class="faq-tab" data-category="general">General</button>
@@ -1294,7 +907,6 @@
                                     <button class="faq-tab" data-category="billing">Billing</button>
                                     <button class="faq-tab" data-category="technical">Technical</button>
                                 </div>
-                                
                                 <div class="faq-accordion">
                                     <div class="faq-category" data-category="general">
                                         <div class="faq-item">
@@ -1412,69 +1024,94 @@
                                     </div>
                                 </div>
                                 <div class="faq-footer">
-                                    <p>Still have questions? <a href="#contact">Contact our support team</a> for personalized help.</p>
+                                    <p>Still have questions?
+                                        <a href="/dashboard#usr_support:contact">
+                                            Contact our support team
+                                        </a> 
+                                        for personalized help.</p>
                                 </div>
                             </div>
+                            <!-- Contact Form -->
+                            <div class="support-form" id="contact">
+                                <h4>Send us a message</h4>
+                                <form id="supportForm" class="supportForm">
+                                    <!-- Choose Type -->
+                                    <div class="form-group">
+                                    <label for="requestType">Message Type:</label>
+                                    <select id="requestType" required>
+                                        <option value="problem" selected>Problem Report</option>
+                                        <option value="feedback">Feedback Survey</option>
+                                    </select>
+                                    </div>
+                                    <!-- Problem Report Fields -->
+                                    <div id="problemFields">
+                                    <div class="form-group">
+                                        <label for="supportSubject">Subject:</label>
+                                        <input type="text" id="supportSubject" placeholder="What's this about?" required>
+                                    </div>
 
-                            <!-- Contact Support Section -->
-                            <div class="contact-section">
-                                <h2><i class="fas fa-headset"></i> Contact Support</h2>
-                                <div class="contact-options">
-                                    <div class="contact-card">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
-                                        <h4>Email Us</h4>
-                                        <p>Send us an email & we'll respond within 24 hours</p>
-                                        <a href="mailto:admin@technospeak.co.za" class="contact-btn">Email Support</a>
+                                    <div class="form-group">
+                                        <label for="supportMessage">Message:</label>
+                                        <textarea id="supportMessage" rows="5" placeholder="Describe your issue in detail..." required></textarea>
                                     </div>
-                                    <div class="contact-card">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-phone-alt"></i>
-                                        </div>
-                                        <h4>Call Us</h4>
-                                        <p>Speak directly with a support representative</p>
-                                        <a href="tel:+1234567890" class="contact-btn">+1 (234) 567-890</a>
+
+                                    <div class="form-group">
+                                        <label for="supportPriority">Priority:</label>
+                                        <select id="supportPriority">
+                                        <option value="low">Low - General question</option>
+                                        <option value="medium" selected>Medium - Need help</option>
+                                        <option value="high">High - Urgent issue</option>
+                                        </select>
                                     </div>
-                                    <div class="contact-card">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-comment-dots"></i>
-                                        </div>
-                                        <h4>Live Chat</h4>
-                                        <p>Chat with us in real-time during business hours</p>
-                                        <button class="contact-btn" id="liveChatBtn">Start Live Chat</button>
                                     </div>
-                                </div>
-                                <!-- Contact Form -->
-                                <div class="support-form" id="contact">
-                                    <h4>Send us a message</h4>
-                                    <form id="supportForm" class="supportForm">
+                                    <!-- Feedback Survey Fields -->
+                                    <div id="feedbackFields" style="display:none;">
                                         <div class="form-group">
-                                            <label for="supportSubject">Subject:</label>
-                                            <input type="text" id="supportSubject" placeholder="What's this about?" required>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="supportMessage">Message:</label>
-                                            <textarea id="supportMessage" rows="5" placeholder="Describe your issue in detail..." required></textarea>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="supportPriority">Priority:</label>
-                                            <select id="supportPriority">
-                                                <option value="low">Low - General question</option>
-                                                <option value="medium" selected>Medium - Need help</option>
-                                                <option value="high">High - Urgent issue</option>
+                                            <label for="feedbackExperience">Overall Experience:</label>
+                                            <select id="feedbackExperience" required>
+                                            <option value="">Choose a rating</option>
+                                            <option value="5">Excellent ⭐⭐⭐⭐⭐</option>
+                                            <option value="4">Good ⭐⭐⭐⭐</option>
+                                            <option value="3">Average ⭐⭐⭐</option>
+                                            <option value="2">Poor ⭐⭐</option>
+                                            <option value="1">Very Poor ⭐</option>
                                             </select>
                                         </div>
-                                        
-                                        <button type="submit" class="submit-btn">
-                                            <i class="fas fa-paper-plane"></i> Send Message
-                                        </button>
-                                    </form>
-                                </div>
+
+                                        <div class="form-group">
+                                            <label for="feedbackEase">Ease of Use:</label>
+                                            <select id="feedbackEase" required>
+                                            <option value="">Choose a rating</option>
+                                            <option value="5">Very Easy</option>
+                                            <option value="4">Easy</option>
+                                            <option value="3">Neutral</option>
+                                            <option value="2">Difficult</option>
+                                            <option value="1">Very Difficult</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="feedbackRecommend">Would you recommend Technospeak to a friend?</label>
+                                            <select id="feedbackRecommend" required>
+                                            <option value="">Choose a rating</option>
+                                            <option value="5">Definitely</option>
+                                            <option value="4">Probably</option>
+                                            <option value="3">Maybe</option>
+                                            <option value="2">Unlikely</option>
+                                            <option value="1">Definitely Not</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="feedbackComment">Additional Comments:</label>
+                                            <textarea id="feedbackComment" rows="4" placeholder="Tell us how we can improve..."></textarea>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="submit-btn">
+                                        <i class="fas fa-paper-plane"></i> Send Message
+                                    </button>
+                                </form>
                             </div>
-                            
                             <!-- Support Status Section -->
                             <div class="status-section">
                                 <h2><i class="fas fa-heartbeat"></i> System Status</h2>
@@ -1665,7 +1302,6 @@
                         $progressData = app('App\Http\Controllers\CourseAccessController')->getOverallProgressData();
                         $progressPercent = $progressData['overall_progress'];
 
-                        \Log::info("Message for average before showing to overalll: " . $progressPercent);
                         $progressMessage = $progressData['message'];
                         $activeLevel = $progressData['level'];
                     @endphp
@@ -1676,7 +1312,6 @@
                                 <h1 class="progress-title">Your Overall Progress</h1>
                                 <p class="progress-percent">{{ $progressPercent }}%</p>
                             </div>
-                            <p>{{\Log::info("Message for average after showing to overalll: " . $progressPercent);}}</p>
                             <div class="progress-track">
                                 <div class="progress-fill" style="width: {{ $progressPercent }}%;"></div>
 
@@ -1758,7 +1393,10 @@
                                 <h3>Price:</h3>
                             </div>
                             <div class="button">
-                                <a href="">R100</a>
+                                <p>
+                                    <sup class="context">from</sup>
+                                    R100
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1783,7 +1421,41 @@
                                 <h3>Price:</h3>
                             </div>
                             <div class="button">
-                                <a href="">R120</a>
+                                <p>
+                                    <sup class="context">from</sup>
+                                    R110
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support Section -->
+                    <div class="contact-section" id="cntct-sctn-spprt">
+                        <h2><i class="fas fa-headset"></i> Contact Support</h2>
+                        <div class="contact-options">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h4>Email Us</h4>
+                                <p>Send us an email & we'll respond within 24 hours</p>
+                                <a href="mailto:admin@technospeak.co.za" class="contact-btn">Email Support</a>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <h4>Call Us</h4>
+                                <p>Speak directly with a support representative</p>
+                                <a href="tel:+1234567890" class="contact-btn">+1 (234) 567-890</a>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <h4>Live Chat</h4>
+                                <p>Chat with us in real-time during business hours</p>
+                                <button class="contact-btn" id="liveChatBtn">Start Live Chat</button>
                             </div>
                         </div>
                     </div>
@@ -1793,13 +1465,6 @@
 
         <!-- Js connections -->
         <script>
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    navItems.forEach(el => el.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
             document.addEventListener('DOMContentLoaded', () => {
                 const progressPercent = {{ $progressPercent }};
                 updateProgress(progressPercent);
@@ -1822,28 +1487,45 @@
                     });
                 }
 
-                function handleInitialLoad() {
-                    // hash first, then localStorage, then default to dashboard
-                    const hash = window.location.hash.substring(1);
-                    const storedSection = localStorage.getItem('activeSection');
-                    const defaultSection = 'usr_dashboard';
-                    
-                    const targetSection = hash || storedSection || defaultSection;
-                    switchToSection(targetSection);
-                    
-                    // global activeSection variable
-                    window.activeSection = targetSection;
+                // parse #contact for main url to use :
+                function getSectionAndAnchor() {
+                    var raw = (window.location.hash || "").replace(/^#/, "");
+                    var parts = raw.split(/[:/|]/);
+                    return { section: parts[0] || "", anchor: parts[1] || "" };
                 }
 
-                // allow # if called
-                function switchToSection(sectionId) {
+                function handleInitialLoad() {
+                    // URL hash, then localStorage, then default to dashboard
+                    var parsed = getSectionAndAnchor();
+                    var storedSection = localStorage.getItem('activeSection');
+                    var defaultSection = 'usr_dashboard';
+
+                    var targetSection = parsed.section || storedSection || defaultSection;
+                    switchToSection(targetSection, true);
+                    window.activeSection = targetSection;
+
+                    if (parsed.anchor) {
+                        setTimeout(function () {
+                            var el = document.getElementById(parsed.anchor) ||
+                                    document.querySelector('#' + targetSection + ' #' + parsed.anchor);
+                            if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }, 300);
+                    }
+                }
+
+                function switchToSection(sectionId, isInitialLoad = false) {
                     const navItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
                     
                     if (!navItem || !document.getElementById(sectionId)) {
                         console.warn(`Section ${sectionId} not found`);
+                        // back to dashboard if section doesn't exist
+                        if (sectionId !== 'usr_dashboard') {
+                            switchToSection('usr_dashboard', isInitialLoad);
+                        }
                         return;
                     }
 
+                    // navigation
                     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                     document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
 
@@ -1853,60 +1535,124 @@
                     localStorage.setItem('activeSection', sectionId);
                     window.activeSection = sectionId;
 
+                    // right bar visibility
                     const rightbar = document.getElementById('rightbar-container');
                     const profile_tag = document.getElementById('profile_tag');
                     const txt_btn_rm = document.getElementById('txt_btn_rm');
                     
+                    // right bar elements
                     const up_coming_box = document.getElementById('up-coming-boxx');
                     const fml_progress_box = document.getElementById('fml-progress-boxx');
                     const rt_ts_asst_fnc = document.getElementById('rt-ts-asst-fnc');
                     const rt_ps_guide_fnc = document.getElementById('rt-ps-guide-fnc');
+                    const cntct_sctn_spprt = document.getElementById('cntct-sctn-spprt');
 
-                    if (rightbar) {
-                        // hide the whole right bar when all trainings section is active
-                        if (sectionId === 'usr_alltrainings') {
-                            rightbar.style.display = 'none';
-                            profile_tag.style.display = 'block';
-                            txt_btn_rm.style.display = 'none';
-                        } else {
-                            rightbar.style.display = 'block';
-                            profile_tag.style.display = 'none';
-                            txt_btn_rm.style.display = 'flex';
-                        }
+                    // reset all right bar
+                    if (up_coming_box) up_coming_box.style.display = "none";
+                    if (fml_progress_box) fml_progress_box.style.display = "none";
+                    if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = "none";
+                    if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "none";
+                    if (cntct_sctn_spprt) cntct_sctn_spprt.style.display = "none";
 
-                        // Hide only upcoming and progress, show task assistance container
-                        if (sectionId === 'usr_taskAssistance') {
-                            if (up_coming_box) up_coming_box.style.display = 'none';
-                            if (fml_progress_box) fml_progress_box.style.display = 'none';
-                            if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = 'block';
-                        } else {
-                            if (up_coming_box) up_coming_box.style.display = 'block';
-                            if (fml_progress_box) fml_progress_box.style.display = 'block';
-                            if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = "none";
-                        }
+                    // sidebar promo section
+                    if (profile_tag) profile_tag.style.display = "none";
+                    if (txt_btn_rm) txt_btn_rm.style.display = "none";
 
-                        // hide and only show personal guide
-                        if (sectionId === 'usr_guide') {
-                            if (up_coming_box) up_coming_box.style.display = 'none';
-                            if (fml_progress_box) fml_progress_box.style.display = 'none';
-                            if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = 'block';
-                        }  else {
-                            if (up_coming_box) up_coming_box.style.display = 'block';
-                            if (fml_progress_box) fml_progress_box.style.display = 'block';
-                            if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "none";
-                        }
+                    // right bar for most sections
+                    if (rightbar) rightbar.style.display = "block";
+
+                    // section cases
+                    switch (sectionId) {
+                        case "usr_dashboard":
+                            // hide progress box
+                            if (fml_progress_box) fml_progress_box.style.display = "none";
+                            // show upcoming session
+                            if (up_coming_box) up_coming_box.style.display = "block";
+                            break;
+                        
+                            case "usr_alltricks":
+                            // right bar for tips & tricks
+                            if (rightbar) rightbar.style.display = "none";
+                            // profile tag in sidebar
+                            if (profile_tag) profile_tag.style.display = "block";
+                            break;
+                            
+                        case "usr_formaltraining":
+                            // progress box for formal training
+                            if (fml_progress_box) fml_progress_box.style.display = "block";
+                            // profile tag in sidebar
+                            if (profile_tag) profile_tag.style.display = "block";
+                            break;
+                            
+                        case "usr_taskAssistance":
+                            // task assistance content
+                            if (rt_ts_asst_fnc) rt_ts_asst_fnc.style.display = "block";
+                            break;
+                            
+                        case "usr_guide":
+                            // personal guide content
+                            if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "block";
+                            break;
+                            
+                        case "usr_mysubscriptions":
+                            // hide the whole right bar except the name
+                            if (up_coming_box) up_coming_box.style.display = "none";
+                            if (fml_progress_box) fml_progress_box.style.display = "none";
+                            break;
+
+                        case "usr_resources":
+                            // hide the whole right bar except the name
+                            if (up_coming_box) up_coming_box.style.display = "none";
+                            if (fml_progress_box) fml_progress_box.style.display = "none";
+                            break;
+                        
+                        case "usr_support":
+                            // hide the whole right bar except the name
+                            if (up_coming_box) up_coming_box.style.display = "none";
+                            if (fml_progress_box) fml_progress_box.style.display = "none";
+                            if (fml_progress_box) fml_progress_box.style.display = "none";
+                            if (cntct_sctn_spprt) cntct_sctn_spprt.style.display = "block";
+                            break;
+
+                        default:
+                            // all back to normal
+                            if (up_coming_box) up_coming_box.style.display = "block";
+                            if (fml_progress_box) fml_progress_box.style.display = "block";
+                            // promo in sidebar
+                            if (txt_btn_rm) txt_btn_rm.style.display = "flex";
+                            break;
                     }
 
-                    if (window.location.hash.substring(1) !== sectionId) {
+                    if (!isInitialLoad && window.location.hash.substring(1) !== sectionId) {
                         history.replaceState(null, null, `#${sectionId}`);
+                    }
+
+                    if (!isInitialLoad) {
+                        var parsed = getSectionAndAnchor();
+                        var newHash = '#' + sectionId + (parsed.anchor ? ':' + parsed.anchor : '');
+                        if (window.location.hash !== newHash) {
+                            history.replaceState(null, null, newHash);
+                        }
                     }
                 }
 
-                window.addEventListener('hashchange', function() {
-                    const sectionId = window.location.hash.substring(1);
+                // hash change listener
+                window.addEventListener('hashchange', function () {
+                    var parsed = getSectionAndAnchor();
+                    var sectionId = parsed.section || window.activeSection;
+
                     switchToSection(sectionId);
+
+                    if (parsed.anchor) {
+                        setTimeout(function () {
+                            var el = document.getElementById(parsed.anchor) ||
+                                    document.querySelector('#' + sectionId + ' #' + parsed.anchor);
+                            if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }, 200);
+                    }
                 });
 
+                // nav item click handlers
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.addEventListener('click', function(event) {
                         event.preventDefault();
@@ -1915,6 +1661,7 @@
                     });
                 });
 
+                // anchor links within the page
                 document.addEventListener('click', function(event) {
                     if (event.target.matches('a[href^="#"]')) {
                         const href = event.target.getAttribute('href');
@@ -1927,98 +1674,20 @@
                     }
                 });
 
+                // initialize the page
                 handleInitialLoad();
+                
+                // available globally
+                window.switchToSection = switchToSection;
             });
+
+            // Set initial active section for other scripts
+            window.activeSection = localStorage.getItem('activeSection') || 'usr_dashboard';
         </script>
 
         <!-- pass session value to JS to remain on usr_settings -->
         <script>
             window.activeSection = localStorage.getItem('activeSection') || 'usr_dashboard';
-        </script>
-
-        <!-- switching b|n menu-items -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const navItems = document.querySelectorAll('.nav-item');
-                const contentSections = document.querySelectorAll('.content-section');
-                
-                if (window.activeSection) {
-                    navItems.forEach(navItem => navItem.classList.remove('active'));
-                    contentSections.forEach(section => section.classList.remove('active'));
-
-                    const activeNav = document.querySelector(`.nav-item[data-section="${window.activeSection}"]`);
-                    if (activeNav) activeNav.classList.add('active');
-
-                    const activeSection = document.getElementById(window.activeSection);
-
-                    if (activeSection) {
-                        activeSection.classList.add('active');
-                        
-                        const rightbar = document.getElementById('rightbar-container');
-                        const profile_tag = document.getElementById('profile_tag');
-                        const txt_btn_rm = document.getElementById('txt_btn_rm');
-                        
-                        const up_coming_box = document.getElementById('up-coming-boxx');
-                        const fml_progress_box = document.getElementById('fml-progress-boxx');
-                        const rt_ts_asst_fnc = document.getElementById('rt-ts-asst-fnc');
-                        const rt_ps_guide_fnc = document.getElementById('rt-ps-guide-fnc');
-
-                        if (rightbar) {
-                            // hide the whole right bar and tips & tips are active
-                            if (window.activeSection === 'usr_alltrainings') {
-                                rightbar.style.display = 'none';
-                                profile_tag.style.display = 'block';
-                                txt_btn_rm.style.display = 'none';
-                            } else {
-                                rightbar.style.display = 'block';
-                                profile_tag.style.display = 'none';
-                                txt_btn_rm.style.display = 'flex';
-                            }
-                            // hide only upcoming and progress, show task assistance cont
-                            if (window.activeSection === 'usr_taskAssistance') {
-                                up_coming_box.style.display = 'none';
-                                fml_progress_box.style.display = 'none';
-                                rt_ts_asst_fnc.style.display = 'block';
-                            } else {
-                                up_coming_box.style.display = 'block';
-                                fml_progress_box.style.display = 'block';
-                                rt_ts_asst_fnc.style.display = "none";
-                            }
-
-                            // hide and only show personal guide
-                            if (window.activeSection === 'usr_guide') {
-                                if (up_coming_box) up_coming_box.style.display = 'none';
-                                if (fml_progress_box) fml_progress_box.style.display = 'none';
-                                if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = 'block';
-                            }  else {
-                                if (up_coming_box) up_coming_box.style.display = 'block';
-                                if (fml_progress_box) fml_progress_box.style.display = 'block';
-                                if (rt_ps_guide_fnc) rt_ps_guide_fnc.style.display = "none";
-                            }
-                        }
-                    }
-                }
-
-                navItems.forEach(item => {
-                    item.addEventListener('click', function() {
-                        event.preventDefault();
-                        navItems.forEach(navItem => {
-                            navItem.classList.remove('active');
-                        });
-
-                        this.classList.add('active');
-                        
-                        const sectionId = this.getAttribute('data-section');
-                        localStorage.setItem('activeSection', sectionId);
-
-                        contentSections.forEach(section => {
-                            section.classList.remove('active');
-                        });
-
-                        document.getElementById(sectionId).classList.add('active');
-                    });
-                });
-            });
         </script>
 
         <!-- log out and profile settings dropdown-->
@@ -2113,6 +1782,99 @@
                     }
                 }
             });
+        </script>
+
+        <!-- swap between send message or report a problem -->
+        <script>
+            const requestType = document.getElementById('requestType');
+            const problemFields = document.getElementById('problemFields');
+            const feedbackFields = document.getElementById('feedbackFields');
+            requestType.addEventListener('change', function () {
+                if (this.value === 'problem') {
+                    problemFields.style.display = 'block';
+                    feedbackFields.style.display = 'none';
+                } else {
+                    problemFields.style.display = 'none';
+                    feedbackFields.style.display = 'block';
+                }
+            });
+        </script>
+
+        <!-- Confirm message sent -->
+        <script>
+            function submitForm(formId, type) {
+                const form = document.getElementById(formId);
+                const submitBtn = form.querySelector('button[type="submit"]');
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Disable button
+                    submitBtn.disabled = true;
+                    
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = 'Processing..';
+
+                    // spinner
+                    const spinner = document.createElement('span');
+                    spinner.classList.add('button-spinner');
+                    submitBtn.appendChild(spinner);
+
+                    const formData = new FormData(form);
+
+                    fetch(`/submit/${type}`, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        submitBtn.disabled = false;
+                        spinner.remove();
+                        submitBtn.innerHTML = 'Submit Now';
+
+                        if(data.success) {
+                            Swal.fire('Success', data.message, 'success');
+                            form.reset();
+                            form.querySelectorAll('input[type="file"]').forEach(input => {
+                                input.value = '';
+                            })
+                        } else {
+                            Swal.fire('Error', 'Something went wrong', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        submitBtn.disabled = false;
+                        spinner.remove();
+                        submitBtn.innerHTML = 'Try Again';
+                        Swal.fire('Error', 'Network error. Please try again.', 'error');
+                    });
+                });
+            }
+
+            // file upload handling
+            function setupFileUpload(formId, fileInputId, fileListId) {
+                const fileInput = document.getElementById(fileInputId);
+                const fileList = document.getElementById(fileListId);
+                
+                fileInput.addEventListener('change', function() {
+                    fileList.innerHTML = '';
+                    Array.from(this.files).forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `
+                            <span>${file.name}</span>
+                            <span>(${(file.size / 1024).toFixed(2)} KB)</span>
+                        `;
+                        fileList.appendChild(fileItem);
+                    });
+                });
+            }
+
+            setupFileUpload('taskAssistanceForm', 'fileUpload-task', 'fileList-task');
+            setupFileUpload('personalGuideForm', 'fileUpload-guide', 'fileList-guide');
+            submitForm('taskAssistanceForm', 'task');
+            submitForm('personalGuideForm', 'guide');
         </script>
     </body>
 </html>

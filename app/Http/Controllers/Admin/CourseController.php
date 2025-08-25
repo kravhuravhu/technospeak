@@ -47,7 +47,8 @@ class CourseController extends Controller
             'instructor_id' => 'required|exists:instructors,id',
             'description' => 'required|string',
             'catch_phrase' => 'required|string|max:90',
-            'plan_type' => 'required|in:free,paid',
+            'plan_type' => 'required|in:free,paid,frml_training',
+            'price' => 'nullable|numeric|min:0|required_if:plan_type,frml_training',
             'level' => 'required|in:beginner,intermediate,advanced,expert,all levels',
             'thumbnail' => 'required|url',
             'software_app_icon' => 'required|url',
@@ -80,6 +81,7 @@ class CourseController extends Controller
                 'description' => $validatedData['description'],
                 'catch_phrase' => $validatedData['catch_phrase'],
                 'plan_type' => $validatedData['plan_type'],
+                'price' => $validatedData['price'],
                 'level' => $validatedData['level'],
                 'thumbnail' => $validatedData['thumbnail'],
                 'software_app_icon' => $validatedData['software_app_icon'],
@@ -155,7 +157,8 @@ class CourseController extends Controller
         ]);
         $categories = CourseCategory::all();
         $instructors = Instructor::all();
-        $resourceTypes = ResourceType::all(); 
+        $resourceTypes = ResourceType::all();
+        
         return view('content-manager.courses.edit', compact('course', 'categories', 'instructors', 'resourceTypes'));
     }
 
@@ -169,7 +172,8 @@ class CourseController extends Controller
             'instructor_id' => 'required|exists:instructors,id',
             'description' => 'required|string',
             'catch_phrase' => 'required|string|max:90',
-            'plan_type' => 'required|in:free,paid',
+            'plan_type' => 'required|in:free,paid,frml_training',
+            'price' => 'nullable|numeric|min:0|required_if:plan_type,frml_training',
             'level' => 'required|in:beginner,intermediate,advanced,expert,all levels',
             'thumbnail' => 'required|url',
             'software_app_icon' => 'required|url',
@@ -203,6 +207,7 @@ class CourseController extends Controller
                 'description' => $validatedData['description'],
                 'catch_phrase' => $validatedData['catch_phrase'],
                 'plan_type' => $validatedData['plan_type'],
+                'price' => $validatedData['price'],
                 'level' => $validatedData['level'],
                 'thumbnail' => $validatedData['thumbnail'],
                 'software_app_icon' => $validatedData['software_app_icon'],
@@ -325,15 +330,15 @@ class CourseController extends Controller
                 ->with('error', 'Failed to update course. Error: ' . $e->getMessage());
         }
     }
-
-    // populating to dash free
-    public function trainingCallFree($limit = null)
+    
+    // populating to dash free[tips&tricks]
+    public function trainingCallTipsTricks($limit = null)
     {
         $query = Course::with(['category', 'instructor', 'episodes'])
-            ->free()
+            ->tipsTricks()
             ->latest();
 
-        $freeCourses = ($limit ? $query->take($limit) : $query)->get()
+        $tipsTricksTrainings = ($limit ? $query->take($limit) : $query)->get()
             ->map(function ($course) {
                 $totalSeconds = $course->total_duration;
                 $hours = floor($totalSeconds / 3600);
@@ -374,6 +379,7 @@ class CourseController extends Controller
                     'uuid' => $course->uuid,
                     'title' => $course->title,
                     'description' => $course->description,
+                    'plan_type' => $course->plan_type,
                     'thumbnail' => $course->thumbnail,
                     'formatted_duration' => $formattedDuration,
                     'level' => $course->level,
@@ -385,17 +391,17 @@ class CourseController extends Controller
                 ];
             });
 
-        return $freeCourses;
+        return $tipsTricksTrainings;
     }
 
-    // populating to dash paid
-    public function trainingCallPaid($limit = null)
+    // populating to dash [formal_trainings]
+    public function trainingCallFormal($limit = null)
     {
         $query = Course::with(['category', 'instructor', 'episodes'])
-            ->paid()
+            ->formal()
             ->latest();
 
-        $paidCourses = ($limit ? $query->take($limit) : $query)->get()
+        $formalTrainings = ($limit ? $query->take($limit) : $query)->get()
             ->map(function ($course) {
                 $totalSeconds = $course->total_duration;
                 $hours = floor($totalSeconds / 3600);
@@ -435,20 +441,21 @@ class CourseController extends Controller
                     'id' => $course->id,
                     'uuid' => $course->uuid,
                     'title' => $course->title,
+                    'plan_type' => $course->plan_type,
                     'description' => $course->description,
                     'thumbnail' => $course->thumbnail,
                     'formatted_duration' => $formattedDuration,
                     'level' => $course->level,
                     'instructor_name' => $course->instructor?->name,
                     'category_name' => $course->category->name,
-                    'price' => 'Premium Training', 
+                    'price' => $course->price,
                     'episodes' => $episodesArray,
                     'episodes_count' => $course->episodes->count(),
                     'created_at' => $course->created_at
                 ];
             });
 
-        return $paidCourses;
+        return $formalTrainings;
     }
 
     // resources

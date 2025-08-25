@@ -3,34 +3,61 @@ document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('training-modal');
     const closeBtn = document.querySelector('.close-btn');
     const episodeList = document.getElementById('episode-list');
+    const modalTitle = document.getElementById('modal-title-cs');
+    const modalPrice = document.getElementById('modal-price');
+    const modalImage = document.getElementById('modal-image');
+    const modalDescription = document.getElementById('modal-description');
+    const modalDuration = document.getElementById('modal-duration');
+    const modalLevel = document.getElementById('modal-level');
+    const modalInstructor = document.getElementById('modal-instructor');
+    const modalCategory = document.getElementById('modal-category');
+    const modalEnrollBtn = document.getElementById('enroll-btn');
 
-    trainingCards.forEach(card => {
+    // Handle card click to open modal
+    trainingCards.forEach(function (card) {
         card.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const isFree = this.getAttribute('data-training-type') === 'free';
-            const title = this.getAttribute('data-title');
-            const description = this.getAttribute('data-description');
-            const image = this.getAttribute('data-image');
-            const duration = this.getAttribute('data-duration');
-            const level = this.getAttribute('data-level');
-            const instructor = this.getAttribute('data-instructor');
-            const category = this.getAttribute('data-category');
-            const price = this.getAttribute('data-price') || 'Free';
-            const episodes = JSON.parse(this.getAttribute('data-episodes'));
+            // Course data
+            const courseId = card.dataset.courseId;
+            const planType = card.dataset.trainingType;
+            const isFormal = planType === 'frml_training';
+            const isTips = !isFormal;
 
-            document.getElementById('modal-title-cs').textContent = title;
-            document.getElementById('modal-price').textContent = isFree ? 'Free' : price;
-            document.getElementById('modal-image').src = image;
-            document.getElementById('modal-image').alt = title;
-            document.getElementById('modal-description').textContent = description;
-            document.getElementById('modal-duration').textContent = duration;
-            document.getElementById('modal-level').textContent = level;
-            document.getElementById('modal-instructor').textContent = instructor;
-            document.getElementById('modal-category').textContent = category;
+            const title = card.dataset.title;
+            const description = card.dataset.description;
+            const image = card.dataset.image;
+            const duration = card.dataset.duration;
+            const level = card.dataset.level;
+            const instructor = card.dataset.instructor;
+            const category = card.dataset.category;
+            const price = card.dataset.price;
+            const isEnrolled = card.dataset.enrolled === 'true';
+            const showLink = card.dataset.showLink || '';
+            const watchLink = card.dataset.watchLink || `/enrolled-courses/${courseId}`;
 
+            // Episodes
+            let episodes = [];
+            try {
+                episodes = JSON.parse(card.dataset.episodes || '[]');
+            } catch (_) {
+                episodes = [];
+            }
+
+            // Modal content
+            modalTitle.textContent = title;
+            modalPrice.textContent = isFormal ? `R${price || ''}` : 'Tips & Tricks';
+            modalImage.src = image;
+            modalImage.alt = title;
+            modalDescription.textContent = description;
+            modalDuration.textContent = duration;
+            modalLevel.textContent = level;
+            modalInstructor.textContent = instructor;
+            modalCategory.textContent = category;
+
+            // Episodes list
             episodeList.innerHTML = '';
-            episodes.forEach(episode => {
+            episodes.forEach(function (episode) {
                 const li = document.createElement('li');
                 li.className = 'episode-item';
                 li.innerHTML = `
@@ -41,40 +68,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 episodeList.appendChild(li);
             });
 
-            const enrollBtn = document.getElementById('enroll-btn');
-            const isEnrolled = this.getAttribute('data-enrolled') === 'true';
-            const showLink = this.getAttribute('data-show-link');
-
+            // Modal button state
             if (isEnrolled && showLink) {
-                enrollBtn.textContent = 'Open →';
-                enrollBtn.href = showLink;
-                enrollBtn.classList.add('open-btn');
-                enrollBtn.style.backgroundColor = '#062644';
-                enrollBtn.removeAttribute('target');
-                enrollBtn.removeAttribute('data-enroll');
+                modalEnrollBtn.textContent = isTips ? 'Continue Watching' : 'Open →';
+                modalEnrollBtn.href = showLink;
+                modalEnrollBtn.classList.add('open-btn');
+                modalEnrollBtn.style.backgroundColor = '#062644';
+                modalEnrollBtn.removeAttribute('data-enroll');
             } else {
-                enrollBtn.textContent = isFree ? 'Enroll Now' : 'Unlock All';
-                enrollBtn.href = '#';
-                enrollBtn.style.backgroundColor = '#38b6ff';
-                enrollBtn.classList.remove('open-btn');
-                enrollBtn.setAttribute('data-enroll', 'true');
+                modalEnrollBtn.textContent = isTips ? 'Watch Now' : 'Enroll Now';
+                modalEnrollBtn.href = '#';
+                modalEnrollBtn.classList.remove('open-btn');
+                modalEnrollBtn.style.backgroundColor = '#38b6ff';
+                modalEnrollBtn.setAttribute('data-enroll', 'true');
             }
 
-            const courseId = this.getAttribute('data-course-id');
-
+            // Modal dataset
             modal.setAttribute('data-course-id', courseId);
-            
+            modal.setAttribute('data-plan-type', planType);
+            modal.setAttribute('data-is-enrolled', String(isEnrolled));
+            modal.setAttribute('data-show-link', showLink);
+
+            // Show modal
             modal.style.display = 'block';
-            
             document.body.style.overflow = 'hidden';
         });
     });
 
+    // Close modal
     closeBtn.addEventListener('click', closeModal);
     window.addEventListener('click', function (e) {
-        if (e.target === modal) {
-            closeModal();
-        }
+        if (e.target === modal) closeModal();
     });
 
     function closeModal() {
@@ -82,56 +106,75 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = 'auto';
     }
 
-    const enrollBtn = document.getElementById('enroll-btn');
-    if (enrollBtn) {
-        enrollBtn.addEventListener('click', function (e) {
-            if (!this.hasAttribute('data-enroll')) return;
-            e.preventDefault();
-
-            if (this.textContent === 'Enrolled') {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Info',
-                    text: 'You are already enrolled in this course, return to Dashboard to confirm.',
-                    timer: 5000,
-                    showConfirmButton: false
-                });
-                return;
-            }
-
-            const courseId = document.getElementById('training-modal').getAttribute('data-course-id');
+    // Modal enroll/watch button
+    if (modalEnrollBtn) {
+        modalEnrollBtn.addEventListener('click', function (e) {
+            const courseId = modal.getAttribute('data-course-id');
             if (!courseId) return console.error('No course ID found');
 
-            enrollInCourse(courseId, enrollBtn);
+            const planType = modal.getAttribute('data-plan-type');
+            const isFormal = planType === 'frml_training';
+            const isEnrolled = modal.getAttribute('data-is-enrolled') === 'true';
+
+            e.preventDefault();
+
+            // processing spinner
+            const originalText = modalEnrollBtn.textContent;
+            modalEnrollBtn.innerHTML = `Processing <i class="fas fa-spinner fa-spin"></i>`;
+            modalEnrollBtn.disabled = true;
+            modalEnrollBtn.style.cursor = 'not-allowed';
+
+            enrollInCourse(courseId, modalEnrollBtn, originalText);
         });
     }
 
-    document.querySelectorAll('.thmb_enrll label').forEach(labelBtn => {
+    // Card label clicks
+    document.querySelectorAll('.thmb_enrll label').forEach(function (labelBtn) {
         labelBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             const card = this.closest('.training-card');
             if (!card) return;
 
             const courseId = card.dataset.courseId;
+            const planType = card.dataset.trainingType;
+            const isFormal = planType === 'frml_training';
+            const isEnrolled = card.dataset.enrolled === 'true';
+            const showLink = card.dataset.showLink || '';
+            const watchLink = card.dataset.watchLink || `/enrolled-courses/${courseId}`;
 
-            labelBtn.disabled = true;
-            const originalText = labelBtn.textContent;
-            labelBtn.innerHTML = `Enrolling <i class="fas fa-spinner fa-spin"></i>`;
-            labelBtn.style.cursor = 'not-allowed';
+            // formal enroll
+            if (isFormal) {
+                if (isEnrolled && showLink) {
+                    window.location.href = showLink;
+                    return;
+                }
 
-            enrollInCourse(courseId, labelBtn, originalText);
+                // spinner
+                labelBtn.disabled = true;
+                const originalText = labelBtn.textContent;
+                labelBtn.innerHTML = `Processing <i class="fas fa-spinner fa-spin"></i>`;
+                labelBtn.style.cursor = 'not-allowed';
+
+                enrollInCourse(courseId, labelBtn, originalText);
+                return;
+            }
+
+            // tips & Tricks enroll
+            if (!isEnrolled) {
+                labelBtn.disabled = true;
+                const originalText = labelBtn.textContent;
+                labelBtn.innerHTML = `Processing <i class="fas fa-spinner fa-spin"></i>`;
+                labelBtn.style.cursor = 'not-allowed';
+
+                enrollInCourse(courseId, labelBtn, originalText);
+            } else {
+                window.location.href = showLink || watchLink;
+            }
         });
     });
 });
 
 function showSwalNotification(type, title, message) {
-    const iconMap = {
-        'success': 'success',
-        'error': 'error',
-        'info': 'info',
-        'warning': 'warning'
-    };
-
     Swal.fire({
         icon: type,
         title: title,
@@ -145,29 +188,27 @@ function showSwalNotification(type, title, message) {
     });
 }
 
+// Enroll for all courses
 function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll Now') {
     fetch('/clear-cache')
-        .then(() => {
-            return fetch('/courses/enroll', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ course_id: courseId })
-            });
-        })
+        .then(() => fetch('/courses/enroll', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ course_id: courseId })
+        }))
         .then(async response => {
             const data = await response.json();
-
-            if (data.success) {
-                showSwalNotification('success', 'Success', data.message);
-                updateEnrollmentUI(courseId);
+            if (response.ok && data.success) {
+                showSwalNotification('success', 'Success', data.message || 'Successfully enrolled in the course');
+                updateEnrollmentUI(courseId, data.open_url);
                 closeModal();
                 refreshMyTrainings();
             } else {
-                showSwalNotification('error', 'Error', data.message);
+                showSwalNotification('error', 'Error', data.message || 'Could not enroll');
                 if (buttonElement) {
                     buttonElement.disabled = false;
                     buttonElement.innerHTML = originalText;
@@ -185,6 +226,7 @@ function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll N
         });
 }
 
+// Refresh My Trainings section
 function refreshMyTrainings() {
     fetch('/clear-cache')
         .then(() => fetch('/dashboard', { cache: 'no-store' }))
@@ -202,10 +244,15 @@ function refreshMyTrainings() {
         });
 }
 
-function updateEnrollmentUI(courseId) {
+// update UI after enrollment (modal + card label)
+function updateEnrollmentUI(courseId, openUrlFromServer) {
     const courseUUID = courseId;
     const card = document.querySelector(`.training-card[data-course-id="${courseUUID}"]`);
     if (!card) return;
+
+    const openUrl = openUrlFromServer || `/enrolled-courses/${courseUUID}`;
+    card.dataset.enrolled = 'true';
+    card.dataset.showLink = openUrl;
 
     const labelBtn = card.querySelector('.thmb_enrll label');
     if (labelBtn) {
@@ -218,7 +265,7 @@ function updateEnrollmentUI(courseId) {
         labelBtn.parentNode.replaceChild(newLabelBtn, labelBtn);
         newLabelBtn.addEventListener('click', function (e) {
             e.stopPropagation();
-            window.location.href = `/enrolled-courses/${courseUUID}`;
+            window.location.href = openUrl;
         });
     }
 
@@ -226,13 +273,15 @@ function updateEnrollmentUI(courseId) {
     if (modal.getAttribute('data-course-id') === courseUUID) {
         const modalEnrollBtn = document.getElementById('enroll-btn');
         if (modalEnrollBtn) {
-            modalEnrollBtn.textContent = 'Open →';
-            modalEnrollBtn.href = `/enrolled-courses/${courseUUID}`;
+            modalEnrollBtn.textContent = 'Continue Watching';
+            modalEnrollBtn.href = openUrl;
             modalEnrollBtn.removeAttribute('data-enroll');
             modalEnrollBtn.classList.add('open-btn');
             modalEnrollBtn.style.backgroundColor = '#062644';
             modalEnrollBtn.style.cursor = 'pointer';
             modalEnrollBtn.disabled = false;
         }
+        modal.setAttribute('data-is-enrolled', 'true');
+        modal.setAttribute('data-show-link', openUrl);
     }
 }

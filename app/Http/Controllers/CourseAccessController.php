@@ -57,37 +57,11 @@ class CourseAccessController extends Controller
         return $recommendedCourses;
     }
 
-    public function getSingleRecommendedCourse()
-    {
-        $user = Auth::user();
-        $recommendedCourse = null;
-
-        // Get enrolled courses
-        $enrolledCourses = $user->courseSubscriptions()->pluck('course_id');
-
-        // First try based on preferred category
-        if ($user->preferred_category_id) {
-            $recommendedCourse = Course::where('category_id', $user->preferred_category_id)
-                ->whereNotIn('id', $enrolledCourses)
-                ->inRandomOrder()
-                ->first();
-        }
-
-        // If no preferred category or no course found, get any random course
-        if (!$recommendedCourse) {
-            $recommendedCourse = Course::whereNotIn('id', $enrolledCourses)
-                ->inRandomOrder()
-                ->first();
-        }
-
-        return $recommendedCourse;
-    }
-
-    public function getFreeCourses()
+    public function getTipsTricks()
     {
         $user = Auth::user();
         
-        $courses = $this->adminCourseController->trainingCallFree()
+        $courses = $this->adminCourseController->trainingCallTipsTricks()
             ->map(function($course) use ($user) {
                 $course['is_enrolled'] = $user->isSubscribedTo($course['id']);
                 return $course;
@@ -96,11 +70,11 @@ class CourseAccessController extends Controller
         return $courses;
     }
 
-    public function getPaidCourses()
+    public function getFormalTrainings()
     {
         $user = Auth::user();
         
-        $courses = $this->adminCourseController->trainingCallPaid()
+        $courses = $this->adminCourseController->trainingCallFormal()
             ->map(function($course) use ($user) {
                 $course['is_enrolled'] = $user->isSubscribedTo($course['id']);
                 return $course;
@@ -115,21 +89,14 @@ class CourseAccessController extends Controller
             $request = request();
             $courseId = $request->input('course_id');
             $user = Auth::user();
-            
-            // Validate course exists
-            //$course = Course::findOrFail($courseId);
+
             $course = Course::where('uuid', $courseId)->firstOrFail();
-            
-            // Check if already enrolled
-            if ($user->isSubscribedTo($course->id)) { 
+
+            if ($user->isSubscribedTo($course->id)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You are already enrolled in this course'
+                    'message' => 'You already have access to this training. Open it from your Dashboard to continue.'
                 ], 409);
-            }
-
-            if ($course->plan_type === 'paid') {
-                return $this->handlePaidEnrollment($user, $course);
             }
 
             $subscription = $user->courseSubscriptions()->create([
@@ -140,11 +107,12 @@ class CourseAccessController extends Controller
                 'started_at' => now(),
                 'last_accessed_at' => now()
             ]);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully enrolled in the course',
-                'subscription' => $subscription
+                'subscription' => $subscription,
+                'open_url' => url('/enrolled-courses/'.$course->uuid),
             ]);
 
         } catch (\Exception $e) {
@@ -153,33 +121,6 @@ class CourseAccessController extends Controller
                 'message' => 'Server error during enrollment: ' . $e->getMessage()
             ], 500);
         }
-    }
-
-    private function handlePaidEnrollment($user, $course)
-    {
-        if ($user->hasActiveSubscription()) {
-            $subscription = $user->courseSubscriptions()->create([
-                'course_id' => $course->id,
-                'course_uuid' => $course->uuid,
-                'payment_status' => 'paid',
-                'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id')
-            ]);
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully enrolled in the premium course',
-                'subscription' => $subscription
-            ]);
-        }
-        
-        return response()->json([
-            'success' => false,
-            'redirect' => route('stripe.checkout', [
-                'clientId' => $user->id,
-                'planId' => 'premium_plan'
-            ]),
-            'message' => 'Payment required for premium courses'
-        ]);
     }
 
     // view enrolled courses

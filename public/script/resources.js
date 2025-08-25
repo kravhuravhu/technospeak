@@ -106,7 +106,7 @@ function fetchAndRenderUserResources() {
                         <div class="resource-meta">
                             <span><i class="fas fa-file-alt"></i> ${resource.type.toUpperCase()}</span>
                         </div>
-                        <button class="view-button" style="margin: 10px 0;background-color: #38b6ff;border: none;padding: 7px 20px;border-radius: 50px;color: #ffffff;cursor:pointer;" onclick="window.open('${resource.url}', '_blank')">View →</button>
+                        <button class="view-button" style="margin: 10px 0;background-color: #38b6ff;border: none;padding: 13px 20px;font-size:1em;border-radius: 50px;color: #ffffff;cursor:pointer;" onclick="window.open('${resource.url}', '_blank')">View →</button>
                     </div>
                 `;
 

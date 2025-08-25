@@ -44,7 +44,6 @@ class EpisodeController extends Controller
                         return $query->where('course_id', $course->id);
                     })
                 ],
-                'is_free' => 'sometimes|boolean',
             ]);
 
             $episode = $course->episodes()->create($validated);
@@ -82,7 +81,6 @@ class EpisodeController extends Controller
             'video_url' => 'required|url',
             'duration' => 'required|integer|min:1',
             'episode_number' => 'required|integer|min:1|max:'.$course->noEpisodes,
-            'is_free' => 'boolean',
         ]);
 
         $episode->update($validated);

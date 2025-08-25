@@ -336,6 +336,11 @@ tr:hover {
     color: #a0aec0;
 }
 
+.status-active-tt {
+    background-color: rgba(160, 174, 192, 0.1);
+    color: #dd6b20;
+}
+
 /* Activity Feed */
 .activity-feed {
     background-color: white;

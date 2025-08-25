@@ -24,7 +24,6 @@ class CourseEpisode extends Model
     protected $casts = [
         'duration' => 'integer',
         'episode_number' => 'integer',
-        'is_free' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];

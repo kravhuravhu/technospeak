@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
                                             <div>Explore Solutions</div>
                                         </a>
                                     @else
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
                                             <div>Explore Courses</div>
                                         </a>
                                     @else
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="cta">
+                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
                                             <div>View Learning Tools</div>
                                         </a>
                                     @else
@@ -159,7 +159,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/dashboard#usr_alltrainings') : url('/login') }}">Get Started</a>
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Get Started</a>
                                     </div>
                                 </div>
 
@@ -324,15 +324,15 @@
 
         <!-- Service Categories Section -->
         <section class="services-categories">
-        <div class="services-container">
-            <div class="services-header">
-            <h2 class="services-title">Service Categories</h2>
-            <p class="services-subtitle">
-                Explore our wide range of done-for-you services designed to make your life easier. 
-                From professional design and content creation to technical support, web development, 
-                and digital marketing, we deliver ready-to-use solutions—no learning, no hassle, just results.
-            </p>
-            </div>
+            <div class="services-container">
+                <div class="services-header">
+                <h2 class="services-title">Service Categories</h2>
+                <p class="services-subtitle">
+                    Explore our wide range of done-for-you services designed to make your life easier. 
+                    From professional design and content creation to technical support, web development, 
+                    and digital marketing, we deliver ready-to-use solutions—no learning, no hassle, just results.
+                </p>
+                </div>
 
             <div class="services-content">
             <!-- Left Categories - Visual Cards -->
@@ -402,26 +402,26 @@
                 </div>
             </div>
 
-            <!-- Right Content - Details Panel -->
-            <div class="services-details" id="service-details">
-                <div class="details-content">
-                <div class="details-header">
-                    <div class="details-icon">🎨</div>
-                    <h3>Bring Your Ideas to Life with Stunning Designs</h3>
+                <!-- Right Content - Details Panel -->
+                <div class="services-details" id="service-details">
+                    <div class="details-content">
+                    <div class="details-header">
+                        <div class="details-icon">🎨</div>
+                        <h3>Bring Your Ideas to Life with Stunning Designs</h3>
+                    </div>
+                    <div class="details-text">
+                        <p>We provide a full spectrum of design services tailored to your business or personal needs. From eye-catching logos, professional business cards, and polished brochures to posters, flyers, and social media graphics, we deliver ready-to-use, high-quality visuals.</p>
+                        <p>Every design is crafted with your brand and audience in mind—no learning, no trial-and-error. You receive professional results, ready for print or online publication, helping your brand make a lasting impression instantly.</p>
+                        <p class="highlight">✨ Ready to stand out? Let us create your next masterpiece today!</p>
+                    </div>
+                    <button class="details-btn">
+                        <span>Need Assistance?</span>
+                        <div class="btn-arrow">→</div>
+                    </button>
+                    </div>
                 </div>
-                <div class="details-text">
-                    <p>We provide a full spectrum of design services tailored to your business or personal needs. From eye-catching logos, professional business cards, and polished brochures to posters, flyers, and social media graphics, we deliver ready-to-use, high-quality visuals.</p>
-                    <p>Every design is crafted with your brand and audience in mind—no learning, no trial-and-error. You receive professional results, ready for print or online publication, helping your brand make a lasting impression instantly.</p>
-                    <p class="highlight">✨ Ready to stand out? Let us create your next masterpiece today!</p>
-                </div>
-                <button class="details-btn">
-                    <span>Need Assistance?</span>
-                    <div class="btn-arrow">→</div>
-                </button>
                 </div>
             </div>
-            </div>
-        </div>
         </section>
 `
         <!-- About Us section -->
@@ -491,7 +491,7 @@
                                         <div class="caption">
                                             <div class="ctgry_dur">
                                                 <div class="ctgry">
-                                                    <p>Technos: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
+                                                    <p>Technite: <i>{{ $course->instructor?->name ?? 'Our Team' }}</i></p>
                                                 </div>
                                                 <div class="dur">
                                                     @php
@@ -546,10 +546,10 @@
                 </div>
                 <div class="view-more-container">
                     @if(Auth::check())
-                        <a href="{{ url('/dashboard#usr_alltrainings') }}" class="view-more-btn">View More Courses</a>
+                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="view-more-btn">View More Courses</a>
                     @else
                         @php
-                            $url = url("/dashboard#usr_alltrainings");
+                            $url = url("/dashboard#usr_alltricks");
                         @endphp
                         <a href="{{ url('/login?redirect=' . urlencode($url)) }}" class="view-more-btn">View More Courses</a>
 

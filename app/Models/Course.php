@@ -19,6 +19,7 @@ class Course extends Model
         'description',
         'catch_phrase',
         'plan_type',
+        'price',
         'thumbnail',
         'software_app_icon',
         'level',
@@ -97,14 +98,14 @@ class Course extends Model
         return ucwords($value);
     }
 
-    public function scopePaid($query)
+    public function scopeTipsTricks($query)
     {
-        return $query->where('plan_type', 'paid');
+        return $query->whereIn('plan_type', ['free', 'paid']);
     }
 
-    public function scopeFree($query)
+    public function scopeFormal($query)
     {
-        return $query->where('plan_type', 'free');
+        return $query->where('plan_type', 'frml_training');
     }
 
     public function comments()

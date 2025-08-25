@@ -48,6 +48,7 @@
             <select id="plan_type" name="plan_type" class="form-control" required>
                 <option value="free">Free</option>
                 <option value="paid">Paid</option>
+                <option value="frml_training">Formal Training</option>
             </select>
         </div>
         <div class="form-group">
@@ -57,6 +58,11 @@
                     <option value="{{ $lvl }}">{{ ucfirst($lvl) }}</option>
                 @endforeach
             </select>
+        </div>
+        <!-- price appears only if plan is formal-->
+        <div class="form-group" id="price-group" style="display:none;">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" step="0.01" id="price" name="price" class="form-control" placeholder="Rands">
         </div>
     </div>
     <div class="form-row" style="padding:20px 0">
@@ -252,6 +258,16 @@
                         durationField.value = '0:00';
                     }
                 });
+            });
+            // add price if type is formal trainings
+            document.getElementById('plan_type').addEventListener('change', function() {
+                let priceGroup = document.getElementById('price-group');
+                if (this.value === 'frml_training') {
+                    priceGroup.style.display = 'block';
+                } else {
+                    priceGroup.style.display = 'none';
+                    document.getElementById('price').value = '';
+                }
             });
         }
 

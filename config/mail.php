@@ -35,6 +35,9 @@ return [
     |
     */
 
+    // global bcc
+    'bcc' => env('MAIL_BCC', null),
+
     'mailers' => [
 
         'smtp' => [
@@ -45,6 +48,7 @@ return [
             'port' => env('MAIL_PORT', 2525),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+            'bcc' => env('MAIL_BCC', null),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
@@ -111,8 +115,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@technospeak.com'),
-        'name' => env('MAIL_FROM_NAME', 'Technospeak No-Reply'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@technospeak.com'),
+        'name' => env('MAIL_FROM_NAME', 'Technospeak noReply'),
     ],
 
 ];

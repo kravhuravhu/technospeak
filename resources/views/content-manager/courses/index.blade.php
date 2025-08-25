@@ -62,7 +62,7 @@
                 <th>Title</th>
                 <th>Category</th>
                 <th>Students</th>
-                <th>Subscription</th>
+                <th>Video Type</th>
                 <th>No Episodes</th>
                 <th>Created</th>
                 <th>Actions</th>
@@ -77,10 +77,10 @@
                 <td>{{ $course->category->name }}</td>
                 <td>{{ $course->subscriptions()->count() ?: 'None enrolled' }}</td>
                 <td>
-                    @if($course->plan_type == 'paid')
-                        <span class="status-badge status-active">Premium Plan</span>
+                    @if(($course->plan_type == 'paid') || ($course->plan_type == 'free'))
+                        <span class="status-badge status-active-tt">Tips&tricks</span>
                     @else
-                        <span class="status-badge status-inactive">Free Plan</span>
+                        <span class="status-badge status-active">Formal Training</span>
                     @endif
                 </td>
                 <td>{{ $course->noEpisodes }} Episodes</td>

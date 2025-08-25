@@ -88,19 +88,25 @@
         margin-right: 0.5rem;
     }
     
-    .badge-free {
-        background-color: rgba(56, 161, 105, 0.1);
-        color: var(--success);
-    }
-    
+    .badge-free,
     .badge-paid {
+        background-color: rgba(56, 161, 105, 0.1);
+        color: #dd6b20;
+    }
+
+    .badge-frml_training {
         background-color: rgba(56, 182, 255, 0.1);
-        color: var(--skBlue);
+        color: var(--success);
     }
     
     .badge-level {
         background-color: rgba(160, 174, 192, 0.1);
         color: #4a5568;
+    }
+
+    .mt-3 {
+        display: flex;
+        align-items: center;
     }
     
     /* Modern Episode List */
@@ -359,9 +365,12 @@
             <span class="meta-item">
                 <i class="fas fa-layer-group"></i> {{ $course->category->name }}
             </span>
-            <span class="badge {{ $course->plan_type === 'free' ? 'badge-free' : 'badge-paid' }}">
-                <i class="fas {{ $course->plan_type === 'free' ? 'fa-unlock-alt' : 'fa-lock' }}"></i>&nbsp
+            <span class="badge {{ $course->plan_type === 'free' ? 'badge-free' : ($course->plan_type === 'frml_training' ? 'badge-frml_training' : 'badge-paid') }}">
+                <i class="fas {{ $course->plan_type === 'free' ? 'fa-unlock-alt' : 'fa-lock' }}"></i>&nbsp;
                 {{ ucfirst($course->plan_type) }}
+                @if($course->plan_type === 'frml_training')
+                    - R{{ number_format($course->price, 2) }}
+                @endif
             </span>
             <span class="badge badge-level">
                 <i class="fas fa-signal"></i>&nbsp

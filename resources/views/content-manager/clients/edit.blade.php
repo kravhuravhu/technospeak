@@ -81,7 +81,7 @@
             <button type="submit" class="btn btn-primary">
                 Update Client
             </button>
-            <a href="{{ route('content-manager.clients.show', $client) }}" class="btn btn-outline">
+            <a href="{{ route('content-manager.clients.clients') }}" class="btn btn-outline">
                 Cancel
             </a>
         </div>

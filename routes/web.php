@@ -31,6 +31,7 @@ use App\Models\TrainingType;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
+use App\Http\Controllers\SubmissionController;
 
 // Public routes
 Route::get('/', [
@@ -73,22 +74,44 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = Auth::user();
         
         $courseAccess = new CourseAccessController();
-        $freeCourses = $courseAccess->getFreeCourses();
-        $paidCourses = $courseAccess->getPaidCourses();
+        $allTipsTricks = $courseAccess->getTipsTricks();
+        $formalTrainings = $courseAccess->getFormalTrainings();
         $recommendedCourses = $courseAccess->getRecommendedCourses();
+
         $enrolledCourses = $user->courseSubscriptions()
             ->with(['course' => function($query) {
                 $query->with(['category', 'instructor', 'episodes']);
             }])
-            ->get()
-            ->map(function($subscription) {
-                $course = $subscription->course;
-                return (object) [
-                    'id' => $course->id,
-                    'title' => $course->title,
-                    'progress' => $subscription->progress_percent ?? 0,
-                ];
-            });
+            ->get();
+
+        // enrolled tips & tricks
+        $tipsAndTricksCurrent = $enrolledCourses->filter(function($subscription) {
+            return in_array($subscription->course->plan_type, ['free', 'paid']);
+        })->map(function($subscription) {
+            $course = $subscription->course;
+            return (object) [
+                'id' => $course->id,
+                'uuid' => $course->uuid,
+                'title' => $course->title,
+                'catch_phrase' => $course->catch_phrase,
+                'thumbnail' => $course->thumbnail,
+            ];
+        });
+
+        // enrolled formal trainigs
+        $formalTrainingCurrent = $enrolledCourses->filter(function($subscription) {
+            return $subscription->course->plan_type === 'frml_training';
+        })->map(function($subscription) {
+            $course = $subscription->course;
+            return (object) [
+                'id' => $course->id,
+                'uuid' => $course->uuid,
+                'thumbnail' => $course->thumbnail,
+                'formatted_duration' => $course->formatted_duration,
+                'title' => $course->title,
+                'progress' => $subscription->progress_percent ?? 0,
+            ];
+        });
         
         $activePlans = collect([TrainingType::find(7)]);
         
@@ -109,9 +132,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $activePlans = $activePlans->merge($completedTrainings);
 
         return view('dashboard', [
-            'freeCourses' => $freeCourses,
-            'paidCourses' => $paidCourses,
-            'enrolledCourses' => $enrolledCourses,
+            'allTipsTricks' => $allTipsTricks,
+            'formalTrainings' => $formalTrainings,
+            'tipsAndTricksCurrent' => $tipsAndTricksCurrent,
+            'formalTrainingCurrent' => $formalTrainingCurrent,
             'recommendedCourses' => $recommendedCourses,
             'instructors' => Instructor::all(),
             'upcomingSessions' => TrainingSession::getUpcomingSessions(),
@@ -189,6 +213,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/task-assistance', [TaskAssistanceController::class, 'store'])->name('task-assistance.store');
     Route::post('/task-assistance/{id}/process-payment', [TaskAssistanceController::class, 'processPayment'])->name('task-assistance.payment');
 
+    // user requests submission
+    Route::post('/submit/{type}', [SubmissionController::class, 'submit'])
+        ->name('submission.submit');
 });
 
 // Subscription routes
@@ -356,13 +383,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
-
-    // Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
-    //     Route::resource('issues', AdminIssueController::class)->except(['create', 'store']);
-    //     Route::post('issues/{issue}/assign', [AdminIssueController::class, 'assign'])->name('issues.assign');
-    //     Route::post('issues/{issue}/close', [AdminIssueController::class, 'close'])->name('issues.close');
-    //     Route::post('issues/{issue}/response', [AdminIssueController::class, 'addResponse'])->name('issues.response');
-    // });
 });
 
 // success payment

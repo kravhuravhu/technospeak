@@ -234,7 +234,11 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/subscription/premium') : url('/login?redirect=subscription/premium') }}">Subscribe Now</a>
+                                        @if(Auth::check())
+                                            <a href="{{ route('subscription.yoco.redirect') }}">Subscribe Now</a>
+                                        @else
+                                            <a href="{{ url('/login?redirect=subscription/yoco/redirect') }}">Subscribe Now</a>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -284,7 +288,11 @@
                                         </ul>
                                     </div>
                                      <div class="plan-button">
-                                        <a href="#" onclick="openGroupSession1Modal(); return false;">Book Now</a>
+                                        @if(Auth::check())
+                                            <a href="#" class="registration-trigger" data-type-id="4">Book Now</a>
+                                        @else
+                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">Book Now</a>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -309,7 +317,11 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="#" onclick="openGroupSession2Modal(); return false;">Book Now</a>
+                                        @if(Auth::check())
+                                            <a href="#" class="registration-trigger" data-type-id="4">Book Now</a>
+                                        @else
+                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">Book Now</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -666,42 +678,6 @@
                 <div class="modal-footer">
                     <button class="modal-btn cancel" id="modal-close-btn">Close</button>
                     <button class="modal-btn confirm" id="modal-contact-btn">Contact Us</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Group Session 1 Modal -->
-        <div id="group-session1-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Coming Soon</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">⏱️</div>
-                    <p>Our Live Q&A Sessions are currently in development and will be available soon.</p>
-                    <p>We're creating an interactive platform where you can ask questions and get immediate expert answers. Please check back later or contact us for more information.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-btn cancel" id="group-session1-close-btn">Close</button>
-                    <button class="modal-btn confirm" id="group-session1-contact-btn">Contact Us</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Group Session 2 Modal -->
-        <div id="group-session2-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Coming Soon</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">⏱️</div>
-                    <p>Our Response Consultations are currently in development and will be available soon.</p>
-                    <p>We're building focused sessions to address comments and questions from our video content. Please check back later or contact us for more information.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-btn cancel" id="group-session2-close-btn">Close</button>
-                    <button class="modal-btn confirm" id="group-session2-contact-btn">Contact Us</button>
                 </div>
             </div>
         </div>

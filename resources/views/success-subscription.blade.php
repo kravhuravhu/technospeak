@@ -117,7 +117,7 @@
             <div class="session-details">
                 <p><strong>Plan Type:</strong> {{ $plan->name }} Subscription</p>
                 <p><strong>Amount Paid:</strong> R{{ number_format($payment_amount, 2) }}</p>
-                <p><strong>Transaction ID:</strong> {{ $transaction_id }}</p>
+                <p><strong>Transaction ID:</strong> {{ $transaction_id ?? 'N/A' }}</p>
                 <p><strong>Expiry Date:</strong> {{ now()->addMonths(3)->format('F j, Y') }}</p>
             </div>
 

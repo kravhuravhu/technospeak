@@ -143,15 +143,14 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            {{-- For subscription --}}
+                                            {{-- Subscription functionality removed --}}
                                             @if(Auth::check())
-                                                <a href="{{ route('yoco.checkout', ['clientId' => auth()->id(), 'planId' => 'subscription_6']) }}" 
-                                                class="btn btn-primary">
-                                                SUBSCRIBE
+                                                <a href="#" class="btn btn-primary disabled">
+                                                    SUBSCRIBE (UNAVAILABLE)
                                                 </a>
                                             @else
                                                 <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">
-                                                    SUBSCRIBE
+                                                    LOGIN TO SUBSCRIBE
                                                 </a>
                                             @endif
                                         </div>

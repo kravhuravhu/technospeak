@@ -218,29 +218,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('submission.submit');
 });
 
-// Subscription routes
-Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
+    // Subscription routes
+    Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
     ->name('subscription.subscribe')
     ->middleware('auth');
 
-Route::post('/subscription/unsubscribe', [SubscriptionController::class, 'unsubscribe'])
-->name('subscription.unsubscribe')
-->middleware('auth');
+    Route::post('/subscription/unsubscribe', [SubscriptionController::class, 'unsubscribe'])
+    ->name('subscription.unsubscribe')
+    ->middleware('auth');
 
-Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
+    Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
     ->name('subscription.subscribe.free')
     ->middleware('auth');
 
-Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
+    Route::post('/courses/enroll', [CourseAccessController::class, 'enroll'])
     ->middleware('auth')
     ->name('courses.enroll');
 
-Route::get('/stripe/subscription/success', [StripeController::class, 'subscriptionSuccess'])
+    Route::get('/stripe/subscription/success', [StripeController::class, 'subscriptionSuccess'])
     ->name('stripe.subscription.success')
     ->middleware('auth');
  
-// Stripe routes
-Route::prefix('stripe')->group(function () {
+    // Stripe routes
+    Route::prefix('stripe')->group(function () {
     Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
         ->name('stripe.checkout')
         ->middleware('auth');
@@ -251,6 +251,44 @@ Route::prefix('stripe')->group(function () {
     Route::get('/success', [StripeController::class, 'success'])->name('stripe.success'); // For training sessions
     Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
         ->name('stripe.subscription.success')
+        ->middleware('auth');
+
+    // Yoco payment routes
+    Route::prefix('yoco')->group(function () {
+        Route::get('/payment/verify/{attempt}', [SubscriptionController::class, 'verifyPayment'])
+            ->name('yoco.payment.verify')
+            ->middleware('auth');
+
+        Route::get('/payment/status/{attempt}', [SubscriptionController::class, 'checkPaymentStatus'])
+            ->name('yoco.payment.status')
+            ->middleware('auth');
+
+        Route::get('/payment/success/{attempt}', function($attemptId) {
+            $paymentAttempt = \App\Models\YocoPaymentAttempt::findOrFail($attemptId);
+            $client = \App\Models\Client::findOrFail($paymentAttempt->client_id);
+            $plan = \App\Models\TrainingType::findOrFail($paymentAttempt->plan_id);
+            
+            return view('success-subscription', [
+                'plan' => $plan,
+                'payment_amount' => $paymentAttempt->amount,
+                'transaction_id' => $paymentAttempt->yoco_payment_id
+            ]);
+        })->name('yoco.payment.success')->middleware('auth');
+
+        Route::get('/payment/failed/{attempt}', function($attemptId) {
+            $paymentAttempt = \App\Models\YocoPaymentAttempt::findOrFail($attemptId);
+            $plan = \App\Models\TrainingType::findOrFail($paymentAttempt->plan_id);
+            
+            return view('payment.failed', [
+                'plan' => $plan,
+                'paymentAttempt' => $paymentAttempt
+            ]);
+        })->name('yoco.payment.failed')->middleware('auth');
+    });
+
+    // Yoco payment redirect
+    Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
+        ->name('subscription.yoco.redirect')
         ->middleware('auth');
 });
 

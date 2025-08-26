@@ -59,6 +59,19 @@ class PaymentProcessed extends Notification
             ->bcc('admin@technospeak.co.za');
     }
 
+    public function toDatabase($notifiable)
+    {
+        return [
+            'payment_id' => $this->payment->id,
+            'amount' => $this->payment->amount,
+            'status' => $this->status,
+            'transaction_id' => $this->payment->transaction_id,
+            'message' => $this->status === 'success' 
+                ? 'Your payment of R' . number_format($this->payment->amount, 2) . ' was successful.'
+                : 'Your payment of R' . number_format($this->payment->amount, 2) . ' failed.'
+        ];
+    }
+
     protected function getIntroLines()
     {
         if ($this->status === 'success') {

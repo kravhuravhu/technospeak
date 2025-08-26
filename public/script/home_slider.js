@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Function to activate a service
   function activateService(serviceType) {
     const service = services[serviceType];
-    
+
     if (service) {
       detailsContainer.innerHTML = `
         <div class="details-content">
@@ -281,20 +281,25 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="details-text">
             ${service.content}
           </div>
-          <button class="details-btn">
-            <span>Need Assistance?</span>
-            <div class="btn-arrow">→</div>
+          <button class="details-btn" id="need-assistance-btn">
+              <span>Need Assistance?</span>
+              <div class="btn-arrow">→</div>
           </button>
         </div>
       `;
-      
+
       // Add event listener to the new button
-      const newButton = detailsContainer.querySelector('.details-btn');
+      const newButton = detailsContainer.querySelector('#need-assistance-btn');
       if (newButton) {
         newButton.addEventListener('click', function() {
-          // Add your button click logic here
-          console.log(`Requesting assistance for: ${serviceType}`);
-          // You can redirect to a contact form or show a modal
+          // Replace this with your actual login check logic
+          const isLoggedIn = window.isUserLoggedIn || false; // Set this variable server-side or via JS
+          if (isLoggedIn) {
+            window.location.href = '/dashboard#usr_support';
+          } else {
+            // Always redirect to login with support tab hash
+            window.location.href = '/login#usr_support';
+          }
         });
       }
     }

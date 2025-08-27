@@ -255,36 +255,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Yoco payment routes
     Route::prefix('yoco')->group(function () {
-        Route::get('/payment/verify/{attempt}', [SubscriptionController::class, 'verifyPayment'])
+        Route::get('/payment/verify/{payment}', [SubscriptionController::class, 'verifyPayment'])
             ->name('yoco.payment.verify')
             ->middleware('auth');
 
-        Route::get('/payment/status/{attempt}', [SubscriptionController::class, 'checkPaymentStatus'])
+        Route::get('/payment/status/{payment}', [SubscriptionController::class, 'checkPaymentStatus'])
             ->name('yoco.payment.status')
             ->middleware('auth');
 
-        Route::get('/payment/success/{attempt}', function($attemptId) {
-            $paymentAttempt = \App\Models\YocoPaymentAttempt::findOrFail($attemptId);
-            $client = \App\Models\Client::findOrFail($paymentAttempt->client_id);
-            $plan = \App\Models\TrainingType::findOrFail($paymentAttempt->plan_id);
-            
+        Route::get('/payment/success/{payment}', function($paymentId) {
+            $payment = Payment::findOrFail($paymentId);
             return view('success-subscription', [
-                'plan' => $plan,
-                'payment_amount' => $paymentAttempt->amount,
-                'transaction_id' => $paymentAttempt->yoco_payment_id
+                'plan' => TrainingType::find($payment->payable_id),
+                'payment_amount' => $payment->amount,
+                'transaction_id' => $payment->transaction_id,
+                'client' => Client::find($payment->client_id)
             ]);
         })->name('yoco.payment.success')->middleware('auth');
 
-        Route::get('/payment/failed/{attempt}', function($attemptId) {
-            $paymentAttempt = \App\Models\YocoPaymentAttempt::findOrFail($attemptId);
-            $plan = \App\Models\TrainingType::findOrFail($paymentAttempt->plan_id);
-            
-            return view('payment.failed', [
-                'plan' => $plan,
-                'paymentAttempt' => $paymentAttempt
-            ]);
+        Route::get('/payment/failed/{payment}', function($paymentId) {
+            $payment = Payment::findOrFail($paymentId);
+            return view('payment.failed', ['payment' => $payment]);
         })->name('yoco.payment.failed')->middleware('auth');
+
+        Route::get('/payment/cancel/{payment}', function($paymentId) {
+            $payment = Payment::findOrFail($paymentId);
+            $payment->update(['status' => 'cancelled']);
+            
+            return redirect()->route('dashboard')
+                ->with('error', 'Payment was cancelled.');
+        })->name('yoco.payment.cancel')->middleware('auth');
     });
+
+    // Yoco webhook route
+    Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
 
     // Yoco payment redirect
     Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])

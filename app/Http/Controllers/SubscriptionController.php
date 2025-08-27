@@ -12,6 +12,7 @@ use App\Models\Course;
 use App\Models\ClientCourseSubscription;
 use App\Notifications\PaymentProcessed;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -40,34 +41,48 @@ class SubscriptionController extends Controller
         return $this->handleYocoPaymentWithPolling($plan, auth()->user());
     }
 
-    protected function handleYocoPaymentWithPolling($plan, $client)
+    protected function handleYocoPayment($plan, $client)
     {
         $price = $plan->getPriceForUserType($client->userType);
         
-        // Create payment attempt record
-        $paymentAttempt = \App\Models\YocoPaymentAttempt::create([
+        // Create payment record in the main payments table
+        $payment = Payment::create([
             'client_id' => $client->id,
-            'plan_id' => $plan->id,
             'amount' => $price,
+            'payment_method' => 'yoco',
             'status' => 'pending',
+            'payable_type' => 'subscription',
+            'payable_id' => $plan->id,
             'metadata' => json_encode([
                 'user_type' => $client->userType,
-                'plan_name' => $plan->name
+                'plan_name' => $plan->name,
+                'payment_processor' => 'yoco'
             ])
         ]);
 
-        // Determine which payment link to use based on user type
         $paymentLink = $this->getPaymentLink($client->userType);
         
-        // Add metadata to identify this payment
-        $redirectUrl = $paymentLink . 
-            '?metadata[client_id]=' . $client->id . 
-            '&metadata[plan_id]=' . $plan->id . 
-            '&metadata[payment_attempt_id]=' . $paymentAttempt->id .
+        // Build URL with proper redirect parameters
+        $successUrl = route('yoco.payment.verify', ['payment' => $payment->id]);
+        $cancelUrl = route('yoco.payment.cancel', ['payment' => $payment->id]);
+        
+        $yocoUrl = $paymentLink . 
+            '?metadata[payment_id]=' . $payment->id . 
+            '&metadata[client_id]=' . $client->id . 
+            '&metadata[plan_id]=' . $plan->id .
             '&amount=' . ($price * 100) . // Yoco expects amount in cents
-            '&redirectUrl=' . urlencode(route('yoco.payment.verify', ['attempt' => $paymentAttempt->id]));
+            '&redirectUrl=' . urlencode($successUrl) .
+            '&cancelUrl=' . urlencode($cancelUrl);
 
-        return redirect($redirectUrl);
+        Log::info('Yoco payment initiated', [
+            'payment_id' => $payment->id,
+            'client_id' => $client->id,
+            'plan_id' => $plan->id,
+            'amount' => $price,
+            'yoco_url' => $yocoUrl
+        ]);
+
+        return redirect($yocoUrl);
     }
 
     public function redirectToYoco(Request $request)
@@ -75,48 +90,41 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $premiumPlan = TrainingType::where('name', 'Premium')->firstOrFail();
         
-        return $this->handleYocoPaymentWithPolling($premiumPlan, $user);
+        return $this->handleYocoPayment($premiumPlan, $user);
     }
 
-    public function verifyPayment(Request $request, $attemptId)
+    public function verifyPayment(Request $request, $paymentId)
     {
-        $paymentAttempt = YocoPaymentAttempt::findOrFail($attemptId);
-        $client = Client::findOrFail($paymentAttempt->client_id);
-        $plan = TrainingType::findOrFail($paymentAttempt->plan_id);
-
+        $payment = Payment::findOrFail($paymentId);
+        
         // Check if payment was already processed
-        if ($paymentAttempt->status === 'completed') {
-            return $this->showSuccessPage($client, $plan, $paymentAttempt->amount, $paymentAttempt->yoco_payment_id);
+        if ($payment->status === 'completed') {
+            return $this->showSuccessPage($payment);
         }
 
-        // Try to verify payment with Yoco API
-        $verificationResult = $this->verifyYocoPayment($paymentAttempt);
+        // Check payment status via Yoco API
+        $verificationResult = $this->verifyYocoPayment($payment);
 
         if ($verificationResult['status'] === 'completed') {
-            // Payment was successful
-            return $this->processSuccessfulPayment($paymentAttempt, $client, $plan, $verificationResult);
+            return $this->processSuccessfulPayment($payment, $verificationResult);
         } elseif ($verificationResult['status'] === 'pending') {
-            // Payment is still pending, show waiting page
             return view('payment.pending', [
-                'paymentAttempt' => $paymentAttempt,
-                'plan' => $plan,
-                'pollingUrl' => route('yoco.payment.status', ['attempt' => $paymentAttempt->id])
+                'payment' => $payment,
+                'pollingUrl' => route('yoco.payment.status', ['payment' => $payment->id])
             ]);
         } else {
-            // Payment failed
-            return $this->processFailedPayment($paymentAttempt, $client, $plan);
+            return $this->processFailedPayment($payment);
         }
     }
 
-    protected function verifyYocoPayment($paymentAttempt)
+    protected function verifyYocoPayment($payment)
     {
-        // If we have a Yoco payment ID, check its status via API
-        if ($paymentAttempt->yoco_payment_id) {
-            return $this->checkYocoPaymentStatus($paymentAttempt->yoco_payment_id);
+        // Check if we have a Yoco transaction ID
+        if ($payment->transaction_id) {
+            return $this->checkYocoPaymentStatus($payment->transaction_id);
         }
 
-        // If no Yoco payment ID yet, check if we can find it
-        // This would require storing additional data or using Yoco's API to search for payments
+        // If no transaction ID yet, payment is still pending
         return ['status' => 'pending'];
     }
 
@@ -133,6 +141,7 @@ class SubscriptionController extends Controller
                 if ($paymentData['status'] === 'succeeded') {
                     return [
                         'status' => 'completed',
+                        'yoco_payment_id' => $yocoPaymentId,
                         'amount' => $paymentData['amount'] / 100,
                         'currency' => $paymentData['currency'],
                         'payment_method' => $paymentData['paymentMethod'] ?? 'card'
@@ -144,36 +153,36 @@ class SubscriptionController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            \Log::error('Error checking Yoco payment status: ' . $e->getMessage());
+            Log::error('Error checking Yoco payment status: ' . $e->getMessage());
         }
 
         return ['status' => 'pending'];
     }
 
-    protected function processSuccessfulPayment($paymentAttempt, $client, $plan, $paymentData)
+    protected function processSuccessfulPayment($payment, $paymentData)
     {
-        // Update payment attempt
-        $paymentAttempt->update([
-            'status' => 'completed',
-            'yoco_payment_id' => $paymentData['id'] ?? $paymentAttempt->yoco_payment_id
-        ]);
+        $client = Client::findOrFail($payment->client_id);
+        $plan = TrainingType::findOrFail($payment->payable_id);
 
-        // Create payment record
-        $payment = Payment::create([
-            'transaction_id' => $paymentData['id'] ?? $paymentAttempt->yoco_payment_id,
-            'client_id' => $client->id,
-            'amount' => $paymentAttempt->amount,
-            'payment_method' => $paymentData['payment_method'] ?? 'yoco',
+        // Update payment record
+        $payment->update([
+            'transaction_id' => $paymentData['yoco_payment_id'] ?? null,
             'status' => 'completed',
-            'payable_type' => 'subscription',
-            'payable_id' => $plan->id
+            'metadata' => json_encode(array_merge(
+                json_decode($payment->metadata, true) ?? [],
+                [
+                    'processed_at' => now()->toDateTimeString(),
+                    'yoco_response' => $paymentData
+                ]
+            ))
         ]);
 
         // Update client subscription
         $client->update([
             'subscription_type' => strtolower($plan->name),
             'subscription_paid_at' => now(),
-            'subscription_expiry' => now()->addQuarter()
+            'subscription_expiry' => now()->addQuarter(),
+            'updated_at' => now()
         ]);
 
         // Update client course subscriptions
@@ -182,74 +191,75 @@ class SubscriptionController extends Controller
         // Send notification
         $client->notify(new PaymentProcessed($payment, 'success'));
 
-        return $this->showSuccessPage($client, $plan, $paymentAttempt->amount, $payment->transaction_id);
-    }
-
-    protected function processFailedPayment($paymentAttempt, $client, $plan)
-    {
-        $paymentAttempt->update(['status' => 'failed']);
-
-        // Create failed payment record
-        $payment = Payment::create([
-            'transaction_id' => $paymentAttempt->yoco_payment_id,
+        Log::info('Yoco payment completed successfully', [
+            'payment_id' => $payment->id,
             'client_id' => $client->id,
-            'amount' => $paymentAttempt->amount,
-            'payment_method' => 'yoco',
-            'status' => 'failed',
-            'payable_type' => 'subscription',
-            'payable_id' => $plan->id
+            'transaction_id' => $payment->transaction_id
         ]);
 
+        return $this->showSuccessPage($payment);
+    }
+
+    protected function processFailedPayment($payment)
+    {
+        $payment->update([
+            'status' => 'failed',
+            'metadata' => json_encode(array_merge(
+                json_decode($payment->metadata, true) ?? [],
+                ['failed_at' => now()->toDateTimeString()]
+            ))
+        ]);
+
+        $client = Client::findOrFail($payment->client_id);
         $client->notify(new PaymentProcessed($payment, 'failed'));
 
+        Log::warning('Yoco payment failed', ['payment_id' => $payment->id]);
+
         return view('payment.failed', [
-            'plan' => $plan,
-            'paymentAttempt' => $paymentAttempt
+            'payment' => $payment
         ]);
     }
 
-    public function checkPaymentStatus(Request $request, $attemptId)
+    public function checkPaymentStatus(Request $request, $paymentId)
     {
-        $paymentAttempt = YocoPaymentAttempt::findOrFail($attemptId);
+        $payment = Payment::findOrFail($paymentId);
         
-        // Check payment status
-        $verificationResult = $this->verifyYocoPayment($paymentAttempt);
+        $verificationResult = $this->verifyYocoPayment($payment);
         
         if ($verificationResult['status'] === 'completed') {
-            $client = Client::findOrFail($paymentAttempt->client_id);
-            $plan = TrainingType::findOrFail($paymentAttempt->plan_id);
-            
-            $this->processSuccessfulPayment($paymentAttempt, $client, $plan, $verificationResult);
+            $this->processSuccessfulPayment($payment, $verificationResult);
             
             return response()->json([
                 'status' => 'completed',
-                'redirect' => route('yoco.payment.success', ['attempt' => $paymentAttempt->id])
+                'redirect' => route('yoco.payment.success', ['payment' => $payment->id])
             ]);
         } elseif ($verificationResult['status'] === 'failed') {
-            $paymentAttempt->update(['status' => 'failed']);
+            $this->processFailedPayment($payment);
             
             return response()->json([
                 'status' => 'failed',
-                'redirect' => route('yoco.payment.failed', ['attempt' => $paymentAttempt->id])
+                'redirect' => route('yoco.payment.failed', ['payment' => $payment->id])
             ]);
         }
         
-        // Still pending
         return response()->json(['status' => 'pending']);
     }
 
-    protected function showSuccessPage($client, $plan, $amount, $transactionId)
+    protected function showSuccessPage($payment)
     {
+        $client = Client::findOrFail($payment->client_id);
+        $plan = TrainingType::findOrFail($payment->payable_id);
+
         return view('success-subscription', [
             'plan' => $plan,
-            'payment_amount' => $amount,
-            'transaction_id' => $transactionId
+            'payment_amount' => $payment->amount,
+            'transaction_id' => $payment->transaction_id,
+            'client' => $client
         ]);
     }
 
     protected function getPaymentLink($userType)
     {
-        // Determine which payment link to use based on user type
         if (strtolower($userType) === 'student') {
             return 'https://pay.yoco.com/r/2BojJr';
         }
@@ -259,7 +269,6 @@ class SubscriptionController extends Controller
 
     protected function updateClientCourseSubscription($client, $plan)
     {
-        // For premium subscription, update all premium course subscriptions
         if (strtolower($plan->name) === 'premium') {
             $premiumCourses = Course::where('plan_type', 'premium')->get();
             

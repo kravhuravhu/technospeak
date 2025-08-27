@@ -105,12 +105,8 @@
 <body>
     <div class="payment-success-container">
         <div class="success-card">
-            <div class="success-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
-                </svg>
-            </div>
-            <h2>Subscription Activated!</h2>
+            <div class="success-icon">✅</div>
+            <h2>Payment Successful!</h2>
             
             <p>Thank you for subscribing to <strong class="for_this">{{ $plan->name }}</strong></p>
             
@@ -119,14 +115,20 @@
                 <p><strong>Amount Paid:</strong> R{{ number_format($payment_amount, 2) }}</p>
                 <p><strong>Transaction ID:</strong> {{ $transaction_id ?? 'N/A' }}</p>
                 <p><strong>Expiry Date:</strong> {{ now()->addMonths(3)->format('F j, Y') }}</p>
+                <p><strong>Customer:</strong> {{ $client->name }} {{ $client->surname }}</p>
             </div>
 
             <div class="confirmation-message">
-                <p>A confirmation email has been sent to <strong>{{ auth()->user()->email }}</strong></p>
+                <p>A confirmation email has been sent to <strong>{{ $client->email }}</strong></p>
                 <p>Your premium subscription is now active for 3 months.</p>
             </div>
 
-            <a href="{{ route('dashboard') }}" class="back-to-dashboard">Go to Dashboard</a>
+            <div style="margin-top: 2rem;">
+                <a href="{{ route('dashboard') }}" class="back-to-dashboard">Go to Dashboard</a>
+                <a href="{{ url('/') }}" class="back-to-dashboard" style="background-color: #6c757d; margin-left: 1rem;">
+                    Return to Home
+                </a>
+            </div>
         </div>
     </div>
 </body>

@@ -17,19 +17,15 @@ class YocoWebhookController extends Controller
     {
         Log::info('Yoco webhook received', $request->all());
         
-        // For testing without signature verification
-        if (app()->environment('local')) {
-            Log::info('Skipping signature verification in local environment');
-            return $this->processWebhook($request->json()->all());
-        }
-        
         // Verify webhook signature in production
-        $signature = $request->header('X-Yoco-Signature');
-        $payload = $request->getContent();
-        
-        if (!$this->verifySignature($signature, $payload)) {
-            Log::error('Invalid Yoco webhook signature');
-            return response()->json(['error' => 'Invalid signature'], 400);
+        if (!app()->environment('local')) {
+            $signature = $request->header('X-Yoco-Signature');
+            $payload = $request->getContent();
+            
+            if (!$this->verifySignature($signature, $payload)) {
+                Log::error('Invalid Yoco webhook signature');
+                return response()->json(['error' => 'Invalid signature'], 400);
+            }
         }
 
         return $this->processWebhook($request->json()->all());
@@ -38,7 +34,6 @@ class YocoWebhookController extends Controller
     protected function processWebhook($event)
     {
         try {
-            // Handle different event types
             switch ($event['type']) {
                 case 'payment.succeeded':
                     return $this->handlePaymentSucceeded($event);
@@ -49,77 +44,77 @@ class YocoWebhookController extends Controller
                     return response()->json(['status' => 'ignored']);
             }
         } catch (\Exception $e) {
-            Log::error('Error processing Yoco webhook: ' . $e->getMessage(), [
-                'event' => $event,
-                'trace' => $e->getTraceAsString()
-            ]);
-            
+            Log::error('Error processing Yoco webhook: ' . $e->getMessage());
             return response()->json(['error' => 'Processing error'], 500);
         }
-    }
-
-    protected function verifySignature($signature, $payload)
-    {
-        $secret = env('YOCO_WEBHOOK_SECRET');
-        
-        if (!$secret) {
-            Log::error('Yoco webhook secret not configured');
-            return false;
-        }
-        
-        $computedSignature = base64_encode(hash_hmac('sha256', $payload, $secret, true));
-        
-        return hash_equals($signature, $computedSignature);
     }
 
     protected function handlePaymentSucceeded($event)
     {
         $paymentData = $event['data']['object'];
-        
-        // Extract metadata to identify the payment
         $metadata = $paymentData['metadata'] ?? [];
+        
+        $paymentId = $metadata['payment_id'] ?? null;
         $clientId = $metadata['client_id'] ?? null;
         $planId = $metadata['plan_id'] ?? null;
-        
-        if (!$clientId || !$planId) {
-            Log::error('Missing metadata in Yoco payment', $paymentData);
-            return response()->json(['error' => 'Missing metadata'], 400);
+
+        if (!$paymentId) {
+            Log::error('Missing payment_id in Yoco webhook metadata', $paymentData);
+            return response()->json(['error' => 'Missing payment_id'], 400);
         }
 
-        $client = Client::find($clientId);
-        $plan = TrainingType::find($planId);
+        $payment = Payment::find($paymentId);
+        if (!$payment) {
+            Log::error('Payment not found', ['payment_id' => $paymentId]);
+            return response()->json(['error' => 'Payment not found'], 404);
+        }
+
+        // If payment is already completed, skip processing
+        if ($payment->status === 'completed') {
+            Log::info('Payment already processed', ['payment_id' => $paymentId]);
+            return response()->json(['status' => 'already_processed']);
+        }
+
+        $client = Client::find($payment->client_id);
+        $plan = TrainingType::find($payment->payable_id);
 
         if (!$client || !$plan) {
-            Log::error('Client or plan not found', ['client_id' => $clientId, 'plan_id' => $planId]);
+            Log::error('Client or plan not found', [
+                'client_id' => $payment->client_id,
+                'plan_id' => $payment->payable_id
+            ]);
             return response()->json(['error' => 'Client or plan not found'], 404);
         }
 
-        // Create payment record
-        $payment = Payment::create([
+        // Update payment record
+        $payment->update([
             'transaction_id' => $paymentData['id'],
-            'client_id' => $client->id,
-            'amount' => $paymentData['amount'] / 100, // Convert from cents to rand
-            'payment_method' => $paymentData['payment_method'] ?? 'yoco',
             'status' => 'completed',
-            'payable_type' => 'subscription',
-            'payable_id' => $plan->id
+            'metadata' => json_encode(array_merge(
+                json_decode($payment->metadata, true) ?? [],
+                [
+                    'webhook_processed_at' => now()->toDateTimeString(),
+                    'yoco_webhook_data' => $paymentData
+                ]
+            ))
         ]);
 
         // Update client subscription
         $client->update([
             'subscription_type' => strtolower($plan->name),
             'subscription_paid_at' => now(),
-            'subscription_expiry' => now()->addQuarter()
+            'subscription_expiry' => now()->addQuarter(),
+            'updated_at' => now()
         ]);
 
-        // Update or create client course subscription
+        // Update client course subscriptions
         $this->updateClientCourseSubscription($client, $plan);
 
         // Send notification
         $client->notify(new PaymentProcessed($payment, 'success'));
 
-        Log::info('Yoco payment processed successfully', [
-            'client_id' => $client->id,
+        Log::info('Yoco payment processed via webhook', [
+            'payment_id' => $payment->id,
             'transaction_id' => $paymentData['id']
         ]);
 

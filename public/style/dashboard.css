@@ -2861,98 +2861,493 @@ section.bar-lt-rt {
 }
 
 
-/* Subscription Plans CSS */
+ /* Subscription Plans Section - Enhanced Design */
 .subscriptions_content {
-    margin-top: 2rem;
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #f9fafb 0%, #f0f4f8 100%);
+  min-height: 100vh;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+}
+
+ /* Section headers */
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  h2 {
+    font-size: 2.5rem;
+    color: #062644;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+ /* Plan comparison table for quick overview */
+.plan-comparison {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+  margin-bottom: 3rem;
+  overflow: hidden;
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    th, td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #062644;
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .feature-name {
+      text-align: left;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .included {
+      color: #28a745;
+      font-size: 1.2rem;
+    }
+    
+    .not-included {
+      color: #dc3545;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+ /* Plan cards grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .plan-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.current-plan {
-    background-color: #f8f9fa;
-    border-left: 4px solid #4e73df;
-}
-
-.other-plan {
-    background-color: white;
-}
-
-.free-plan {
-    background-color: #f0f8ff;
-    border-left: 4px solid #1e90ff;
-}
-
-.plan-badge {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  }
+  
+   /* Different border colors for different plans */
+  &.current-plan {
+    border-top: 6px solid #38b6ff;
+  }
+  
+  &.free-plan {
+    border-top: 6px solid #6c757d;
+  }
+  
+  &.other-plan {
+    border-top: 6px solid #ff6b6b;
+  }
+  
+  &.premium-plan {
+    border-top: 6px solid #ffc107;
+  }
+  
+  &.personal-guide-plan {
+    border-top: 6px solid #20c997;
+  }
+  
+  &.formal-training-plan {
+    border-top: 6px solid #6610f2;
+  }
+  
+  &.task-assistance-plan {
+    border-top: 6px solid #fd7e14;
+  }
+  
+  &.group-session-plan {
+    border-top: 6px solid #e83e8c;
+  }
+  
+   /* Plan badges */
+  .plan-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #4e73df;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.free-badge {
-    background-color: #1e90ff;
-}
-
-.plan-price {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
     font-weight: bold;
-    margin: 10px 0;
-    color: #4e73df;
-}
-
-.plan-description {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    &.free-badge {
+      background: #6c757d;
+      color: white;
+    }
+    
+    &.premium-badge {
+      background: #ffc107;
+      color: #212529;
+    }
+    
+    &.active-badge {
+      background: #38b6ff;
+      color: white;
+    }
+    
+    &.popular-badge {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+      color: white;
+    }
+  }
+  
+   /* Plan header */
+  .plan-header {
+    margin-bottom: 1.5rem;
+    padding-right: 80px;  /*Space for badge*/
+    
+    h3 {
+      color: #062644;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    
+    .plan-tagline {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+   /* Price section */
+  .plan-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: #38b6ff;
+    
+    .price-amount {
+      font-size: 2.2rem;
+    }
+    
+    .price-interval {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .price-note {
+      display: block;
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 0.3rem;
+    }
+  }
+  
+   /* Description */
+  .plan-description {
     color: #666;
-    margin-bottom: 15px;
-}
-
-.plan-features {
-    padding-left: 20px;
-    color: #555;
-}
-
-.plan-actions {
-    margin-top: 15px;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+   /* Features list */
+  .plan-features {
+    margin: 1.5rem 0;
+    padding-left: 0;
+    list-style-type: none;
+    
+    li {
+      margin-bottom: 0.8rem;
+      color: #444;
+      position: relative;
+      padding-left: 1.8rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      
+      &:before {
+        content: "✓";
+        color: #38b6ff;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+   /* Actions */
+  .plan-actions {
     display: flex;
-    gap: 10px;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      
+      &.details-btn {
+        background: #f8f9fa;
+        color: #495057;
+        border: 1px solid #dee2e6;
+        
+        &:hover {
+          background: #e9ecef;
+        }
+      }
+      
+      &.subscribe-btn {
+        background: linear-gradient(135deg, #38b6ff 0%, #2c8fd1 100%);
+        color: white;
+        
+        &:hover {
+          background: linear-gradient(135deg, #2c8fd1 0%, #1e7aba 100%);
+          box-shadow: 0 5px 15px rgba(56, 182, 255, 0.3);
+        }
+      }
+      
+      &.unsubscribe-btn {
+        background: #dc3545;
+        color: white;
+        
+        &:hover {
+          background: #c82333;
+          box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+      }
+    }
+  }
 }
 
-.btn {
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: none;
+ /* User's current plans section */
+.current-plans {
+  margin-bottom: 4rem;
+  
+  .title {
+    margin-bottom: 2rem;
+    text-align: center;
+    
+    h2 {
+      color: #062644;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+ /* Other available plans section */
+.other-plans {
+  .title {
+    margin-bottom: 2rem;
+    text-align: center;
+    
+    h2 {
+      color: #062644;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+ /* Plan recommendation section */
+.plan-recommendation {
+  background: linear-gradient(135deg, #38b6ff 0%, #2c8fd1 100%);
+  border-radius: 16px;
+  padding: 2.5rem;
+  color: white;
+  margin: 3rem 0;
+  text-align: center;
+  
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+  
+  .btn {
+    background: white;
+    color: #38b6ff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+  }
 }
 
-.details-btn {
-    background-color: #f8f9fa;
-    color: #4e73df;
+ /* Responsive design */
+@media (max-width: 992px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .plan-comparison {
+    overflow-x: auto;
+    
+    table {
+      min-width: 700px;
+    }
+  }
 }
 
-.subscribe-btn {
-    background-color: #4e73df;
+@media (max-width: 768px) {
+  .subscriptions_content {
+    padding: 1rem 0;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .plan-card {
+    padding: 1.5rem;
+  }
+  
+  .plan-actions {
+    flex-direction: column;
+    
+    .btn {
+      justify-content: center;
+    }
+  }
+}
+
+ /* Animation for plan cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.plan-card {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.plan-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.plan-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.plan-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.plan-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.plan-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.plan-card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.plan-card:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+/* Tooltip for feature explanations */
+.feature-tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted #38b6ff;
+  cursor: help;
+  
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #062644;
     color: white;
-}
-
-.unsubscribe-btn {
-    background-color: #e74a3b;
-    color: white;
-}
-
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #062644 transparent transparent transparent;
+    }
+  }
 }

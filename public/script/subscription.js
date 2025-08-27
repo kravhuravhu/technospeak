@@ -19,7 +19,7 @@ async function loadAllPlanDetails() {
         console.error('Error loading plan details:', error);
         // Fallback to hardcoded data if API fails
         allPlansData = {
-            1: { id: 1, title: "Formal Training", price: "From R1500/training", description: "Structured learning with professional instructors", features: ["Comprehensive EUC training", "Web development courses", "Portfolio building", "Certificate of completion"], isFree: false },
+            1: { id: 1, title: "Formal Training", price: "From R1500/training", description: "- Structured learning with \n - professional instructors", features: ["Comprehensive EUC training", "Web development courses", "Portfolio building", "Certificate of completion"], isFree: false },
             2: { id: 2, title: "Task Assistance", price: "From R100/hour", description: "Get help with specific challenges or tasks", features: ["Tutoring and consultations", "Task-specific help", "Flexible payment options", "Quality guaranteed"], isFree: false },
             3: { id: 3, title: "Personal Guide", price: "From R110/hour", description: "Personalized one-on-one sessions tailored to your needs", features: ["Custom video/chat sessions", "Submit requests in advance", "Flexible scheduling", "Additional hours available"], isFree: false },
             4: { id: 4, title: "Group Session 1", price: "Free", description: "Clients will be able to ask questions on a live Q&A.", features: ["Clients will be able to ask questions on a live Q&A", "Participants remain muted but can submit questions via chat"], isFree: true },

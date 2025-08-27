@@ -788,9 +788,9 @@
                                     </div>
                                     
                                     <div class="form-group fm-g-rw">
-    <label for="startDateTime-guide">When would you like to start</label>
-    <input type="datetime-local" id="startDateTime-guide" name="startDateTime" required>
-</div>
+                                        <label for="startDateTime-guide">When would you like to start</label>
+                                        <input type="datetime-local" id="startDateTime-guide" name="startDateTime" required>
+                                    </div>
 
                                 </div>
                                 

@@ -216,7 +216,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // user requests submission
     Route::post('/submit/{type}', [SubmissionController::class, 'submit'])
         ->name('submission.submit');
-});
+    });
 
     // Subscription routes
     Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])

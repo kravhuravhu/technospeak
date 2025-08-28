@@ -819,49 +819,49 @@
 
                 <!-- subscriptions containers -->
                 @isset($activePlans)
-                <div class="content-section" id="usr_mysubscriptions">
-                    <div class="current-plans">
-                        <div class="container">
-                            <div class="title">
-                                <h2>Your Current Plans</h2>
-                                <p>All plans you're actively subscribed to</p>
-                            </div>
-                            
-                            <div class="card-grid">
-                                @foreach($activePlans as $plan)
-                                @if($plan) <!-- Safety check -->
-                                <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : '' }}">
-                                    @if($plan->id == 7)
-                                        <span class="plan-badge free-badge">Always Active</span>
-                                    @elseif($plan->id == 6)
-                                        <span class="plan-badge premium-badge">
-                                            Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
-                                        </span>
-                                    @else
-                                        <span class="plan-badge paid-badge">Active</span>
-                                    @endif
-                                    
-                                    <h3>{{ $plan->name }}</h3>
-                                    <div class="plan-price">
-                                        @if($plan->id == 7)
-                                            Free Access
-                                        @else
-                                            @if($plan->student_price)
-                                                R{{ $plan->student_price }} (students)
-                                            @endif
-                                            @if($plan->professional_price)
-                                                | R{{ $plan->professional_price }} (business)
-                                            @endif
-                                        @endif
-                                    </div>
-                                    <p class="plan-description">{{ $plan->description }}</p>
+                    <div class="content-section subscriptions_content" id="usr_mysubscriptions">
+                        <div class="current-plans">
+                            <div class="container">
+                                <div class="title">
+                                    <h2>Your Current Plans</h2>
+                                    <p>All plans you're actively subscribed to</p>
                                 </div>
-                                @endif
-                                @endforeach
+                                
+                                <div class="card-grid">
+                                    @foreach($activePlans as $plan)
+                                    @if($plan) <!-- Safety check -->
+                                    <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : '' }}">
+                                        @if($plan->id == 7)
+                                            <span class="plan-badge free-badge">Always Active</span>
+                                        @elseif($plan->id == 6)
+                                            <span class="plan-badge premium-badge">
+                                                Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
+                                            </span>
+                                        @else
+                                            <span class="plan-badge paid-badge">Active</span>
+                                        @endif
+                                        
+                                        <h3>{{ $plan->name }}</h3>
+                                        <div class="plan-price">
+                                            @if($plan->id == 7)
+                                                Free Access
+                                            @else
+                                                @if($plan->student_price)
+                                                    R{{ $plan->student_price }} (students)
+                                                @endif
+                                                @if($plan->professional_price)
+                                                    | R{{ $plan->professional_price }} (business)
+                                                @endif
+                                            @endif
+                                        </div>
+                                        <p class="plan-description">{{ $plan->description }}</p>
+                                    </div>
+                                    @endif
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @endisset
 
                 <!-- resources containers -->

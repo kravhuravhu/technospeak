@@ -26,10 +26,10 @@ class WelcomeController extends Controller
     public function trainingsPage()
     {
         $courses = Cache::remember('random_free_courses', 60, function() {
-            return Course::free()->inRandomOrder()->take(3)->get();
+            return Course::tipsTricks()->inRandomOrder()->take(3)->get();
         });
 
-        $recommendedTraining = Course::where('plan_type', 'paid')->inRandomOrder()->first();
+        $recommendedTraining = Course::where('plan_type', 'frml_training')->inRandomOrder()->first();
 
         return view('trainings', compact('courses', 'recommendedTraining'));
     }

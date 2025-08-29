@@ -25,14 +25,4 @@ class Instructor extends Authenticatable
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    public function assignedIssues()
-    {
-        return $this->hasMany(Issue::class, 'assigned_to');
-    }
-
-    public function assignments()
-    {
-        return $this->hasMany(IssueAssignment::class);
-    }
 }

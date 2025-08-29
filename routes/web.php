@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\EpisodeController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\TrainingSessionController;
-use App\Http\Controllers\Admin\AdminIssueController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ProfileController;
@@ -19,8 +18,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TrainingRegistrationController;
-use App\Http\Controllers\CourseAccessController; 
-use App\Http\Controllers\IssueController; 
+use App\Http\Controllers\CourseAccessController;
 use App\Http\Controllers\Admin\CourseResourceController;
 use App\Models\Instructor;
 use App\Models\Client;
@@ -32,6 +30,7 @@ use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
 use App\Http\Controllers\SubmissionController;
+use App\Models\CourseResource;
 
 // Public routes
 Route::get('/', [
@@ -54,6 +53,7 @@ Route::get('/pricing', function () {
         'services' => $services
     ]);
 });
+
 Route::get('/privacy', function () { return view('privacy'); });
 Route::get('/terms', function () { return view('terms'); });
 
@@ -109,7 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'thumbnail' => $course->thumbnail,
                 'formatted_duration' => $course->formatted_duration,
                 'title' => $course->title,
-                'progress' => $subscription->progress_percent ?? 0,
+                'progress' => $subscription->progress ?? 0,
             ];
         });
         
@@ -138,7 +138,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'formalTrainingCurrent' => $formalTrainingCurrent,
             'recommendedCourses' => $recommendedCourses,
             'instructors' => Instructor::all(),
-            'upcomingSessions' => TrainingSession::getUpcomingSessions(),
+            'upcomingGroupSessions' => TrainingSession::getUpcomingGroupSessions(),
             'activePlans' => $activePlans
         ]);
     })->name('dashboard');
@@ -154,12 +154,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // update
-    Route::post('/enrolled-courses/{course}/episodes/{episode}/progress', 
-        [CourseAccessController::class, 'updateProgress'])
+    Route::post('/enrolled-courses/{course}/episodes/{episode}/progress', [CourseAccessController::class, 'updateProgress'])
         ->name('enrolled-courses.episodes.progress');
 
-    // view enrolled resource
-    Route::get('/api/user/resources', [CourseAccessController::class, 'getUserResources']);
+    // view all free/paid resource
+    Route::get('/api/user/data', function() {
+        $user = Auth::user();
+        return response()->json([
+            'subscription_type' => $user->subscription_type,
+            'name' => $user->name
+        ]);
+    });
+
+    Route::get('/api/resources/all', function() {
+        $resources = CourseResource::with('category')->get()->map(function($resource) {
+            return [
+                'id' => $resource->id,
+                'title' => $resource->title,
+                'description' => $resource->description,
+                'thumbnail_url' => $resource->thumbnail_url,
+                'file_url' => $resource->file_url,
+                'file_type' => $resource->file_type,
+                'category' => $resource->category ? [
+                    'id' => $resource->category->id,
+                    'name' => $resource->category->name
+                ] : null
+            ];
+        });
+
+        return response()->json($resources);
+    });
 
     // view while unenrolled
     Route::prefix('unenrolled-courses')->group(function () {
@@ -195,15 +219,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile routes
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // Issue management
-    Route::get('/my-issues', [IssueController::class, 'index'])->name('issues.index');
-    Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
-    Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
-
-    // Contact section
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
-    Route::post('/questions', [QuestionController::class, 'store'])->name('questions.submit');
 
     // Personal Guide routes
     Route::post('/personal-guide', [PersonalGuideController::class, 'store'])->name('personal-guide.store');
@@ -217,6 +232,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/submit/{type}', [SubmissionController::class, 'submit'])
         ->name('submission.submit');
     });
+    // report/feedback
+    Route::post('/submit/{type}', [SubmissionController::class, 'supportFeedbackSubmit'])
+        ->middleware('auth');
 
     // Subscription routes
     Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
@@ -364,12 +382,6 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::get('trainings/{training}/registrations', [TrainingSessionController::class, 'registrations'])->name('trainings.registrations');
         Route::post('trainings/{training}/mark-attendance', [TrainingSessionController::class, 'markAttendance'])->name('trainings.mark-attendance');
         
-        // issues
-        Route::resource('issues', \App\Http\Controllers\Admin\AdminIssueController::class);  
-        Route::post('issues/{issue}/assign', [\App\Http\Controllers\Admin\AdminIssueController::class, 'assign'])->name('issues.assign');
-        Route::post('issues/{issue}/add-response', [\App\Http\Controllers\Admin\AdminIssueController::class, 'addResponse'])->name('issues.add-response');
-        Route::post('issues/{issue}/mark-resolved', [\App\Http\Controllers\Admin\AdminIssueController::class, 'markResolved'])->name('issues.mark-resolved');
-
         // more features
         Route::prefix('other-features')->name('other-features.')->group(function() {
             Route::get('/', [\App\Http\Controllers\Admin\OtherFeaturesController::class, 'index'])

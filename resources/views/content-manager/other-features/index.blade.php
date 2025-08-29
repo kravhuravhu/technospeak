@@ -193,7 +193,6 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Profession</th>
-                        <th>Assigned Tickets</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -203,7 +202,6 @@
                         <td>{{ $instructor->name }}, {{ $instructor->surname }}</td>
                         <td>{{ $instructor->email }}</td>
                         <td>{{ $instructor->job_title }}</td>
-                        <td><i>{{ $instructor->assignedIssues->count() }}</i></td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{ route('content-manager.other-features.instructors.show', $instructor) }}" class="btn btn-outline btn-sm">

@@ -119,4 +119,36 @@ class TrainingSession extends Model
 
         return $future;
     }
+
+    public function scopeGroupSessions(Builder $query)
+    {
+        $query->whereHas('type', function($q) {
+            $q->whereIn('name', ['Group Session 1', 'Group Session 2']);
+        }); 
+    }
+
+    public static function getUpcomingGroupSessions()
+    {
+        $now = now();
+        
+        $future = self::with('type')
+            ->groupSessions()
+            ->where('scheduled_for', '>', $now)
+            ->orderBy('scheduled_for')
+            ->limit(4)
+            ->get();
+
+        if ($future->count() < 4) {
+            $remaining = 4 - $future->count();
+            $past = self::with('type')
+                ->groupSessions()
+                ->where('scheduled_for', '<=', $now)
+                ->orderByDesc('scheduled_for')
+                ->limit($remaining)
+                ->get();
+            return $future->concat($past);
+        }
+
+        return $future;
+    }
 }

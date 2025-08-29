@@ -14,6 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
         <link rel="stylesheet" href="@secureAsset('style/dashboard.css')">
         <link rel="stylesheet" href="@secureAsset('style/footer.css')">
@@ -27,8 +28,6 @@
         <!-- Font Awesome CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
         @include('components.preference-popup', [
@@ -36,6 +35,10 @@
         ])
 
         @include('components.pop-up')
+
+        <!-- group session pop-ups -->
+        @include('components.sessions_registration', ['typeId' => 4, 'typeName' => 'Q/A Session'])
+        @include('components.sessions_registration', ['typeId' => 5, 'typeName' => 'Live Q/A Session'])
 
         <section class="sidebar bar-lt-rt">
             <div class="main_container">
@@ -177,7 +180,7 @@
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Search...">
                     </div>
-                   <div class="welcome">
+                    <div class="welcome">
                         <div class="nname">
                             <h1>
                                 @php
@@ -346,7 +349,7 @@
                             </div>
 
                             <div id="courseNoResultsMessageTips" style="display:none;" class="no-results-message">
-                                No trainings match your criteria. Try a different search
+                                No Tips & tricks match your criteria. Try a different search or filter by category
                             </div>
 
                             <div class="card-grid thn_grid_cd" id="tips-trainings">
@@ -443,7 +446,7 @@
                                 @empty
                                     <div class="empty-state">
                                         <p>You haven't enrolled in any formal trainings yet.</p>
-                                        <a href="#usr_formaltraining" class="browse-btn">Browse All Trainings → </a>
+                                        <a href="/dashboard#usr_formaltraining" class="browse-btn">Browse All Below ↓</a>
                                     </div>
                                 @endforelse
                             </div>
@@ -871,6 +874,24 @@
                             <div class="title">
                                 <h2>Available Resources</h2>
                                 <p>Browse through materials available with your current product plan</p>
+                                
+                                <!-- Search bar -->
+                                <div class="resources-search">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="resourcesSearch" placeholder="Search resources..." oninput="filterResources(this.value.toLowerCase())">
+                                </div>
+                            </div>
+                            
+                            <!-- Free user message -->
+                            <div class="free-user-message" id="freeUserMessage" style="display: none;">
+                                <div class="message-content">
+                                    <i class="fas fa-crown"></i>
+                                    <div class="message-text">
+                                        <h3>Upgrade to Access All Resources</h3>
+                                        <p>Your free plan has limited access. Upgrade to unlock all premium resources.</p>
+                                    </div>
+                                    <button class="upgrade-cta" onclick="showUpgradeModal()">More Details</button>
+                                </div>
                             </div>
                             
                             <div class="resource-grid" id="resourceGrid">
@@ -878,6 +899,32 @@
                                     <i class="fas fa-spinner fa-spin" style="font-size: 2em; color: #555;"></i>
                                 </div>
                                 <!-- Resource cards will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upgrade Modal -->
+                <div class="resources-modal" id="upgradeModal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Tips&Tricks Subscription</h3>
+                            <span class="close-modal" onclick="closeUpgradeModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="price-tag">
+                                <span>From R350/quarter</span>
+                            </div>
+                            <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
+                            <ul>
+                                <li>All clickbait-style videos</li>
+                                <li>Downloadable resources & cheat sheets</li>
+                                <li>Monthly curated tech newsletters</li>
+                                <li>Student and business pricing options</li>
+                            </ul>
+                            <div class="modal-actions">
+                                <button class="btn-secondary" onclick="closeUpgradeModal()">Maybe Later</button>
+                                <button class="btn-primary" onclick="redirectToSubscription()">Upgrade Now</button>
                             </div>
                         </div>
                     </div>
@@ -891,6 +938,7 @@
                                 <h2>Support Center</h2>
                                 <p>Find answers to common questions or contact our support team</p>
                             </div>
+
                             <!-- FAQ Section -->
                             <div class="faq-section">
                                 <div class="section-header">
@@ -1031,82 +1079,92 @@
                                         for personalized help.</p>
                                 </div>
                             </div>
+
                             <!-- Contact Form -->
                             <div class="support-form" id="contact">
                                 <h4>Send us a message</h4>
-                                <form id="supportForm" class="supportForm">
+                                <form id="supportForm" class="supportForm" enctype="multipart/form-data">
                                     <!-- Choose Type -->
                                     <div class="form-group">
-                                    <label for="requestType">Message Type:</label>
-                                    <select id="requestType" required>
-                                        <option value="problem" selected>Problem Report</option>
-                                        <option value="feedback">Feedback Survey</option>
-                                    </select>
-                                    </div>
-                                    <!-- Problem Report Fields -->
-                                    <div id="problemFields">
-                                    <div class="form-group">
-                                        <label for="supportSubject">Subject:</label>
-                                        <input type="text" id="supportSubject" placeholder="What's this about?" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="supportMessage">Message:</label>
-                                        <textarea id="supportMessage" rows="5" placeholder="Describe your issue in detail..." required></textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="supportPriority">Priority:</label>
-                                        <select id="supportPriority">
-                                        <option value="low">Low - General question</option>
-                                        <option value="medium" selected>Medium - Need help</option>
-                                        <option value="high">High - Urgent issue</option>
+                                        <label for="requestType">Message Type:</label>
+                                        <select id="requestType" name="requestType" required>
+                                            <option value="problem" selected>Problem Report</option>
+                                            <option value="feedback">Feedback Survey</option>
                                         </select>
                                     </div>
+
+                                    <!-- Problem Report Fields -->
+                                    <div id="problemFields">
+                                        <div class="form-group">
+                                            <label for="supportSubject">Subject:</label>
+                                            <input type="text" id="supportSubject" name="supportSubject" placeholder="What's this about?" data-required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="supportMessage">Message:</label>
+                                            <textarea id="supportMessage" name="supportMessage" rows="5" placeholder="Describe your issue in detail..." data-required></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="supportPriority">Priority:</label>
+                                            <select id="supportPriority" name="supportPriority" data-required>
+                                                <option value="low">Low - General question</option>
+                                                <option value="medium" selected>Medium - Need help</option>
+                                                <option value="high">High - Urgent issue</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="fileUpload">Attach File (optional):</label>
+                                            <input type="file" id="fileUpload" name="fileUpload[]" multiple>
+                                            <div id="fileList"></div>
+                                        </div>
                                     </div>
+
                                     <!-- Feedback Survey Fields -->
                                     <div id="feedbackFields" style="display:none;">
                                         <div class="form-group">
                                             <label for="feedbackExperience">Overall Experience:</label>
-                                            <select id="feedbackExperience" required>
-                                            <option value="">Choose a rating</option>
-                                            <option value="5">Excellent ⭐⭐⭐⭐⭐</option>
-                                            <option value="4">Good ⭐⭐⭐⭐</option>
-                                            <option value="3">Average ⭐⭐⭐</option>
-                                            <option value="2">Poor ⭐⭐</option>
-                                            <option value="1">Very Poor ⭐</option>
+                                            <select id="feedbackExperience" name="feedbackExperience" data-required>
+                                                <option value="">Choose a rating</option>
+                                                <option value="5">Excellent ⭐⭐⭐⭐⭐</option>
+                                                <option value="4">Good ⭐⭐⭐⭐</option>
+                                                <option value="3">Average ⭐⭐⭐</option>
+                                                <option value="2">Poor ⭐⭐</option>
+                                                <option value="1">Very Poor ⭐</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="feedbackEase">Ease of Use:</label>
-                                            <select id="feedbackEase" required>
-                                            <option value="">Choose a rating</option>
-                                            <option value="5">Very Easy</option>
-                                            <option value="4">Easy</option>
-                                            <option value="3">Neutral</option>
-                                            <option value="2">Difficult</option>
-                                            <option value="1">Very Difficult</option>
+                                            <select id="feedbackEase" name="feedbackEase" data-required>
+                                                <option value="">Choose a rating</option>
+                                                <option value="5">Very Easy</option>
+                                                <option value="4">Easy</option>
+                                                <option value="3">Neutral</option>
+                                                <option value="2">Difficult</option>
+                                                <option value="1">Very Difficult</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="feedbackRecommend">Would you recommend Technospeak to a friend?</label>
-                                            <select id="feedbackRecommend" required>
-                                            <option value="">Choose a rating</option>
-                                            <option value="5">Definitely</option>
-                                            <option value="4">Probably</option>
-                                            <option value="3">Maybe</option>
-                                            <option value="2">Unlikely</option>
-                                            <option value="1">Definitely Not</option>
+                                            <select id="feedbackRecommend" name="feedbackRecommend" data-required>
+                                                <option value="">Choose a rating</option>
+                                                <option value="5">Definitely</option>
+                                                <option value="4">Probably</option>
+                                                <option value="3">Maybe</option>
+                                                <option value="2">Unlikely</option>
+                                                <option value="1">Definitely Not</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="feedbackComment">Additional Comments:</label>
-                                            <textarea id="feedbackComment" rows="4" placeholder="Tell us how we can improve..."></textarea>
+                                            <textarea id="feedbackComment" name="feedbackComment" rows="4" placeholder="Tell us how we can improve..."></textarea>
                                         </div>
                                     </div>
+
                                     <button type="submit" class="submit-btn">
                                         <i class="fas fa-paper-plane"></i> Send Message
                                     </button>
@@ -1337,29 +1395,27 @@
                             <h4>Upcoming Sessions</h4>
                         </div>
 
-                        @forelse ($upcomingSessions as $i => $session)
+                        @forelse ($upcomingGroupSessions as $i => $session)
                             @php
                                 $bgClass = $i % 2 === 0 ? 'if-qa-session-background-color' : 'if-new-video-background-color';
 
                                 $typeIcon = match($session->type->name) {
-                                    'Formal Training' => 'fa-graduation-cap',
-                                    'Task Assistance' => 'fa-tasks',
-                                    'Personal Guide' => 'fa-user',
-                                    'Group Session 1' => 'fa-users',
-                                    'Group Session 2' => 'fa-users',
+                                    'Group Session 1' => 'fa-comments',
+                                    'Group Session 2' => 'fa-video',
                                     default => 'fa-calendar',
                                 };
 
-                                $formattedDate = \Carbon\Carbon::parse($session->scheduled_for)->format('d M Y, l');
+                                // Determine type ID for modal
+                                $typeId = $session->type->id;
                             @endphp
 
-                            <div class="up_session_bar">
+                            <div class="up_session_bar registration-trigger" data-type-id="{{ $typeId }}" style="cursor:pointer;">
                                 <div class="icon up_container {{ $bgClass }}">
                                     <i class="fa {{ $typeIcon }}" aria-hidden="true"></i>
                                 </div>
                                 <div class="content_sbar up_container">
                                     <strong>{{ $session->title }} - {{ $session->type->name }}</strong>
-                                    <p>{{ $formattedDate }} - 
+                                    <p>{{ $session->scheduled_for->format('d M Y, l') }} - 
                                         @if ($session->scheduled_for->isFuture())
                                             <span class="text-green-600 text-sm" style="color:#1fb12b;"><i>Upcoming</i></span>
                                         @else
@@ -1369,7 +1425,7 @@
                                 </div>
                             </div>
                         @empty
-                            <p class="text-gray-500 p-2">No upcoming sessions.</p>
+                            <p class="text-gray-500 p-2">No upcoming group sessions.</p>
                         @endforelse
                     </div>
 
@@ -1785,18 +1841,102 @@
         </script>
 
         <!-- swap between send message or report a problem -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             const requestType = document.getElementById('requestType');
             const problemFields = document.getElementById('problemFields');
             const feedbackFields = document.getElementById('feedbackFields');
-            requestType.addEventListener('change', function () {
-                if (this.value === 'problem') {
+
+            function toggleFields(type) {
+                if (type === 'problem') {
                     problemFields.style.display = 'block';
                     feedbackFields.style.display = 'none';
+                    problemFields.querySelectorAll('[data-required]').forEach(el => el.setAttribute('required', 'true'));
+                    feedbackFields.querySelectorAll('[data-required]').forEach(el => el.removeAttribute('required'));
                 } else {
                     problemFields.style.display = 'none';
                     feedbackFields.style.display = 'block';
+                    feedbackFields.querySelectorAll('[data-required]').forEach(el => el.setAttribute('required', 'true'));
+                    problemFields.querySelectorAll('[data-required]').forEach(el => el.removeAttribute('required'));
                 }
+            }
+
+            requestType.addEventListener('change', function () {
+                toggleFields(this.value);
+            });
+            toggleFields(requestType.value);
+
+            // file upload display
+            const fileInput = document.getElementById('fileUpload');
+            const fileList = document.getElementById('fileList');
+            fileInput.addEventListener('change', function() {
+                fileList.innerHTML = '';
+                Array.from(this.files).forEach(file => {
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+                    item.textContent = `${file.name} (${(file.size/1024).toFixed(2)} KB)`;
+                    fileList.appendChild(item);
+                });
+            });
+
+            const form = document.getElementById('supportForm');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                submitBtn.disabled = true;
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = 'Processing ';
+
+                const spinner = document.createElement('span');
+                spinner.style.display = 'inline-block';
+                spinner.style.width = '14px';
+                spinner.style.height = '14px';
+                spinner.style.border = '2px solid #f3f3f3';
+                spinner.style.borderTop = '2px solid #3498db';
+                spinner.style.borderRadius = '50%';
+                spinner.style.marginLeft = '8px';
+                spinner.style.animation = 'spin 0.8s linear infinite';
+                submitBtn.appendChild(spinner);
+
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+
+                const formData = new FormData(form);
+                const type = requestType.value;
+
+                fetch(`/submit/${type}`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    submitBtn.disabled = false;
+                    spinner.remove();
+                    submitBtn.innerHTML = originalText;
+
+                    if(data.success) {
+                        Swal.fire('Success', data.message, 'success');
+                        form.reset();
+                        fileList.innerHTML = '';
+                    } else {
+                        Swal.fire('Error', 'Something went wrong', 'error');
+                    }
+                })
+                .catch(err => {
+                    submitBtn.disabled = false;
+                    spinner.remove();
+                    submitBtn.innerHTML = originalText;
+                    Swal.fire('Error', 'Network error. Please try again.', 'error');
+                });
             });
         </script>
 

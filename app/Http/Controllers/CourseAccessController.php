@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CourseRating;
 use App\Models\CourseEpisode;
+use App\Models\CourseResource;
 use Illuminate\Support\Facades\Log;
 
 class CourseAccessController extends Controller
@@ -207,12 +208,10 @@ class CourseAccessController extends Controller
     {
         $user = Auth::user();
         
-        // Verify user is enrolled in this course
         if (!$user->isSubscribedTo($course->id)) {
             abort(403, 'You are not enrolled in this course');
         }
 
-        // Verify episode belongs to this course
         if ($episode->course_id !== $course->id) {
             abort(400, 'Episode does not belong to this course');
         }
@@ -225,7 +224,6 @@ class CourseAccessController extends Controller
             abort(404, 'Subscription not found');
         }
 
-        // Mark episode as completed
         $subscription->episodeProgress()->updateOrCreate(
             ['episode_id' => $episode->id],
             ['is_completed' => true, 'completed_at' => now()]
@@ -349,37 +347,6 @@ class CourseAccessController extends Controller
             ]);
     }
 
-    // user comments
-    public function getComments(Course $course)
-    {
-        $comments = $course->comments()
-            ->with(['client', 'replies.client'])
-            ->whereNull('parent_id')
-            ->latest()
-            ->get();
-
-        return response()->json($comments);
-    }
-
-    public function addComment(Request $request, Course $course)
-    {
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
-            'parent_id' => 'nullable|exists:course_comments,id'
-        ]);
-
-        $comment = $course->comments()->create([
-            'client_id' => Auth::id(),
-            'parent_id' => $validated['parent_id'] ?? null,
-            'content' => $validated['content']
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'comment' => $comment->load('client')
-        ]);
-    }
-
     // course certifications
     public function getCertificate(Course $course)
     {
@@ -462,41 +429,19 @@ class CourseAccessController extends Controller
         ]);
     }
 
-    // resources if enrolled
-    public function getUserResources()
-    {
-        $user = Auth::user();
-
-        $resources = $user->courseSubscriptions()
-            ->with(['course.resources'])
-            ->get()
-            ->flatMap(function($subscription) {
-                return $subscription->course->resources;
-            })
-            ->map(function($resource) {
-                return [
-                    'id' => $resource->id,
-                    'title' => $resource->title,
-                    'description' => $resource->description,
-                    'thumbnail' => $resource->thumbnail_url,
-                    'url' => $resource->file_url,
-                    'type' => $resource->file_type,
-                    'category' => $resource->category->name ?? 'Course Resource',
-                    'course_id' => $resource->course_id,
-                    'locked' => false
-                ];
-            })
-            ->values();
-
-        return response()->json($resources);
-    }
-
     // overall for tracking all enrolled progress
     public function getOverallProgressData()
     {
         $user = Auth::user();
 
-        $subscriptions = $user->courseSubscriptions()->with('course')->get();
+        // only formal trainings
+        $subscriptions = $user->courseSubscriptions()
+            ->with('course')
+            ->get()
+            ->filter(function($subscription) {
+                return $subscription->course && $subscription->course->plan_type === 'frml_training';
+            });
+
         $enrolledCount = $subscriptions->count();
 
         if ($enrolledCount === 0) {
@@ -532,7 +477,7 @@ class CourseAccessController extends Controller
 
         $averageProgress = round($totalProgress / $enrolledCount);
 
-        // message and level
+        // Set message and level
         if ($averageProgress >= 100) {
             $message = "Congratulations! 🏆 You’ve reached expert status. Keep pushing boundaries 🪵, mastering new skills, and inspiring others on your journey! 🎖️";
             $level = 4;

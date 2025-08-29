@@ -726,7 +726,7 @@
                     <h2 class="question-title">Real Questions. Real Answers.</h2>
                     
                     <!-- Form with proper attributes but hidden -->
-                    <form id="questionForm" action="{{ route('questions.submit') }}" method="POST" style="display: none;">
+                    <form id="questionForm" action="" method="POST" style="display: none;">
                         @csrf
                         <input type="email" name="email" id="formEmail" required>
                         <textarea name="question" id="formQuestion" required></textarea>

@@ -69,7 +69,7 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
                         </span>
                     </div>
                     <p class="price-note">
-                        @if(auth()->user() && auth()->user()->userType === 'Student')
+                        @if(auth()->user() && (auth()->user()->userType === 'Student'))
                             (Student Price Applied)
                         @else
                             (Professional Price)

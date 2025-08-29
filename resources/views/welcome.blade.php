@@ -601,7 +601,7 @@
                 </div>
                 <div class="form_container">
                     <div class="form"> 
-                        <form action="{{ route('contact.submit') }}" method="POST">
+                        <form action=" " method="POST">
                             @csrf
                             <div class="block">
                                 <div class="prgrph">

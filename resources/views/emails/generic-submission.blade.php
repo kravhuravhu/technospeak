@@ -9,13 +9,13 @@ Your **{{ $type }} submission** has been received. Our team will review it and g
 
 <table style="width:100%; border-collapse: collapse; border:1px solid #ddd;">
     @foreach($data as $key => $value)
-        @if(!in_array($key, ['_token', 'fileUpload', 'attachments']))
+        @if(!in_array($key, ['_token', 'fileUpload', 'attachments']) && !is_array($value))
             <tr>
                 <td style="padding:8px; border:1px solid #ddd; background-color:#f7f7f7; font-weight:bold; width:30%; text-align:left;">
                     {{ ucwords(str_replace('_', ' ', $key)) }}
                 </td>
                 <td style="padding:8px; border:1px solid #ddd; text-align:left;">
-                    {{ is_array($value) ? implode(', ', $value) : ($value ?: '-') }}
+                    {{ $value ?: '-' }}
                 </td>
             </tr>
         @endif

@@ -619,7 +619,12 @@
                         </div>
                         <div class="course-actions">
                             <button class="btn back-btn" onclick="window.location.href='/dashboard#usr_alltrainings'">
-                                <i class="fas fa-arrow-left"></i> View All Courses
+                                <i class="fas fa-arrow-left"></i>
+                                @if ($course->plan_type === 'frml_training')
+                                    View All Trainings
+                                @else 
+                                    View All Tips&Tricks
+                                @endif
                             </button>
                             @auth
                                 @if(!$payEnroll)
@@ -628,6 +633,11 @@
                                         <input type="hidden" name="course_id" value="{{ $course->uuid }}">
                                         <button type="button" class="btn enroll-btn" id="enroll-btn">
                                             <i class="fas fa-plus-circle"></i> Enroll Now
+                                            @if ($course->plan_type === 'frml_training')
+                                                Enroll Now
+                                            @else 
+                                                Watch Now
+                                            @endif
                                         </button>
                                     </form>
                                 @else
@@ -654,12 +664,20 @@
                                     <img src="{{ $course->thumbnail }}" alt="Course Thumbnail" class="video-thumb" />
                                     <div class="video-locked">
                                         <i class="fas fa-lock"></i>
-                                        <p>Enroll to unlock all course content</p>
+                                        @if ($course->plan_type === 'frml_training')
+                                            <p>Enroll to unlock this content</p>
+                                        @else 
+                                            <p>Start watching now & unlock all full series</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="video-description">
-                                <h3>About This Course</h3>
+                                @if ($course->plan_type === 'frml_training')
+                                    <h3>About This Training</h3>
+                                @else 
+                                    <h3>About These Tips&Tricks</h3>
+                                @endif
                                 <p>{{ $course->description }}</p>
                                 
                                 <div class="what-you-learn">
@@ -680,14 +698,14 @@
                                 </div>
                                 
                                 <div class="instructor-info">
-                                    <h4>Instructor</h4>
+                                    <h4>Technos</h4>
                                     <div class="instructor-details">
                                         <div class="instructor-avatar">
-                                            <img src="{{ secure_asset('images/icons/circle-user-solid.svg') }}" alt="Instructor Avatar">
+                                            <img src="{{ $course->instructor->thumbnail }}" alt="Instructor Avatar">
                                         </div>
                                         <div class="instructor-text">
                                             <h5>{{ $course->instructor->name }}</h5>
-                                            <p>Senior Instructor</p>
+                                            <p>Senior Technite</p>
                                         </div>
                                     </div>
                                 </div>
@@ -696,10 +714,15 @@
                         
                         <div class="course-sidebar">
                             <div class="enroll-card">
-                                <h3>Enroll in this Course</h3>
-                                
-                                @if($course->plan_type == 'free')
-                                    <div class="course-price price-free">Free</div>
+                                <h3>
+                                    @if($course->plan_type == 'frml_training')
+                                        Enroll in this training
+                                    @else 
+                                        Start Watching
+                                    @endif
+                                </h3>
+                                @if($course->plan_type == 'free' || $course->plan_type == 'paid')
+                                    <div class="course-price price-free">Quartely Subscription</div>
                                 @else
                                     <div class="course-price">Premium</div>
                                     @unless($hasActiveSubscription)
@@ -709,7 +732,13 @@
                                         </div>
                                     @endunless
                                 @endif                                
-                                <div class="includes-title">This course includes:</div>
+                                <div class="includes-title">
+                                    @if($course->plan_type == 'frml_training')
+                                        This <i>Formal Training</i> includes:
+                                    @else 
+                                        This <i>Tips&Tricks</i> series includes:
+                                    @endif
+                                </div>
                                 <ul class="includes-list">
                                     <li class="includes-item">
                                         <i class="far fa-play-circle"></i>
@@ -753,15 +782,21 @@
                             </div>
                             
                             <div class="course-details-card">
-                                <h3>Course Details</h3>
+                                @if ($course->plan_type === 'frml_training')
+                                    <h3>Training Details</h3>
+                                @else 
+                                    <h3>Tips&Tricks Details</h3>
+                                @endif
                                 <div class="detail-item">
                                     <span class="detail-label">Category</span>
                                     <span class="detail-value">{{ $course->category?->name }}</span>
                                 </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Level</span>
-                                    <span class="detail-value">{{ $course->level }}</span>
-                                </div>
+                                @if ($course->plan_type === 'frml_training')
+                                    <div class="detail-item">
+                                        <span class="detail-label">Level</span>
+                                        <span class="detail-value">{{ $course->level }}</span>
+                                    </div>
+                                @endif
                                 <div class="detail-item">
                                     <span class="detail-label">Duration</span>
                                     <span class="detail-value">{{ $course->formatted_duration }}</span>
@@ -787,8 +822,12 @@
 
                 <div class="tab-content" id="curriculum-tab" style="display:none;">
                     <div class="episodes-list">
-                        <h3>Course Curriculum</h3>
-                        <p>Enroll to unlock all episodes and resources</p>
+                        @if ($course->plan_type === 'frml_training')
+                            <h3>Training Curriculum</h3>
+                        @else 
+                            <h3>Series Curriculum</h3>
+                        @endif
+                        <p>Enroll to unlock all videos and resources</p>
                         
                         <ul id="course-episodes-list">
                             @foreach($course->episodes as $episode)
@@ -807,7 +846,11 @@
 
                 <div class="tab-content" id="reviews-tab" style="display:none;">
                     <div class="course-rating">
-                        <h3>Course Rating</h3>
+                        @if ($course->plan_type === 'frml_training')
+                            <h3>Training Rating</h3>
+                        @else 
+                            <h3>Tips&Tricks Rating</h3>
+                        @endif
                         <div class="rating-display">
                             <div class="average-rating">
                                 <div class="stars" id="average-stars"></div>

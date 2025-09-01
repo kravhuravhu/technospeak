@@ -96,7 +96,8 @@ class CourseAccessController extends Controller
             if ($user->isSubscribedTo($course->id)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You already have access to this training. Open it from your Dashboard to continue.'
+                    'message' => 'You already have access to this training. Open it from your Dashboard to continue.',
+                    'open_url' => url('/enrolled-courses/' . $course->uuid),
                 ], 409);
             }
 
@@ -111,7 +112,7 @@ class CourseAccessController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Successfully enrolled in the course',
+                'message' => 'Successfully enrolled, redirecting...',
                 'subscription' => $subscription,
                 'open_url' => url('/enrolled-courses/'.$course->uuid),
             ]);
@@ -165,7 +166,6 @@ class CourseAccessController extends Controller
                     'duration' => $durationFormatted,
                     'video_url' => $episode->video_url,
                     'completed' => $completedEpisodeIds->contains($episode->id),
-                    'is_free' => $episode->is_free,
                 ];
             });
 
@@ -236,7 +236,7 @@ class CourseAccessController extends Controller
 
         $subscription->update(['progress' => $progress]);
 
-        // Check if course is completed
+        // if course is completed
         if ($progress >= 100) {
             $subscription->markAsCompleted();
         }

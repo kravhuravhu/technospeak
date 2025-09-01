@@ -1305,7 +1305,12 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn unenroll-btn" id="unenroll-btn">
-                                <i class="fas fa-times-circle"></i> Unenroll
+                                    <i class="fas fa-times-circle"></i> 
+                                    @if ($course->plan_type === 'frml_training')
+                                        Unenroll Training
+                                    @else 
+                                        Remove From Watching
+                                    @endif
                             </button>
                         </form>
                     </div>
@@ -1313,7 +1318,7 @@
             </div>
 
             <div class="course-tabs">
-                <button class="tab-btn active" data-tab="episodes">Current Course</button>
+                <button class="tab-btn active" data-tab="episodes">Current Video</button>
                 <button class="tab-btn" data-tab="resources">Resources</button>
                 @if($showCertificateTab)
                     <button class="tab-btn" data-tab="certificate">Certificate</button>
@@ -1328,30 +1333,30 @@
                                 <img src="{{ $course->thumbnail }}" alt="Course Thumbnail" class="video-thumb" />
                                 <div class="overlay" id="video-overlay">
                                     <i class="fas fa-play-circle"></i>
-                                    <p>Select an episode to start watching</p>
+                                    <p>Select a video from the playlist to start watching</p>
                                 </div>
                             </div>
                         </div>
                         <div class="video-description">
-                            <h3>About This Course</h3>
+                            <h3>Description</h3>
                             <p>{{ $course['description'] }}</p>
                             
                             <div class="instructor-info">
-                                <h4>Instructor</h4>
+                                <h4>Technos</h4>
                                 <div class="instructor-details">
                                     <div class="instructor-avatar">
                                         <img src="{{ $course->instructor->thumbnail }}" alt="Instructor {{ $course->instructor->name }}">
                                     </div>
                                     <div class="instructor-text">
                                         <h5>{{ $course->instructor->name }}</h5>
-                                        <p>Senior Instructor</p>
+                                        <p>Senior Technite</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="course-rating">
-                            <h3>Course Rating</h3>
+                            <h3>Rating</h3>
                             <div class="rating-display">
                                 <div class="average-rating">
                                     <div class="stars" id="average-stars"></div>
@@ -1361,7 +1366,7 @@
                             
                             <!-- Rating Form -->
                             <div class="rating-form" id="rating-form" style="display:none">
-                                <h4>Rate this course</h4>
+                                <h4>Rate this training</h4>
                                 <div class="star-rating">
                                     <i class="far fa-star" data-rating="1"></i>
                                     <i class="far fa-star" data-rating="2"></i>
@@ -1379,13 +1384,15 @@
                     
                     <div class="course-sidebar">
                         <div class="progress-container-rt">
-                            <div class="progress-header">
-                                <h3>Your Progress</h3>
-                                <div class="progress-percent">{{ $progress }}%</div>
-                            </div>
-                            <div class="progress-bar" style="height:10px;width:100%;margin:12px 0;border-radius:15px;background:#38b6ff9c">
-                                <div class="progress-fill" style="width: {{ $progress }}%; height:10px; background:#38b6ff; border-radius:15px;"></div>
-                            </div>
+                            @if ($course->plan_type === 'frml_training')
+                                <div class="progress-header">
+                                    <h3>Your Progress</h3>
+                                    <div class="progress-percent">{{ $progress }}%</div>
+                                </div>
+                                <div class="progress-bar" style="height:10px;width:100%;margin:12px 0;border-radius:15px;background:#38b6ff9c">
+                                    <div class="progress-fill" style="width: {{ $progress }}%; height:10px; background:#38b6ff; border-radius:15px;"></div>
+                                </div>
+                            @endif
                             <div class="progress-actions">
                                 <button class="btn mark-complete-btn" id="mark-complete-btn">
                                     <i class="fas fa-check-circle"></i> Mark as Complete
@@ -1394,7 +1401,7 @@
                         </div>
                         
                         <div class="episodes-list">
-                            <h3>Course Episodes</h3>
+                            <h3>Video Playlist</h3>
                             <ul id="course-episodes-list">
                                 @foreach($course['episodes'] as $episode)
                                 <li class="episode-item {{ $completedEpisodeIds->contains($episode->id) ? 'completed' : '' }}" 

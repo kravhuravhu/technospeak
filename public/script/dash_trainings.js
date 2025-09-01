@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 modalEnrollBtn.classList.add('open-btn');
                 modalEnrollBtn.style.backgroundColor = '#062644';
                 modalEnrollBtn.removeAttribute('data-enroll');
+                modalEnrollBtn.style.cursor = 'pointer';
             } else {
                 modalEnrollBtn.textContent = isTips ? 'Watch Now' : 'Enroll Now';
                 modalEnrollBtn.href = '#';
@@ -190,46 +191,59 @@ function showSwalNotification(type, title, message) {
 
 // Enroll for all courses
 function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll Now') {
-    fetch('/clear-cache')
-        .then(() => fetch('/courses/enroll', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ course_id: courseId })
-        }))
-        .then(async response => {
-            const data = await response.json();
-            if (response.ok && data.success) {
-                showSwalNotification('success', 'Success', data.message || 'Successfully enrolled in the course');
-                updateEnrollmentUI(courseId, data.open_url);
-                closeModal();
-                refreshMyTrainings();
-            } else {
-                showSwalNotification('error', 'Error', data.message || 'Could not enroll');
-                if (buttonElement) {
-                    buttonElement.disabled = false;
-                    buttonElement.innerHTML = originalText;
-                    buttonElement.style.cursor = 'pointer';
-                }
+    fetch('/courses/enroll', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ course_id: courseId })
+    })
+    .then(async response => {
+        const data = await response.json();
+        if (response.ok && data.success) {
+            showSwalNotification('success', 'Success', data.message || 'Successfully enrolled! Redirecting now...');
+            updateEnrollmentUI(courseId, data.open_url);
+            closeModal();
+            refreshMyTrainings();
+            // redirect
+            const openRedirectUrl = data.open_url;
+            if (openRedirectUrl) {
+                setTimeout(() => {
+                    window.location.href = openRedirectUrl;
+                }, 100);
             }
-        })
-        .catch(() => {
-            showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+        } else {
+            const openUrl = data.open_url;
+            if (openUrl) {
+                showSwalNotification('info', 'Already Enrolled', 'Redirecting...');
+                setTimeout(() => {
+                    window.location.href = openUrl;
+                }, 100);
+                return;
+            }
+            showSwalNotification('error', 'Error', data.message || 'Could not enroll');
             if (buttonElement) {
                 buttonElement.disabled = false;
                 buttonElement.innerHTML = originalText;
                 buttonElement.style.cursor = 'pointer';
             }
-        });
+        }
+    })
+    .catch(() => {
+        showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+        if (buttonElement) {
+            buttonElement.disabled = false;
+            buttonElement.innerHTML = originalText;
+            buttonElement.style.cursor = 'pointer';
+        }
+    });
 }
 
 // Refresh My Trainings section
 function refreshMyTrainings() {
-    fetch('/clear-cache')
-        .then(() => fetch('/dashboard', { cache: 'no-store' }))
+    fetch('/dashboard')
         .then(response => response.text())
         .then(html => {
             const parser = new DOMParser();

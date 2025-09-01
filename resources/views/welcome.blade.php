@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="TechnoSpeak">
         <meta property="og:type" content="website">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
         <link rel="stylesheet" href="@secureAsset('style/home.css')">
         <link rel="stylesheet" href="@secureAsset('style/about.css')">
@@ -21,6 +22,22 @@
     <body>
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
+
+        <!-- Task Assistance Form Modal] -->
+        <div id="taskAssistanceModalUnique" class="assistanceTP_form_modal">
+            <div class="task_modal-content">
+                <span id="closeTaskAssistanceModal" class="close">&times;</span>
+                @include('components.task-assistance-form')
+            </div>
+        </div>
+
+        <!-- Personal Guide Form Modal -->
+        <div id="personalGuideModalUnique" class="assistanceTP_form_modal">
+            <div class="task_modal-content">
+                <span id="closePersonalGuideModal" class="close">&times;</span>
+                @include('components.personal-guide-form')
+            </div>
+        </div>
 
         <!-- Landing page container -->
         <section class="landing_container">
@@ -209,7 +226,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/dashboard#usr_guide') : url('/login') }}">Get Guide</a>
+                                        <a href="#" id="openPersonalGuideModal">Get Guide</a>
                                     </div>
                                 </div>
 
@@ -263,7 +280,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/dashboard#usr_taskAssistance') : url('/login') }}">Get Assistance</a>
+                                        <a href="#" id="openTaskAssistanceModal">Get Assistance</a>
                                     </div>
                                 </div>
 
@@ -659,11 +676,6 @@
         {{-- Include the footer --}}
         @include('layouts.footer')
 
-        <script src="script/home_slider.js"></script>
-        <script src="script/pop-up.js"></script>
-
-
-
         <!-- Coming Soon Modal -->
         <div id="coming-soon-modal" class="modal" style="display: none;">
             <div class="modal-content">
@@ -682,5 +694,69 @@
             </div>
         </div>
 
+        <script src="script/home_slider.js"></script>
+        <script src="script/pop-up.js"></script>
+
+        <!-- Assistance Modal -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {    
+                function openModal(modalId) {
+                    var modal = document.getElementById(modalId);
+                    modal.style.display = "block";
+                    
+                    document.body.style.overflow = "hidden";
+                    document.body.style.position = "fixed";
+                    document.body.style.width = "100%";
+                }
+
+                function closeModal(modalId) {
+                    var modal = document.getElementById(modalId);
+                    modal.style.display = "none";
+                    
+                    document.body.style.overflow = "auto";
+                    document.body.style.position = "";
+                    document.body.style.width = "";
+                }
+
+                window.onclick = function(event) {
+                    var taskAssistanceModal = document.getElementById("taskAssistanceModalUnique");
+                    var personalGuideModal = document.getElementById("personalGuideModalUnique");
+                    
+                    if (event.target == taskAssistanceModal) {
+                        closeModal("taskAssistanceModalUnique");
+                    } else if (event.target == personalGuideModal) {
+                        closeModal("personalGuideModalUnique");
+                    }
+                }
+
+                // Task Assistance Modal
+                var openTaskAssistanceModalBtn = document.getElementById("openTaskAssistanceModal");
+                var closeTaskAssistanceModalBtn = document.getElementById("closeTaskAssistanceModal");
+
+                openTaskAssistanceModalBtn.onclick = function(event) {
+                    event.preventDefault();
+                    openModal("taskAssistanceModalUnique");
+                };
+
+                closeTaskAssistanceModalBtn.onclick = function() {
+                    closeModal("taskAssistanceModalUnique");
+                };
+
+                // Personal Guide Modal
+                var openPersonalGuideModalBtn = document.getElementById("openPersonalGuideModal");
+                var closePersonalGuideModalBtn = document.getElementById("closePersonalGuideModal");
+
+                openPersonalGuideModalBtn.onclick = function(event) {
+                    event.preventDefault();
+                    openModal("personalGuideModalUnique");
+                };
+
+                closePersonalGuideModalBtn.onclick = function() {
+                    closeModal("personalGuideModalUnique");
+                };
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body> 
 </html>

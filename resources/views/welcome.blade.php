@@ -176,7 +176,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Get Started</a>
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Sign up Free</a>
                                     </div>
                                 </div>
 
@@ -201,7 +201,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="#" onclick="openComingSoonModal(); return false;">Enroll Now</a>
+                                        <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
                                     </div>
                                 </div>
 
@@ -271,7 +271,7 @@
                                         </div>
                                     </div>
                                     <div class="st_dscrpt">
-                                        <p>Hands-on help with your technical tasks from coding to system configurations.</p>
+                                        <p>We provide hands-on support by completing technical tasks for you—ranging from coding and automation to system configurations and troubleshooting etc.</p>
                                         <ul>
                                             <li>Coding & web development help</li>
                                             <li>System configuration support</li>
@@ -280,9 +280,22 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="#" id="openTaskAssistanceModal">Get Assistance</a>
+                                        <a href="#categories_cont" id="openTaskAssistanceModal">Get Assistance</a>
                                     </div>
                                 </div>
+
+                                    @php
+                                        // Get the latest upcoming sessions
+                                        $qaSession = \App\Models\TrainingSession::where('type_id', 4)
+                                            ->where('scheduled_for', '>', now())
+                                            ->orderBy('scheduled_for')
+                                            ->first();
+                                            
+                                        $consultSession = \App\Models\TrainingSession::where('type_id', 5)
+                                            ->where('scheduled_for', '>', now())
+                                            ->orderBy('scheduled_for')
+                                            ->first();
+                                    @endphp
 
                                 <!-- Card 6: Group Session 1 -->
                                 <div class="card card6">
@@ -306,12 +319,22 @@
                                     </div>
                                      <div class="plan-button">
                                         @if(Auth::check())
-                                            <a href="#" class="registration-trigger" data-type-id="4">Book Now</a>
+                                        <!-- Group Q/A Button -->
+                                        @if($qaSession)
+                                            <a href="#" class="btn btn-primary registration-trigger" 
+                                            data-type-id="4" 
+                                            data-session-id="{{ $qaSession->id }}">
+                                                BOOK NOW
+                                            </a>
                                         @else
-                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">Book Now</a>
+                                            <button class="btn btn-primary" disabled>BOOK NOW</button>
+                                        @endif
+                                        @else
+                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
                                         @endif
                                     </div>
                                 </div>
+                                
 
                                 <!-- Card 7: Group Session 2 -->
                                 <div class="card card7">
@@ -335,9 +358,17 @@
                                     </div>
                                     <div class="plan-button">
                                         @if(Auth::check())
-                                            <a href="#" class="registration-trigger" data-type-id="4">Book Now</a>
+                                            @if($consultSession)
+                                                <a href="#" class="btn btn-primary registration-trigger" 
+                                                data-type-id="5" 
+                                                data-session-id="{{ $consultSession->id }}">
+                                                    BOOK NOW
+                                                </a>
+                                            @else
+                                                <button class="btn btn-primary" disabled>BOOK NOW</button>
+                                            @endif
                                         @else
-                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}">Book Now</a>
+                                            <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
                                         @endif
                                     </div>
                                 </div>
@@ -349,6 +380,40 @@
                     </div>
                 </div>
             </div>
+
+                            <!-- Modals and Includes -->
+                    @if(isset($premiumPlan))
+                        @include('components.subscription_modal', [
+                            'planId' => $premiumPlan->id,
+                            'planName' => $premiumPlan->name,
+                            'plan' => $premiumPlan
+                        ])
+                    @endif
+
+                    @include('components.training_modal')
+                    @include('components.sessions_registration', [
+                        'typeId' => 4,
+                        'typeName' => 'Group Session 1'
+                    ])
+                    @include('components.sessions_registration', [
+                        'typeId' => 5, 
+                        'typeName' => 'Group Session 2'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 1,
+                        'typeName' => 'Formal Training'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 2, 
+                        'typeName' => 'Task Assistance'
+                    ])
+
+                    @include('components.sessions_registration', [
+                        'typeId' => 3,
+                        'typeName' => 'Personal Guide'
+                    ])
         </section>
 
         <!-- Service Categories Section -->
@@ -449,12 +514,12 @@
                     </button>
                     </div>
                 </div>
-                </div>
-            </div>
-        </section>
-`
-        <!-- About Us section -->
-        <section class="about_summ">
+        </div>
+    </div>
+</section>
+
+<!-- About Us section -->
+<section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
                     <img src="@secureAsset('images/teams/two_team.jpeg')" alt="office_technospeak"/>
@@ -676,24 +741,6 @@
         {{-- Include the footer --}}
         @include('layouts.footer')
 
-        <!-- Coming Soon Modal -->
-        <div id="coming-soon-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Coming Soon</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-icon">⏱️</div>
-                    <p>Our Formal Training program is currently in development and will be available soon.</p>
-                    <p>We're working hard to create the best learning experience for you. Please check back later or contact us for more information.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-btn cancel" id="modal-close-btn">Close</button>
-                    <button class="modal-btn confirm" id="modal-contact-btn">Contact Us</button>
-                </div>
-            </div>
-        </div>
-
         <script src="script/home_slider.js"></script>
         <script src="script/pop-up.js"></script>
 
@@ -754,6 +801,35 @@
                 closePersonalGuideModalBtn.onclick = function() {
                     closeModal("personalGuideModalUnique");
                 };
+            });
+        </script>
+
+        <!-- QA & Consult Modal -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Handle registration triggers
+                document.querySelectorAll('.registration-trigger').forEach(trigger => {
+                    trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const typeId = this.dataset.typeId;
+                        
+                        // Show the appropriate modal based on typeId
+                        if(typeId == 4) {
+                            document.getElementById('modal-qa').style.display = 'flex';
+                        } else if(typeId == 5) {
+                            document.getElementById('modal-consult').style.display = 'flex';
+                        }
+                        
+                        document.body.classList.add('no-scroll');
+                    });
+                });
+                
+                // Close modal handlers (keep your existing ones)
+                function closeModal(event, modalId) {
+                    event.stopPropagation();
+                    document.getElementById(modalId).style.display = 'none';
+                    document.body.classList.remove('no-scroll');
+                }
             });
         </script>
 

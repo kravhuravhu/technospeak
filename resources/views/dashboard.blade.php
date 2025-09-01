@@ -601,51 +601,250 @@
                 @include('components.personal-guide-form')
 
                 <!-- subscriptions containers -->
-                @isset($activePlans)
-                    <div class="content-section subscriptions_content" id="usr_mysubscriptions">
-                        <div class="current-plans">
-                            <div class="container">
-                                <div class="title">
-                                    <h2>Your Current Plans</h2>
-                                    <p>All plans you're actively subscribed to</p>
+                <div class="content-section subscriptions_content" id="usr_mysubscriptions">
+                    <div class="current-plans">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Your Current Plans</h2>
+                                <p>All plans you're actively subscribed to</p>
+                            </div>
+                            
+                            @isset($activePlans)
+                            <div class="card-grid">
+                                @foreach($activePlans as $plan)
+                                @if($plan) <!-- Safety check -->
+                                <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : '' }}">
+                                    @if($plan->id == 7)
+                                        <span class="plan-badge free-badge">Always Active</span>
+                                    @elseif($plan->id == 6)
+                                        <span class="plan-badge premium-badge">
+                                            Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
+                                        </span>
+                                    @else
+                                        <span class="plan-badge paid-badge">Active</span>
+                                    @endif
+                                    
+                                    <h3>{{ $plan->name }}</h3>
+                                    <div class="plan-price">
+                                        @if($plan->id == 7)
+                                            Free Access
+                                        @else
+                                            @if($plan->student_price)
+                                                R{{ $plan->student_price }} (students)
+                                            @endif
+                                            @if($plan->professional_price)
+                                                | R{{ $plan->professional_price }} (business)
+                                            @endif
+                                        @endif
+                                    </div>
+                                    <p class="plan-description">{{ $plan->description }}</p>
+                                </div>
+                                @endif
+                                @endforeach
+                            </div>
+                            @endisset
+                        </div>
+                    </div>
+                    
+                    <!-- Available Plans Section -->
+                    <div class="available-plans" style="margin-top: 50px;">
+                        <div class="container">
+                            <div class="section-title">
+                                <h2>Available Product Plans</h2>
+                                <p>Explore our range of tech solutions tailored to your needs</p>
+                            </div>
+                            
+                            <div class="pricing-toggle">
+                                <button class="active" onclick="togglePricing('student')">Student Pricing</button>
+                                <button onclick="togglePricing('professional')">Professional Pricing</button>
+                            </div>
+                            
+                            <div class="plans-grid">
+                                <!-- Plan 1 - Free Subscription -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Free Subscription</h3>
+                                        <div class="plan-price">Free</div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">Get started with basic access to our content.</p>
+                                        <ul class="plan-features">
+                                            <li>Access to clickbait videos</li>
+                                            <li>Comment section questions</li>
+                                            <li>Brief answers with website links</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-outline">Current Plan</a>
+                                    </div>
                                 </div>
                                 
-                                <div class="card-grid">
-                                    @foreach($activePlans as $plan)
-                                    @if($plan) <!-- Safety check -->
-                                    <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : '' }}">
-                                        @if($plan->id == 7)
-                                            <span class="plan-badge free-badge">Always Active</span>
-                                        @elseif($plan->id == 6)
-                                            <span class="plan-badge premium-badge">
-                                                Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
-                                            </span>
-                                        @else
-                                            <span class="plan-badge paid-badge">Active</span>
-                                        @endif
-                                        
-                                        <h3>{{ $plan->name }}</h3>
-                                        <div class="plan-price">
-                                            @if($plan->id == 7)
-                                                Free Access
-                                            @else
-                                                @if($plan->student_price)
-                                                    R{{ $plan->student_price }} (students)
-                                                @endif
-                                                @if($plan->professional_price)
-                                                    | R{{ $plan->professional_price }} (business)
-                                                @endif
-                                            @endif
+                                <!-- Plan 2 - Premium -->
+                                <div class="plan-card">
+                                    <div class="ribbon">Most Popular</div>
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Premium Plan</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">R350</div>
+                                            <div class="price-note">Quarterly (Student)</div>
                                         </div>
-                                        <p class="plan-description">{{ $plan->description }}</p>
+                                        <div class="professional-price">
+                                            <div class="plan-price">R400</div>
+                                            <div class="price-note">Quarterly (Business)</div>
+                                        </div>
                                     </div>
-                                    @endif
-                                    @endforeach
+                                    <div class="plan-body">
+                                        <p class="plan-description">Full access to all resources with premium features.</p>
+                                        <ul class="plan-features">
+                                            <li>All clickbait-style videos</li>
+                                            <li>Downloadable resources & guides</li>
+                                            <li>Monthly email newsletters</li>
+                                            <li>Exclusive tech tips</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Upgrade Now</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 3 - Personal Guide -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Personal Guide</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">from R110</div>
+                                            <div class="price-note">Per Hour (Student)</div>
+                                        </div>
+                                        <div class="professional-price">
+                                            <div class="plan-price">from R210</div>
+                                            <div class="price-note">Per Hour (Business)</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">One-on-one personalised sessions with our experts.</p>
+                                        <ul class="plan-features">
+                                            <li>Personalised 1-on-1 sessions</li>
+                                            <li>Video call or chat options</li>
+                                            <li>Flexible scheduling</li>
+                                            <li>Additional hours available</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Book Now</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 4 - Formal Training -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Formal Training</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">from R1500</div>
+                                            <div class="price-note">Per Course (Student)</div>
+                                        </div>
+                                        <div class="professional-price">
+                                            <div class="plan-price">from R2500</div>
+                                            <div class="price-note">Per Course (Business)</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">Comprehensive 40-hour training program in EUC and web development.</p>
+                                        <ul class="plan-features">
+                                            <li>40 hours of comprehensive training</li>
+                                            <li>EUC and web development focus</li>
+                                            <li>Portfolio building support</li>
+                                            <li>All skill levels welcome</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Enroll Now</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 5 - Task Assistance -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Task Assistance</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">from R100</div>
+                                            <div class="price-note">Per Hour (Student)</div>
+                                        </div>
+                                        <div class="professional-price">
+                                            <div class="plan-price">from R250</div>
+                                            <div class="price-note">Per Hour (Business)</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">Get hands-on assistance with your tech tasks and projects.</p>
+                                        <ul class="plan-features">
+                                            <li>Coding and development help</li>
+                                            <li>System configuration</li>
+                                            <li>Tech-related task support</li>
+                                            <li>Direct expert assistance</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Get Help</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 6 - Group Session 1 -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Group Session 1</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">from R130</div>
+                                            <div class="price-note">Per Hour (Student)</div>
+                                        </div>
+                                        <div class="professional-price">
+                                            <div class="plan-price">from R200</div>
+                                            <div class="price-note">Per Hour (Business)</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">Live Q&A sessions where you can ask questions via chat.</p>
+                                        <ul class="plan-features">
+                                            <li>Live Q&A sessions</li>
+                                            <li>Submit questions via chat</li>
+                                            <li>Multiple topics covered</li>
+                                            <li>Interactive learning</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Join Session</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Plan 7 - Group Session 2 -->
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h3 class="plan-name">Group Session 2</h3>
+                                        <div class="student-price active">
+                                            <div class="plan-price">from R130</div>
+                                            <div class="price-note">Per Hour (Student)</div>
+                                        </div>
+                                        <div class="professional-price">
+                                            <div class="plan-price">from R200</div>
+                                            <div class="price-note">Per Hour (Business)</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-body">
+                                        <p class="plan-description">Consultation sessions based on your video comments and questions.</p>
+                                        <ul class="plan-features">
+                                            <li>Response to video comments</li>
+                                            <li>Programming topics</li>
+                                            <li>Cybersecurity discussions</li>
+                                            <li>Tech skill-building</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <a href="#" class="btn btn-primary">Join Session</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endisset
+                </div>
 
                 <!-- resources containers -->
                 <div class="content-section resources_content" id="usr_resources">

@@ -182,7 +182,7 @@ section.price_container {
                   height: clamp(25rem, 75vw, 34.375rem);
                   
                   &::after {
-                    content: 'Premium';
+                    /* content: 'Premium'; */
                     position: absolute;
                     top: clamp(0.5rem, 2vw, 1rem);
                     right: clamp(-2.5rem, -5vw, -2.5rem);

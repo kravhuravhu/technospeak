@@ -22,6 +22,22 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
+        <!-- Task Assistance Form Modal] -->
+        <div id="taskAssistanceModalUnique" class="assistanceTP_form_modal">
+            <div class="task_modal-content">
+                <span id="closeTaskAssistanceModal" class="close">&times;</span>
+                @include('components.task-assistance-form')
+            </div>
+        </div>
+
+        <!-- Personal Guide Form Modal -->
+        <div id="personalGuideModalUnique" class="assistanceTP_form_modal">
+            <div class="task_modal-content">
+                <span id="closePersonalGuideModal" class="close">&times;</span>
+                @include('components.personal-guide-form')
+            </div>
+        </div>
+
         <section class="price_container">
             <div class="main-container">
                 <div class="title_container">
@@ -143,15 +159,10 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            {{-- Subscription functionality removed --}}
                                             @if(Auth::check())
-                                                <a href="#" class="btn btn-primary disabled">
-                                                    SUBSCRIBE (UNAVAILABLE)
-                                                </a>
+                                                <a href="{{ route('subscription.yoco.redirect') }}">SUBSCRIBE (UNAVAILABLE) </a>
                                             @else
-                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">
-                                                    LOGIN TO SUBSCRIBE
-                                                </a>
+                                                 <a href="{{ url('/login?redirect=subscription/yoco/redirect') }}">SUBSCRIBE (UNAVAILABLE)</a>
                                             @endif
                                         </div>
                                     </div>
@@ -212,26 +223,7 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            @php
-                                            $formalSession = \App\Models\TrainingSession::where('type_id', 1)
-                                                ->where('scheduled_for', '>', now())
-                                                ->orderBy('scheduled_for')
-                                                ->first();
-                                            @endphp
-
-                                            @if(Auth::check())
-                                                @if($formalSession)
-                                                    <a href="#" class="btn btn-primary registration-trigger" 
-                                                    data-type-id="1" 
-                                                    data-session-id="{{ $formalSession->id }}">
-                                                        ENROLL NOW
-                                                    </a>
-                                                @else
-                                                    <button class="btn btn-primary" disabled>ENROLL NOW</button>
-                                                @endif
-                                            @else
-                                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">ENROLL NOW</a>
-                                            @endif
+                                            <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -260,36 +252,8 @@
                                                 </div>
                                             </div>
                                             <div class="bttn">
-                                               @php
-                                                $guideSession = \App\Models\TrainingSession::where('type_id', 3)
-                                                    ->orderBy('scheduled_for')
-                                                    ->first();
-                                                @endphp
-
-                                                @if(Auth::check())
-                                                    <a href="#" class="btn btn-primary registration-trigger" 
-                                                    data-type-id="3" 
-                                                    data-session-id="{{ $guideSession->id }}">
-                                                        PERSONAL GUIDE
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">PERSONAL GUIDE</a>
-                                                @endif
-                                                @php
-                                                $taskSession = \App\Models\TrainingSession::where('type_id', 2)
-                                                    ->orderBy('scheduled_for')
-                                                    ->first();
-                                                @endphp
-
-                                                @if(Auth::check())
-                                                    <a href="#" class="btn btn-primary registration-trigger" 
-                                                    data-type-id="2" 
-                                                    data-session-id="{{ $taskSession->id }}">
-                                                        TASK ASSISTANCE
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">TASK ASSISTANCE</a>
-                                                @endif
+                                                <a href="#" id="openPersonalGuideModal">PERSONAL GUIDE</a>
+                                                <a href="#" id="openTaskAssistanceModal">TASK ASSISTANCE</a>
                                             </div>
                                         </div>
 
@@ -790,6 +754,7 @@
             }
         </script>
 
+        <!-- QA & Consult Modal -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Handle registration triggers
@@ -816,10 +781,70 @@
                     document.body.classList.remove('no-scroll');
                 }
             });
+        </script>
+
+            <!-- Assistance Modal -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {    
+                    function openModal(modalId) {
+                        var modal = document.getElementById(modalId);
+                        modal.style.display = "block";
+                        
+                        document.body.style.overflow = "hidden";
+                        document.body.style.position = "fixed";
+                        document.body.style.width = "100%";
+                    }
+
+                    function closeModal(modalId) {
+                        var modal = document.getElementById(modalId);
+                        modal.style.display = "none";
+                        
+                        document.body.style.overflow = "auto";
+                        document.body.style.position = "";
+                        document.body.style.width = "";
+                    }
+
+                    window.onclick = function(event) {
+                        var taskAssistanceModal = document.getElementById("taskAssistanceModalUnique");
+                        var personalGuideModal = document.getElementById("personalGuideModalUnique");
+                        
+                        if (event.target == taskAssistanceModal) {
+                            closeModal("taskAssistanceModalUnique");
+                        } else if (event.target == personalGuideModal) {
+                            closeModal("personalGuideModalUnique");
+                        }
+                    }
+
+                    // Task Assistance Modal
+                    var openTaskAssistanceModalBtn = document.getElementById("openTaskAssistanceModal");
+                    var closeTaskAssistanceModalBtn = document.getElementById("closeTaskAssistanceModal");
+
+                    openTaskAssistanceModalBtn.onclick = function(event) {
+                        event.preventDefault();
+                        openModal("taskAssistanceModalUnique");
+                    };
+
+                    closeTaskAssistanceModalBtn.onclick = function() {
+                        closeModal("taskAssistanceModalUnique");
+                    };
+
+                    // Personal Guide Modal
+                    var openPersonalGuideModalBtn = document.getElementById("openPersonalGuideModal");
+                    var closePersonalGuideModalBtn = document.getElementById("closePersonalGuideModal");
+
+                    openPersonalGuideModalBtn.onclick = function(event) {
+                        event.preventDefault();
+                        openModal("personalGuideModalUnique");
+                    };
+
+                    closePersonalGuideModalBtn.onclick = function() {
+                        closeModal("personalGuideModalUnique");
+                    };
+                });
             </script>
 
         <script src="script/pricing.js"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="script/pop-up.js"></script>
     </body>
 

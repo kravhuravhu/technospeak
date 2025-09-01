@@ -56,110 +56,109 @@ class SubmissionController extends Controller
             ], 500);
         }
 
-        return response()->json(['success' => true, 'message' => 'Your submission has been received.']);
+        return response()->json(['success' => true, 'message' => 'Thank you for your submission. We’ve received your details and will get back to you shortly.']);
     }
 
     // report/feedback
-public function supportFeedbackSubmit(Request $request, $type)
-{
-    $user = Auth::user();
-    $request->merge([
-        'firstName' => $user->firstName ?? $user->name ?? 'User',
-        'lastName'  => $user->surname ?? '',
-        'email'     => $user->email ?? '',
-    ]);
+    public function supportFeedbackSubmit(Request $request, $type)
+    {
+        $user = Auth::user();
+        $request->merge([
+            'firstName' => $user->firstName ?? $user->name ?? 'User',
+            'lastName'  => $user->surname ?? '',
+            'email'     => $user->email ?? '',
+        ]);
 
-    $data = $request->except('fileUpload');
-    $attachments = [];
+        $data = $request->except('fileUpload');
+        $attachments = [];
 
-    // attachments
-    if ($request->hasFile('fileUpload')) {
-        $files = $request->file('fileUpload');
-        if (!is_array($files)) $files = [$files];
+        // attachments
+        if ($request->hasFile('fileUpload')) {
+            $files = $request->file('fileUpload');
+            if (!is_array($files)) $files = [$files];
 
-        foreach ($files as $file) {
-            if ($file->isValid()) {
-                $attachments[] = [
-                    'content' => $file->get(),
-                    'original_name' => $file->getClientOriginalName(),
-                    'mime_type' => $file->getClientMimeType(),
-                ];
+            foreach ($files as $file) {
+                if ($file->isValid()) {
+                    $attachments[] = [
+                        'content' => $file->get(),
+                        'original_name' => $file->getClientOriginalName(),
+                        'mime_type' => $file->getClientMimeType(),
+                    ];
+                }
             }
         }
-    }
 
-    // prepare relevant fields
-    $fieldsToInclude = [];
-    if ($type === 'problem') {
-        $fields = ['supportSubject','supportMessage','supportPriority'];
-    } else {
-        $fields = ['feedbackExperience','feedbackEase','feedbackRecommend','feedbackComment'];
-    }
-
-    foreach ($fields as $field) {
-        if (!empty($data[$field])) {
-            $fieldsToInclude[$field] = $data[$field];
+        // prepare relevant fields
+        $fieldsToInclude = [];
+        if ($type === 'problem') {
+            $fields = ['supportSubject','supportMessage','supportPriority'];
+        } else {
+            $fields = ['feedbackExperience','feedbackEase','feedbackRecommend','feedbackComment'];
         }
-    }
 
-    // map numeric feedback to human-readable text
-    if ($type === 'feedback') {
-        $ratingsMap = [
-            'feedbackExperience' => [
-                5 => 'Excellent ⭐⭐⭐⭐⭐',
-                4 => 'Good ⭐⭐⭐⭐',
-                3 => 'Average ⭐⭐⭐',
-                2 => 'Poor ⭐⭐',
-                1 => 'Very Poor ⭐',
-            ],
-            'feedbackEase' => [
-                5 => 'Very Easy',
-                4 => 'Easy',
-                3 => 'Neutral',
-                2 => 'Difficult',
-                1 => 'Very Difficult',
-            ],
-            'feedbackRecommend' => [
-                5 => 'Definitely',
-                4 => 'Probably',
-                3 => 'Maybe',
-                2 => 'Unlikely',
-                1 => 'Definitely Not',
-            ],
+        foreach ($fields as $field) {
+            if (!empty($data[$field])) {
+                $fieldsToInclude[$field] = $data[$field];
+            }
+        }
+
+        // map numeric feedback to human-readable text
+        if ($type === 'feedback') {
+            $ratingsMap = [
+                'feedbackExperience' => [
+                    5 => 'Excellent ⭐⭐⭐⭐⭐',
+                    4 => 'Good ⭐⭐⭐⭐',
+                    3 => 'Average ⭐⭐⭐',
+                    2 => 'Poor ⭐⭐',
+                    1 => 'Very Poor ⭐',
+                ],
+                'feedbackEase' => [
+                    5 => 'Very Easy',
+                    4 => 'Easy',
+                    3 => 'Neutral',
+                    2 => 'Difficult',
+                    1 => 'Very Difficult',
+                ],
+                'feedbackRecommend' => [
+                    5 => 'Definitely',
+                    4 => 'Probably',
+                    3 => 'Maybe',
+                    2 => 'Unlikely',
+                    1 => 'Definitely Not',
+                ],
+            ];
+
+            foreach (['feedbackExperience','feedbackEase','feedbackRecommend'] as $field) {
+                if (!empty($fieldsToInclude[$field])) {
+                    $fieldsToInclude[$field] = $ratingsMap[$field][$fieldsToInclude[$field]] ?? $fieldsToInclude[$field];
+                }
+            }
+        }
+        
+        $fieldsToInclude['First Name'] = $data['firstName'] ?? '-';
+        $fieldsToInclude['Last Name']  = $data['lastName'] ?? '-';
+        $fieldsToInclude['Email']      = $data['email'] ?? '-';
+
+        $emailData = [
+            'fields' => $fieldsToInclude,
+            'attachments' => $attachments
         ];
 
-        foreach (['feedbackExperience','feedbackEase','feedbackRecommend'] as $field) {
-            if (!empty($fieldsToInclude[$field])) {
-                $fieldsToInclude[$field] = $ratingsMap[$field][$fieldsToInclude[$field]] ?? $fieldsToInclude[$field];
-            }
+        // email notification
+        try {
+            Notification::route('mail', $data['email'])
+                ->notify(new ProblemFeedbackNotification($emailData, $type));
+        } catch (\Exception $e) {
+            \Log::error('Notification failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process your submission. Please try again.'
+            ], 500);
         }
-    }
-    
-    $fieldsToInclude['First Name'] = $data['firstName'] ?? '-';
-    $fieldsToInclude['Last Name']  = $data['lastName'] ?? '-';
-    $fieldsToInclude['Email']      = $data['email'] ?? '-';
 
-    $emailData = [
-        'fields' => $fieldsToInclude,
-        'attachments' => $attachments
-    ];
-
-    // email notification
-    try {
-        Notification::route('mail', $data['email'])
-            ->notify(new ProblemFeedbackNotification($emailData, $type));
-    } catch (\Exception $e) {
-        \Log::error('Notification failed: ' . $e->getMessage());
         return response()->json([
-            'success' => false,
-            'message' => 'Failed to process your submission. Please try again.'
-        ], 500);
+            'success' => true,
+            'message' => 'Thank you! Your ' . ($type === 'problem' ? 'problem report' : 'feedback') . ' has been submitted successfully. We’ll review it and respond if needed.',
+        ]);
     }
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Your ' . ($type === 'problem' ? 'problem report' : 'feedback') . ' has been received.'
-    ]);
-}
- 
 }

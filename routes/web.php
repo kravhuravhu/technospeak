@@ -220,21 +220,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Personal Guide routes
-    Route::post('/personal-guide', [PersonalGuideController::class, 'store'])->name('personal-guide.store');
-    Route::post('/personal-guide/{id}/process-payment', [PersonalGuideController::class, 'processPayment'])->name('personal-guide.payment');
-    
-    // Task Assistance routes
-    Route::post('/task-assistance', [TaskAssistanceController::class, 'store'])->name('task-assistance.store');
-    Route::post('/task-assistance/{id}/process-payment', [TaskAssistanceController::class, 'processPayment'])->name('task-assistance.payment');
-
-    // user requests submission
-    Route::post('/submit/{type}', [SubmissionController::class, 'submit'])
-        ->name('submission.submit');
-    });
     // report/feedback
-    Route::post('/submit/{type}', [SubmissionController::class, 'supportFeedbackSubmit'])
-        ->middleware('auth');
+    Route::post('/submit-support/{type}', [SubmissionController::class, 'supportFeedbackSubmit'])->name('submit.support');
 
     // Subscription routes
     Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
@@ -257,61 +244,62 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->name('stripe.subscription.success')
     ->middleware('auth');
  
-    // Stripe routes
+    // Payment routes
     Route::prefix('stripe')->group(function () {
-    Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
-        ->name('stripe.checkout')
-        ->middleware('auth');
-
-    Route::post('/webhook', [StripeWebhookController::class, 'handle']);
-
-    // Separate success handlers
-    Route::get('/success', [StripeController::class, 'success'])->name('stripe.success'); // For training sessions
-    Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
-        ->name('stripe.subscription.success')
-        ->middleware('auth');
-
-    // Yoco payment routes
-    Route::prefix('yoco')->group(function () {
-        Route::get('/payment/verify/{payment}', [SubscriptionController::class, 'verifyPayment'])
-            ->name('yoco.payment.verify')
+        Route::get('/checkout/{clientId}/{planId}', [StripeController::class, 'checkout'])
+            ->name('stripe.checkout')
             ->middleware('auth');
 
-        Route::get('/payment/status/{payment}', [SubscriptionController::class, 'checkPaymentStatus'])
-            ->name('yoco.payment.status')
+        Route::post('/webhook', [StripeWebhookController::class, 'handle']);
+
+        // Separate success handlers
+        Route::get('/success', [StripeController::class, 'success'])->name('stripe.success'); // For training sessions
+        Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
+            ->name('stripe.subscription.success')
             ->middleware('auth');
 
-        Route::get('/payment/success/{payment}', function($paymentId) {
-            $payment = Payment::findOrFail($paymentId);
-            return view('success-subscription', [
-                'plan' => TrainingType::find($payment->payable_id),
-                'payment_amount' => $payment->amount,
-                'transaction_id' => $payment->transaction_id,
-                'client' => Client::find($payment->client_id)
-            ]);
-        })->name('yoco.payment.success')->middleware('auth');
+        // Yoco payment routes
+        Route::prefix('yoco')->group(function () {
+            Route::get('/payment/verify/{payment}', [SubscriptionController::class, 'verifyPayment'])
+                ->name('yoco.payment.verify')
+                ->middleware('auth');
 
-        Route::get('/payment/failed/{payment}', function($paymentId) {
-            $payment = Payment::findOrFail($paymentId);
-            return view('payment.failed', ['payment' => $payment]);
-        })->name('yoco.payment.failed')->middleware('auth');
+            Route::get('/payment/status/{payment}', [SubscriptionController::class, 'checkPaymentStatus'])
+                ->name('yoco.payment.status')
+                ->middleware('auth');
 
-        Route::get('/payment/cancel/{payment}', function($paymentId) {
-            $payment = Payment::findOrFail($paymentId);
-            $payment->update(['status' => 'cancelled']);
-            
-            return redirect()->route('dashboard')
-                ->with('error', 'Payment was cancelled.');
-        })->name('yoco.payment.cancel')->middleware('auth');
+            Route::get('/payment/success/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('success-subscription', [
+                    'plan' => TrainingType::find($payment->payable_id),
+                    'payment_amount' => $payment->amount,
+                    'transaction_id' => $payment->transaction_id,
+                    'client' => Client::find($payment->client_id)
+                ]);
+            })->name('yoco.payment.success')->middleware('auth');
+
+            Route::get('/payment/failed/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('payment.failed', ['payment' => $payment]);
+            })->name('yoco.payment.failed')->middleware('auth');
+
+            Route::get('/payment/cancel/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $payment->update(['status' => 'cancelled']);
+                
+                return redirect()->route('dashboard')
+                    ->with('error', 'Payment was cancelled.');
+            })->name('yoco.payment.cancel')->middleware('auth');
+        });
+
+        // Yoco webhook route
+        Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
+
+        // Yoco payment redirect
+        Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
+            ->name('subscription.yoco.redirect')
+            ->middleware('auth');
     });
-
-    // Yoco webhook route
-    Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
-
-    // Yoco payment redirect
-    Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
-        ->name('subscription.yoco.redirect')
-        ->middleware('auth');
 });
 
 require __DIR__.'/auth.php';
@@ -449,3 +437,6 @@ Route::get('/clear-cache', function () {
     Artisan::call('optimize:clear');
     return response()->json(['message' => 'Cache cleared']);
 });
+
+// user requests submission
+Route::post('/submit/{type}', [SubmissionController::class, 'submit'])->name('submit.generic');

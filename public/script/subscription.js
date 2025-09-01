@@ -1,35 +1,3 @@
-let userPlans = [];
-let availablePlans = [];
-let allPlansData = {}; // This will store all plan details
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // First load all plan details
-    loadAllPlanDetails().then(() => {
-        // Then fetch user-specific plans
-        fetchUserPlans();
-    });
-});
-
-async function loadAllPlanDetails() {
-    try {
-        const response = await fetch('/api/plans/details');
-        allPlansData = await response.json();
-    } catch (error) {
-        console.error('Error loading plan details:', error);
-        // Fallback to hardcoded data if API fails
-        allPlansData = {
-            1: { id: 1, title: "Formal Training", price: "From R1500/training", description: "- Structured learning with \n - professional instructors", features: ["Comprehensive EUC training", "Web development courses", "Portfolio building", "Certificate of completion"], isFree: false },
-            2: { id: 2, title: "Task Assistance", price: "From R100/hour", description: "Get help with specific challenges or tasks", features: ["Tutoring and consultations", "Task-specific help", "Flexible payment options", "Quality guaranteed"], isFree: false },
-            3: { id: 3, title: "Personal Guide", price: "From R110/hour", description: "Personalized one-on-one sessions tailored to your needs", features: ["Custom video/chat sessions", "Submit requests in advance", "Flexible scheduling", "Additional hours available"], isFree: false },
-            4: { id: 4, title: "Group Session 1", price: "Free", description: "Clients will be able to ask questions on a live Q&A.", features: ["Clients will be able to ask questions on a live Q&A", "Participants remain muted but can submit questions via chat"], isFree: true },
-            5: { id: 5, title: "Group Session 2", price: "R130/hr (students) | R200/hr (business)", description: "Clients will receive answers based on the comments they made on the videos.", features: ["Clients will receive answers based on the comments they made on the videos", "Covers various topics, such as programming, cybersecurity, and other tech skill-building sessions", "Clients pose questions and they are answered live"], isFree: false },
-            6: { id: 6, title: "Premium Subscription", price: "R350/quarterly", description: "Full access to all resources for committed learners", features: ["All clickbait-style videos", "Downloadable resources", "Monthly tech tips newsletter", "Priority support"], isFree: false },
-            7: { id: 7, title: "Tech Teasers", price: "Free", description: "Perfect for beginners who want to explore our content", features: ["Access to clickbait videos on social media", "Ask questions in comments", "Basic community support"], isFree: true }
-        };
-    }
-}
-
 async function fetchUserPlans() {
     try {
         const response = await fetch('/api/user/subscriptions');
@@ -116,4 +84,31 @@ function renderOtherPlans() {
         `;
         container.appendChild(card);
     });
+}
+
+
+// Professional Pricing Section
+function togglePricing(type) {
+    // Update toggle buttons
+    document.querySelectorAll('.pricing-toggle button').forEach(button => {
+        button.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Show/hide appropriate pricing
+    if (type === 'student') {
+        document.querySelectorAll('.student-price').forEach(el => {
+            el.classList.add('active');
+        });
+        document.querySelectorAll('.professional-price').forEach(el => {
+            el.classList.remove('active');
+        });
+    } else {
+        document.querySelectorAll('.student-price').forEach(el => {
+            el.classList.remove('active');
+        });
+        document.querySelectorAll('.professional-price').forEach(el => {
+            el.classList.add('active');
+        });
+    }
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CourseRating;
 use App\Models\CourseEpisode;
 use App\Models\CourseResource;
+use App\Models\TrainingType;
 use Illuminate\Support\Facades\Log;
 
 class CourseAccessController extends Controller
@@ -24,6 +25,24 @@ class CourseAccessController extends Controller
         $this->adminCourseController = new CourseController();
         
         Auth::shouldUse($currentGuard);
+    }
+
+    // price for the logged user
+    public function getSubscriptionPrice()
+    {
+        $user = Auth::user();
+
+        $trainingType = TrainingType::where('name', 'Premium')->first();
+
+        if (!$trainingType) {
+            return null;
+        }
+
+        if (!$user) {
+            return $trainingType->professional_price;
+        }
+
+        return $trainingType->getPriceForUserType($user->userType);
     }
 
     // recommended trainings
@@ -133,6 +152,13 @@ class CourseAccessController extends Controller
         if (!$user->isSubscribedTo($course->id)) {
             return redirect()->route('unenrolled-courses.show', $course->uuid);
         } else {
+            if (($course->plan_type === 'free' || ($course->plan_type === 'paid')) && !$user->hasActiveSubscription()) {
+                // access to only the first episode
+                $accessibleEpisodes = $course->episodes->take(1);
+            } else {
+                $accessibleEpisodes = $course->episodes;
+            }
+
             $totalSeconds = $course->total_duration;
             $hours = floor($totalSeconds / 3600);
             $minutes = floor(($totalSeconds % 3600) / 60);
@@ -143,14 +169,14 @@ class CourseAccessController extends Controller
             $subscription = $user->courseSubscriptions()->where('course_id', $course->id)->first();
             $progress = $subscription ? $subscription->progress : 0;
 
-            // get the episode that is completed
+            // episode that is completed
             $completedEpisodeIds = $subscription && $subscription->episodeProgress()
                 ? $subscription->episodeProgress()
                     ->where('is_completed', true)
                     ->pluck('episode_id')
                 : collect();
 
-            $episodes = $course->episodes->map(function($episode) use ($completedEpisodeIds) {
+            $episodes = $accessibleEpisodes->map(function($episode) use ($completedEpisodeIds) {
                 $duration = $episode->duration;
                 $h = floor($duration / 3600);
                 $m = floor(($duration % 3600) / 60);
@@ -166,15 +192,53 @@ class CourseAccessController extends Controller
                     'duration' => $durationFormatted,
                     'video_url' => $episode->video_url,
                     'completed' => $completedEpisodeIds->contains($episode->id),
+                    'locked' => false
                 ];
             });
+
+            if (($course->plan_type === 'free' || ($course->plan_type === 'paid')) && !$user->hasActiveSubscription() && $course->episodes->count() > 1) {
+                $lockedEpisodes = $course->episodes->slice(1)->map(function($episode) {
+                    return [
+                        'id' => $episode->id,
+                        'number' => $episode->episode_number,
+                        'title' => $episode->title,
+                        'description' => $episode->description,
+                        'duration' => '',
+                        'video_url' => null,
+                        'completed' => false,
+                        'locked' => true
+                    ];
+                });
+                
+                $episodes = $episodes->merge($lockedEpisodes);
+            }
 
             $showCertificateTab = $course->has_certificate;
             $certificate = $subscription ? $subscription->certificate : null;
 
             $resources = $course->resources()->get();
 
-            return view('enrolled-courses.show', compact('course', 'subscription', 'showCertificateTab', 'certificate', 'resources', 'completedEpisodeIds', 'episodes', 'progress'));
+            $trainingType = TrainingType::where('name', 'Premium')->first();
+            if ($trainingType) {
+                $price = $user
+                    ? $trainingType->getPriceForUserType($user->userType)
+                    : $trainingType->professional_price;
+            } else {
+                $price = null;
+            }
+
+            return view('enrolled-courses.show', compact(
+                'course', 
+                'subscription', 
+                'showCertificateTab', 
+                'certificate', 
+                'resources', 
+                'completedEpisodeIds', 
+                'episodes', 
+                'progress',
+                'user',
+                'price'
+            ));
         }
     }
 

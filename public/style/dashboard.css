@@ -1599,34 +1599,12 @@ section.bar-lt-rt {
       /* style for all subscriptions */
       &.subscriptions_content {
         padding: 2rem 0;
-        background: #f9fafb;
-
-        /* Add vertical scroll for overflow content */
-        max-height: 90vh;
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: #38b6ff #e0e0e0;
-
-        &::-webkit-scrollbar {
-          width: 8px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background: #38b6ff;
-          border-radius: 8px;
-        }
-        &::-webkit-scrollbar-track {
-          background: #e0e0e0;
-          border-radius: 8px;
-        }
-
         .available-plans {
           margin-bottom: 3rem;
         }
-
         .current-plans .title,
         .available-plans .section-title {
           margin-bottom: 1.5rem;
-          text-align: center;
         }
 
         .current-plans .title h2,

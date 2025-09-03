@@ -32,6 +32,7 @@ use App\Http\Middleware\AdminOrInstructorAuth;
 use App\Http\Controllers\SubmissionController;
 use App\Models\CourseResource;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TestingPayment;
 
 // Public routes
 Route::get('/', [
@@ -424,3 +425,9 @@ Route::get('/clear-cache', function () {
 
 // user requests submission
 Route::post('/submit/{type}', [SubmissionController::class, 'submit'])->name('submit.generic');
+
+// my yoco test
+Route::middleware('auth')->group(function () {
+    Route::get('/testing-yoco', [TestingPayment::class, 'show'])->name('testing.yoco');
+    Route::post('/testing-yoco/charge', [TestingPayment::class, 'charge'])->name('testing.payment.charge');
+});

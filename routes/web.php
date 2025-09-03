@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Middleware\AdminOrInstructorAuth;
 use App\Http\Controllers\SubmissionController;
 use App\Models\CourseResource;
+use App\Http\Controllers\DashboardController;
 
 // Public routes
 Route::get('/', [
@@ -70,78 +71,7 @@ Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'
 
 // Auth routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        
-        $courseAccess = new CourseAccessController();
-        $allTipsTricks = $courseAccess->getTipsTricks();
-        $formalTrainings = $courseAccess->getFormalTrainings();
-        $recommendedCourses = $courseAccess->getRecommendedCourses();
-
-        $enrolledCourses = $user->courseSubscriptions()
-            ->with(['course' => function($query) {
-                $query->with(['category', 'instructor', 'episodes']);
-            }])
-            ->get();
-
-        // enrolled tips & tricks
-        $tipsAndTricksCurrent = $enrolledCourses->filter(function($subscription) {
-            return in_array($subscription->course->plan_type, ['free', 'paid']);
-        })->map(function($subscription) {
-            $course = $subscription->course;
-            return (object) [
-                'id' => $course->id,
-                'uuid' => $course->uuid,
-                'title' => $course->title,
-                'catch_phrase' => $course->catch_phrase,
-                'thumbnail' => $course->thumbnail,
-            ];
-        });
-
-        // enrolled formal trainigs
-        $formalTrainingCurrent = $enrolledCourses->filter(function($subscription) {
-            return $subscription->course->plan_type === 'frml_training';
-        })->map(function($subscription) {
-            $course = $subscription->course;
-            return (object) [
-                'id' => $course->id,
-                'uuid' => $course->uuid,
-                'thumbnail' => $course->thumbnail,
-                'formatted_duration' => $course->formatted_duration,
-                'title' => $course->title,
-                'progress' => $subscription->progress ?? 0,
-            ];
-        });
-        
-        $activePlans = collect([TrainingType::find(7)]);
-        
-        if ($user->subscription_type === 'premium') {
-            $activePlans->push(TrainingType::find(6));
-        }
-        
-        $completedTrainings = TrainingRegistration::with('session.type')
-            ->where('client_id', $user->id)
-            ->where('payment_status', 'completed')
-            ->get()
-            ->map(function($reg) {
-                return $reg->session->type;
-            })
-            ->filter()
-            ->unique('id');
-        
-        $activePlans = $activePlans->merge($completedTrainings);
-
-        return view('dashboard', [
-            'allTipsTricks' => $allTipsTricks,
-            'formalTrainings' => $formalTrainings,
-            'tipsAndTricksCurrent' => $tipsAndTricksCurrent,
-            'formalTrainingCurrent' => $formalTrainingCurrent,
-            'recommendedCourses' => $recommendedCourses,
-            'instructors' => Instructor::all(),
-            'upcomingGroupSessions' => TrainingSession::getUpcomingGroupSessions(),
-            'activePlans' => $activePlans
-        ]);
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // view enrolled
     Route::prefix('enrolled-courses')->group(function () {
@@ -299,7 +229,61 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
             ->name('subscription.yoco.redirect')
             ->middleware('auth');
+
+        // Yoco training payment routes
+        Route::prefix('yoco')->group(function () {
+            // Training payment verification
+            Route::get('/training/verify/{payment}', [TrainingRegistrationController::class, 'verifyTrainingPayment'])
+                ->name('yoco.training.verify')
+                ->middleware('auth');
+
+            Route::get('/training/status/{payment}', [TrainingRegistrationController::class, 'checkTrainingPaymentStatus'])
+                ->name('yoco.training.status')
+                ->middleware('auth');
+
+            Route::get('/training/success/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $session = TrainingSession::find($payment->payable_id);
+                
+                return view('success-payment', [
+                    'trainingSession' => $session,
+                    'payment' => $payment
+                ]);
+            })->name('yoco.training.success')->middleware('auth');
+
+            Route::get('/training/failed/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('payment.failed', ['payment' => $payment]);
+            })->name('yoco.training.failed')->middleware('auth');
+
+            Route::get('/training/cancel/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $payment->update(['status' => 'cancelled']);
+                
+                return redirect()->route('dashboard')
+                    ->with('error', 'Payment was cancelled.');
+            })->name('yoco.training.cancel')->middleware('auth');
+        });
     });
+    
+    // Add API route for registration check
+    Route::get('/api/check-registration/{typeId}', function($typeId) {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['registered' => false]);
+        }
+        
+        // Check if user has any completed registrations for this type
+        $registered = TrainingRegistration::where('client_id', $user->id)
+            ->whereHas('session', function($query) use ($typeId) {
+                $query->where('type_id', $typeId);
+            })
+            ->where('payment_status', 'completed')
+            ->exists();
+        
+        return response()->json(['registered' => $registered]);
+    })->middleware('auth');
 });
 
 require __DIR__.'/auth.php';

@@ -23,7 +23,7 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? true])
 
-        <!-- Task Assistance Form Modal] -->
+        <!-- Task Assistance Form Modal -->
         <div id="taskAssistanceModalUnique" class="assistanceTP_form_modal">
             <div class="task_modal-content">
                 <span id="closeTaskAssistanceModal" class="close">&times;</span>
@@ -36,6 +36,14 @@
             <div class="task_modal-content">
                 <span id="closePersonalGuideModal" class="close">&times;</span>
                 @include('components.personal-guide-form')
+            </div>
+        </div>
+
+        <!-- Service Assistance Form Modal -->
+        <div id="serviceAssistanceModalUnique" class="assistanceTP_form_modal">
+            <div class="task_modal-content">
+                <span id="closeServiceAssistanceModal" class="close">&times;</span>
+                @include('components.service-assistance-form')
             </div>
         </div>
 
@@ -226,7 +234,7 @@
                                         </ul>
                                     </div>
                                     <div class="plan-button">
-                                        <a href="#" id="openPersonalGuideModal">Get Guide</a>
+                                        <a href="#categories_cont" id="openPersonalGuideModal">Get Guide</a>
                                     </div>
                                 </div>
 
@@ -381,39 +389,39 @@
                 </div>
             </div>
 
-                            <!-- Modals and Includes -->
-                    @if(isset($premiumPlan))
-                        @include('components.subscription_modal', [
-                            'planId' => $premiumPlan->id,
-                            'planName' => $premiumPlan->name,
-                            'plan' => $premiumPlan
-                        ])
-                    @endif
+            <!-- Modals and Includes -->
+            @if(isset($premiumPlan))
+                @include('components.subscription_modal', [
+                    'planId' => $premiumPlan->id,
+                    'planName' => $premiumPlan->name,
+                    'plan' => $premiumPlan
+                ])
+            @endif
 
-                    @include('components.training_modal')
-                    @include('components.sessions_registration', [
-                        'typeId' => 4,
-                        'typeName' => 'Group Session 1'
-                    ])
-                    @include('components.sessions_registration', [
-                        'typeId' => 5, 
-                        'typeName' => 'Group Session 2'
-                    ])
+            @include('components.training_modal')
+            @include('components.sessions_registration', [
+                'typeId' => 4,
+                'typeName' => 'Group Session 1'
+            ])
+            @include('components.sessions_registration', [
+                'typeId' => 5, 
+                'typeName' => 'Group Session 2'
+            ])
 
-                    @include('components.sessions_registration', [
-                        'typeId' => 1,
-                        'typeName' => 'Formal Training'
-                    ])
+            @include('components.sessions_registration', [
+                'typeId' => 1,
+                'typeName' => 'Formal Training'
+            ])
 
-                    @include('components.sessions_registration', [
-                        'typeId' => 2, 
-                        'typeName' => 'Task Assistance'
-                    ])
+            @include('components.sessions_registration', [
+                'typeId' => 2, 
+                'typeName' => 'Task Assistance'
+            ])
 
-                    @include('components.sessions_registration', [
-                        'typeId' => 3,
-                        'typeName' => 'Personal Guide'
-                    ])
+            @include('components.sessions_registration', [
+                'typeId' => 3,
+                'typeName' => 'Personal Guide'
+            ])
         </section>
 
         <!-- Service Categories Section -->
@@ -514,12 +522,12 @@
                     </button>
                     </div>
                 </div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- About Us section -->
-<section class="about_summ">
+    <!-- About Us section -->
+    <section class="about_summ">
             <div class="main_container">
                 <div class="image_block block">
                     <img src="@secureAsset('images/teams/two_team.jpeg')" alt="office_technospeak"/>

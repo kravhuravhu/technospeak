@@ -115,9 +115,17 @@
             <p>Thank you for registering for <strong class="for_this">{{ $trainingSession->title }}</strong></p>
 
             <div class="session-details">
-                <p><strong>Date:</strong> {{ $trainingSession->scheduled_for->format('F j, Y') }}</p>
-                <p><strong>Time:</strong> {{ $trainingSession->scheduled_for->format('g:i A') }}</p>
+                @if(isset($trainingSession))
+                    <p><strong>Session:</strong> {{ $trainingSession->title }}</p>
+                    <p><strong>Date:</strong> {{ $trainingSession->scheduled_for->format('F j, Y') }}</p>
+                    <p><strong>Time:</strong> {{ $trainingSession->scheduled_for->format('g:i A') }}</p>
+                @elseif(isset($plan))
+                    <p><strong>Plan Type:</strong> {{ $plan->name }} Subscription</p>
+                    <p><strong>Expiry Date:</strong> {{ now()->addMonths(3)->format('F j, Y') }}</p>
+                @endif
                 <p><strong>Amount Paid:</strong> R{{ number_format($payment->amount, 2) }}</p>
+                <p><strong>Transaction ID:</strong> {{ $payment->transaction_id ?? 'N/A' }}</p>
+                <p><strong>Customer:</strong> {{ $client->name }} {{ $client->surname }}</p>
             </div>
 
             <div class="confirmation-message">

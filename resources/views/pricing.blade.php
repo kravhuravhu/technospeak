@@ -160,9 +160,9 @@
                                         </div>
                                         <div class="bttn">
                                             @if(Auth::check())
-                                                <a href="{{ route('subscription.yoco.redirect') }}">SUBSCRIBE (UNAVAILABLE) </a>
+                                                <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">SUBSCRIBE (UNAVAILABLE)</a>
                                             @else
-                                                 <a href="{{ url('/login?redirect=subscription/yoco/redirect') }}">SUBSCRIBE (UNAVAILABLE)</a>
+                                                <a href="{{ url('/login?redirect=subscription/yoco/redirect') }}" class="btn btn-primary">SUBSCRIBE (UNAVAILABLE)</a>
                                             @endif
                                         </div>
                                     </div>
@@ -223,7 +223,7 @@
                                             </div>
                                         </div>
                                         <div class="bttn">
-                                            <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
+                                            <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}" class="btn btn-primary">Enroll Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -252,8 +252,8 @@
                                                 </div>
                                             </div>
                                             <div class="bttn">
-                                                <a href="#" id="openPersonalGuideModal">PERSONAL GUIDE</a>
-                                                <a href="#" id="openTaskAssistanceModal">TASK ASSISTANCE</a>
+                                                <a href="#" id="openPersonalGuideModal" class="btn btn-primary">PERSONAL GUIDE</a>
+                                                <a href="#" id="openTaskAssistanceModal" class="btn btn-primary">TASK ASSISTANCE</a>
                                             </div>
                                         </div>
 

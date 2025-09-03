@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     serviceCards[0].classList.add('active');
   }
   
-  // Add click event to all service cards
+  // Click event to all service cards
   serviceCards.forEach(card => {
     card.addEventListener('click', function() {
       const serviceType = this.dataset.service;
@@ -292,33 +292,59 @@ document.addEventListener('DOMContentLoaded', function() {
       const newButton = detailsContainer.querySelector('#need-assistance-btn');
       if (newButton) {
         newButton.addEventListener('click', function() {
-          // Replace this with your actual login check logic
-          const isLoggedIn = window.isUserLoggedIn || false; // Set this variable server-side or via JS
-          if (isLoggedIn) {
-            window.location.href = '/dashboard#usr_support';
-          } else {
-            // Always redirect to login with support tab hash
-            window.location.href = '/login#usr_support';
-          }
+          const serviceType = document.querySelector('.service-card.active').dataset.service;
+          openServiceAssistanceModal(serviceType);
         });
+      }
+
+      // Function to open service assistance modal with specific service
+      function openServiceAssistanceModal(serviceType) {
+        const serviceTitles = {
+          design: "Graphic Design",
+          ai: "AI Content Creation", 
+          office: "Office Admin (ICT)",
+          support: "Technical Support",
+          web: "Web & App Programming",
+          network: "Networking Essentials",
+          marketing: "Digital Marketing"
+        };
+        
+        document.getElementById('serviceCategoryTitle').textContent = serviceTitles[serviceType];
+        document.getElementById('serviceTypeInput').value = serviceType;
+        
+        // Set a placeholder in the textarea based on service type
+        const textarea = document.getElementById('service_needs');
+        const placeholders = {
+          design: "e.g., I need a logo for my new business...",
+          ai: "e.g., I need help creating content for my social media...",
+          office: "e.g., I need help organizing my digital files...",
+          support: "e.g., My computer is running slowly and...",
+          web: "e.g., I need a website for my business that includes...",
+          network: "e.g., I'm having issues with my office WiFi...",
+          marketing: "e.g., I want to increase my online presence by..."
+        };
+        
+        textarea.placeholder = placeholders[serviceType] || "Please describe your requirements...";
+        
+        // Show the modal
+        document.getElementById('serviceAssistanceModalUnique').style.display = 'block';
+        document.body.style.overflow = 'hidden';
       }
     }
   }
-  
-  // Add hover effects for desktop
-  if (window.innerWidth > 768) {
-    serviceCards.forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        if (!this.classList.contains('active')) {
-          this.style.transform = 'translateY(-5px)';
-        }
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        if (!this.classList.contains('active')) {
-          this.style.transform = 'translateY(0)';
-        }
-      });
-    });
-  }
+
+  // Close modal functionality
+  document.getElementById('closeServiceAssistanceModal').addEventListener('click', function() {
+    document.getElementById('serviceAssistanceModalUnique').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  });
+
+  // Close modal when clicking outside
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('serviceAssistanceModalUnique');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+  });
 });

@@ -24,9 +24,21 @@
             </div>
             @if(Auth::check())
                 <div class="user-info">
-                    <a href="/dashboard" class="active {{ $whiteBg ? 'bg-wt' : '' }}">
-                        {{ Auth::user()->name }}
-                    </a>
+                    <div class="user-dropdown {{ $whiteBg ? 'bg-wt' : '' }}">
+                        <span class="user-name">
+                            {{ Auth::user()->name }} <i class="fa-solid fa-circle-chevron-down"></i>
+                        </span>
+                        <ul class="dropdown-menu {{ $whiteBg ? 'white-bg' : '' }}">
+                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="/dashboard#usr_settings">Settings/Profile</a></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             @endif
         </div>
@@ -77,6 +89,20 @@
             navHeight = nav.offsetHeight;
         });
 
+        // dropdown
+        const dropdown = document.querySelector('.user-dropdown');
+        if (dropdown) {
+            dropdown.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+        }
     });
 </script>
 

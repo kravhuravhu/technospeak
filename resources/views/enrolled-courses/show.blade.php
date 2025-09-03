@@ -1280,6 +1280,40 @@
                 opacity: 0;
             }
         }
+
+        .episode-item.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .episode-item.locked .episode-info h4 {
+            color: #999 !important;
+        }
+
+        .subscription-cta {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .locked-episode-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -1328,7 +1362,30 @@
             <div class="tab-content active" id="episodes-tab">     
                 <div class="course-content">
                     <div class="course-video">
+                        @if(($course->plan_type === 'free' || ($course->plan_type === 'paid')) && !$user->hasActiveSubscription() && $course->episodes->count() > 1)
+                            <div class="subscription-cta" style="background: linear-gradient(172deg, #030e18 1%, #062644 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+                                <h3 style="margin-bottom: 15px;">🔒 Unlock All Tips & Tricks</h3>
+                                <p style="margin-bottom: 20px; opacity: 0.9;">Subscribe now to access all {{ $course->episodes->count() }} videos and unlock premium content!</p>
+                                @if($price)
+                                    <button onclick="showSubscriptionModalTipsTricks()" style="background: white; color: #38b6ff; border: none; padding: 12px 30px; border-radius: 25px; font-weight: 400; cursor: pointer; transition: transform 0.3s ease;">
+                                        Upgrade to Premium - R{{ number_format($price, 2) }}/Quarterly
+                                    </button>
+                                @endif
+                            </div>
+                        @endif
+
                         <div class="video-container" id="video-container">
+                            @if(isset($episode['locked']) && $episode['locked'])
+                            <div class="video-placeholder" style="background: #f8f9fa;">
+                                <div class="overlay" style="background: rgba(0,0,0,0.7);">
+                                    <i class="fas fa-lock" style="font-size: 50px; color: #fff; margin-bottom: 15px;"></i>
+                                    <p style="color: #fff; font-size: 16px;">Subscribe to unlock this video</p>
+                                    <button onclick="showSubscriptionModalTipsTricks()" style="background: #38b6ff; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 15px; cursor: pointer;">
+                                        Unlock All Videos
+                                    </button>
+                                </div>
+                            </div>
+                            @else
                             <div class="video-placeholder" id="video-placeholder">
                                 <img src="{{ $course->thumbnail }}" alt="Course Thumbnail" class="video-thumb" />
                                 <div class="overlay" id="video-overlay">
@@ -1336,6 +1393,7 @@
                                     <p>Select a video from the playlist to start watching</p>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <div class="video-description">
                             <h3>Description</h3>
@@ -1383,8 +1441,8 @@
                     </div>
                     
                     <div class="course-sidebar">
-                        <div class="progress-container-rt">
-                            @if ($course->plan_type === 'frml_training')
+                        @if ($course->plan_type === 'frml_training')
+                            <div class="progress-container-rt">
                                 <div class="progress-header">
                                     <h3>Your Progress</h3>
                                     <div class="progress-percent">{{ $progress }}%</div>
@@ -1392,29 +1450,42 @@
                                 <div class="progress-bar" style="height:10px;width:100%;margin:12px 0;border-radius:15px;background:#38b6ff9c">
                                     <div class="progress-fill" style="width: {{ $progress }}%; height:10px; background:#38b6ff; border-radius:15px;"></div>
                                 </div>
-                            @endif
-                            <div class="progress-actions">
-                                <button class="btn mark-complete-btn" id="mark-complete-btn">
-                                    <i class="fas fa-check-circle"></i> Mark as Complete
-                                </button>
+                                <div class="progress-actions">
+                                    <button class="btn mark-complete-btn" id="mark-complete-btn">
+                                        <i class="fas fa-check-circle"></i> Mark as Complete
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         
                         <div class="episodes-list">
                             <h3>Video Playlist</h3>
                             <ul id="course-episodes-list">
-                                @foreach($course['episodes'] as $episode)
-                                <li class="episode-item {{ $completedEpisodeIds->contains($episode->id) ? 'completed' : '' }}" 
+                                @foreach($episodes as $episode)
+                                <li class="episode-item {{ $episode['completed'] ? 'completed' : '' }} {{ $episode['locked'] ? 'locked' : '' }}" 
                                     data-episode-id="{{ $episode['id'] }}"
                                     data-video-url="{{ $episode['video_url'] }}"
-                                    data-episode-title="{{ $episode['title'] }}">
-                                    <div class="episode-number">{{ $episode->episode_number }}</div>
+                                    data-episode-title="{{ $episode['title'] }}"
+                                    data-locked="{{ $episode['locked'] ? 'true' : 'false' }}">
+                                    <div class="episode-number">
+                                        @if($episode['locked'])
+                                            <i class="fas fa-lock"></i>
+                                        @else
+                                            {{ $episode['number'] }}
+                                        @endif
+                                    </div>
                                     <div class="episode-info">
                                         <h4>{{ $episode['title'] }}</h4>
-                                        <p>{{ $episode->duration_formatted }}</p>
+                                        @if(!$episode['locked'])
+                                            <p>{{ $episode['duration'] }}</p>
+                                        @else
+                                            <p style="color: #ff6b6b;">Subscribe to unlock</p>
+                                        @endif
                                     </div>
                                     @if($episode['completed'])
                                         <i class="fas fa-check-circle"></i>
+                                    @elseif($episode['locked'])
+                                        <i class="fas fa-lock" style="color: #ff6b6b;"></i>
                                     @endif
                                 </li>
                                 @endforeach
@@ -1427,7 +1498,7 @@
             <div class="tab-content" id="resources-tab" style="display:none;">
                 <div class="resources-container">
                     <div class="resources-header">
-                        <h3>Course Resources</h3>
+                        <h3>Video Resources</h3>
                         <span class="resources-count">{{ count($resources) }} resources available</span>
                     </div>
                     
@@ -1542,6 +1613,44 @@
         </button>
     </div>
 
+    <div id="subscription-modal-tipstricks" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
+            <button onclick="closeSubscriptionModalTipsTricks()" 
+                style="
+                    position: absolute;
+                    top: 15px; 
+                    left: 90%; 
+                    background-color: #dd5a3aff; 
+                    color: #dadadaff;
+                    padding: 10px 15px; 
+                    border-radius: 25px; 
+                    cursor: pointer;
+                    border:none;
+                    font-weight:500;"
+                    >
+                X
+            </button>
+            <h2 style="color: #38b6ff; margin-bottom: 20px;">Unlock Premium Content</h2>
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #333; margin-bottom: 10px;">✨ Premium Subscription Benefits:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">✓ Access to all Tips & Tricks episodes</li>
+                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">✓ Exclusive premium content</li>
+                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">✓ Ad-free experience</li>
+                    <li style="padding: 8px 0;">✓ Priority support</li>
+                </ul>
+            </div>
+            <div style="text-align: center;display:flex;align-items:center;justify-content:space-evenly;flex-direction:column;">
+                @if($price)
+                    <button onclick="proceedToSubscription()" 
+                            style="background: #38b6ff; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px;">
+                        Upgrade to Premium - R{{ number_format($price, 2) }}/Quarterly
+                    </button>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('change-celebration-style').addEventListener('click', () => {
             Swal.fire({
@@ -1594,6 +1703,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // subscription modal
+        function showSubscriptionModalTipsTricks() {
+            document.getElementById('subscription-modal-tipstricks').style.display = 'block';
+        }
+
+        function closeSubscriptionModalTipsTricks() {
+            document.getElementById('subscription-modal-tipstricks').style.display = 'none';
+        }
+
+        function proceedToSubscription() {
+            window.location.href = '#';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // toast notifications
             function showToast(message, type = 'success') {
@@ -1666,6 +1788,7 @@
             }
 
             // YouTube-like video player implementation
+            let hasMarkedCompleted = false;
             function createCustomVideoPlayer(videoUrl) {
                 const videoContainer = document.getElementById('video-container');
                 
@@ -1700,13 +1823,13 @@
                 const playPauseBtn = document.createElement('button');
                 playPauseBtn.className = 'control-btn play-pause-btn';
                 playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                 
+
                 const timeDisplay = document.createElement('span');
                 timeDisplay.className = 'time-display';
                 const activeEpisode = document.querySelector('.episode-item.active');
                 const episodeTitle = activeEpisode ? activeEpisode.getAttribute('data-episode-title') : 'Current Episode';
                 timeDisplay.innerHTML = `0:00 / 0:00 <span class="separator-pipe">|</span> <span class="title-current-pipe">${episodeTitle}</span>`;
-                
+
                 leftControls.appendChild(playPauseBtn);
                 leftControls.appendChild(timeDisplay);
                 
@@ -1764,15 +1887,6 @@
                     loadingSpinner.style.display = 'none';
                 });
                 
-                video.addEventListener('timeupdate', function() {
-                    // Update progress bar
-                    const progress = (video.currentTime / video.duration) * 100;
-                    progressBar.style.width = progress + '%';
-                    
-                    // Update time display
-                    updateTimeDisplay();
-                });
-                
                 video.addEventListener('play', function() {
                     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 });
@@ -1823,14 +1937,7 @@
                         }
                     }
                 });
-                
-                // Progress bar click handler
-                progressContainer.addEventListener('click', function(e) {
-                    const rect = this.getBoundingClientRect();
-                    const pos = (e.pageX - rect.left) / this.offsetWidth;
-                    video.currentTime = pos * video.duration;
-                });
-                
+
                 // Play/pause button
                 playPauseBtn.addEventListener('click', function() {
                     if (video.paused) {
@@ -1873,116 +1980,86 @@
                         fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
                     }
                 });
-                
+
+                progressContainer.addEventListener('click', e => {
+                    const rect = progressContainer.getBoundingClientRect();
+                    video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
+                    updateTimeDisplay();
+                });
+
                 // Format time display
-                function formatTime(seconds) {
-                    const minutes = Math.floor(seconds / 60);
-                    const secs = Math.floor(seconds % 60);
-                    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+                function formatTime(sec) {
+                    const m = Math.floor(sec / 60);
+                    const s = Math.floor(sec % 60);
+                    return `${m}:${s < 10 ? '0' : ''}${s}`;
                 }
-                
+
                 function updateTimeDisplay() {
-                    const activeEpisode = document.querySelector('.episode-item.active');
-                    const episodeTitle = activeEpisode ? activeEpisode.getAttribute('data-episode-title') : 'Current Episode';
-                    timeDisplay.innerHTML = `
-                        ${formatTime(video.currentTime)} / ${formatTime(video.duration)}
-                        <span class="separator-pipe">|</span>
-                        <span class="title-current-pipe">${episodeTitle}</span>
-                    `;
+                    timeDisplay.innerHTML = `${formatTime(video.currentTime)} / ${formatTime(video.duration)} <span class="separator-pipe">|</span> <span class="title-current-pipe">${episodeTitle}</span>`;
+                    progressBar.style.width = (video.currentTime / video.duration) * 100 + '%';
                 }
-                
+
                 // Start playing the video
                 video.play().catch(e => {
                     showToast('Click on the video to start playback', 'info');
                 });
 
-                // Track video progress
-                video.addEventListener('timeupdate', function() {
-                    const currentTime = video.currentTime;
-                    const duration = video.duration;
-                    
-                    // send progress updates every 5 sec
-                    if (currentTime % 5 < 0.1 || currentTime > duration - 5) {
-                        const isCompleted = currentTime >= duration - 2;
-                        
+                let lastSentSecond = -1;
+                let throttleSeconds = 5;
+                video.addEventListener('timeupdate', () => {
+                    updateTimeDisplay();
+                    const currentSecond = Math.floor(video.currentTime);
+                    if (currentSecond % throttleSeconds === 0 && currentSecond !== lastSentSecond) {
+                        lastSentSecond = currentSecond;
+                        const isCompleted = currentSecond >= Math.floor(video.duration) - 2;
+                        if (isCompleted) hasMarkedCompleted = true;
+
                         fetch(`/enrolled-courses/${window.currentCourseId}/episodes/${window.currentEpisodeId}/progress`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                watched_seconds: Math.floor(currentTime),
-                                is_completed: isCompleted
-                            })
-                        })
-                        .then(response => response.json())
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' },
+                            body: JSON.stringify({ watched_seconds: currentSecond, is_completed: isCompleted })
+                        }).then(res => res.json())
                         .then(data => {
                             if (data.success && data.overall_progress) {
-                                // overall progress display
                                 const progressPercent = document.querySelector('.progress-percent');
                                 const progressFill = document.querySelector('.progress-fill');
-                                
-                                progressPercent.textContent = `${data.overall_progress}%`;
-                                progressFill.style.width = `${data.overall_progress}%`;
-
+                                if (progressPercent) progressPercent.textContent = `${data.overall_progress}%`;
+                                if (progressFill) progressFill.style.width = `${data.overall_progress}%`;
                                 checkProgressFromResponse(data.overall_progress);
-                                
-                                // If completed, update UI
-                                if (data.progress.is_completed) {
+
+                                if (data.progress?.is_completed) {
                                     const activeEpisode = document.querySelector('.episode-item.active');
                                     if (activeEpisode && !activeEpisode.classList.contains('completed')) {
                                         activeEpisode.classList.add('completed');
-                                        if (!activeEpisode.querySelector('.fa-check-circle')) {
-                                            activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
-                                        }
+                                        if (!activeEpisode.querySelector('.fa-check-circle')) activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
                                     }
                                 }
                             }
-                            if (data.success) {
-                                const bar = document.querySelector('.progress-bar');
-                                const text = document.querySelector('.progress-percent');
-
-                                if (bar) bar.style.width = data.overall_progress + '%';
-                                if (text) text.textContent = data.overall_progress + '%';
-                            }
                         });
                     }
-                });              
-                
-                // auto completion when vid ends
-                video.addEventListener('ended', function() {
-                    fetch(`/enrolled-courses/${currentCourseId}/episodes/${currentEpisodeId}/progress`, {
+                });
+
+                // Auto-complete on video end
+                video.addEventListener('ended', () => {
+                    if (hasMarkedCompleted) return;
+                    hasMarkedCompleted = true;
+
+                    fetch(`/enrolled-courses/${window.currentCourseId}/episodes/${window.currentEpisodeId}/progress`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            watched_seconds: video.duration,
-                            is_completed: true
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' },
+                        body: JSON.stringify({ watched_seconds: video.duration, is_completed: true })
+                    }).then(res => res.json()).then(data => {
                         if (data.success) {
                             const activeEpisode = document.querySelector('.episode-item.active');
                             if (activeEpisode && !activeEpisode.classList.contains('completed')) {
                                 activeEpisode.classList.add('completed');
-                                if (!activeEpisode.querySelector('.fa-check-circle')) {
-                                    activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
-                                }
-                                
-                                // progress display
-                                const progressPercent = document.querySelector('.progress-percent');
-                                const progressFill = document.querySelector('.progress-fill');
-                                progressPercent.textContent = `${data.overall_progress}%`;
-                                progressFill.style.width = `${data.overall_progress}%`;
-                                
-                                showToast('Episode marked as completed!');
+                                if (!activeEpisode.querySelector('.fa-check-circle')) activeEpisode.innerHTML += '<i class="fas fa-check-circle"></i>';
                             }
+                            const progressPercent = document.querySelector('.progress-percent');
+                            const progressFill = document.querySelector('.progress-fill');
+                            if (progressPercent) progressPercent.textContent = `${data.overall_progress}%`;
+                            if (progressFill) progressFill.style.width = `${data.overall_progress}%`;
+                            showToast('Current video marked as completed!');
                         }
                     });
                 });
@@ -1992,6 +2069,12 @@
 
             // Updated episode selection function
             function handleEpisodeSelection(item) {
+                // locked episodes
+                const isLocked = item.getAttribute('data-locked') === 'true';
+                if (isLocked) {
+                    showSubscriptionModalTipsTricks();
+                    return;
+                }
                 const videoUrl = item.getAttribute('data-video-url');
                 const episodeTitle = item.getAttribute('data-episode-title');
                 const episodeId = item.getAttribute('data-episode-id');
@@ -2021,6 +2104,11 @@
             // episode click handlers
             document.querySelectorAll('.episode-item').forEach(item => {
                 item.addEventListener('click', function () {
+                    const isLocked = this.getAttribute('data-locked') === 'true';
+                    if (isLocked) {
+                        showSubscriptionModalTipsTricks();
+                        return;
+                    }
                     handleEpisodeSelection(this);
                 });
             });
@@ -2044,37 +2132,39 @@
             }
 
             // Mark as complete button
-            document.getElementById('mark-complete-btn').addEventListener('click', function () {
-                const activeEpisode = document.querySelector('.episode-item.active');
-                if (!activeEpisode) {
+            const markCompleteBtn = document.getElementById('mark-complete-btn');
+            if (markCompleteBtn) {
+                markCompleteBtn.addEventListener('click', function () {
+                    const activeEpisode = document.querySelector('.episode-item.active');
+                    if (!activeEpisode) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Please select a video to play first',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+
+                    const episodeId = activeEpisode.getAttribute('data-episode-id');
+                    const courseId = {{ $course['id'] }};
+
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Please select an episode first',
-                        timer: 2500,
-                        showConfirmButton: false
+                        title: 'Marking current video as completed...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
-                    return;
-                }
 
-                const episodeId = activeEpisode.getAttribute('data-episode-id');
-                const courseId = {{ $course['id'] }};
-
-                Swal.fire({
-                    title: 'Marking episode as completed...',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    }
-                })
+                    fetch(`/enrolled-courses/${courseId}/episodes/${episodeId}/complete`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) throw new Error('Network response was not ok');
                         return response.json();
@@ -2095,8 +2185,12 @@
                             const increment = () => {
                                 if (currentProgress < targetProgress) {
                                     currentProgress++;
-                                    progressPercent.textContent = `${currentProgress}%`;
-                                    progressFill.style.width = `${currentProgress}%`;
+                                    if (progressPercent) {
+                                        progressPercent.textContent = `${data.overall_progress}%`;
+                                    }
+                                    if (progressFill) {
+                                        progressFill.style.width = `${data.overall_progress}%`;
+                                    }
                                     setTimeout(increment, 20);
                                 } else {
                                     checkProgressFromResponse(currentProgress);
@@ -2128,7 +2222,8 @@
                             showConfirmButton: false
                         });
                     });
-            });
+                });
+            }
 
             // Confirm before unenrolling
             const unenrollBtn = document.getElementById('unenroll-btn');
@@ -2257,6 +2352,13 @@
                         }
                     });
                 });
+            });
+
+            // close subscription modal
+            document.getElementById('subscription-modal-tipstricks').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSubscriptionModalTipsTricks();
+                }
             });
 
             // Share certificate functionality

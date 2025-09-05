@@ -112,15 +112,30 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const cardsContainer = document.querySelector(".cards");
     const cards = Array.from(cardsContainer.children);
-    const wrapper = document.querySelector(".cards-wrapper");
     const prevBtn = document.querySelector(".arrow-btn-prev");
     const nextBtn = document.querySelector(".arrow-btn-next");
     
-    const centerPosition = Math.floor(cards.length / 2);
-    let currentIndex = centerPosition;
+    // Create clones for seamless looping
+    const firstCardClone = cards[0].cloneNode(true);
+    const lastCardClone = cards[cards.length - 1].cloneNode(true);
     
-    function updateView() {
-        const card = cards[0];
+    // Add unique class to identify clones
+    firstCardClone.classList.add('clone-card');
+    lastCardClone.classList.add('clone-card');
+    
+    // Append clones to container
+    cardsContainer.appendChild(firstCardClone);
+    cardsContainer.insertBefore(lastCardClone, cards[0]);
+    
+    // Get all cards including clones
+    const allCards = Array.from(cardsContainer.children);
+    const totalCards = allCards.length;
+    
+    // Start at the first real card (position 1, since position 0 is the last clone)
+    let currentIndex = 1;
+    
+    function updateView(animate = true) {
+        const card = allCards[0];
         const cardWidth = card.offsetWidth;
         const cardMargin = window.innerWidth <= 768 ? 20 : 55;
         const totalWidth = cardWidth + cardMargin * 2;
@@ -128,223 +143,254 @@ document.addEventListener("DOMContentLoaded", function () {
         // Adjust the percentage for mobile
         const translatePercentage = window.innerWidth <= 768 ? 50 : 47.65;
         const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 20px))`;
+        
+        if (animate) {
+            cardsContainer.style.transition = 'transform 0.5s ease';
+        } else {
+            cardsContainer.style.transition = 'none';
+        }
+        
         cardsContainer.style.transform = transformValue;
         
-        cards.forEach((card, index) => {
+        // Update active classes
+        allCards.forEach((card, index) => {
             card.classList.remove("prev", "next", "active");
             
             if (index === currentIndex - 1) card.classList.add("prev");
             else if (index === currentIndex + 1) card.classList.add("next");
             else if (index === currentIndex) card.classList.add("active");
         });
+    }
+    
+    function nextSlide() {
+        currentIndex++;
         
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex === cards.length - 1;
+        // If we've reached the end (the first clone), instantly jump to the beginning
+        if (currentIndex >= totalCards - 1) {
+            updateView(true);
+            
+            // After animation completes, instantly jump to the first real card
+            setTimeout(() => {
+                currentIndex = 1;
+                updateView(false);
+            }, 500);
+        } else {
+            updateView(true);
+        }
+    }
+    
+    function prevSlide() {
+        currentIndex--;
+        
+        // If we've reached the beginning (the last clone), instantly jump to the end
+        if (currentIndex <= 0) {
+            updateView(true);
+            
+            // After animation completes, instantly jump to the last real card
+            setTimeout(() => {
+                currentIndex = totalCards - 2;
+                updateView(false);
+            }, 500);
+        } else {
+            updateView(true);
+        }
     }
     
     // Handle window resize
-    window.addEventListener('resize', updateView);
+    window.addEventListener('resize', () => updateView(false));
     
-    prevBtn.addEventListener("click", () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateView();
-        }
-    });
-    
-    nextBtn.addEventListener("click", () => {
-        if (currentIndex < cards.length - 1) {
-            currentIndex++;
-            updateView();
-        }
-    });
+    prevBtn.addEventListener("click", prevSlide);
+    nextBtn.addEventListener("click", nextSlide);
     
     // Clicking on side cards
-    cards.forEach((card, index) => {
+    allCards.forEach((card, index) => {
         card.addEventListener("click", () => {
-            if (index === currentIndex - 1 || index === currentIndex + 1) {
-                currentIndex = index;
-                updateView();
-            }
+            if (index === currentIndex - 1) prevSlide();
+            else if (index === currentIndex + 1) nextSlide();
         });
     });
     
     // Initialize
-    updateView();
+    updateView(false);
+    
 });
+
 
 // Service Categories section
 const services = {
-  design: {
-    icon: "🎨",
-    title: "Bring Your Ideas to Life with Stunning Designs",
-    content: `
-      <p>We provide a full spectrum of design services tailored to your business or personal needs. From eye-catching logos, professional business cards, and polished brochures to posters, flyers, and social media graphics, we deliver ready-to-use, high-quality visuals.</p>
-      <p>Every design is crafted with your brand and audience in mind—no learning, no trial-and-error. You receive professional results, ready for print or online publication, helping your brand make a lasting impression instantly.</p>
-      <p class="highlight">✨ Ready to stand out? Let us create your next masterpiece today!</p>
-    `
-  },
-  ai: {
-    icon: "🤖",
-    title: "AI Content Creation Made Simple & Effective",
-    content: `
-      <p>Unlock powerful AI-driven tools for generating blog posts, ad copy, social media captions, and more—customized for your brand's tone and audience. Our AI solutions help you create engaging content that resonates with your target market.</p>
-      <p>Save hours of effort while delivering professional, SEO-optimized content at scale. From ideation to publication, we streamline the entire content creation process.</p>
-      <p class="highlight">🚀 Transform your content strategy with AI-powered solutions!</p>
-    `
-  },
-  office: {
-    icon: "📊",
-    title: "Simplify Your Office Admin with Smart ICT Solutions",
-    content: `
-      <p>We streamline office tasks with comprehensive ICT solutions—document management, automated reporting, efficient data entry, and workflow automation. Our services are designed to reduce manual effort and minimize errors.</p>
-      <p>With our office administration support, you can focus on business growth while we handle the operational details. We implement systems that improve productivity and organization.</p>
-      <p class="highlight">📈 Boost efficiency with our office automation solutions!</p>
-    `
-  },
-  support: {
-    icon: "🔧",
-    title: "Reliable Technical Support & Maintenance Services",
-    content: `
-      <p>From troubleshooting to preventive maintenance, we keep your systems running smoothly. Our technical support covers hardware, software, network issues, and regular system updates.</p>
-      <p>We provide reliable IT support that ensures less downtime and more productivity. With proactive monitoring and quick response times, we prevent problems before they affect your business.</p>
-      <p class="highlight">🛡️ Keep your systems secure and operational with our expert support!</p>
-    `
-  },
-  web: {
-    icon: "💻",
-    title: "Custom Web & App Programming Solutions",
-    content: `
-      <p>We build responsive websites and user-centered applications, tailored to your specific needs. Our development services include front-end and back-end programming, database design, and API integrations.</p>
-      <p>Whether you need a simple website, complex web application, or mobile app, we deliver fast, secure, and scalable coding solutions that drive your digital presence forward.</p>
-      <p class="highlight">🌐 Create powerful digital experiences with our development expertise!</p>
-    `
-  },
-  network: {
-    icon: "🌐",
-    title: "Networking & Internet Essentials for Modern Businesses",
-    content: `
-      <p>Optimize your network with expert setup, configuration, and monitoring services. We ensure secure, fast, and reliable internet connectivity for your business operations.</p>
-      <p>Our networking solutions include Wi-Fi setup, router configuration, network security, VPN implementation, and ongoing maintenance to keep your connections stable and secure.</p>
-      <p class="highlight">⚡ Experience seamless connectivity with our networking expertise!</p>
-    `
-  },
-  marketing: {
-    icon: "📢",
-    title: "Digital Marketing & Social Media Strategies That Convert",
-    content: `
-      <p>Grow your brand online with targeted social campaigns, SEO optimization, email marketing funnels, and analytics-driven strategies that deliver measurable results.</p>
-      <p>We develop comprehensive digital marketing plans that increase your visibility, engage your audience, and convert followers into customers. From content strategy to performance analytics, we handle it all.</p>
-      <p class="highlight">📈 Drive growth with our result-oriented marketing strategies!</p>
-    `
-  }
+    design: {
+        icon: "🎨",
+        title: "Bring Your Ideas to Life with Stunning Designs",
+        content: `
+            <p>We provide a full spectrum of design services tailored to your business or personal needs. From eye-catching logos, professional business cards, and polished brochures to posters, flyers, and social media graphics, we deliver ready-to-use, high-quality visuals.</p>
+            <p>Every design is crafted with your brand and audience in mind—no learning, no trial-and-error. You receive professional results, ready for print or online publication, helping your brand make a lasting impression instantly.</p>
+            <p class="highlight">✨ Ready to stand out? Let us create your next masterpiece today!</p>
+        `
+    },
+    ai: {
+        icon: "🤖",
+        title: "AI Content Creation Made Simple & Effective",
+        content: `
+            <p>Unlock powerful AI-driven tools for generating blog posts, ad copy, social media captions, and more—customized for your brand's tone and audience. Our AI solutions help you create engaging content that resonates with your target market.</p>
+            <p>Save hours of effort while delivering professional, SEO-optimized content at scale. From ideation to publication, we streamline the entire content creation process.</p>
+            <p class="highlight">🚀 Transform your content strategy with AI-powered solutions!</p>
+        `
+    },
+    office: {
+        icon: "📊",
+        title: "Simplify Your Office Admin with Smart ICT Solutions",
+        content: `
+            <p>We streamline office tasks with comprehensive ICT solutions—document management, automated reporting, efficient data entry, and workflow automation. Our services are designed to reduce manual effort and minimize errors.</p>
+            <p>With our office administration support, you can focus on business growth while we handle the operational details. We implement systems that improve productivity and organization.</p>
+            <p class="highlight">📈 Boost efficiency with our office automation solutions!</p>
+        `
+    },
+    support: {
+        icon: "🔧",
+        title: "Reliable Technical Support & Maintenance Services",
+        content: `
+            <p>From troubleshooting to preventive maintenance, we keep your systems running smoothly. Our technical support covers hardware, software, network issues, and regular system updates.</p>
+            <p>We provide reliable IT support that ensures less downtime and more productivity. With proactive monitoring and quick response times, we prevent problems before they affect your business.</p>
+            <p class="highlight">🛡️ Keep your systems secure and operational with our expert support!</p>
+        `
+    },
+    web: {
+        icon: "💻",
+        title: "Custom Web & App Programming Solutions",
+        content: `
+            <p>We build responsive websites and user-centered applications, tailored to your specific needs. Our development services include front-end and back-end programming, database design, and API integrations.</p>
+            <p>Whether you need a simple website, complex web application, or mobile app, we deliver fast, secure, and scalable coding solutions that drive your digital presence forward.</p>
+            <p class="highlight">🌐 Create powerful digital experiences with our development expertise!</p>
+        `
+    },
+    network: {
+        icon: "🌐",
+        title: "Networking & Internet Essentials for Modern Businesses",
+        content: `
+            <p>Optimize your network with expert setup, configuration, and monitoring services. We ensure secure, fast, and reliable internet connectivity for your business operations.</p>
+            <p>Our networking solutions include Wi-Fi setup, router configuration, network security, VPN implementation, and ongoing maintenance to keep your connections stable and secure.</p>
+            <p class="highlight">⚡ Experience seamless connectivity with our networking expertise!</p>
+        `
+    },
+    marketing: {
+        icon: "📢",
+        title: "Digital Marketing & Social Media Strategies That Convert",
+        content: `
+            <p>Grow your brand online with targeted social campaigns, SEO optimization, email marketing funnels, and analytics-driven strategies that deliver measurable results.</p>
+            <p>We develop comprehensive digital marketing plans that increase your visibility, engage your audience, and convert followers into customers. From content strategy to performance analytics, we handle it all.</p>
+            <p class="highlight">📈 Drive growth with our result-oriented marketing strategies!</p>
+        `
+    }
 };
 
 // Initialize Service Categories
 document.addEventListener('DOMContentLoaded', function() {
-  const serviceCards = document.querySelectorAll('.service-card');
-  const detailsContainer = document.getElementById('service-details');
-  
-  // Set first service as active by default
-  if (serviceCards.length > 0) {
-    activateService(serviceCards[0].dataset.service);
-    serviceCards[0].classList.add('active');
-  }
-  
-  // Click event to all service cards
-  serviceCards.forEach(card => {
-    card.addEventListener('click', function() {
-      const serviceType = this.dataset.service;
-      
-      // Remove active class from all cards
-      serviceCards.forEach(c => c.classList.remove('active'));
-      
-      // Add active class to clicked card
-      this.classList.add('active');
-      
-      // Update details
-      activateService(serviceType);
-    });
-  });
-  
-  // Function to activate a service
-  function activateService(serviceType) {
-    const service = services[serviceType];
-
-    if (service) {
-      detailsContainer.innerHTML = `
-        <div class="details-content">
-          <div class="details-header">
-            <div class="details-icon">${service.icon}</div>
-            <h3>${service.title}</h3>
-          </div>
-          <div class="details-text">
-            ${service.content}
-          </div>
-          <button class="details-btn" id="need-assistance-btn">
-              <span>Need Assistance?</span>
-              <div class="btn-arrow">→</div>
-          </button>
-        </div>
-      `;
-
-      // Add event listener to the new button
-      const newButton = detailsContainer.querySelector('#need-assistance-btn');
-      if (newButton) {
-        newButton.addEventListener('click', function() {
-          const serviceType = document.querySelector('.service-card.active').dataset.service;
-          openServiceAssistanceModal(serviceType);
+    const serviceCards = document.querySelectorAll('.service-card');
+    const detailsContainer = document.getElementById('service-details');
+    const isMobile = window.innerWidth <= 768;
+    
+    // Set first service as active by default on desktop
+    if (!isMobile && serviceCards.length > 0) {
+        activateServiceDesktop(serviceCards[0].dataset.service);
+        serviceCards[0].classList.add('active');
+    }
+    
+    // Click event to all service cards
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const serviceType = this.dataset.service;
+            
+            if (isMobile) {
+                // Mobile behavior - toggle accordion
+                toggleMobileService(this, serviceType);
+            } else {
+                // Desktop behavior - update details panel
+                serviceCards.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                activateServiceDesktop(serviceType);
+            }
         });
-      }
+    });
+    
+    // Function to activate a service on desktop
+    function activateServiceDesktop(serviceType) {
+        const service = services[serviceType];
 
-      // Function to open service assistance modal with specific service
-      function openServiceAssistanceModal(serviceType) {
-        const serviceTitles = {
-          design: "Graphic Design",
-          ai: "AI Content Creation", 
-          office: "Office Admin (ICT)",
-          support: "Technical Support",
-          web: "Web & App Programming",
-          network: "Networking Essentials",
-          marketing: "Digital Marketing"
-        };
-        
-        document.getElementById('serviceCategoryTitle').textContent = serviceTitles[serviceType];
-        document.getElementById('serviceTypeInput').value = serviceType;
-        
-        // Set a placeholder in the textarea based on service type
-        const textarea = document.getElementById('service_needs');
-        const placeholders = {
-          design: "e.g., I need a logo for my new business...",
-          ai: "e.g., I need help creating content for my social media...",
-          office: "e.g., I need help organizing my digital files...",
-          support: "e.g., My computer is running slowly and...",
-          web: "e.g., I need a website for my business that includes...",
-          network: "e.g., I'm having issues with my office WiFi...",
-          marketing: "e.g., I want to increase my online presence by..."
-        };
-        
-        textarea.placeholder = placeholders[serviceType] || "Please describe your requirements...";
-        
-        // Show the modal
-        document.getElementById('serviceAssistanceModalUnique').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-      }
+        if (service) {
+            detailsContainer.innerHTML = `
+                <div class="details-content">
+                    <div class="details-header">
+                        <div class="details-icon">${service.icon}</div>
+                        <h3>${service.title}</h3>
+                    </div>
+                    <div class="details-text">
+                        ${service.content}
+                    </div>
+                </div>
+            `;
+        }
     }
-  }
-
-  // Close modal functionality
-  document.getElementById('closeServiceAssistanceModal').addEventListener('click', function() {
-    document.getElementById('serviceAssistanceModalUnique').style.display = 'none';
-    document.body.style.overflow = 'auto';
-  });
-
-  // Close modal when clicking outside
-  window.addEventListener('click', function(event) {
-    const modal = document.getElementById('serviceAssistanceModalUnique');
-    if (event.target === modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = 'auto';
+    
+    // Function to toggle mobile service details
+    function toggleMobileService(card, serviceType) {
+        const service = services[serviceType];
+        
+        // Check if this card is already active
+        const isActive = card.classList.contains('mobile-active');
+        
+        // Remove active class and hide all details
+        document.querySelectorAll('.service-card').forEach(c => {
+            c.classList.remove('mobile-active');
+        });
+        document.querySelectorAll('.mobile-service-details').forEach(detail => {
+            detail.remove();
+        });
+        
+        // If it wasn't active, show the details for this card
+        if (!isActive) {
+            card.classList.add('mobile-active');
+            
+            // Create details element
+            const detailsElement = document.createElement('div');
+            detailsElement.className = 'mobile-service-details';
+            detailsElement.innerHTML = `
+                <div class="details-header">
+                    <div class="details-icon">${service.icon}</div>
+                    <h3>${service.title}</h3>
+                </div>
+                <div class="details-text">
+                    ${service.content}
+                </div>
+            `;
+            
+            // Insert after the card
+            card.parentNode.insertBefore(detailsElement, card.nextSibling);
+        }
     }
-  });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const newIsMobile = window.innerWidth <= 768;
+        
+        if (isMobile !== newIsMobile) {
+            // Clear any mobile details if switching to desktop
+            if (!newIsMobile) {
+                document.querySelectorAll('.mobile-service-details').forEach(detail => {
+                    detail.remove();
+                });
+                document.querySelectorAll('.service-card').forEach(card => {
+                    card.classList.remove('mobile-active');
+                });
+                
+                // Reset desktop view
+                if (serviceCards.length > 0) {
+                    activateServiceDesktop(serviceCards[0].dataset.service);
+                    serviceCards[0].classList.add('active');
+                }
+            }
+            
+            // Update isMobile for next click
+            isMobile = newIsMobile;
+        }
+    });
 });

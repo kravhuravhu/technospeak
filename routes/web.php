@@ -431,3 +431,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/testing-yoco', [TestingPayment::class, 'show'])->name('testing.yoco');
     Route::post('/testing-yoco/charge', [TestingPayment::class, 'charge'])->name('testing.payment.charge');
 });
+
+// Yoco subscription routes
+Route::get('/subscription/yoco/form', [SubscriptionController::class, 'showSubscriptionForm'])
+    ->name('subscription.yoco.form')
+    ->middleware('auth');
+
+Route::post('/subscription/yoco/process', [SubscriptionController::class, 'processYocoPayment'])
+    ->name('subscription.yoco.process')
+    ->middleware('auth');
+
+// Yoco training payment routes
+Route::post('/training/yoco/process', [TrainingRegistrationController::class, 'processYocoTrainingPayment'])
+    ->name('training.yoco.process')
+    ->middleware('auth');

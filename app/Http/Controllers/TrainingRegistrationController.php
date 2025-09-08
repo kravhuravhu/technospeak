@@ -81,24 +81,9 @@ class TrainingRegistrationController extends Controller
         Log::info("Training payment attempt for client {$client->id}, session {$session->id}, amount R$amount, status pending");
 
         try {
-            // Create payment record first
-            $payment = Payment::create([
-                'client_id' => $client->id,
-                'amount' => $amount,
-                'payment_method' => 'card',
-                'status' => 'pending',
-                'payable_type' => 'training',
-                'payable_id' => $session->id,
-                'metadata' => json_encode([
-                    'user_type' => $client->userType,
-                    'session_title' => $session->title,
-                    'payment_processor' => 'yoco'
-                ])
-            ]);
-
-            // Process payment with Yoco
+            // Process payment with Yoco (USE TEST KEY LIKE TESTING VERSION)
             $response = Http::withHeaders([
-                'X-Auth-Secret-Key' => env('YOCO_SECRET_KEY'),
+                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'), // Changed to TEST key
             ])->post('https://online.yoco.com/v1/charges/', [
                 'token' => $request->token,
                 'amountInCents' => intval($amount * 100),
@@ -109,30 +94,24 @@ class TrainingRegistrationController extends Controller
 
             if (isset($data['error'])) {
                 Log::error("Yoco error for client {$client->id}: " . $data['error']['message']);
-                
-                // Update payment status to failed
-                $payment->update([
-                    'status' => 'failed',
-                    'metadata' => json_encode(array_merge(
-                        json_decode($payment->metadata, true) ?? [],
-                        ['error' => $data['error']['message']]
-                    ))
-                ]);
-
                 return back()->with('error', $data['error']['message']);
             }
 
-            // Payment successful
-            $payment->update([
+            // Create payment record after successful charge
+            $payment = Payment::create([
                 'transaction_id' => $data['id'],
+                'client_id' => $client->id,
+                'amount' => $amount,
+                'payment_method' => 'card',
                 'status' => $data['status'] === 'successful' ? 'completed' : 'failed',
-                'metadata' => json_encode(array_merge(
-                    json_decode($payment->metadata, true) ?? [],
-                    [
-                        'yoco_response' => $data,
-                        'processed_at' => now()->toDateTimeString()
-                    ]
-                ))
+                'payable_type' => 'training',
+                'payable_id' => $session->id,
+                'metadata' => json_encode([
+                    'user_type' => $client->userType,
+                    'session_title' => $session->title,
+                    'payment_processor' => 'yoco',
+                    'yoco_response' => $data
+                ])
             ]);
 
             if ($payment->status === 'completed') {
@@ -164,188 +143,21 @@ class TrainingRegistrationController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Training payment failed for client {$client->id}: " . $e->getMessage());
-            
-            if (isset($payment)) {
-                $payment->update([
-                    'status' => 'failed',
-                    'metadata' => json_encode(array_merge(
-                        json_decode($payment->metadata, true) ?? [],
-                        ['exception' => $e->getMessage()]
-                    ))
-                ]);
-            }
-
             return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }
 
-    // Keep the existing verification and status check methods
-    public function verifyTrainingPayment(Request $request, $paymentId)
+    public function showTrainingSuccess($paymentId)
     {
         $payment = Payment::findOrFail($paymentId);
-        
-        // Check if payment was already processed
-        if ($payment->status === 'completed') {
-            return $this->showTrainingSuccessPage($payment);
-        }
-
-        // Check payment status via Yoco API
-        $verificationResult = $this->verifyYocoPayment($payment);
-
-        if ($verificationResult['status'] === 'completed') {
-            return $this->processSuccessfulTrainingPayment($payment, $verificationResult);
-        } elseif ($verificationResult['status'] === 'pending') {
-            return view('payment.pending', [
-                'payment' => $payment,
-                'pollingUrl' => route('yoco.training.status', ['payment' => $payment->id])
-            ]);
-        } else {
-            return $this->processFailedTrainingPayment($payment);
-        }
-    }
-
-    protected function processSuccessfulTrainingPayment($payment, $paymentData)
-    {
         $client = Client::findOrFail($payment->client_id);
         $session = TrainingSession::findOrFail($payment->payable_id);
 
-        // Update payment record
-        $payment->update([
-            'transaction_id' => $paymentData['yoco_payment_id'] ?? null,
-            'status' => 'completed',
-            'metadata' => json_encode(array_merge(
-                json_decode($payment->metadata, true) ?? [],
-                [
-                    'processed_at' => now()->toDateTimeString(),
-                    'yoco_response' => $paymentData
-                ]
-            ))
-        ]);
-
-        // Update training registration
-        $registration = TrainingRegistration::where([
-            'client_id' => $client->id,
-            'session_id' => $session->id
-        ])->first();
-
-        if ($registration) {
-            $registration->update([
-                'payment_status' => 'completed',
-                'payment_id' => $payment->id
-            ]);
-        }
-
-        // Send notification
-        $client->notify(new PaymentProcessed($payment, 'success'));
-
-        Log::info('Yoco training payment completed successfully', [
-            'payment_id' => $payment->id,
-            'client_id' => $client->id,
-            'session_id' => $session->id,
-            'transaction_id' => $payment->transaction_id
-        ]);
-
-        return $this->showTrainingSuccessPage($payment);
-    }
-
-    protected function processFailedTrainingPayment($payment)
-    {
-        $payment->update([
-            'status' => 'failed',
-            'metadata' => json_encode(array_merge(
-                json_decode($payment->metadata, true) ?? [],
-                ['failed_at' => now()->toDateTimeString()]
-            ))
-        ]);
-
-        $client = Client::findOrFail($payment->client_id);
-        $client->notify(new PaymentProcessed($payment, 'failed'));
-
-        Log::warning('Yoco training payment failed', ['payment_id' => $payment->id]);
-
-        return view('payment.failed', [
-            'payment' => $payment
-        ]);
-    }
-
-    public function checkTrainingPaymentStatus(Request $request, $paymentId)
-    {
-        $payment = Payment::findOrFail($paymentId);
-        
-        $verificationResult = $this->verifyYocoPayment($payment);
-        
-        if ($verificationResult['status'] === 'completed') {
-            $this->processSuccessfulTrainingPayment($payment, $verificationResult);
-            
-            return response()->json([
-                'status' => 'completed',
-                'redirect' => route('yoco.training.success', ['payment' => $payment->id])
-            ]);
-        } elseif ($verificationResult['status'] === 'failed') {
-            $this->processFailedTrainingPayment($payment);
-            
-            return response()->json([
-                'status' => 'failed',
-                'redirect' => route('yoco.training.failed', ['payment' => $payment->id])
-            ]);
-        }
-        
-        return response()->json(['status' => 'pending']);
-    }
-
-    protected function showTrainingSuccessPage($payment)
-    {
-        $client = Client::findOrFail($payment->client_id);
-        $session = TrainingSession::findOrFail($payment->payable_id);
-
-        return view('success-payment', [
-            'trainingSession' => $session,
+        return view('success-group', [
+            'service' => $session, // Pass the session as service
             'payment' => $payment,
             'client' => $client
         ]);
-    }
-
-    // Reuse the verifyYocoPayment method
-    protected function verifyYocoPayment($payment)
-    {
-        // Check if we have a Yoco transaction ID
-        if ($payment->transaction_id) {
-            return $this->checkYocoPaymentStatus($payment->transaction_id);
-        }
-
-        // If no transaction ID yet, payment is still pending
-        return ['status' => 'pending'];
-    }
-
-    protected function checkYocoPaymentStatus($yocoPaymentId)
-    {
-        try {
-            $secretKey = env('YOCO_SECRET_KEY');
-            $response = Http::withBasicAuth($secretKey, '')
-                ->get("https://api.yoco.com/v1/payments/{$yocoPaymentId}");
-
-            if ($response->successful()) {
-                $paymentData = $response->json();
-                
-                if ($paymentData['status'] === 'succeeded') {
-                    return [
-                        'status' => 'completed',
-                        'yoco_payment_id' => $yocoPaymentId,
-                        'amount' => $paymentData['amount'] / 100,
-                        'currency' => $paymentData['currency'],
-                        'payment_method' => $paymentData['paymentMethod'] ?? 'card'
-                    ];
-                } elseif ($paymentData['status'] === 'pending') {
-                    return ['status' => 'pending'];
-                } else {
-                    return ['status' => 'failed'];
-                }
-            }
-        } catch (\Exception $e) {
-            Log::error('Error checking Yoco payment status: ' . $e->getMessage());
-        }
-
-        return ['status' => 'pending'];
     }
 
     public function registrations(TrainingSession $training)
@@ -421,28 +233,6 @@ class TrainingRegistrationController extends Controller
         //     'clientId' => $client->id,
         //     'planId' => 'training_' . $session->id
         // ]);
-    }
-
-    protected function getYocoPaymentLink($trainingTypeId, $userType)
-    {
-        // Live Q&A Session (type_id = 4)
-        if ($trainingTypeId == 4) {
-            return strtolower($userType) === 'student' 
-                ? 'https://pay.yoco.com/r/78EaYJ' 
-                : 'https://pay.yoco.com/r/2Yga0k';
-        }
-        
-        // Response Consultation (type_id = 5)
-        if ($trainingTypeId == 5) {
-            return strtolower($userType) === 'student' 
-                ? 'https://pay.yoco.com/r/4arOz5' 
-                : 'https://pay.yoco.com/r/4xj5wr';
-        }
-        
-        // Default fallback (shouldn't happen for these session types)
-        return strtolower($userType) === 'student' 
-            ? 'https://pay.yoco.com/r/78EaYJ' 
-            : 'https://pay.yoco.com/r/2Yga0k';
     }
 
     protected function processTrainingPayment(Payment $payment): void

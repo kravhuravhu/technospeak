@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class ClientController extends Controller
 {
@@ -181,8 +182,11 @@ class ClientController extends Controller
             return back()->with('success', 'Client archived instead of deleted due to existing activity.');
         }
 
-        $client->session()->invalidate();
-        $client->session()->regenerateToken();
+        if (auth('web')->check() && auth('web')->id() === $client->id) {
+            auth('web')->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
 
         Cache::forget('client_' . $client->id);
 

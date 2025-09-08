@@ -51,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         // forse HTTPS when load from oxide
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
+            $this->app['request']->server->set('HTTPS', true);
         }
 
         // allow bcc when sending emails

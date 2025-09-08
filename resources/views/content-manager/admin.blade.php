@@ -111,7 +111,7 @@
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->registered_date->format('M d, Y') }}</td>
                     <td>
-                        @if($client->email_verified_at)
+                        @if($client->email_verified_at && ($client->status === 'active'))
                             <span class="status-badge status-active">Active</span>
                         @else
                             <span class="status-badge status-inactive">Inactive</span>

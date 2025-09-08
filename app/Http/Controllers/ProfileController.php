@@ -53,13 +53,33 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        if (
+            $user->courseSubscriptions()->exists() ||
+            $user->trainingRegistrations()->exists() ||
+            $user->payments()->exists()
+        ) {
+            // Archive instead of deleting
+            $user->status = 'archived';
+            $user->archived_at = now();
+            $user->email = $user->email . '.arch_' . time();
+            $user->save();
 
-        $user->delete();
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
+            return Redirect::to('/')->with('accountDeleted', true);
+        }
+
+        // safe to delete
+        Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        Cache::forget('client_' . $user->id);
+
+        $user->delete();
+
+        return Redirect::to('/')->with('success', 'Account deleted successfully.');
     }
 }

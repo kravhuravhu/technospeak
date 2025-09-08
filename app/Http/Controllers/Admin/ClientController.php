@@ -13,6 +13,7 @@ use App\Models\TrainingSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -20,6 +21,7 @@ class ClientController extends Controller
     {
         $clients = Client::with(['preferredCategory'])
             ->latest('registered_date')
+            ->where('status', 'active')
             ->paginate(10);
 
         return view('content-manager.clients.clients', compact('clients'));
@@ -113,21 +115,6 @@ class ClientController extends Controller
             ->with('success', 'Client updated successfully!');
     }
 
-    public function destroy(Client $client)
-    {
-        if ($client->courseSubscriptions()->exists() || 
-            $client->trainingRegistrations()->exists() || 
-            $client->payments()->exists()) {
-            return back()->with('error', 
-                'Cannot delete client with existing activity. Archive instead.');
-        }
-
-        $client->delete();
-
-        return redirect()->route('content-manager.clients.clients')
-            ->with('success', 'Client deleted successfully!');
-    }
-
     public function enrollCourse(Request $request, Client $client)
     {
         $validated = $request->validate([
@@ -177,5 +164,53 @@ class ClientController extends Controller
         $subscription->delete();
 
         return back()->with('success', 'Enrollment removed');
+    }
+
+    public function destroy(Client $client)
+    {
+        if ($client->courseSubscriptions()->exists() || 
+            $client->trainingRegistrations()->exists() || 
+            $client->payments()->exists()) {
+
+            // archive the client, don't delete
+            $client->status = 'archived';
+            $client->archived_at = now();
+            $client->email = $client->email . '.arch_' . time();
+            $client->save();
+
+            return back()->with('success', 'Client archived instead of deleted due to existing activity.');
+        }
+
+        $client->session()->invalidate();
+        $client->session()->regenerateToken();
+
+        Cache::forget('client_' . $client->id);
+
+        $client->delete();
+
+        return redirect()->route('content-manager.clients.clients')
+            ->with('success', 'Client deleted successfully!');
+    }
+
+    public function archived()
+    {
+        $archivedClients = Client::where('status', '!=', 'active')
+            ->with('preferredCategory')
+            ->get()
+            ->map(function($client) {
+                return [
+                    'id' => $client->id,
+                    'name' => $client->name,
+                    'surname' => $client->surname,
+                    'email' => $client->email,
+                    'userType' => $client->userType ?? 'Unknown',
+                    'preferredCategory' => $client->preferredCategory ? $client->preferredCategory->name : 'Unset',
+                    'archived_at' => $client->archived_at ? $client->archived_at->format('Y-m-d H:i:s') : null
+                ];
+            });
+
+        return response()->json([
+            'archivedClients' => $archivedClients
+        ]);
     }
 }

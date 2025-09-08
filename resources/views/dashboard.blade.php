@@ -306,7 +306,7 @@
                                                 </div>
                                                 <div class="thmb_enrll content">
                                                     <label class="{{ $course->is_enrolled ? 'enrolled' : '' }}">
-                                                        {{ $course->is_enrolled ? 'Enrolled' : ($course->plan_type === 'paid' ? 'Unlock' : 'Enroll Free') }}
+                                                        {{ $course->is_enrolled ? 'Enrolled' : ($course->plan_type === 'paid' ? 'Enroll Free' : 'Enroll Free') }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -1806,7 +1806,7 @@
             });
         </script>
 
-                <!-- QA & Consult Modal -->
+        <!-- QA & Consult Modal -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Handle registration triggers
@@ -1934,6 +1934,6 @@
                     });
                 });
             });
-            </script>
+        </script>
     </body>
 </html>

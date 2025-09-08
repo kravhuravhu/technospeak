@@ -1736,10 +1736,10 @@
             }
 
             // Disable right-click and context menu
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                showToast('Right-click is disabled to protect content', 'info');
-            });
+            // document.addEventListener('contextmenu', function(e) {
+            //     e.preventDefault();
+            //     showToast('Right-click is disabled to protect content', 'info');
+            // });
             
             // Disable keyboard shortcuts
             document.addEventListener('keydown', function(e) {
@@ -2807,7 +2807,9 @@
             });
 
             function checkProgressFromResponse(progress) {
-                if (progress >= 100) {
+                const coursePlanType = "{{ $course->plan_type }}";
+                
+                if (progress >= 100 && coursePlanType === 'frml_training') {
                     if (!window.celebrationActive) {
                         window.stopCelebration = startCelebration();
                         window.celebrationActive = true;
@@ -2831,15 +2833,19 @@
                 const progressText = document.querySelector('.progress-percent');
                 if (progressText) {
                     const progress = parseInt(progressText.textContent);
-                    if (progress >= 100) {
-                        if (!window.celebrationActive) {
-                            window.stopCelebration = startCelebration();
-                            window.celebrationActive = true;
-                        }
-                    } else {
-                        if (window.celebrationActive) {
-                            window.stopCelebration?.();
-                            window.celebrationActive = false;
+                    const coursePlanType = "{{ $course->plan_type }}";
+                    
+                    if (coursePlanType === 'frml_training') {
+                        if (progress >= 100) {
+                            if (!window.celebrationActive) {
+                                window.stopCelebration = startCelebration();
+                                window.celebrationActive = true;
+                            }
+                        } else {
+                            if (window.celebrationActive) {
+                                window.stopCelebration?.();
+                                window.celebrationActive = false;
+                            }
                         }
                     }
                 }
@@ -2915,9 +2921,11 @@
                 }
             });
 
-            // In checkProgressFromResponse:
+            // checkProgressFromResponse func
             function checkProgressFromResponse(progress) {
-                if (progress >= 100 && !localStorage.getItem('celebrationDisabled')) {
+                const coursePlanType = "{{ $course->plan_type }}";
+                    
+                if (coursePlanType === 'frml_training' && progress >= 100 && !localStorage.getItem('celebrationDisabled')) {
                     if (!window.celebrationActive) {
                         window.stopCelebration = startCelebration();
                         window.celebrationActive = true;

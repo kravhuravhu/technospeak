@@ -21,6 +21,60 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin-top: 1rem;
     }
+
+    /* avhieve */
+    .archive_modal {
+        display: none; 
+        position: fixed;
+        z-index: 1001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        padding-top: 60px;
+        & > .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Archive list styling */
+        #archiveList {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #archiveList li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 @endpush
 
@@ -45,6 +99,9 @@
         <div class="table-actions">
             <button class="btn btn-outline">
                 <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="btn btn-outline" id="viewArchivesBtn">
+                <i class="fas fa-archive"></i> View Archives
             </button>
         </div>
     </div>
@@ -83,7 +140,7 @@
                 <th>User Type</th>
                 <th>Courses Enrolled</th>
                 <th>Preferred Trainings</th>
-                <th>Verified</th>
+                <th>Verification</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -106,7 +163,7 @@
                     @if($client->email_verified_at)
                         <span class="status-badge status-active">Active</span>
                     @else
-                        <span class="status-badge status-inactive">Inactive</span>
+                        <span class="status-badge status-inactive">N/A</span>
                     @endif
                 </td>
                 <td>
@@ -242,6 +299,58 @@
     </div>
 </div>
 
+<!-- Archive List -->
+<div id="archiveModal" class="archive_modal" style="display: none;">
+    <div class="modal-content">
+        <span id="closeArchiveModal" class="close">&times;</span>
+        <h2 style="padding:20px;">Archived Clients</h2>
+
+        <div id="archiveSpinnerOverlay" style="
+            display:none;
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            border-radius:10px;
+        ">
+            <div class="loader" style="
+                border: 8px solid #f3f3f3;
+                border-top: 8px solid #3498db;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                animation: spin 1s linear infinite;
+            "></div>
+        </div>
+
+        <table id="archiveTable" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>User Type</th>
+                    <th>Preferred Category</th>
+                    <th>Archived At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filled dynamically via JS -->
+            </tbody>
+        </table>
+
+        <div id="archiveNoResultsMessage" class="no-results-message" style="display:none;">
+            No archived clients found.
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -285,6 +394,73 @@
 
         searchInput.addEventListener('input', filterClients);
         applyFilterBtn.addEventListener('click', filterClients);
+
+        /* archieve */
+        const viewArchivesBtn = document.getElementById('viewArchivesBtn');
+        const archiveModal = document.getElementById('archiveModal');
+        const closeArchiveModal = document.getElementById('closeArchiveModal');
+        const archiveList = document.getElementById('archiveList');
+
+        function showArchives() {
+            const archiveTableBody = document.querySelector('#archiveTable tbody');
+            const archiveNoResultsMessage = document.getElementById('archiveNoResultsMessage');
+            const archiveSpinnerOverlay = document.getElementById('archiveSpinnerOverlay');
+
+            archiveTableBody.innerHTML = '';
+            archiveNoResultsMessage.style.display = 'none';
+            archiveSpinnerOverlay.style.display = 'flex';
+            archiveModal.style.display = 'block';
+
+            fetch("{{ route('content-manager.clients.archived.json') }}")
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    archiveSpinnerOverlay.style.display = 'none';
+
+                    if (data.archivedClients.length === 0) {
+                        archiveNoResultsMessage.style.display = 'block';
+                    } else {
+                        data.archivedClients.forEach(client => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${client.surname}, ${client.name}</td>
+                                <td>${client.email}</td>
+                                <td>${client.userType || 'Unknown'}</td>
+                                <td>${client.preferredCategory || 'Unset'}</td>
+                                <td>${client.archived_at || 'N/A'}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="/content/clients/${client.id}" class="btn btn-outline btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            `;
+                            archiveTableBody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching archives:', error);
+                    archiveSpinnerOverlay.style.display = 'none';
+                    archiveNoResultsMessage.innerText = 'Failed to load archived clients.';
+                    archiveNoResultsMessage.style.display = 'block';
+                });
+        }
+
+        viewArchivesBtn.addEventListener('click', showArchives);
+
+        closeArchiveModal.addEventListener('click', function () {
+            archiveModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === archiveModal) {
+                archiveModal.style.display = 'none';
+            }
+        });
     });
 </script>
 @endpush

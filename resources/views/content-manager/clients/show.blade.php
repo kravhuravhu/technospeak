@@ -261,7 +261,7 @@
                         </td>
                         <td>
                             <div class="btn-group">
-                                <a href="{{ route('content-manager.clients.show', $payment->client->id) }}" class="btn btn-outline btn-sm">
+                                <a href="{{ route('content-manager.payments.show', $payment->id) }}" class="btn btn-outline btn-sm">
                                     <i class="fas fa-eye"></i>
                                 </a>
                             </div>

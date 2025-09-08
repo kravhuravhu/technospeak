@@ -831,7 +831,6 @@
                     });
                 });
                 
-                // Close modal handlers (keep your existing ones)
                 function closeModal(event, modalId) {
                     event.stopPropagation();
                     document.getElementById(modalId).style.display = 'none';
@@ -841,5 +840,23 @@
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- account deleted pop -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('accountDeleted'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    timer: 7000,
+                    toast: true,
+                    text: 'Your account has been deleted successfully.',
+                    showConfirmButton: false,
+                    position: 'top-end',
+                });
+                localStorage.clear();
+            @endif
+        });
+        </script>
     </body> 
 </html>

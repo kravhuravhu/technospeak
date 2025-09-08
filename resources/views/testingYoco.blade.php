@@ -12,7 +12,7 @@
         label { display: block; margin-bottom: 0.5rem; color: #38b6ff; }
         input { width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
         .price { margin: 1rem 0; font-weight: bold; font-size: 1.1rem; }
-        .submit-btn { background: #38b6ff; color: white; border: none; padding: 0.75rem; width: 100%; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .submit-btn { background: #38b6ff; color: white; border: none; padding: 0.75rem; width: 100%; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-top: 0.5rem; }
         .submit-btn:hover { background: #2a9ce8; }
         .message { margin: 1rem 0; padding: 0.75rem; border-radius: 6px; }
         .success { background: #38a169; color: white; }
@@ -58,7 +58,13 @@
                 <input type="tel" name="phone" id="phone">
             </div>
 
-            <button type="button" id="pay-button" class="submit-btn">Proceed to Payment</button>
+            <!-- Card payment button -->
+            <button type="button" id="pay-button" class="submit-btn">Pay with Card</button>
+
+            <!-- EFT button -->
+            <button type="submit" formaction="{{ route('testing.payment.eft') }}" class="submit-btn" style="background:#15415a;">
+                Pay with EFT
+            </button>
         </form>
 
     @else

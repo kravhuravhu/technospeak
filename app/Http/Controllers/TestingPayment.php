@@ -85,4 +85,46 @@ class TestingPayment extends Controller
             return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }
+
+    // eft
+    public function eft(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|exists:training_sessions,id',
+        ]);
+
+        $client = Auth::user();
+        $session = TrainingSession::findOrFail($request->session_id);
+        $amount = $session->type->getPriceForUserType($client->userType);
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Basic ' . base64_encode(env('YOCO_TEST_SECRET_KEY') . ':'),
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ])->post('https://payments.yoco.com/api/checkouts', [
+                'amount' => intval($amount * 100),
+                'currency' => 'ZAR',
+                'successUrl' => route('testing.payment.success'),
+                'cancelUrl' => route('testing.payment.cancel'),
+                'paymentMethods' => ['eft'],
+                'customer' => [
+                    'email' => $client->email,
+                    'name'  => $client->name,
+                ],
+            ]);
+
+            $data = $response->json();
+            \Log::info('Yoco EFT response: ', $data);
+
+            if (!isset($data['redirectUrl'])) {
+                return back()->with('error', 'Failed to create EFT checkout.');
+            }
+
+            return redirect()->away($data['redirectUrl']);
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'EFT failed: ' . $e->getMessage());
+        }
+    }
 }

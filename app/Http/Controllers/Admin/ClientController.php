@@ -181,8 +181,10 @@ class ClientController extends Controller
             return back()->with('success', 'Client archived instead of deleted due to existing activity.');
         }
 
-        $client->session()->invalidate();
-        $client->session()->regenerateToken();
+        if ($client->session()) {
+            $client->session()->invalidate();
+            $client->session()->regenerateToken();
+        }
 
         Cache::forget('client_' . $client->id);
 

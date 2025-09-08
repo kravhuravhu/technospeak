@@ -26,14 +26,15 @@ class AdminController extends Controller
         ];
         $recentClients = Client::orderBy('registered_date', 'desc')
                        ->orderBy('registered_time', 'desc')
+                       ->where('status', 'active')
                        ->take(5)
                        ->get();
         
-        $coursesCount = \App\Models\Course::count();
-        $activeClients = \App\Models\Client::whereNotNull('email_verified_at')->count();
-        $pendingPayments = \App\Models\Payment::where('status', 'pending')->count();
+        $coursesCount = Course::count();
+        $activeClients = Client::whereNotNull('email_verified_at')->count();
+        $pendingPayments = Payment::where('status', 'pending')->count();
         $trainingSessions = TrainingSession::count();
-        $processedPayments = \App\Models\Payment::where('status', 'completed')->count();
+        $processedPayments = Payment::where('status', 'completed')->count();
         // not yet
         // $recentActivities = ActivityLog::latest()->take(5)->get();
 

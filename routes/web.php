@@ -224,7 +224,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Yoco webhook route
-        Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
+        //Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
 
         // Yoco payment redirect
         Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
@@ -312,7 +312,7 @@ Route::prefix('content')->name('content-manager.')->group(function() {
         Route::resource('categories', CourseCategoryController::class)->except(['show']);
         
         // Clients
-        Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)
+        Route::resource('clients', ClientController::class)
             ->names([
                 'index' => 'clients.clients',
                 'create' => 'clients.create',
@@ -320,8 +320,11 @@ Route::prefix('content')->name('content-manager.')->group(function() {
                 'show' => 'clients.show',
                 'edit' => 'clients.edit',
                 'update' => 'clients.update',
-                'destroy' => 'clients.destroy'
+                'destroy' => 'clients.destroy',
+                //'archived' => 'clients.archived'
             ]);
+        Route::get('clients/archived/json', [ClientController::class, 'archived'])
+            ->name('clients.archived.json');
         Route::post('clients/{client}/enroll-course', [ClientController::class, 'enrollCourse'])->name('clients.enroll-course');
         Route::post('clients/{client}/register-training', [ClientController::class, 'registerTraining'])->name('clients.register-training');
                 
@@ -430,7 +433,17 @@ Route::post('/submit/{type}', [SubmissionController::class, 'submit'])->name('su
 Route::middleware('auth')->group(function () {
     Route::get('/testing-yoco', [TestingPayment::class, 'show'])->name('testing.yoco');
     Route::post('/testing-yoco/charge', [TestingPayment::class, 'charge'])->name('testing.payment.charge');
+    Route::post('/testing-yoco/eft', [TestingPayment::class, 'eft'])->name('testing.payment.eft');
 });
+
+// callbacks after EFT
+Route::get('/testing-yoco/success', function () {
+    return redirect()->route('testing.yoco')->with('success', 'EFT Payment successful!');
+})->name('testing.payment.success');
+
+Route::get('/testing-yoco/cancel', function () {
+    return redirect()->route('testing.yoco')->with('error', 'EFT Payment cancelled.');
+})->name('testing.payment.cancel');
 
 // Yoco subscription routes
 Route::get('/subscription/yoco/form', [SubscriptionController::class, 'showSubscriptionForm'])

@@ -32,7 +32,9 @@ class Client extends Authenticatable implements MustVerifyEmail
         'registered_time',
         'remember_token',
         'email_verified_at',
-        'userType'
+        'userType',
+        'status',
+        'archived_at',
     ];
 
     protected $hidden = [
@@ -45,6 +47,7 @@ class Client extends Authenticatable implements MustVerifyEmail
         'subscription_expiry' => 'date',
         'registered_date' => 'date',
         'subscription_paid_at' => 'datetime',
+        'archived_at' => 'datetime',
     ];
 
     public function setNameAttribute($value)
@@ -130,5 +133,10 @@ class Client extends Authenticatable implements MustVerifyEmail
     public function enrolledCourses()
     {
         return $this->belongsToMany(Course::class, 'client_course_subscriptions')->withPivot(['progress', 'current_episode_id'])->withTimestamps();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
     }
 }

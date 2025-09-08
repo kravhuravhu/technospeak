@@ -843,20 +843,20 @@
 
         <!-- account deleted pop -->
         <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(session('accountDeleted'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Deleted!',
-                    timer: 7000,
-                    toast: true,
-                    text: 'Your account has been deleted successfully.',
-                    showConfirmButton: false,
-                    position: 'top-end',
-                });
-                localStorage.clear();
-            @endif
-        });
+            document.addEventListener('DOMContentLoaded', function () {
+                @if(session('accountDeleted'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        timer: 7000,
+                        toast: true,
+                        text: 'Your account has been deleted successfully.',
+                        showConfirmButton: false,
+                        position: 'top-end',
+                    });
+                    localStorage.clear();
+                @endif
+            });
         </script>
     </body> 
 </html>

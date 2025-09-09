@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Product Plans script section
 document.addEventListener("DOMContentLoaded", function () {
     const cardsContainer = document.querySelector(".cards");
     const cards = Array.from(cardsContainer.children);
@@ -251,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 
 // Service Categories section
 const services = {

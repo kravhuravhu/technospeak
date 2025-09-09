@@ -248,5 +248,5 @@ class TrainingRegistrationController extends Controller
             'payment_id' => $payment->id,
             'payment_status' => $payment->status,
         ])->save();
-    }    
+    }
 }

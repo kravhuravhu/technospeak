@@ -602,23 +602,25 @@
 
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
-                    <!-- 1. Your current plan -->
-                    <div class="current-plan">
+                    <div class="current-plans">
                         <div class="container">
                             <div class="title">
-                                <h2>Your Current Plan</h2>
-                                <p>Your active subscription plan</p>
+                                <h2>Your Current Plans</h2>
+                                <p>All plans you're actively subscribed to</p>
                             </div>
                             
-                            @isset($currentPlan)
                             <div class="card-grid">
-                                <div class="plan-card {{ $currentPlan->id == 7 ? 'free-plan' : 'premium-plan' }}">
+                                <!-- Current Plan (Free or Premium) -->
+                                @if($currentPlan)
+                                <div class="plan-card {{ $currentPlan->id == 7 ? 'free-plan' : '' }}">
                                     @if($currentPlan->id == 7)
-                                        <span class="plan-badge free-badge">Free Plan</span>
+                                        <span class="plan-badge free-badge">Always Active</span>
                                     @elseif($currentPlan->id == 6)
                                         <span class="plan-badge premium-badge">
                                             Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
                                         </span>
+                                    @else
+                                        <span class="plan-badge paid-badge">Active</span>
                                     @endif
                                     
                                     <h3>{{ $currentPlan->name }}</h3>
@@ -636,25 +638,12 @@
                                     </div>
                                     <p class="plan-description">{{ $currentPlan->description }}</p>
                                 </div>
-                            </div>
-                            @endisset
-                        </div>
-                    </div>
-                    
-                    <!-- 2. Your group sessions -->
-                    @if($groupSessions->count() > 0)
-                    <div class="group-sessions" style="margin-top: 50px;">
-                        <div class="container">
-                            <div class="title">
-                                <h2>Your Group Sessions</h2>
-                                <p>Group sessions you're registered for</p>
-                            </div>
-                            
-                            <div class="card-grid">
-                                @foreach($groupSessions as $session)
+                                @endif
+                                
+                                <!-- Completed Group Sessions -->
+                                @foreach($completedGroupSessions as $session)
                                 <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Registered</span>
-                                    
+                                    <span class="plan-badge paid-badge">Completed</span>
                                     <h3>{{ $session->name }}</h3>
                                     <div class="plan-price">
                                         @if($session->student_price)
@@ -667,43 +656,28 @@
                                     <p class="plan-description">{{ $session->description }}</p>
                                 </div>
                                 @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    
-                    <!-- 3. Your formal trainings -->
-                    @if($formalTrainings->count() > 0)
-                    <div class="formal-trainings" style="margin-top: 50px;">
-                        <div class="container">
-                            <div class="title">
-                                <h2>Your Formal Trainings</h2>
-                                <p>Formal training programs you're enrolled in</p>
-                            </div>
-                            
-                            <div class="card-grid">
-                                @foreach($formalTrainings as $training)
+                                
+                                <!-- Completed Formal Training Types -->
+                                @foreach($completedFormalTrainingTypes as $trainingType)
                                 <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Enrolled</span>
-                                    
-                                    <h3>{{ $training->name }}</h3>
+                                    <span class="plan-badge paid-badge">Completed</span>
+                                    <h3>{{ $trainingType->name }}</h3>
                                     <div class="plan-price">
-                                        @if($training->student_price)
-                                            R{{ $training->student_price }} (students)
+                                        @if($trainingType->student_price)
+                                            R{{ $trainingType->student_price }} (students)
                                         @endif
-                                        @if($training->professional_price)
-                                            | R{{ $training->professional_price }} (business)
+                                        @if($trainingType->professional_price)
+                                            | R{{ $trainingType->professional_price }} (business)
                                         @endif
                                     </div>
-                                    <p class="plan-description">{{ $training->description }}</p>
+                                    <p class="plan-description">{{ $trainingType->description }}</p>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
                     </div>
-                    @endif
                     
-                    <!-- 4. Available product plans -->
+                    <!-- Available Plans Section -->
                     <div class="available-plans" style="margin-top: 50px;">
                         @php
                             // Get the latest upcoming sessions
@@ -1953,7 +1927,7 @@
                 document.head.appendChild(style);
             }
 
-            // Registration triggers to check if already registered
+            // Update registration triggers to check if already registered
             document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.registration-trigger').forEach(trigger => {
                     trigger.addEventListener('click', function(e) {
@@ -1962,38 +1936,34 @@
                         const typeId = this.getAttribute('data-type-id');
                         const sessionId = this.getAttribute('data-session-id');
                         
-                        // For Task Assistance and Personal Guide, always allow registration
-                        if (['2', '3'].includes(typeId)) {
+                        // Check if user is already registered for this type (except for types 2 and 3)
+                        if (!['2', '3'].includes(typeId)) {
+                            // Make an AJAX call to check if user is already registered
+                            fetch('/api/check-registration/' + typeId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.registered) {
+                                        showNotification('You are already registered for this type of session.', 'info');
+                                    } else {
+                                        // Proceed with registration modal
+                                        // You'll need to implement your modal opening function here
+                                        // For example: openRegistrationModal(typeId, sessionId);
+                                        console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error checking registration:', error);
+                                    // Proceed with registration modal on error
+                                    // openRegistrationModal(typeId, sessionId);
+                                    console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
+                                });
+                        } else {
                             // Always allow registration for Task Assistance and Personal Guide
-                            openRegistrationModal(typeId, sessionId);
-                            return;
+                            // openRegistrationModal(typeId, sessionId);
+                            console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
                         }
-                        
-                        // For other types, check if user is already registered
-                        fetch('/api/check-registration/' + typeId)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.registered) {
-                                    showNotification('You are already registered for this type of session.', 'info');
-                                } else {
-                                    // Proceed with registration modal
-                                    openRegistrationModal(typeId, sessionId);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error checking registration:', error);
-                                // Proceed with registration modal on error
-                                openRegistrationModal(typeId, sessionId);
-                            });
                     });
                 });
-                
-                // Function to open registration modal (you need to implement this based on your modal system)
-                function openRegistrationModal(typeId, sessionId) {
-                    // Your implementation to open the appropriate modal
-                    console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
-                    // Example: $('#registrationModal').modal('show');
-                }
             });
         </script>
     </body>

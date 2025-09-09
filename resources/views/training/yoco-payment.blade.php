@@ -21,70 +21,70 @@
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
 
-        @if(session('success'))
-            <div class="message success">{{ session('success') }}</div>
-        @elseif(session('error'))
-            <div class="message error">{{ session('error') }}</div>
-        @endif
+    @if(session('success'))
+        <div class="message success">{{ session('success') }}</div>
+    @elseif(session('error'))
+        <div class="message error">{{ session('error') }}</div>
+    @endif
 
-        <h2>Register for {{ $session->title }}</h2>
+    <h2>Register for {{ $session->title }}</h2>
 
-        <div class="session-details">
-            <p><strong>Session:</strong> {{ $session->title }}</p>
-            <p><strong>Date & Time:</strong> {{ $session->scheduled_for->format('F j, Y g:i A') }}</p>
-            <p><strong>Price:</strong> R{{ number_format($price, 2) }}</p>
-            <p><strong>Type:</strong> {{ $session->type->name }}</p>
-        </div>
-
-        <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
-            @csrf
-            <input type="hidden" name="session_id" value="{{ $session->id }}">
-            <input type="hidden" name="token" id="yoco-token">
-
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
-            </div>
-
-            <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
-        </form>
-
+    <div class="session-details">
+        <p><strong>Session:</strong> {{ $session->title }}</p>
+        <p><strong>Date & Time:</strong> {{ $session->scheduled_for->format('F j, Y g:i A') }}</p>
+        <p><strong>Price:</strong> R{{ number_format($price, 2) }}</p>
+        <p><strong>Type:</strong> {{ $session->type->name }}</p>
     </div>
 
-    <script>
-        const yoco = new window.YocoSDK({
-            publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}" // Changed to TEST key
-        });
+    <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
+        @csrf
+        <input type="hidden" name="session_id" value="{{ $session->id }}">
+        <input type="hidden" name="token" id="yoco-token">
 
-        document.getElementById("pay-button").addEventListener("click", function () {
-            const amount = {{ $price * 100 }};
-            yoco.showPopup({
-                amountInCents: amount,
-                currency: "ZAR",
-                name: "{{ $session->title }}",
-                description: "Training Session Registration",
-                callback: function (result) {
-                    if (result.error) {
-                        alert("Error: " + result.error.message);
-                    } else {
-                        document.getElementById("yoco-token").value = result.id;
-                        document.getElementById("yoco-payment-form").submit();
-                    }
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
+        </div>
+
+        <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
+    </form>
+
+</div>
+
+<script>
+    const yoco = new window.YocoSDK({
+        publicKey: "{{ env('YOCO_PUBLIC_KEY') }}"
+    });
+
+    document.getElementById("pay-button").addEventListener("click", function () {
+        const amount = {{ $price * 100 }};
+        yoco.showPopup({
+            amountInCents: amount,
+            currency: "ZAR",
+            name: "{{ $session->title }}",
+            description: "Training Session Registration",
+            callback: function (result) {
+                if (result.error) {
+                    alert("Error: " + result.error.message);
+                } else {
+                    document.getElementById("yoco-token").value = result.id;
+                    document.getElementById("yoco-payment-form").submit();
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\TrainingType;
 use App\Models\TrainingRegistration;
 use App\Models\TrainingSession;
@@ -17,7 +18,7 @@ class DashboardController extends Controller
         
         $courseAccess = new CourseAccessController();
         $allTipsTricks = $courseAccess->getTipsTricks();
-        $formalTrainings = $courseAccess->getFormalTrainings();
+        $formalTrainings = $courseAccess->getFormalTrainings(); // This contains formal training courses
         $recommendedCourses = $courseAccess->getRecommendedCourses();
 
         $enrolledCourses = $user->courseSubscriptions()
@@ -40,7 +41,7 @@ class DashboardController extends Controller
             ];
         });
 
-        // enrolled formal trainigs
+        // enrolled formal trainings
         $formalTrainingCurrent = $enrolledCourses->filter(function($subscription) {
             return $subscription->course->plan_type === 'frml_training';
         })->map(function($subscription) {
@@ -58,42 +59,70 @@ class DashboardController extends Controller
         // Get all training types
         $allTrainingTypes = TrainingType::whereIn('id', [1, 2, 3, 4, 5, 6, 7])->get();
 
-        // Get user's active plans
-        $activePlans = collect([TrainingType::find(7)]); // Free plan is always active
-
+        // Categorize user's active plans
+        $currentPlan = null;
+        $completedGroupSessions = collect();
+        $completedFormalTrainingTypes = collect();
+        
+        // Check if user has premium subscription
         if ($user->subscription_type === 'premium') {
-            $activePlans->push(TrainingType::find(6));
+            $currentPlan = TrainingType::find(6); // Premium plan
+        } else {
+            $currentPlan = TrainingType::find(7); // Free plan (only if not premium)
         }
-
-        // Get completed trainings and add to active plans
-        $completedTrainings = TrainingRegistration::with('session.type')
+        
+        // Get completed group sessions (types 4 and 5)
+        $completedGroupSessions = TrainingRegistration::with('session.type')
             ->where('client_id', $user->id)
             ->where('payment_status', 'completed')
+            ->whereHas('session', function($query) {
+                $query->whereIn('type_id', [4, 5]);
+            })
             ->get()
             ->map(function($reg) {
                 return $reg->session->type;
             })
             ->filter()
             ->unique('id');
-
-        $activePlans = $activePlans->merge($completedTrainings);
-
-        // Get available plans (all plans except those user is already subscribed to)
-        $availablePlans = $allTrainingTypes->filter(function($plan) use ($activePlans) {
-            return !$activePlans->contains('id', $plan->id);
+        
+        // Get completed formal training types (type 1)
+        $completedFormalTrainingTypes = TrainingRegistration::with('session.type')
+            ->where('client_id', $user->id)
+            ->where('payment_status', 'completed')
+            ->whereHas('session', function($query) {
+                $query->where('type_id', 1);
+            })
+            ->get()
+            ->map(function($reg) {
+                return $reg->session->type;
+            })
+            ->filter()
+            ->unique('id');
+        
+        // Get available plans (all plans except current plan and completed sessions)
+        $excludedIds = collect([$currentPlan->id])
+            ->merge($completedGroupSessions->pluck('id'))
+            ->merge($completedFormalTrainingTypes->pluck('id'))
+            ->unique()
+            ->toArray();
+        
+        $availablePlans = $allTrainingTypes->filter(function($plan) use ($excludedIds) {
+            return !in_array($plan->id, $excludedIds);
         });
 
         return view('dashboard', [
             'allTipsTricks' => $allTipsTricks,
-            'formalTrainings' => $formalTrainings,
+            'formalTrainings' => $formalTrainings, // This remains the formal training courses
             'tipsAndTricksCurrent' => $tipsAndTricksCurrent,
             'formalTrainingCurrent' => $formalTrainingCurrent,
             'recommendedCourses' => $recommendedCourses,
             'instructors' => Instructor::all(),
             'upcomingGroupSessions' => TrainingSession::getUpcomingGroupSessions(),
-            'activePlans' => $activePlans,
-            'availablePlans' => $availablePlans,
-            'allTrainingTypes' => $allTrainingTypes
+            'allTrainingTypes' => $allTrainingTypes,
+            'currentPlan' => $currentPlan,
+            'completedGroupSessions' => $completedGroupSessions,
+            'completedFormalTrainingTypes' => $completedFormalTrainingTypes,
+            'availablePlans' => $availablePlans
         ]);
     }
 }

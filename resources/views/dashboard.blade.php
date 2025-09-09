@@ -609,14 +609,13 @@
                                 <p>All plans you're actively subscribed to</p>
                             </div>
                             
-                            @isset($activePlans)
                             <div class="card-grid">
-                                @foreach($activePlans as $plan)
-                                @if($plan) <!-- Safety check -->
-                                <div class="plan-card {{ $plan->id == 7 ? 'free-plan' : '' }}">
-                                    @if($plan->id == 7)
+                                <!-- Current Plan (Free or Premium) -->
+                                @if($currentPlan)
+                                <div class="plan-card {{ $currentPlan->id == 7 ? 'free-plan' : '' }}">
+                                    @if($currentPlan->id == 7)
                                         <span class="plan-badge free-badge">Always Active</span>
-                                    @elseif($plan->id == 6)
+                                    @elseif($currentPlan->id == 6)
                                         <span class="plan-badge premium-badge">
                                             Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
                                         </span>
@@ -624,25 +623,57 @@
                                         <span class="plan-badge paid-badge">Active</span>
                                     @endif
                                     
-                                    <h3>{{ $plan->name }}</h3>
+                                    <h3>{{ $currentPlan->name }}</h3>
                                     <div class="plan-price">
-                                        @if($plan->id == 7)
+                                        @if($currentPlan->id == 7)
                                             Free Access
                                         @else
-                                            @if($plan->student_price)
-                                                R{{ $plan->student_price }} (students)
+                                            @if($currentPlan->student_price)
+                                                R{{ $currentPlan->student_price }} (students)
                                             @endif
-                                            @if($plan->professional_price)
-                                                | R{{ $plan->professional_price }} (business)
+                                            @if($currentPlan->professional_price)
+                                                | R{{ $currentPlan->professional_price }} (business)
                                             @endif
                                         @endif
                                     </div>
-                                    <p class="plan-description">{{ $plan->description }}</p>
+                                    <p class="plan-description">{{ $currentPlan->description }}</p>
                                 </div>
                                 @endif
+                                
+                                <!-- Completed Group Sessions -->
+                                @foreach($completedGroupSessions as $session)
+                                <div class="plan-card">
+                                    <span class="plan-badge paid-badge">Completed</span>
+                                    <h3>{{ $session->name }}</h3>
+                                    <div class="plan-price">
+                                        @if($session->student_price)
+                                            R{{ $session->student_price }} (students)
+                                        @endif
+                                        @if($session->professional_price)
+                                            | R{{ $session->professional_price }} (business)
+                                        @endif
+                                    </div>
+                                    <p class="plan-description">{{ $session->description }}</p>
+                                </div>
+                                @endforeach
+                                
+                                <!-- Completed Formal Training Types -->
+                                @foreach($completedFormalTrainingTypes as $trainingType)
+                                <div class="plan-card">
+                                    <span class="plan-badge paid-badge">Completed</span>
+                                    <h3>{{ $trainingType->name }}</h3>
+                                    <div class="plan-price">
+                                        @if($trainingType->student_price)
+                                            R{{ $trainingType->student_price }} (students)
+                                        @endif
+                                        @if($trainingType->professional_price)
+                                            | R{{ $trainingType->professional_price }} (business)
+                                        @endif
+                                    </div>
+                                    <p class="plan-description">{{ $trainingType->description }}</p>
+                                </div>
                                 @endforeach
                             </div>
-                            @endisset
                         </div>
                     </div>
                     

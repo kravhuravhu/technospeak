@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Premium Subscription Payment</title>
+    <title>Subscribe to {{ $plan->name }} - Technospeak</title>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 2rem; }
@@ -17,6 +17,7 @@
         .message { margin: 1rem 0; padding: 0.75rem; border-radius: 6px; }
         .success { background: #38a169; color: white; }
         .error { background: #e53e3e; color: white; }
+        .plan-details { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -28,13 +29,14 @@
         <div class="message error">{{ session('error') }}</div>
     @endif
 
-    <h2>Subscribe to Premium Plan</h2>
+    <h2>Subscribe to {{ $plan->name }}</h2>
 
-    <p><strong>Plan:</strong> {{ $plan->name }}</p>
-    <p class="price">
-        <strong>Price:</strong>
-        R{{ number_format($price, 2) }}
-    </p>
+    <div class="plan-details">
+        <p><strong>Plan:</strong> {{ $plan->name }}</p>
+        <p><strong>Price:</strong> R{{ number_format($price, 2) }}</p>
+        <p><strong>Duration:</strong> 3 months</p>
+        <p><strong>Benefits:</strong> Full access to all premium content, downloadable resources, and exclusive features.</p>
+    </div>
 
     <form id="yoco-payment-form" method="POST" action="{{ route('subscription.yoco.process') }}">
         @csrf
@@ -51,14 +53,14 @@
             <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
         </div>
 
-        <button type="button" id="pay-button" class="submit-btn">Subscribe Now</button>
+        <button type="button" id="pay-button" class="submit-btn">Subscribe Now - R{{ number_format($price, 2) }}</button>
     </form>
 
 </div>
 
 <script>
     const yoco = new window.YocoSDK({
-        publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}"
+        publicKey: "{{ env('YOCO_PUBLIC_KEY') }}"
     });
 
     document.getElementById("pay-button").addEventListener("click", function () {
@@ -66,8 +68,8 @@
         yoco.showPopup({
             amountInCents: amount,
             currency: "ZAR",
-            name: "Premium Subscription",
-            description: "Quarterly Premium Access",
+            name: "{{ $plan->name }} Subscription",
+            description: "Quarterly subscription to {{ $plan->name }} plan",
             callback: function (result) {
                 if (result.error) {
                     alert("Error: " + result.error.message);

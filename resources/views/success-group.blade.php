@@ -94,31 +94,10 @@
             text-decoration: none;
             font-weight: 500;
             transition: background-color 0.3s;
-            margin: 0 0.5rem;
-        }
-
-        .back-to-home {
-            display: inline-block;
-            background-color: #38b6ff;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.3s;
-            margin: 0 0.5rem;
         }
 
         .back-to-dashboard:hover {
             background-color: #5E35B1;
-        }
-
-        .back-to-home:hover {
-            background-color: #2a9ce8;
-        }
-
-        .button-group {
-            margin-top: 2rem;
         }
     </style>
 </head>
@@ -130,29 +109,25 @@
                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
                 </svg>
             </div>
-            <h2>Group Session Booked Successfully!</h2>
+            <h2>Group Session Booked!</h2>
             
-            <p>Thank you for booking <strong class="for_this">{{ $service->title }}</strong></p>
+            <p>Thank you for booking <strong class="for_this">{{ $service->name }}</strong></p>
             
             <div class="session-details">
-                <p><strong>Session:</strong> {{ $service->title }}</p>
-                <p><strong>Date:</strong> {{ $service->scheduled_for->format('F j, Y') }}</p>
-                <p><strong>Time:</strong> {{ $service->scheduled_for->format('g:i A') }}</p>
-                <p><strong>Type:</strong> {{ $service->type->name }}</p>
+                <p><strong>Session Type:</strong> {{ $service->name }}</p>
                 <p><strong>Amount Paid:</strong> R{{ number_format($payment->amount, 2) }}</p>
                 <p><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</p>
-                <p><strong>Customer:</strong> {{ $client->name }} {{ $client->surname }}</p>
+                @if($service->is_hourly)
+                    <p><strong>Duration:</strong> {{ $payment->metadata['hours'] ?? 1 }} hour(s)</p>
+                @endif
             </div>
 
             <div class="confirmation-message">
-                <p>A confirmation email has been sent to <strong>{{ $client->email }}</strong></p>
-                <p>You'll receive session details and meeting link 24 hours before the session.</p>
+                <p>A confirmation email with session details has been sent to <strong>{{ auth()->user()->email }}</strong></p>
+                <p>You'll receive a reminder before your scheduled session.</p>
             </div>
 
-            <div class="button-group">
-                <a href="{{ route('dashboard') }}" class="back-to-dashboard">Go to Dashboard</a>
-                <a href="{{ url('/') }}" class="back-to-home">Return Home</a>
-            </div>
+            <a href="{{ route('dashboard') }}" class="back-to-dashboard">Go to Dashboard</a>
         </div>
     </div>
 </body>

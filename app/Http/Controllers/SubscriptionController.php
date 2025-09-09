@@ -61,14 +61,30 @@ class SubscriptionController extends Controller
 
         $client = Auth::user();
         $plan = TrainingType::findOrFail($request->plan_id);
+
         $amount = $plan->getPriceForUserType($client->userType);
 
         Log::info("Subscription payment attempt for client {$client->id}, plan {$plan->id}, amount R$amount, status pending");
 
         try {
-            // Process payment with Yoco (USE TEST KEY LIKE TESTING VERSION)
+            // Create payment record first
+            $payment = Payment::create([
+                'client_id' => $client->id,
+                'amount' => $amount,
+                'payment_method' => 'card',
+                'status' => 'pending',
+                'payable_type' => 'subscription',
+                'payable_id' => $plan->id,
+                'metadata' => json_encode([
+                    'user_type' => $client->userType,
+                    'plan_name' => $plan->name,
+                    'payment_processor' => 'yoco'
+                ])
+            ]);
+
+            // Process payment with Yoco
             $response = Http::withHeaders([
-                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'), 
+                'X-Auth-Secret-Key' => env('YOCO_SECRET_KEY'),
             ])->post('https://online.yoco.com/v1/charges/', [
                 'token' => $request->token,
                 'amountInCents' => intval($amount * 100),
@@ -79,24 +95,30 @@ class SubscriptionController extends Controller
 
             if (isset($data['error'])) {
                 Log::error("Yoco error for client {$client->id}: " . $data['error']['message']);
+                
+                // Update payment status to failed
+                $payment->update([
+                    'status' => 'failed',
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        ['error' => $data['error']['message']]
+                    ))
+                ]);
+
                 return back()->with('error', $data['error']['message']);
             }
 
-            // Create payment record after successful charge
-            $payment = Payment::create([
+            // Payment successful
+            $payment->update([
                 'transaction_id' => $data['id'],
-                'client_id' => $client->id,
-                'amount' => $amount,
-                'payment_method' => 'card',
                 'status' => $data['status'] === 'successful' ? 'completed' : 'failed',
-                'payable_type' => 'subscription',
-                'payable_id' => $plan->id,
-                'metadata' => json_encode([
-                    'user_type' => $client->userType,
-                    'plan_name' => $plan->name,
-                    'payment_processor' => 'yoco',
-                    'yoco_response' => $data
-                ])
+                'metadata' => json_encode(array_merge(
+                    json_decode($payment->metadata, true) ?? [],
+                    [
+                        'yoco_response' => $data,
+                        'processed_at' => now()->toDateTimeString()
+                    ]
+                ))
             ]);
 
             if ($payment->status === 'completed') {
@@ -105,10 +127,14 @@ class SubscriptionController extends Controller
                     'subscription_type' => strtolower($plan->name),
                     'subscription_paid_at' => now(),
                     'subscription_expiry' => now()->addQuarter(),
+                    'updated_at' => now()
                 ]);
 
                 // Update client course subscriptions
                 $this->updateClientCourseSubscription($client, $plan);
+
+                // Send notification
+                $client->notify(new PaymentProcessed($payment, 'success'));
 
                 Log::info("Subscription payment successful for client {$client->id}, transaction {$payment->transaction_id}");
 
@@ -122,6 +148,17 @@ class SubscriptionController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Subscription payment failed for client {$client->id}: " . $e->getMessage());
+            
+            if (isset($payment)) {
+                $payment->update([
+                    'status' => 'failed',
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        ['exception' => $e->getMessage()]
+                    ))
+                ]);
+            }
+
             return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }

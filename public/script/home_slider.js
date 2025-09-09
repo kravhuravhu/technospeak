@@ -133,11 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Start at the first real card (position 1, since position 0 is the last clone)
     let currentIndex = 1;
-    let isAnimating = false;
     
     function updateView(animate = true) {
-        if (isAnimating) return;
-        
         const card = allCards[0];
         const cardWidth = card.offsetWidth;
         const cardMargin = window.innerWidth <= 768 ? 20 : 55;
@@ -148,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 20px))`;
         
         if (animate) {
-            isAnimating = true;
             cardsContainer.style.transition = 'transform 0.5s ease';
         } else {
             cardsContainer.style.transition = 'none';
@@ -164,18 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (index === currentIndex + 1) card.classList.add("next");
             else if (index === currentIndex) card.classList.add("active");
         });
-        
-        // Reset animation flag after transition completes
-        if (animate) {
-            setTimeout(() => {
-                isAnimating = false;
-            }, 500);
-        }
     }
     
     function nextSlide() {
-        if (isAnimating) return;
-        
         currentIndex++;
         
         // If we've reached the end (the first clone), instantly jump to the beginning
@@ -193,8 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function prevSlide() {
-        if (isAnimating) return;
-        
         currentIndex--;
         
         // If we've reached the beginning (the last clone), instantly jump to the end
@@ -211,46 +196,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-    // Removed auto-advance code
-    
-    // Pause auto-slide on hover - removed
-    
     // Handle window resize
-    window.addEventListener('resize', () => {
-        updateView(false);
-    });
+    window.addEventListener('resize', () => updateView(false));
     
-    prevBtn.addEventListener("click", () => {
-        prevSlide();
-    });
-    
-    nextBtn.addEventListener("click", () => {
-        nextSlide();
-    });
+    prevBtn.addEventListener("click", prevSlide);
+    nextBtn.addEventListener("click", nextSlide);
     
     // Clicking on side cards
     allCards.forEach((card, index) => {
         card.addEventListener("click", () => {
-            if (index === currentIndex - 1) {
-                prevSlide();
-            } else if (index === currentIndex + 1) {
-                nextSlide();
-            }
+            if (index === currentIndex - 1) prevSlide();
+            else if (index === currentIndex + 1) nextSlide();
         });
     });
     
     // Initialize
     updateView(false);
     
-    // Add keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            prevSlide();
-        } else if (e.key === 'ArrowRight') {
-            nextSlide();
-        }
-    });
 });
+
 
 // Service Categories section
 const services = {

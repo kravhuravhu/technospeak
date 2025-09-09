@@ -188,6 +188,83 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/subscription/success', [StripeController::class, 'subscriptionSuccess'])
             ->name('stripe.subscription.success')
             ->middleware('auth');
+
+        // Yoco payment routes
+        Route::prefix('yoco')->group(function () {
+            Route::get('/payment/verify/{payment}', [SubscriptionController::class, 'verifyPayment'])
+                ->name('yoco.payment.verify')
+                ->middleware('auth');
+
+            Route::get('/payment/status/{payment}', [SubscriptionController::class, 'checkPaymentStatus'])
+                ->name('yoco.payment.status')
+                ->middleware('auth');
+
+            Route::get('/payment/success/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('success-subscription', [
+                    'plan' => TrainingType::find($payment->payable_id),
+                    'payment_amount' => $payment->amount,
+                    'transaction_id' => $payment->transaction_id,
+                    'client' => Client::find($payment->client_id)
+                ]);
+            })->name('yoco.payment.success')->middleware('auth');
+
+            Route::get('/payment/failed/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('payment.failed', ['payment' => $payment]);
+            })->name('yoco.payment.failed')->middleware('auth');
+
+            Route::get('/payment/cancel/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $payment->update(['status' => 'cancelled']);
+                
+                return redirect()->route('dashboard')
+                    ->with('error', 'Payment was cancelled.');
+            })->name('yoco.payment.cancel')->middleware('auth');
+        });
+
+        // Yoco webhook route
+        //Route::post('/api/yoco/webhook', [YocoWebhookController::class, 'handleWebhook']);
+
+        // Yoco payment redirect
+        Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
+            ->name('subscription.yoco.redirect')
+            ->middleware('auth');
+
+        // Yoco training payment routes
+        Route::prefix('yoco')->group(function () {
+            // Training payment verification
+            Route::get('/training/verify/{payment}', [TrainingRegistrationController::class, 'verifyTrainingPayment'])
+                ->name('yoco.training.verify')
+                ->middleware('auth');
+
+            Route::get('/training/status/{payment}', [TrainingRegistrationController::class, 'checkTrainingPaymentStatus'])
+                ->name('yoco.training.status')
+                ->middleware('auth');
+
+            Route::get('/training/success/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $session = TrainingSession::find($payment->payable_id);
+                
+                return view('success-payment', [
+                    'trainingSession' => $session,
+                    'payment' => $payment
+                ]);
+            })->name('yoco.training.success')->middleware('auth');
+
+            Route::get('/training/failed/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                return view('payment.failed', ['payment' => $payment]);
+            })->name('yoco.training.failed')->middleware('auth');
+
+            Route::get('/training/cancel/{payment}', function($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+                $payment->update(['status' => 'cancelled']);
+                
+                return redirect()->route('dashboard')
+                    ->with('error', 'Payment was cancelled.');
+            })->name('yoco.training.cancel')->middleware('auth');
+        });
     });
     
     // Add API route for registration check
@@ -377,16 +454,7 @@ Route::post('/subscription/yoco/process', [SubscriptionController::class, 'proce
     ->name('subscription.yoco.process')
     ->middleware('auth');
 
-// Add this route definition
-Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
-    ->name('subscription.yoco.redirect')
-    ->middleware('auth');
-
 // Yoco training payment routes
 Route::post('/training/yoco/process', [TrainingRegistrationController::class, 'processYocoTrainingPayment'])
     ->name('training.yoco.process')
-    ->middleware('auth');
-
-     Route::get('/yoco/training/success/{payment}', [TrainingRegistrationController::class, 'showTrainingSuccess'])
-    ->name('yoco.training.success')
     ->middleware('auth');

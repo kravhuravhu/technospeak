@@ -18,7 +18,7 @@ class DashboardController extends Controller
         
         $courseAccess = new CourseAccessController();
         $allTipsTricks = $courseAccess->getTipsTricks();
-        $formalTrainings = $courseAccess->getFormalTrainings(); // This contains formal training courses
+        $formalTrainings = $courseAccess->getFormalTrainings();
         $recommendedCourses = $courseAccess->getRecommendedCourses();
 
         $enrolledCourses = $user->courseSubscriptions()
@@ -59,20 +59,16 @@ class DashboardController extends Controller
         // Get all training types
         $allTrainingTypes = TrainingType::whereIn('id', [1, 2, 3, 4, 5, 6, 7])->get();
 
-        // Categorize user's active plans
+        // 1. Your current plan (only premium if subscribed, otherwise free)
         $currentPlan = null;
-        $completedGroupSessions = collect();
-        $completedFormalTrainingTypes = collect();
-        
-        // Check if user has premium subscription
         if ($user->subscription_type === 'premium') {
             $currentPlan = TrainingType::find(6); // Premium plan
         } else {
             $currentPlan = TrainingType::find(7); // Free plan (only if not premium)
         }
         
-        // Get completed group sessions (types 4 and 5)
-        $completedGroupSessions = TrainingRegistration::with('session.type')
+        // 2. Your group sessions (types 4 and 5 that user has registered for)
+        $groupSessions = TrainingRegistration::with('session.type')
             ->where('client_id', $user->id)
             ->where('payment_status', 'completed')
             ->whereHas('session', function($query) {
@@ -85,8 +81,8 @@ class DashboardController extends Controller
             ->filter()
             ->unique('id');
         
-        // Get completed formal training types (type 1)
-        $completedFormalTrainingTypes = TrainingRegistration::with('session.type')
+        // 3. Your formal trainings (type 1 that user has registered for)
+        $formalTrainingsRegistered = TrainingRegistration::with('session.type')
             ->where('client_id', $user->id)
             ->where('payment_status', 'completed')
             ->whereHas('session', function($query) {
@@ -99,20 +95,26 @@ class DashboardController extends Controller
             ->filter()
             ->unique('id');
         
-        // Get available plans (all plans except current plan and completed sessions)
+        // 4. Available product plans (all plans except current plan and completed sessions)
+        // Task Assistance (2) and Personal Guide (3) should always be available
+        $alwaysAvailableIds = [2, 3]; // Task Assistance and Personal Guide
+        
         $excludedIds = collect([$currentPlan->id])
-            ->merge($completedGroupSessions->pluck('id'))
-            ->merge($completedFormalTrainingTypes->pluck('id'))
+            ->merge($groupSessions->pluck('id'))
+            ->merge($formalTrainingsRegistered->pluck('id'))
             ->unique()
+            ->reject(function($id) use ($alwaysAvailableIds) {
+                return in_array($id, $alwaysAvailableIds);
+            })
             ->toArray();
         
-        $availablePlans = $allTrainingTypes->filter(function($plan) use ($excludedIds) {
-            return !in_array($plan->id, $excludedIds);
+        $availablePlans = $allTrainingTypes->filter(function($plan) use ($excludedIds, $alwaysAvailableIds) {
+            return !in_array($plan->id, $excludedIds) || in_array($plan->id, $alwaysAvailableIds);
         });
 
         return view('dashboard', [
             'allTipsTricks' => $allTipsTricks,
-            'formalTrainings' => $formalTrainings, // This remains the formal training courses
+            'formalTrainings' => $formalTrainings,
             'tipsAndTricksCurrent' => $tipsAndTricksCurrent,
             'formalTrainingCurrent' => $formalTrainingCurrent,
             'recommendedCourses' => $recommendedCourses,
@@ -120,8 +122,8 @@ class DashboardController extends Controller
             'upcomingGroupSessions' => TrainingSession::getUpcomingGroupSessions(),
             'allTrainingTypes' => $allTrainingTypes,
             'currentPlan' => $currentPlan,
-            'completedGroupSessions' => $completedGroupSessions,
-            'completedFormalTrainingTypes' => $completedFormalTrainingTypes,
+            'groupSessions' => $groupSessions,
+            'formalTrainingsRegistered' => $formalTrainingsRegistered,
             'availablePlans' => $availablePlans
         ]);
     }

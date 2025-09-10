@@ -602,25 +602,23 @@
 
                 <!-- subscriptions containers -->
                 <div class="content-section subscriptions_content" id="usr_mysubscriptions">
+                    <!-- 1. Your Current Plan -->
                     <div class="current-plans">
                         <div class="container">
                             <div class="title">
-                                <h2>Your Current Plans</h2>
-                                <p>All plans you're actively subscribed to</p>
+                                <h2>Your Current Plan</h2>
+                                <p>Your active subscription plan</p>
                             </div>
                             
                             <div class="card-grid">
-                                <!-- Current Plan (Free or Premium) -->
                                 @if($currentPlan)
-                                <div class="plan-card {{ $currentPlan->id == 7 ? 'free-plan' : '' }}">
-                                    @if($currentPlan->id == 7)
-                                        <span class="plan-badge free-badge">Always Active</span>
-                                    @elseif($currentPlan->id == 6)
+                                <div class="plan-card {{ $currentPlan->id == 7 ? 'free-plan' : 'current-plan' }}">
+                                    @if($currentPlan->id == 6)
                                         <span class="plan-badge premium-badge">
                                             Active until {{ auth()->user()->subscription_expiry->format('M d, Y') }}
                                         </span>
-                                    @else
-                                        <span class="plan-badge paid-badge">Active</span>
+                                    @elseif($currentPlan->id == 7)
+                                        <span class="plan-badge free-badge">Always Active</span>
                                     @endif
                                     
                                     <h3>{{ $currentPlan->name }}</h3>
@@ -637,13 +635,33 @@
                                         @endif
                                     </div>
                                     <p class="plan-description">{{ $currentPlan->description }}</p>
+                                    
+                                    <div class="plan-actions">
+                                        @if($currentPlan->id == 7)
+                                            <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">Upgrade to Premium</a>
+                                        @else
+                                            <span class="btn btn-outline">Current Plan</span>
+                                        @endif
+                                    </div>
                                 </div>
                                 @endif
-                                
-                                <!-- Completed Group Sessions -->
-                                @foreach($completedGroupSessions as $session)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. Your Group Sessions -->
+                    @if($groupSessions->count() > 0)
+                    <div class="group-sessions">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Your Group Sessions</h2>
+                                <p>Sessions you've enrolled in</p>
+                            </div>
+                            
+                            <div class="card-grid">
+                                @foreach($groupSessions as $session)
                                 <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Completed</span>
+                                    <span class="plan-badge paid-badge">Enrolled</span>
                                     <h3>{{ $session->name }}</h3>
                                     <div class="plan-price">
                                         @if($session->student_price)
@@ -656,29 +674,43 @@
                                     <p class="plan-description">{{ $session->description }}</p>
                                 </div>
                                 @endforeach
-                                
-                                <!-- Completed Formal Training Types -->
-                                @foreach($completedFormalTrainingTypes as $trainingType)
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    
+                    <!-- 3. Your Formal Trainings -->
+                    @if($formalTrainingsRegistered->count() > 0)
+                    <div class="formal-trainings">
+                        <div class="container">
+                            <div class="title">
+                                <h2>Your Formal Trainings</h2>
+                                <p>Formal trainings you've registered for</p>
+                            </div>
+                            
+                            <div class="card-grid">
+                                @foreach($formalTrainingsRegistered as $training)
                                 <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Completed</span>
-                                    <h3>{{ $trainingType->name }}</h3>
+                                    <span class="plan-badge paid-badge">Registered</span>
+                                    <h3>{{ $training->name }}</h3>
                                     <div class="plan-price">
-                                        @if($trainingType->student_price)
-                                            R{{ $trainingType->student_price }} (students)
+                                        @if($training->student_price)
+                                            R{{ $training->student_price }} (students)
                                         @endif
-                                        @if($trainingType->professional_price)
-                                            | R{{ $trainingType->professional_price }} (business)
+                                        @if($training->professional_price)
+                                            | R{{ $training->professional_price }} (business)
                                         @endif
                                     </div>
-                                    <p class="plan-description">{{ $trainingType->description }}</p>
+                                    <p class="plan-description">{{ $training->description }}</p>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
                     </div>
+                    @endif
                     
-                    <!-- Available Plans Section -->
-                    <div class="available-plans" style="margin-top: 50px;">
+                    <!-- 4. Available Product Plans -->
+                    <div class="available-plans">
                         @php
                             // Get the latest upcoming sessions
                             $qaSession = \App\Models\TrainingSession::where('type_id', 4)
@@ -809,7 +841,7 @@
                                                 @elseif($plan->id == 3) <!-- Personal Guide -->
                                                     <a href="{{ url('/dashboard#usr_guide') }}" class="btn btn-primary">Get Guide</a>
                                                 @elseif($plan->id == 7) <!-- Free Plan -->
-                                                    <a href="#" class="btn btn-outline">Current Plan</a>
+                                                    <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">Upgrade Now</a>
                                                 @endif
                                             @else
                                                 <a href="{{ url('/login?redirect=' . urlencode(url()->current())) }}" class="btn btn-primary">

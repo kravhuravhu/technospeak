@@ -2,140 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment Success</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="@secureAsset('style/home.css')" type="text/css">
-    <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
+    <title>Payment Successful - Technospeak</title>
     <style>
-        :root {
-            --success: #38b000;
-            --lightGray: #f3f4f6;
-            --textDark: #374151;
-            --skBlue: #38b6ff;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        .payment-success-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-            padding: 2rem;
-        }
-
-        .success-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2.5rem;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background-color: var(--success);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .success-icon svg {
-            width: 40px;
-            height: 40px;
-            color: white;
-        }
-
-        .success-card h2 {
-            color: var(--skBlue);
-            margin-bottom: 1rem;
-            font-size: 1.75rem;
-        }
-
-        .for_this {
-            color: #062644;
-        }
-
-        .session-details {
-            margin: 1.5rem 0;
-            padding: 1rem;
-            background-color: #062644;
-            border-radius: 8px;
-            text-align: left;
-        }
-
-        .session-details p {
-            margin-bottom: 0.5rem;
-            color: #f9faf9;
-        }
-
-        .confirmation-message {
-            margin: 1.5rem 0;
-            color: var(--textDark);
-            font-size: 0.95rem;
-        }
-
-        .back-to-dashboard {
-            display: inline-block;
-            background-color: #38b6ff;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
-
-        .back-to-dashboard:hover {
-            background-color: #2a9ce8;
-        }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 2rem; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        .success-icon { color: #38a169; font-size: 4rem; margin-bottom: 1rem; }
+        h1 { color: #15415a; margin-bottom: 1rem; }
+        .details { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: left; }
+        .detail-item { margin-bottom: 0.5rem; }
+        .buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .btn-primary { background: #38b6ff; color: white; }
+        .btn-secondary { background: #e2e8f0; color: #4a5568; }
+        .btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="success-icon">✅</div>
+    <h1>Payment Successful!</h1>
+    <p>Thank you for your payment. You are now registered for the training session.</p>
 
-    <div class="payment-success-container">
-        <div class="success-card">
-            <div class="success-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
-                </svg>
-            </div>
-            <h2>Payment Successful!</h2>
-            <p>Thank you for registering for <strong class="for_this">{{ $trainingSession->title }}</strong></p>
-
-            <div class="session-details">
-                @if(isset($trainingSession))
-                    <p><strong>Session:</strong> {{ $trainingSession->title }}</p>
-                    <p><strong>Date:</strong> {{ $trainingSession->scheduled_for->format('F j, Y') }}</p>
-                    <p><strong>Time:</strong> {{ $trainingSession->scheduled_for->format('g:i A') }}</p>
-                @elseif(isset($plan))
-                    <p><strong>Plan Type:</strong> {{ $plan->name }} Subscription</p>
-                    <p><strong>Expiry Date:</strong> {{ now()->addMonths(3)->format('F j, Y') }}</p>
-                @endif
-                <p><strong>Amount Paid:</strong> R{{ number_format($payment->amount, 2) }}</p>
-                <p><strong>Transaction ID:</strong> {{ $payment->transaction_id ?? 'N/A' }}</p>
-                <p><strong>Customer:</strong> {{ $client->name }} {{ $client->surname }}</p>
-            </div>
-
-            <div class="confirmation-message">
-                <p>A confirmation email has been sent to <strong>{{ auth()->user()->email }}</strong></p>
-                <p>You'll receive session details and meeting link 24 hours before the session.</p>
-            </div>
-
-            <a href="{{ url('/') }}" class="back-to-dashboard">Go to Home</a>
-        </div>
+    <div class="details">
+        <div class="detail-item"><strong>Session:</strong> {{ $trainingSession->title }}</div>
+        <div class="detail-item"><strong>Date:</strong> {{ $trainingSession->scheduled_for->format('F j, Y') }}</div>
+        <div class="detail-item"><strong>Time:</strong> {{ $trainingSession->scheduled_for->format('g:i A') }}</div>
+        <div class="detail-item"><strong>Amount Paid:</strong> R{{ number_format($payment->amount, 2) }}</div>
+        <div class="detail-item"><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</div>
+        <div class="detail-item"><strong>Payment Method:</strong> {{ ucfirst($payment->payment_method) }}</div>
     </div>
 
+    <p>You will receive a confirmation email shortly with the session details.</p>
+
+    <div class="buttons">
+        <a href="{{ route('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+        <a href="{{ url('/') }}" class="btn btn-secondary">Return Home</a>
+    </div>
+</div>
 </body>
 </html>

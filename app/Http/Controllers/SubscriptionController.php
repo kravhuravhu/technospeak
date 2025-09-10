@@ -17,11 +17,72 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
+    public static function getSubscriptionStatus($client)
+    {
+        if (!$client->subscription_type) {
+            return 'none';
+        }
+        
+        if ($client->subscription_type === 'premium') {
+            if ($client->subscription_expiry && $client->subscription_expiry->isFuture()) {
+                return 'active';
+            } else {
+                return 'expired';
+            }
+        }
+        
+        return 'free';
+    }
+
+    public static function getAvailablePlans($client, $allTrainingTypes)
+    {
+        $subscriptionStatus = self::getSubscriptionStatus($client);
+        
+        return $allTrainingTypes->filter(function($plan) use ($client, $subscriptionStatus) {
+            // Free plan is always available
+            if ($plan->id == 7) {
+                return true;
+            }
+            
+            // Premium plan - only show if not already active
+            if ($plan->id == 6) {
+                return $subscriptionStatus !== 'active';
+            }
+            
+            // Other plans are always available
+            return true;
+        });
+    }
+
+    public static function hasActiveSubscription($client, $plan)
+    {
+        // Check if user already has an active subscription for this plan
+        if ($plan->id == 6 && $client->subscription_type === 'premium') {
+            return $client->subscription_expiry && $client->subscription_expiry->isFuture();
+        }
+        
+        return false;
+    }
+
+    public static function getPriceForUser($client, $plan)
+    {
+        if ($client->userType === 'Student') {
+            return $plan->student_price;
+        } elseif ($client->userType === 'Professional') {
+            return $plan->professional_price;
+        }
+        
+        // Default to professional price if user type not set
+        return $plan->professional_price;
+    }
+
     public function showSubscriptionForm()
     {
         $plan = TrainingType::where('name', 'Premium')->firstOrFail();
         $client = Auth::user();
-        $price = $plan->getPriceForUserType($client->userType);
+        
+        // Get price based on user type
+        $price = self::getPriceForUser($client, $plan);
         
         return view('subscription.yoco-payment', compact('plan', 'price', 'client'));
     }
@@ -47,7 +108,7 @@ class SubscriptionController extends Controller
     protected function showYocoPaymentForm($plan)
     {
         $client = Auth::user();
-        $price = $plan->getPriceForUserType($client->userType);
+        $price = self::getPriceForUser($client, $plan);
         
         return view('subscription.yoco-payment', compact('plan', 'price', 'client'));
     }
@@ -61,14 +122,31 @@ class SubscriptionController extends Controller
 
         $client = Auth::user();
         $plan = TrainingType::findOrFail($request->plan_id);
-        $amount = $plan->getPriceForUserType($client->userType);
+        
+        // Check for existing active subscription
+        if (self::hasActiveSubscription($client, $plan)) {
+            return back()->with('error', 'You already have an active subscription. Your current subscription expires on ' . $client->subscription_expiry->format('M d, Y'));
+        }
+        
+        // Check for pending payments for the same plan
+        $pendingPayment = Payment::where('client_id', $client->id)
+            ->where('payable_type', 'subscription')
+            ->where('payable_id', $plan->id)
+            ->where('status', 'pending')
+            ->first();
+            
+        if ($pendingPayment) {
+            return back()->with('error', 'You already have a pending payment for this subscription. Please wait for it to be processed.');
+        }
+        
+        $amount = self::getPriceForUser($client, $plan);
 
         Log::info("Subscription payment attempt for client {$client->id}, plan {$plan->id}, amount R$amount, status pending");
 
         try {
-            // Process payment with Yoco (USE TEST KEY LIKE TESTING VERSION)
+            // Process payment with Yoco
             $response = Http::withHeaders([
-                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'), 
+                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'),
             ])->post('https://online.yoco.com/v1/charges/', [
                 'token' => $request->token,
                 'amountInCents' => intval($amount * 100),
@@ -95,16 +173,18 @@ class SubscriptionController extends Controller
                     'user_type' => $client->userType,
                     'plan_name' => $plan->name,
                     'payment_processor' => 'yoco',
-                    'yoco_response' => $data
+                    'yoco_response' => $data,
+                    'calculated_price' => $amount
                 ])
             ]);
 
             if ($payment->status === 'completed') {
-                // Update client subscription
+                // Update client subscription with proper expiry
                 $client->update([
                     'subscription_type' => strtolower($plan->name),
                     'subscription_paid_at' => now(),
-                    'subscription_expiry' => now()->addQuarter(),
+                    'subscription_expiry' => now()->addQuarter(), // 3 months
+                    'updated_at' => now()
                 ]);
 
                 // Update client course subscriptions
@@ -291,10 +371,9 @@ class SubscriptionController extends Controller
         $client = Client::findOrFail($payment->client_id);
         $plan = TrainingType::findOrFail($payment->payable_id);
 
-        return view('success-subscription', [
+        return view('success-payment', [
             'plan' => $plan,
-            'payment_amount' => $payment->amount,
-            'transaction_id' => $payment->transaction_id,
+            'payment' => $payment,
             'client' => $client
         ]);
     }
@@ -365,62 +444,9 @@ class SubscriptionController extends Controller
             ->with('success', 'Free subscription activated!');
     }
 
-    protected function handleYocoPayment($plan, $client)
-    {
-        $price = $plan->getPriceForUserType($client->userType);
-        
-        // Create payment record in the main payments table
-        $payment = Payment::create([
-            'client_id' => $client->id,
-            'amount' => $price,
-            'payment_method' => 'yoco',
-            'status' => 'pending',
-            'payable_type' => 'subscription',
-            'payable_id' => $plan->id,
-            'metadata' => json_encode([
-                'user_type' => $client->userType,
-                'plan_name' => $plan->name,
-                'payment_processor' => 'yoco'
-            ])
-        ]);
-
-        $paymentLink = $this->getPaymentLink($client->userType);
-        
-        // Build URL with proper redirect parameters
-        $successUrl = route('yoco.payment.verify', ['payment' => $payment->id]);
-        $cancelUrl = route('yoco.payment.cancel', ['payment' => $payment->id]);
-        
-        $yocoUrl = $paymentLink . 
-            '?metadata[payment_id]=' . $payment->id . 
-            '&metadata[client_id]=' . $client->id . 
-            '&metadata[plan_id]=' . $plan->id .
-            '&amount=' . ($price * 100) . // Yoco expects amount in cents
-            '&redirectUrl=' . urlencode($successUrl) .
-            '&cancelUrl=' . urlencode($cancelUrl);
-
-        Log::info('Yoco payment initiated', [
-            'payment_id' => $payment->id,
-            'client_id' => $client->id,
-            'plan_id' => $plan->id,
-            'amount' => $price,
-            'yoco_url' => $yocoUrl
-        ]);
-
-        return redirect($yocoUrl);
-    }
-
-    protected function getPaymentLink($userType)
-    {
-        if (strtolower($userType) === 'student') {
-            return 'https://pay.yoco.com/r/2BojJr';
-        }
-        
-        return 'https://pay.yoco.com/r/2DeZrp';
-    }
-
     protected function handlePayment($plan, $client)
     {
-        $price = $plan->getPriceForUserType($client->userType);
+        $price = self::getPriceForUser($client, $plan);
         
         $payment = Payment::create([
             'client_id' => $client->id,
@@ -489,7 +515,7 @@ class SubscriptionController extends Controller
         // Show success page
         return view('success-subscription', [
             'plan' => $plan,
-            'payment_amount' => $plan->getPriceForUserType($client->userType),
+            'payment_amount' => self::getPriceForUser($client, $plan),
             'transaction_id' => $transactionId
         ]);
     }

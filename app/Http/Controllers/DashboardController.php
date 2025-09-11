@@ -59,13 +59,18 @@ class DashboardController extends Controller
         // Get all training types
         $allTrainingTypes = TrainingType::whereIn('id', [1, 2, 3, 4, 5, 6, 7])->get();
 
-        // 1. Your current plan (only premium if subscribed, otherwise free)
+        // 1. Your current plan using static methods
         $currentPlan = null;
-        if ($user->subscription_type === 'premium') {
+        $subscriptionStatus = SubscriptionController::getSubscriptionStatus($user);
+
+        if ($subscriptionStatus === 'active') {
             $currentPlan = TrainingType::find(6); // Premium plan
-        } else {
-            $currentPlan = TrainingType::find(7); // Free plan (only if not premium)
+        } elseif ($subscriptionStatus === 'free' || $subscriptionStatus === 'none') {
+            $currentPlan = TrainingType::find(7); // Free plan
         }
+
+        // 4. Available product plans with improved logic
+        $availablePlans = SubscriptionController::getAvailablePlans($user, $allTrainingTypes);
         
         // 2. Your group sessions (types 4 and 5 that user has registered for)
         $groupSessions = TrainingRegistration::with('session.type')
@@ -94,23 +99,6 @@ class DashboardController extends Controller
             })
             ->filter()
             ->unique('id');
-        
-        // 4. Available product plans (all plans except current plan and completed sessions)
-        // Task Assistance (2) and Personal Guide (3) should always be available
-        $alwaysAvailableIds = [2, 3]; // Task Assistance and Personal Guide
-        
-        $excludedIds = collect([$currentPlan->id])
-            ->merge($groupSessions->pluck('id'))
-            ->merge($formalTrainingsRegistered->pluck('id'))
-            ->unique()
-            ->reject(function($id) use ($alwaysAvailableIds) {
-                return in_array($id, $alwaysAvailableIds);
-            })
-            ->toArray();
-        
-        $availablePlans = $allTrainingTypes->filter(function($plan) use ($excludedIds, $alwaysAvailableIds) {
-            return !in_array($plan->id, $excludedIds) || in_array($plan->id, $alwaysAvailableIds);
-        });
 
         return view('dashboard', [
             'allTipsTricks' => $allTipsTricks,
@@ -124,7 +112,8 @@ class DashboardController extends Controller
             'currentPlan' => $currentPlan,
             'groupSessions' => $groupSessions,
             'formalTrainingsRegistered' => $formalTrainingsRegistered,
-            'availablePlans' => $availablePlans
+            'availablePlans' => $availablePlans,
+            'subscriptionStatus' => $subscriptionStatus
         ]);
     }
 }

@@ -65,7 +65,7 @@
 
 <script>
     const yoco = new window.YocoSDK({
-        publicKey: "{{ env('YOCO_PUBLIC_KEY') }}"
+        publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}" // Changed to TEST key
     });
 
     document.getElementById("pay-button").addEventListener("click", function () {

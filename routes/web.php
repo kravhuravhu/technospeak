@@ -454,7 +454,6 @@ Route::post('/subscription/yoco/process', [SubscriptionController::class, 'proce
     ->name('subscription.yoco.process')
     ->middleware('auth');
 
-// Add this route definition
 Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redirectToYoco'])
     ->name('subscription.yoco.redirect')
     ->middleware('auth');
@@ -464,6 +463,6 @@ Route::post('/training/yoco/process', [TrainingRegistrationController::class, 'p
     ->name('training.yoco.process')
     ->middleware('auth');
 
-     Route::get('/yoco/training/success/{payment}', [TrainingRegistrationController::class, 'showTrainingSuccess'])
-    ->name('yoco.training.success')
+Route::get('/training/register/{session}', [TrainingRegistrationController::class, 'showRegistrationForm'])
+    ->name('training.register.form')
     ->middleware('auth');

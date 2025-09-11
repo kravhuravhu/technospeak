@@ -531,7 +531,7 @@
                                                                 <span>R{{ $course['price'] }}</span>
                                                             </div>
                                                             <div>
-                                                                <label>Enroll Now</label>
+                                                                <label>Full Details</label>
                                                             </div>
                                                         @endif
                                                     </div>

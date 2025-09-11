@@ -10,6 +10,7 @@
         <link rel="icon" href="@secureAsset('images/icon.png')" type="image/x-icon">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="has-formal-payment" content="{{ $hasFormalPayment ? 'true' : 'false' }}">
         <style>
             :root {
                 --primary-color: #38b6ff;
@@ -618,33 +619,34 @@
                             </div>
                         </div>
                         <div class="course-actions">
-                            <button class="btn back-btn" onclick="window.location.href='/dashboard#usr_alltrainings'">
-                                <i class="fas fa-arrow-left"></i>
-                                @if ($course->plan_type === 'frml_training')
+                            @if ($course->plan_type === 'frml_training')
+                                <button class="btn back-btn" onclick="window.location.href='/dashboard#usr_formaltraining'">
+                                    <i class="fas fa-arrow-left"></i>
                                     View All Trainings
-                                @else 
+                                </button>
+                            @else
+                                <button class="btn back-btn" onclick="window.location.href='/dashboard#usr_alltricks'">
+                                    <i class="fas fa-arrow-left"></i>
                                     View All Tips&Tricks
-                                @endif
-                            </button>
+                                </button>
+                            @endif
                             @auth
-                                @if(!$payEnroll)
-                                    <form id="enroll-form" method="POST" style="display:inline;">
-                                        @csrf
-                                        <input type="hidden" name="course_id" value="{{ $course->uuid }}">
-                                        <button type="button" class="btn enroll-btn" id="enroll-btn">
-                                            <i class="fas fa-plus-circle"></i> Enroll Now
-                                            @if ($course->plan_type === 'frml_training')
-                                                Enroll Now
-                                            @else 
-                                                Watch Now
-                                            @endif
-                                        </button>
-                                    </form>
-                                @else
-                                    <button class="btn enroll-btn" id="upgrade-btn">
-                                        <i class="fas fa-crown"></i> Enroll Now
+                                <form id="enroll-form" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="course_id" value="{{ $course->uuid }}">
+                                    <button type="button" class="btn enroll-btn" id="enroll-btn"
+                                        data-course-id="{{ $course->uuid }}"
+                                        data-plan-type="{{ $course->plan_type }}"
+                                        data-course-price="{{ $course->price }}"
+                                        >
+                                        <i class="fas fa-plus-circle"></i>
+                                        @if ($course->plan_type === 'frml_training')
+                                            Checkout (1)
+                                        @else 
+                                            Watch Now
+                                        @endif
                                     </button>
-                                @endif
+                                </form>
                             @endauth
                         </div>
                     </div>
@@ -724,17 +726,17 @@
                                 @if($course->plan_type == 'free' || $course->plan_type == 'paid')
                                     <div class="course-price price-free">Quartely Subscription</div>
                                 @else
-                                    <div class="course-price">Premium</div>
+                                    <div class="course-price">R{{ $course->price }}</div>
                                     @unless($hasActiveSubscription)
                                         <div class="subscription-required" style="text-align:center;">
                                             <i class="fas fa-exclamation-circle"></i>
-                                            <span>Premium subscription required</span>
+                                            <span>Payment required to access this training!</span>
                                         </div>
                                     @endunless
                                 @endif                                
                                 <div class="includes-title">
                                     @if($course->plan_type == 'frml_training')
-                                        This <i>Formal Training</i> includes:
+                                        This <i>Formal training</i> includes:
                                     @else 
                                         This <i>Tips&Tricks</i> series includes:
                                     @endif
@@ -761,19 +763,18 @@
                                 </ul>
                                 
                                 @auth
-                                    @if(!$payEnroll)
-                                        <form id="sidebar-enroll-form">
-                                            @csrf
-                                            <input type="hidden" name="course_id" value="{{ $course->uuid }}">
-                                            <button type="button" class="btn enroll-btn" id="sidebar-enroll-btn" style="width: 100%;">
-                                                <i class="fas fa-plus-circle"></i> Enroll Now
-                                            </button>
-                                        </form>
-                                    @else
-                                        <button class="btn upgrade-btn" id="upgrade-btn-card" style="width: 100%;">
-                                            <i class="fas fa-crown"></i> Upgrade to Premium
+                                    <form id="sidebar-enroll-form">
+                                        @csrf
+                                        <input type="hidden" name="course_id" value="{{ $course->uuid }}">
+                                        <button type="button" class="btn enroll-btn" id="sidebar-enroll-btn"
+                                            data-course-id="{{ $course->uuid }}"
+                                            data-plan-type="{{ $course->plan_type }}"
+                                            data-course-price="{{ $course->price }}"
+                                            style="width: 100%;">
+
+                                            <i class="fas fa-plus-circle"></i> Checkout (1)
                                         </button>
-                                    @endif
+                                    </form>
                                 @else
                                     <div class="login-to-enroll">
                                         <a href="{{ route('login') }}?redirect={{ urlencode(request()->fullUrl()) }}">Log in</a> to enroll in this course
@@ -902,9 +903,15 @@
                     enrollBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         
-                        const form = this.closest('form');
                         const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
-                        
+                        const courseId = this.dataset.courseId;
+                        const planType = this.dataset.planType;
+                        const coursePrice = this.dataset.coursePrice;
+
+                        const hasFormalPayment = document.querySelector('meta[name="has-formal-payment"]')?.content === 'true';
+
+                        console.log('hasFormalPayment:', hasFormalPayment);
+
                         Swal.fire({
                             title: 'Confirm Enrollment',
                             html: `Are you sure you want to enroll in <strong>${courseTitle}</strong>?`,
@@ -916,7 +923,21 @@
                             cancelButtonText: 'Cancel'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                form.submit();
+                                if (planType === 'frml_training') {
+                                    if (hasFormalPayment) {
+                                        window.location.href = `/enrolled-courses/${courseId}`;
+                                    } else {
+                                        // Sithebe, sithebe
+                                        // This is where you'll be working
+                                        // After Yoco is successful, 
+                                        // Update the PAYMENT table as usual
+                                        // also update client_course_subscription->payment_status to 'formal_payment'
+                                        // exmaple for the url with the course->price
+                                        // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                    }
+                                } else {
+                                    enrollInCourse(courseId);
+                                }
                             }
                         });
                     });
@@ -1083,10 +1104,51 @@
 
                 // Sidebar enroll button handler
                 const sidebarEnrollBtn = document.getElementById('sidebar-enroll-btn');
+
                 if (sidebarEnrollBtn) {
-                    sidebarEnrollBtn.addEventListener('click', function(e) {
+                    sidebarEnrollBtn.addEventListener('click', function (e) {
                         e.preventDefault();
-                        handleEnrollment();
+
+                        const courseId = this.dataset.courseId;
+                        const planType = this.dataset.planType;
+                        const coursePrice = this.dataset.coursePrice;
+
+                        const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
+                        
+                        const hasFormalPayment = document.querySelector('meta[name="has-formal-payment"]')?.content === 'true';
+
+                        if (!courseId) {
+                            console.error('Course ID not found');
+                            return;
+                        }
+
+                        Swal.fire({
+                            title: 'Confirm Enrollment',
+                            html: `Are you sure you want to enroll in <strong>${courseTitle}</strong>?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#38b6ff',
+                            cancelButtonColor: '#718096',
+                            confirmButtonText: 'Yes, Enroll',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (planType === 'frml_training') {
+                                    if (hasFormalPayment) {
+                                        window.location.href = `/enrolled-courses/${courseId}`;
+                                    } else {
+                                        // Sithebe, sithebe
+                                        // This is where you'll be working
+                                        // After Yoco is successful, 
+                                        // Update the client_course_subscription->payment_status to 'formal_payment'
+                                        // exmaple for the url with the course->price
+                                        // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                    }
+                                } else {
+                                    enrollInCourse(courseId);
+                                }
+                            }
+                        });
                     });
                 }
 
@@ -1094,6 +1156,10 @@
                     const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
                     const courseId = document.querySelector('input[name="course_id"]')?.value || 
                                     document.querySelector('#sidebar-enroll-form input[name="course_id"]')?.value;
+                    const planType = document.querySelector('meta[name="course-plan-type"]')?.content;
+                    const coursePrice = document.querySelector('meta[name="course-price"]')?.content;
+
+                    const hasFormalPayment = document.querySelector('meta[name="has-formal-payment"]')?.content === 'true';
                     
                     if (!courseId) {
                         console.error('Course ID not found');
@@ -1111,63 +1177,90 @@
                         cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            enrollInCourse(courseId);
+                            if (planType === 'frml_training') {
+                                console.log('hasFormalPayment:', hasFormalPayment);
+
+                                if (hasFormalPayment) {
+                                    window.location.href = `/enrolled-courses/${courseId}`;
+                                } else {
+                                    // Sithebe, sithebe
+                                    // This is where you'll be working
+                                    // After Yoco is successful, 
+                                    // Update the client_course_subscription->payment_status to 'formal_payment'
+                                    // exmaple for the url with the course->price
+                                    // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                }
+                            } else {
+                                enrollInCourse(courseId);
+                            }
                         }
                     });
                 }
 
                 function enrollInCourse(courseId) {
-                    fetch('/clear-cache')
-                        .then(() => {
-                            return fetch('/courses/enroll', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify({ course_id: courseId })
-                            });
-                        })
-                        .then(async response => {
-                            const data = await response.json();
+                    fetch('/courses/enroll', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ course_id: courseId })
+                    })
+                    .then(async response => {
+                        const data = await response.json();
 
-                            if (data.success) {
-                                fetch('/clear-cache').then(() => {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success',
-                                        text: data.message,
-                                        timer: 2500,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        window.location.href = `/enrolled-courses/${courseId}`;
-                                    });
-                                });
-                            } else if (data.redirect) {
-                                fetch('/clear-cache').then(() => {
-                                    window.location.href = data.redirect;
-                                });
+                        if (response.status === 409) {
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
                             } else {
                                 Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: data.message,
-                                    timer: 5000,
+                                    icon: 'info',
+                                    title: 'Already Enrolled',
+                                    text: data.message || 'You are already enrolled in this course',
+                                    timer: 3000,
                                     showConfirmButton: true
+                                }).then(() => {
+                                    if (data.redirect) {
+                                        window.location.href = data.redirect;
+                                    }
                                 });
                             }
-                        })
-                        .catch(error => {
-                            console.error('Enrollment error:', error);
+                            return;
+                        }
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: data.message,
+                                timer: 2500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = `/enrolled-courses/${courseId}`;
+                            });
+                        } else if (data.open_url) {
+                            window.location.href = data.open_url;
+                        } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: 'An error occurred during enrollment',
+                                text: data.message || 'Enrollment failed',
                                 timer: 5000,
                                 showConfirmButton: true
                             });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Enrollment error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred during enrollment',
+                            timer: 5000,
+                            showConfirmButton: true
                         });
+                    });
                 }
             });
         </script>

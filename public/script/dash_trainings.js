@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 modalEnrollBtn.removeAttribute('data-enroll');
                 modalEnrollBtn.style.cursor = 'pointer';
             } else {
-                modalEnrollBtn.textContent = isTips ? 'Watch Now' : 'Enroll Now';
+                modalEnrollBtn.textContent = isTips ? 'Watch Now' : 'Full Details';
                 modalEnrollBtn.href = '#';
                 modalEnrollBtn.classList.remove('open-btn');
                 modalEnrollBtn.style.backgroundColor = '#38b6ff';
@@ -190,7 +190,7 @@ function showSwalNotification(type, title, message) {
 }
 
 // Enroll for all courses
-function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll Now') {
+function enrollInCourse(courseId, buttonElement = null, originalText = 'Full Details') {
     fetch('/courses/enroll', {
         method: 'POST',
         headers: {
@@ -217,7 +217,7 @@ function enrollInCourse(courseId, buttonElement = null, originalText = 'Enroll N
         } else {
             const openUrl = data.open_url;
             if (openUrl) {
-                showSwalNotification('info', 'Already Enrolled', 'Redirecting...');
+                showSwalNotification('info', 'Redirect', 'Opening in few seconds...');
                 setTimeout(() => {
                     window.location.href = openUrl;
                 }, 100);

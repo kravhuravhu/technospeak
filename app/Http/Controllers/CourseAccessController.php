@@ -120,6 +120,14 @@ class CourseAccessController extends Controller
                 ], 409);
             }
 
+            if(($course->plan_type === 'frml_training') && (!$user->isSubscribedTo($course->id))) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Redirecting to Formal trainings details',
+                    'open_url' => url('/unenrolled-courses/' . $course->uuid),
+                ]);
+            }
+
             $subscription = $user->courseSubscriptions()->create([
                 'course_id' => $course->id,
                 'course_uuid' => $course->uuid,
@@ -247,25 +255,34 @@ class CourseAccessController extends Controller
     {
         $user = Auth::user();
 
-        if ($user && $user->isSubscribedTo($course->id)) {
-            return redirect()->route('enrolled-courses.show', $course->uuid);
-        } else {
-            $course->load(['category', 'instructor', 'episodes' => function($query) {
-                $query->orderBy('episode_number');
-            }]);
-
-            $course->resources_count = $course->resources()->count();
-            $course->episodes_count = $course->episodes()->count();
-
-            $hasActiveSubscription = $user ? $user->hasActiveSubscription() : false;
-            $payEnroll = $course->plan_type == 'paid' || $hasActiveSubscription;
-
-            return view('unenrolled-courses.show', [
-                'course' => $course,
-                'payEnroll' => $payEnroll,
-                'hasActiveSubscription' => $hasActiveSubscription
-            ]);
+        if (!$user) {
+            return view('unenrolled-courses.show', $course->uuid);
         }
+
+        $hasFormalPayment = $user->courseSubscriptions()
+            ->where('course_id', $course->id)
+            ->where('payment_status', 'formal_payment')
+            ->exists();
+
+        if ($hasFormalPayment) {
+            return redirect()->route('enrolled-courses.show', $course->uuid);
+        }
+
+        $course->load(['category', 'instructor', 'episodes' => function($query) {
+            $query->orderBy('episode_number');
+        }]);
+
+        $course->resources_count = $course->resources()->count();
+        $course->episodes_count = $course->episodes()->count();
+
+        $hasActiveSubscription = $user->hasActiveSubscription();
+
+        return view('unenrolled-courses.show', [
+            'course' => $course,
+            'hasActiveSubscription' => $hasActiveSubscription,
+            'user' => $user,
+            'hasFormalPayment' => false,
+        ]);
     }
 
     public function markEpisodeCompleted(Course $course, CourseEpisode $episode)

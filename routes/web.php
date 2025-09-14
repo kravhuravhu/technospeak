@@ -149,7 +149,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
    
     // Profile routes
     Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
@@ -548,3 +547,4 @@ Route::get('/formal-training/payment/success/{payment}', [CourseAccessController
 Route::get('/formal-training/payment/failed/{payment}', [CourseAccessController::class, 'paymentFailed'])
     ->name('formal.training.payment.failed')
     ->middleware('auth');
+

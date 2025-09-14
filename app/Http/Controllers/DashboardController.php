@@ -16,6 +16,31 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
+        // log testing
+        // Log::info('Dashboard accessed for user: ' . $user->email);
+        // Log::info('User subscription_type: ' . $user->subscription_type);
+        // Log::info('User subscription_expiry: ' . ($user->subscription_expiry ? $user->subscription_expiry->format('Y-m-d') : 'null'));
+        // Log::info('Is subscription active: ' . ($user->subscription_type === 'premium' && $user->subscription_expiry && $user->subscription_expiry->isFuture() ? 'YES' : 'NO'));
+        
+        // Get training status with proper case handling
+        $userSessions = TrainingRegistration::with(['session', 'payment'])
+            ->where('client_id', $user->id)
+            ->get()
+            ->map(function($registration) {
+                return [
+                    'session' => $registration->session,
+                    'payment_status' => $registration->payment_status,
+                    'paid' => $registration->payment_status === 'completed'
+                ];
+            });
+
+        // Get subscription status with proper case handling
+        $subscriptionStatus = strtolower($user->subscription_type);
+        $hasActivePremium = $subscriptionStatus === 'premium' && 
+                            $user->subscription_expiry && 
+                            $user->subscription_expiry->isFuture();
+            
+
         $courseAccess = new CourseAccessController();
         $allTipsTricks = $courseAccess->getTipsTricks();
         $formalTrainings = $courseAccess->getFormalTrainings();
@@ -59,19 +84,16 @@ class DashboardController extends Controller
         // Get all training types
         $allTrainingTypes = TrainingType::whereIn('id', [1, 2, 3, 4, 5, 6, 7])->get();
 
-        // 1. Your current plan using static methods
+        // 1. Your current plan using subscription_type from Clients table
         $currentPlan = null;
-        $subscriptionStatus = SubscriptionController::getSubscriptionStatus($user);
+        $subscriptionStatus = strtolower($user->subscription_type);
 
-        if ($subscriptionStatus === 'active') {
+        if ($subscriptionStatus === 'premium') {
             $currentPlan = TrainingType::find(6); // Premium plan
-        } elseif ($subscriptionStatus === 'free' || $subscriptionStatus === 'none') {
+        } elseif ($subscriptionStatus === 'free') {
             $currentPlan = TrainingType::find(7); // Free plan
         }
 
-        // 4. Available product plans with improved logic
-        $availablePlans = SubscriptionController::getAvailablePlans($user, $allTrainingTypes);
-        
         // 2. Your group sessions (types 4 and 5 that user has registered for)
         $groupSessions = TrainingRegistration::with('session.type')
             ->where('client_id', $user->id)
@@ -100,6 +122,9 @@ class DashboardController extends Controller
             ->filter()
             ->unique('id');
 
+        // 4. Available product plans - filter out plans user already has
+        $availablePlans = $this->getFilteredAvailablePlans($user, $allTrainingTypes, $groupSessions, $formalTrainingsRegistered);
+
         return view('dashboard', [
             'allTipsTricks' => $allTipsTricks,
             'formalTrainings' => $formalTrainings,
@@ -113,7 +138,90 @@ class DashboardController extends Controller
             'groupSessions' => $groupSessions,
             'formalTrainingsRegistered' => $formalTrainingsRegistered,
             'availablePlans' => $availablePlans,
-            'subscriptionStatus' => $subscriptionStatus
+            'subscriptionStatus' => $subscriptionStatus,
+            'userSessions' => $userSessions,
+            'hasActivePremium' => $hasActivePremium,
+            'subscriptionExpiry' => $user->subscription_expiry,
+            'subscriptionPaidAt' => $user->subscription_paid_at,
+            'user' => $user 
         ]);
+    }
+
+    private function getFilteredAvailablePlans($user, $allTrainingTypes, $groupSessions, $formalTrainingsRegistered)
+    {
+        $availablePlans = collect();
+        
+        // Convert to lowercase for case-insensitive comparison
+        $subscriptionType = strtolower($user->subscription_type);
+        $hasActivePremium = $subscriptionType === 'premium' && 
+                        $user->subscription_expiry && 
+                        $user->subscription_expiry->isFuture();
+        
+        foreach ($allTrainingTypes as $plan) {
+            // Skip free plan (ID 7) as it should never be in available plans
+            if ($plan->id == 7) {
+                continue;
+            }
+            
+            // For premium plan (ID 6), only show if user doesn't have active premium
+            if ($plan->id == 6) {
+                if (!$hasActivePremium) {
+                    $availablePlans->push($plan);
+                }
+                continue;
+            }
+            
+            // For group sessions (4,5), check if user has already registered
+            if (in_array($plan->id, [4, 5])) {
+                $hasRegistered = $groupSessions->contains('id', $plan->id);
+                if (!$hasRegistered) {
+                    $availablePlans->push($plan);
+                }
+                continue;
+            }
+            
+            // For formal training (1), check if user has already registered
+            if ($plan->id == 1) {
+                $hasRegistered = $formalTrainingsRegistered->contains('id', $plan->id);
+                if (!$hasRegistered) {
+                    $availablePlans->push($plan);
+                }
+                continue;
+            }
+            
+            // For Task Assistance (2) and Personal Guide (3), always show
+            if (in_array($plan->id, [2, 3])) {
+                $availablePlans->push($plan);
+                continue;
+            }
+        }
+        
+        return $availablePlans;
+    }
+
+    public function getUserSubscriptionStatus()
+    {
+        $user = Auth::user();
+        
+        return [
+            'has_premium' => $user->subscription_type === 'premium' && 
+                            $user->subscription_expiry && 
+                            $user->subscription_expiry->isFuture(),
+            'premium_expiry' => $user->subscription_expiry,
+            'has_formal_training' => TrainingRegistration::where('client_id', $user->id)
+                ->whereHas('session', function($query) {
+                    $query->where('type_id', 1);
+                })
+                ->where('payment_status', 'completed')
+                ->exists(),
+            'has_group_session' => function($typeId) use ($user) {
+                return TrainingRegistration::where('client_id', $user->id)
+                    ->whereHas('session', function($query) use ($typeId) {
+                        $query->where('type_id', $typeId);
+                    })
+                    ->where('payment_status', 'completed')
+                    ->exists();
+            }
+        ];
     }
 }

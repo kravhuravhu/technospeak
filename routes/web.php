@@ -148,8 +148,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('skipOnboarding');
    
     // Profile routes
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
     // report/feedback
     Route::post('/submit-support/{type}', [SubmissionController::class, 'supportFeedbackSubmit'])->name('submit.support');
@@ -276,11 +279,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
         
         // Check if user has any completed registrations for this type
-        $registered = TrainingRegistration::where('client_id', $user->id)
-            ->whereHas('session', function($query) use ($typeId) {
+        $registered = Payment::where('client_id', $user->id)
+            ->where('payable_type', 'training')
+            ->whereHas('payable', function($query) use ($typeId) {
                 $query->where('type_id', $typeId);
             })
-            ->where('payment_status', 'completed')
+            ->where('status', 'completed')
             ->exists();
         
         return response()->json(['registered' => $registered]);
@@ -445,6 +449,7 @@ Route::get('/testing-yoco/cancel', function () {
     return redirect()->route('testing.yoco')->with('error', 'EFT Payment cancelled.');
 })->name('testing.payment.cancel');
 
+
 // Yoco subscription routes
 Route::get('/subscription/yoco/form', [SubscriptionController::class, 'showSubscriptionForm'])
     ->name('subscription.yoco.form')
@@ -458,6 +463,39 @@ Route::get('/subscription/yoco/redirect', [SubscriptionController::class, 'redir
     ->name('subscription.yoco.redirect')
     ->middleware('auth');
 
+Route::get('/yoco/payment/success/{payment}', [SubscriptionController::class, 'showSuccessPage'])
+    ->name('yoco.payment.success')
+    ->middleware('auth');
+
+// API endpoint for frontend validation to check subscription status
+Route::get('/api/check-subscription-status/{planId}', function($planId) {
+    $user = Auth::user();
+    
+    if (!$user) {
+        return response()->json(['active' => false, 'message' => 'User not authenticated']);
+    }
+    
+    $active = \App\Http\Controllers\SubscriptionController::hasActiveSubscription($user->id, $planId);
+    
+    if ($planId == 6) { // Premium plan
+        $subscriptionStatus = strtolower($user->subscription_type);
+        $message = $active ? 
+            'You already have an active Premium subscription. Your subscription expires on ' . 
+            ($user->subscription_expiry ? $user->subscription_expiry->format('M d, Y') : 'N/A') :
+            'No active Premium subscription found';
+    } else {
+        $message = $active ? 
+            'You have already purchased this subscription' : 
+            'No active subscription found';
+    }
+    
+    return response()->json([
+        'active' => $active,
+        'message' => $message
+    ]);
+})->middleware('auth');
+
+
 // Yoco training payment routes
 Route::post('/training/yoco/process', [TrainingRegistrationController::class, 'processYocoTrainingPayment'])
     ->name('training.yoco.process')
@@ -465,4 +503,48 @@ Route::post('/training/yoco/process', [TrainingRegistrationController::class, 'p
 
 Route::get('/training/register/{session}', [TrainingRegistrationController::class, 'showRegistrationForm'])
     ->name('training.register.form')
+    ->middleware('auth');
+
+Route::get('/training/register', [TrainingRegistrationController::class, 'showTrainingSelection'])
+    ->name('training.register')
+    ->middleware('auth');
+
+// API endpoint for frontend validation
+Route::get('/api/user/subscription-status', function() {
+    $user = Auth::user();
+    $controller = new \App\Http\Controllers\DashboardController();
+    return response()->json($controller->getUserSubscriptionStatus());
+})->middleware('auth');
+
+// API endpoint for frontend validation to check if user has paid for a specific session
+Route::get('/api/check-session-payment/{sessionId}', function($sessionId) {
+    $user = Auth::user();
+    
+    if (!$user) {
+        return response()->json(['paid' => false, 'message' => 'User not authenticated']);
+    }
+    
+    $paid = \App\Http\Controllers\TrainingRegistrationController::hasPaidForSession($user->id, $sessionId);
+    
+    return response()->json([
+        'paid' => $paid,
+        'message' => $paid ? 'You have already paid for this session' : 'No payment found for this session'
+    ]);
+})->middleware('auth');
+
+// Formal training payment routes
+Route::get('/formal-training/payment/{course}', [CourseAccessController::class, 'showPaymentForm'])
+    ->name('formal.training.payment.form')
+    ->middleware('auth');
+
+Route::post('/formal-training/yoco/process', [CourseAccessController::class, 'processYocoPayment'])
+    ->name('formal.training.yoco.process')
+    ->middleware('auth');
+
+Route::get('/formal-training/payment/success/{payment}', [CourseAccessController::class, 'paymentSuccess'])
+    ->name('formal.training.payment.success')
+    ->middleware('auth');
+
+Route::get('/formal-training/payment/failed/{payment}', [CourseAccessController::class, 'paymentFailed'])
+    ->name('formal.training.payment.failed')
     ->middleware('auth');

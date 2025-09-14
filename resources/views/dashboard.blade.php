@@ -627,11 +627,11 @@
                                             Free Access
                                         @else
                                             @if($currentPlan->student_price)
-                                                R{{ $currentPlan->student_price }} (students)
+                                                From R{{ $currentPlan->student_price }}
                                             @endif
-                                            @if($currentPlan->professional_price)
+                                            <!-- @if($currentPlan->professional_price)
                                                 | R{{ $currentPlan->professional_price }} (business)
-                                            @endif
+                                            @endif -->
                                         @endif
                                     </div>
                                     <p class="plan-description">{{ $currentPlan->description }}</p>
@@ -665,11 +665,11 @@
                                     <h3>{{ $session->name }}</h3>
                                     <div class="plan-price">
                                         @if($session->student_price)
-                                            R{{ $session->student_price }} (students)
+                                            From R{{ $session->student_price }} 
                                         @endif
-                                        @if($session->professional_price)
+                                        <!-- @if($session->professional_price)
                                             | R{{ $session->professional_price }} (business)
-                                        @endif
+                                        @endif -->
                                     </div>
                                     <p class="plan-description">{{ $session->description }}</p>
                                 </div>
@@ -695,11 +695,11 @@
                                     <h3>{{ $training->name }}</h3>
                                     <div class="plan-price">
                                         @if($training->student_price)
-                                            R{{ $training->student_price }} (students)
+                                            From R{{ $training->student_price }} 
                                         @endif
-                                        @if($training->professional_price)
+                                        <!-- @if($training->professional_price)
                                             | R{{ $training->professional_price }} (business)
-                                        @endif
+                                        @endif -->
                                     </div>
                                     <p class="plan-description">{{ $training->description }}</p>
                                 </div>
@@ -741,37 +741,37 @@
                                             <div class="student-price active">
                                                 <div class="plan-price">
                                                     @if($plan->student_price > 0)
-                                                        R{{ $plan->student_price }}
+                                                        From R{{ $plan->student_price }}
                                                     @else
                                                         Free
                                                     @endif
                                                 </div>
                                                 <div class="price-note">
                                                     @if($plan->id == 6)
-                                                        Quarterly (Student)
+                                                        Quarterly 
                                                     @elseif(in_array($plan->id, [1, 2, 3]))
-                                                        Per Course (Student)
+                                                        Per Course 
                                                     @elseif(in_array($plan->id, [4, 5]))
-                                                        Per Hour (Student)
+                                                        Per Hour 
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="professional-price">
                                                 <div class="plan-price">
-                                                    @if($plan->professional_price > 0)
+                                                    <!-- @if($plan->professional_price > 0)
                                                         R{{ $plan->professional_price }}
                                                     @else
                                                         Free
-                                                    @endif
+                                                    @endif -->
                                                 </div>
                                                 <div class="price-note">
-                                                    @if($plan->id == 6)
+                                                    <!-- @if($plan->id == 6)
                                                         Quarterly (Business)
                                                     @elseif(in_array($plan->id, [1, 2, 3]))
                                                         Per Course (Business)
                                                     @elseif(in_array($plan->id, [4, 5]))
                                                         Per Hour (Business)
-                                                    @endif
+                                                    @endif -->
                                                 </div>
                                             </div>
                                         </div>
@@ -817,17 +817,39 @@
                                             </ul>
                                         </div>
                                         
+                                        <!-- In the Available Product Plans section -->
                                         <div class="plan-actions">
                                             @if(Auth::check())
-                                                @if($plan->id == 6) <!-- Premium Plan -->
-                                                    <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">Upgrade Now</a>
-                                                @elseif($plan->id == 1) <!-- Formal Training -->
-                                                    <a href="{{ url('/dashboard#usr_formaltraining') }}" class="btn btn-primary">Enroll Now</a>
+                                                    @if($plan->id == 6) <!-- Premium Plan -->
+                                                        @php
+                                                            $subscriptionType = strtolower(auth()->user()->subscription_type);
+                                                            $hasActivePremium = $subscriptionType === 'premium' && 
+                                                                            auth()->user()->subscription_expiry && 
+                                                                            auth()->user()->subscription_expiry->isFuture();
+                                                        @endphp
+                                                        
+                                                        @if($hasActivePremium)
+                                                            <span class="btn btn-outline">Already Subscribed</span>
+                                                            <div class="subscription-info" style="font-size: 12px; margin-top: 5px; color: #666;">
+                                                                Expires: {{ auth()->user()->subscription_expiry->format('M d, Y') }}
+                                                            </div>
+                                                        @else
+                                                            <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">Upgrade Now</a>
+                                                        @endif
+                                                    @elseif($plan->id == 1) <!-- Formal Training -->
+                                                    @if($formalTrainingsRegistered->contains('id', $plan->id))
+                                                        <span class="btn btn-outline">Already Registered</span>
+                                                    @else
+                                                        <a href="{{ url('/dashboard#usr_formaltraining') }}" class="btn btn-primary">Enroll Now</a>
+                                                    @endif
                                                 @elseif(in_array($plan->id, [4, 5])) <!-- Group Sessions -->
                                                     @php
                                                         $session = $plan->id == 4 ? $qaSession : $consultSession;
+                                                        $hasRegistered = $groupSessions->contains('id', $plan->id);
                                                     @endphp
-                                                    @if($session)
+                                                    @if($hasRegistered)
+                                                        <span class="btn btn-outline">Already Registered</span>
+                                                    @elseif($session)
                                                         <a href="#" class="btn btn-primary registration-trigger" 
                                                         data-type-id="{{ $plan->id }}" 
                                                         data-session-id="{{ $session->id }}">
@@ -840,8 +862,6 @@
                                                     <a href="{{ url('/dashboard#usr_taskAssistance') }}" class="btn btn-primary">Get Help</a>
                                                 @elseif($plan->id == 3) <!-- Personal Guide -->
                                                     <a href="{{ url('/dashboard#usr_guide') }}" class="btn btn-primary">Get Guide</a>
-                                                @elseif($plan->id == 7) <!-- Free Plan -->
-                                                    <a href="{{ route('subscription.yoco.redirect') }}" class="btn btn-primary">Upgrade Now</a>
                                                 @endif
                                             @else
                                                 <a href="{{ url('/login?redirect=' . urlencode(url()->current())) }}" class="btn btn-primary">
@@ -860,40 +880,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Modals and Includes -->
-                    @if(isset($premiumPlan))
-                        @include('components.subscription_modal', [
-                            'planId' => $premiumPlan->id,
-                            'planName' => $premiumPlan->name,
-                            'plan' => $premiumPlan
-                        ])
-                    @endif
-
-                    @include('components.training_modal')
-                    @include('components.sessions_registration', [
-                        'typeId' => 4,
-                        'typeName' => 'Group Session 1'
-                    ])
-                    @include('components.sessions_registration', [
-                        'typeId' => 5, 
-                        'typeName' => 'Group Session 2'
-                    ])
-
-                    @include('components.sessions_registration', [
-                        'typeId' => 1,
-                        'typeName' => 'Formal Training'
-                    ])
-
-                    @include('components.sessions_registration', [
-                        'typeId' => 2, 
-                        'typeName' => 'Task Assistance'
-                    ])
-
-                    @include('components.sessions_registration', [
-                        'typeId' => 3,
-                        'typeName' => 'Personal Guide'
-                    ])
+                    
                 </div>
 
                 <!-- resources containers -->
@@ -953,7 +940,13 @@
                             </ul>
                             <div class="modal-actions">
                                 <button class="btn-secondary" onclick="closeUpgradeModal()">Maybe Later</button>
-                                <button class="btn-primary" onclick="redirectToSubscription()">Upgrade Now</button>
+                                <button>
+                                @if(Auth::check())
+                                    <a href="{{ route('subscription.yoco.form') }}" class="btn-primary">Upgrade Now</a>
+                                @else
+                                    <a href="{{ url('/login?redirect=subscription/yoco/form') }}" class="btn-primary">Upgrade Now</a>
+                                @endif
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1869,134 +1862,5 @@
             });
         </script>
 
-        <!-- QA & Consult Modal -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Handle registration triggers
-                document.querySelectorAll('.registration-trigger').forEach(trigger => {
-                    trigger.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const typeId = this.dataset.typeId;
-                        
-                        // Show the appropriate modal based on typeId
-                        if(typeId == 4) {
-                            document.getElementById('modal-qa').style.display = 'flex';
-                        } else if(typeId == 5) {
-                            document.getElementById('modal-consult').style.display = 'flex';
-                        }
-                        
-                        document.body.classList.add('no-scroll');
-                    });
-                });
-                
-                // Close modal handlers (keep your existing ones)
-                function closeModal(event, modalId) {
-                    event.stopPropagation();
-                    document.getElementById(modalId).style.display = 'none';
-                    document.body.classList.remove('no-scroll');
-                }
-            });
-        </script>
-
-        <!-- Available Plans -->
-         <script>
-            // Function to show notification
-            function showNotification(message, type = 'info') {
-                // Create notification element
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    border-radius: 5px;
-                    color: white;
-                    z-index: 10000;
-                    font-weight: 500;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    max-width: 350px;
-                    animation: slideIn 0.3s ease-out;
-                `;
-                
-                if (type === 'info') {
-                    notification.style.background = '#2196F3';
-                } else if (type === 'success') {
-                    notification.style.background = '#4CAF50';
-                } else if (type === 'error') {
-                    notification.style.background = '#F44336';
-                } else if (type === 'warning') {
-                    notification.style.background = '#FF9800';
-                }
-                
-                notification.textContent = message;
-                
-                // Add to document
-                document.body.appendChild(notification);
-                
-                // Remove after 5 seconds
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease-in';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }, 5000);
-                
-                // Add CSS animations
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes slideIn {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                    @keyframes slideOut {
-                        from { transform: translateX(0); opacity: 1; }
-                        to { transform: translateX(100%); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-
-            // Update registration triggers to check if already registered
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.registration-trigger').forEach(trigger => {
-                    trigger.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        
-                        const typeId = this.getAttribute('data-type-id');
-                        const sessionId = this.getAttribute('data-session-id');
-                        
-                        // Check if user is already registered for this type (except for types 2 and 3)
-                        if (!['2', '3'].includes(typeId)) {
-                            // Make an AJAX call to check if user is already registered
-                            fetch('/api/check-registration/' + typeId)
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.registered) {
-                                        showNotification('You are already registered for this type of session.', 'info');
-                                    } else {
-                                        // Proceed with registration modal
-                                        // You'll need to implement your modal opening function here
-                                        // For example: openRegistrationModal(typeId, sessionId);
-                                        console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error checking registration:', error);
-                                    // Proceed with registration modal on error
-                                    // openRegistrationModal(typeId, sessionId);
-                                    console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
-                                });
-                        } else {
-                            // Always allow registration for Task Assistance and Personal Guide
-                            // openRegistrationModal(typeId, sessionId);
-                            console.log('Opening registration modal for type:', typeId, 'session:', sessionId);
-                        }
-                    });
-                });
-            });
-        </script>
     </body>
 </html>

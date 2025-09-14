@@ -61,18 +61,20 @@
                                 @if($payment->payable)
                                 <tr>
                                     <td style="padding:10px;border:1px solid #ddd;font-weight:bold;background:#f9f9f9;">Service</td>
-                                        <td style="padding:10px;border:1px solid #ddd;">
-                                            <strong>{{ $payment->detailed_service_name['title'] }}</strong><br>
-                                            <span style="font-size: 14px;">
-                                                {{ $payment->detailed_service_name['type'] ?? '' }}
-                                                @if(isset($payment->detailed_service_name['category']))
-                                                    • Category: {{ $payment->detailed_service_name['category'] }}
-                                                @endif
-                                                @if(isset($payment->detailed_service_name['date']))
-                                                    • Scheduled for: {{ $payment->detailed_service_name['date'] }}
-                                                @endif
-                                            </span>
-                                        </td>
+                                    <td style="padding:10px;border:1px solid #ddd;">
+                                        <strong>{{ $payment->detailed_service_name['title'] ?? 'N/A' }}</strong><br>
+                                        <span style="font-size: 14px;">
+                                            {{ $payment->detailed_service_name['type'] ?? '' }}
+                                            @if(isset($payment->detailed_service_name['category']) && $payment->detailed_service_name['category'])
+                                                • Category: {{ $payment->detailed_service_name['category'] }}
+                                            @endif
+                                            @if(isset($payment->detailed_service_name['date']) && $payment->detailed_service_name['date'])
+                                                • Scheduled for: {{ $payment->detailed_service_name['date'] }}
+                                            @endif
+                                            @if(isset($payment->detailed_service_name['duration']) && $payment->detailed_service_name['duration'])
+                                                • Duration: {{ $payment->detailed_service_name['duration'] }}
+                                            @endif
+                                        </span>
                                     </td>
                                 </tr>
                                 @endif
@@ -86,7 +88,6 @@
                                 </tr>
                             </table>
 
-
                             <!-- Outro -->
                             @foreach ($outroLines as $line)
                                 <p style="margin:0 0 15px;font-size:16px;line-height:1.5;color:#333;text-align:center;">
@@ -96,7 +97,11 @@
 
                             <!-- Salutation -->
                             <p style="margin:30px 0 0;font-size:16px;line-height:1.5;color:#333;">
-                                {{ $salutation ?? __('Regards,') }}<br>{{ $payment->detailed_service_name['instructor'] }} <br><br>Support: admin@technospeak.co.za
+                                {{ $salutation ?? __('Regards,') }}<br>
+                                @if(isset($payment->detailed_service_name['instructor']) && $payment->detailed_service_name['instructor'])
+                                    {{ $payment->detailed_service_name['instructor'] }} <br><br>
+                                @endif
+                                Support: admin@technospeak.co.za
                             </p>
                         </td>
                     </tr>

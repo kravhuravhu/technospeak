@@ -79,13 +79,14 @@ class Payment extends Model
     {
         return $query->where('status', 'failed');
     }
-    
-    public function getDetailedServiceNameAttribute()
+
+    public function getDetailedServiceNameAttribute(): array
     {
         if (!$this->payable) {
             return [
                 'type' => ucfirst($this->payable_type),
-                'title' => 'N/A'
+                'title' => 'N/A',
+                'instructor' => null
             ];
         }
 
@@ -101,24 +102,28 @@ class Payment extends Model
                 return [
                     'type' => 'Course',
                     'title' => $this->payable->title,
-                    'category' => $this->payable->category->name ?? 'N/A'
+                    'category' => $this->payable->category->name ?? 'N/A',
+                    'instructor' => null
                 ];
             case 'subscription':
                 return [
                     'type' => 'Subscription',
                     'title' => $this->payable->name,
-                    'duration' => 'Quarterly'
+                    'duration' => 'Quarterly',
+                    'instructor' => null
                 ];
             case 'service':
                 return [
                     'type' => 'Service',
                     'title' => $this->payable->name,
-                    'hours' => $this->metadata['hours'] ?? null
+                    'hours' => $this->metadata['hours'] ?? null,
+                    'instructor' => null
                 ];
             default:
                 return [
                     'type' => ucfirst($this->payable_type),
-                    'title' => $this->payable->title ?? 'N/A'
+                    'title' => $this->payable->title ?? 'N/A',
+                    'instructor' => null
                 ];
         }
     }
@@ -141,5 +146,10 @@ class Payment extends Model
                 ]);
             }
         });
+    }
+
+    public function session()
+    {
+        return $this->morphTo('payable');
     }
 }

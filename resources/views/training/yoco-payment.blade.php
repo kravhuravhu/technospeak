@@ -14,6 +14,7 @@
         .price { margin: 1rem 0; font-weight: bold; font-size: 1.1rem; }
         .submit-btn { background: #38b6ff; color: white; border: none; padding: 0.75rem; width: 100%; border-radius: 8px; cursor: pointer; font-size: 1rem; }
         .submit-btn:hover { background: #2a9ce8; }
+        .submit-btn:disabled { background: #6c757d; cursor: not-allowed; }
         .message { margin: 1rem 0; padding: 0.75rem; border-radius: 6px; }
         .success { background: #38a169; color: white; }
         .error { background: #e53e3e; color: white; }
@@ -38,28 +39,35 @@
         <p><strong>Type:</strong> {{ $session->type->name }}</p>
     </div>
 
-    <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
-        @csrf
-        <input type="hidden" name="session_id" value="{{ $session->id }}">
-        <input type="hidden" name="token" id="yoco-token">
-
-        <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
+    @if(\App\Http\Controllers\TrainingRegistrationController::hasPaidForSession($client->id, $session->id))
+        <div class="message error">
+            You have already paid for this session. You cannot make duplicate payments.
         </div>
+        <a href="{{ route('dashboard') }}" class="submit-btn">Return to Dashboard</a>
+    @else
+        <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
+            @csrf
+            <input type="hidden" name="session_id" value="{{ $session->id }}">
+            <input type="hidden" name="token" id="yoco-token">
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
-        </div>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
+            </div>
 
-        <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
-        </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
+            </div>
 
-        <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
-    </form>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
+            </div>
+
+            <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
+        </form>
+    @endif
 
 </div>
 
@@ -68,7 +76,7 @@
         publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}" // Changed to TEST key
     });
 
-    document.getElementById("pay-button").addEventListener("click", function () {
+    document.getElementById("pay-button")?.addEventListener("click", function () {
         const amount = {{ $price * 100 }};
         yoco.showPopup({
             amountInCents: amount,
@@ -77,12 +85,45 @@
             description: "Training Session Registration",
             callback: function (result) {
                 if (result.error) {
-                    alert("Error: " + result.error.message);
+                    alert("Error: " . result.error.message);
                 } else {
                     document.getElementById("yoco-token").value = result.id;
                     document.getElementById("yoco-payment-form").submit();
                 }
             }
+        });
+    });
+
+    // Add this script to your payment form
+    document.addEventListener('DOMContentLoaded', function() {
+        const sessionId = {{ $session->id }};
+        const payButton = document.getElementById('pay-button');
+        
+        if (!payButton) return;
+        
+        // Check payment status on page load
+        fetch(`/api/check-session-payment/${sessionId}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.paid) {
+                payButton.disabled = true;
+                payButton.textContent = 'Already Paid';
+                payButton.style.backgroundColor = '#6c757d';
+                
+                // Show message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message error';
+                messageDiv.textContent = data.message;
+                document.querySelector('.container').prepend(messageDiv);
+            }
+        })
+        .catch(error => {
+            console.error('Error checking payment status:', error);
         });
     });
 </script>

@@ -1642,10 +1642,17 @@
             </div>
             <div style="text-align: center;display:flex;align-items:center;justify-content:space-evenly;flex-direction:column;">
                 @if($price)
-                    <button onclick="proceedToSubscription()" 
-                            style="background: #38b6ff; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px;">
-                        Upgrade to Premium - R{{ number_format($price, 2) }}/Quarterly
-                    </button>
+                    @if(Auth::check())
+                        <a href="{{ route('subscription.yoco.form') }}" 
+                        style="background: #38b6ff; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px; text-decoration: none; display: inline-block;">
+                            Upgrade to Premium - R{{ number_format($price, 2) }}/Quarterly
+                        </a>
+                    @else
+                        <a href="{{ url('/login?redirect=subscription/yoco/form') }}" 
+                        style="background: #38b6ff; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px; text-decoration: none; display: inline-block;">
+                            Upgrade to Premium - R{{ number_format($price, 2) }}/Quarterly
+                        </a>
+                    @endif
                 @endif
             </div>
         </div>

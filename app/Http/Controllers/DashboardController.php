@@ -8,6 +8,7 @@ use App\Models\TrainingType;
 use App\Models\TrainingRegistration;
 use App\Models\TrainingSession;
 use App\Models\Instructor;
+use App\Models\Payment;
 use App\Http\Controllers\CourseAccessController;
 
 class DashboardController extends Controller
@@ -15,12 +16,6 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
-        // log testing
-        // Log::info('Dashboard accessed for user: ' . $user->email);
-        // Log::info('User subscription_type: ' . $user->subscription_type);
-        // Log::info('User subscription_expiry: ' . ($user->subscription_expiry ? $user->subscription_expiry->format('Y-m-d') : 'null'));
-        // Log::info('Is subscription active: ' . ($user->subscription_type === 'premium' && $user->subscription_expiry && $user->subscription_expiry->isFuture() ? 'YES' : 'NO'));
         
         // Get training status with proper case handling
         $userSessions = TrainingRegistration::with(['session', 'payment'])
@@ -108,16 +103,15 @@ class DashboardController extends Controller
             ->filter()
             ->unique('id');
         
-        // 3. Your formal trainings (type 1 that user has registered for)
-        $formalTrainingsRegistered = TrainingRegistration::with('session.type')
-            ->where('client_id', $user->id)
-            ->where('payment_status', 'completed')
-            ->whereHas('session', function($query) {
-                $query->where('type_id', 1);
-            })
+        // 3. Your formal trainings - Check payments table for completed course payments
+        $formalTrainingsRegistered = Payment::where('client_id', $user->id)
+            ->where('payable_type', 'course')
+            ->where('status', 'completed')
             ->get()
-            ->map(function($reg) {
-                return $reg->session->type;
+            ->map(function($payment) {
+                // Since we're dealing with formal training as a concept rather than specific courses,
+                // we'll return the formal training type (ID 1)
+                return TrainingType::find(1);
             })
             ->filter()
             ->unique('id');
@@ -157,6 +151,12 @@ class DashboardController extends Controller
                         $user->subscription_expiry && 
                         $user->subscription_expiry->isFuture();
         
+        // Check if user has paid for any formal training (course)
+        $hasPaidForFormalTraining = Payment::where('client_id', $user->id)
+            ->where('payable_type', 'course')
+            ->where('status', 'completed')
+            ->exists();
+        
         foreach ($allTrainingTypes as $plan) {
             // Skip free plan (ID 7) as it should never be in available plans
             if ($plan->id == 7) {
@@ -180,10 +180,9 @@ class DashboardController extends Controller
                 continue;
             }
             
-            // For formal training (1), check if user has already registered
+            // For formal training (1), check if user has already paid for any course
             if ($plan->id == 1) {
-                $hasRegistered = $formalTrainingsRegistered->contains('id', $plan->id);
-                if (!$hasRegistered) {
+                if (!$hasPaidForFormalTraining) {
                     $availablePlans->push($plan);
                 }
                 continue;
@@ -203,17 +202,18 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
+        // Check if user has paid for any formal training (course)
+        $hasPaidForFormalTraining = Payment::where('client_id', $user->id)
+            ->where('payable_type', 'course')
+            ->where('status', 'completed')
+            ->exists();
+        
         return [
             'has_premium' => $user->subscription_type === 'premium' && 
                             $user->subscription_expiry && 
                             $user->subscription_expiry->isFuture(),
             'premium_expiry' => $user->subscription_expiry,
-            'has_formal_training' => TrainingRegistration::where('client_id', $user->id)
-                ->whereHas('session', function($query) {
-                    $query->where('type_id', 1);
-                })
-                ->where('payment_status', 'completed')
-                ->exists(),
+            'has_formal_training' => $hasPaidForFormalTraining,
             'has_group_session' => function($typeId) use ($user) {
                 return TrainingRegistration::where('client_id', $user->id)
                     ->whereHas('session', function($query) use ($typeId) {

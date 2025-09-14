@@ -14,6 +14,8 @@ use App\Models\TrainingType;
 use Illuminate\Support\Facades\Log;
 use App\Models\Payment;
 use App\Models\ClientCourseSubscription;
+use Illuminate\Support\Facades\Http;
+use App\Notifications\PaymentProcessed; 
 
 class CourseAccessController extends Controller
 {
@@ -633,190 +635,137 @@ class CourseAccessController extends Controller
     {
         $request->validate([
             'course_id' => 'required|exists:courses,id',
-            'token' => 'required',
-            'phone' => 'required'
+            'token' => 'required|string',
         ]);
-        
-        $user = Auth::user();
+
+        $client = Auth::user();
         $course = Course::findOrFail($request->course_id);
         
         // Check for duplicate payment
-        $hasPaid = Payment::where('client_id', $user->id)
-            ->where('payable_type', 'course')
-            ->where('payable_id', $course->id)
-            ->where('status', 'completed')
-            ->exists();
+        if ($this->hasDuplicateCoursePayment($client, $course->id)) {
+            $errorMessage = $this->getDuplicateCoursePaymentMessage($course);
             
-        if ($hasPaid) {
-            return redirect()->route('enrolled-courses.show', $course->uuid)
-                ->with('error', 'You have already purchased this training');
+            Log::warning("Duplicate course payment attempt prevented", [
+                'client_id' => $client->id,
+                'course_id' => $course->id,
+                'message' => $errorMessage
+            ]);
+            
+            return back()->with('error', $errorMessage);
         }
-        
-        // Prepare the charge data
-        $data = [
-            'token' => $request->token,
-            'amountInCents' => (int)($course->price * 100),
-            'currency' => 'ZAR'
-        ];
-        
-        // Process payment using the same method as your subscription/training payments
-        $result = $this->processYocoCharge($data);
-        
-        if ($result['success']) {
-            // Create payment record
+
+        $amount = $course->price;
+
+        Log::info("Formal training payment attempt for client {$client->id}, course {$course->id}, amount R$amount, status pending");
+
+        try {
+            // Process payment with Yoco - USING THE SAME METHOD AS TRAINING REGISTRATION
+            $response = Http::withHeaders([
+                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'),
+            ])->post('https://online.yoco.com/v1/charges/', [
+                'token' => $request->token,
+                'amountInCents' => intval($amount * 100),
+                'currency' => 'ZAR',
+            ]);
+
+            $data = $response->json();
+
+            if (isset($data['error'])) {
+                Log::error("Yoco error for client {$client->id}: " . $data['error']['message']);
+                return back()->with('error', $data['error']['message']);
+            }
+
+            // Create payment record after successful charge
             $payment = Payment::create([
-                'transaction_id' => $result['transaction_id'],
-                'client_id' => $user->id,
-                'amount' => $course->price,
+                'transaction_id' => $data['id'],
+                'client_id' => $client->id,
+                'amount' => $amount,
                 'payment_method' => 'card',
-                'status' => 'completed',
+                'status' => $data['status'] === 'successful' ? 'completed' : 'failed',
                 'payable_type' => 'course',
                 'payable_id' => $course->id,
-                'metadata' => json_encode($result['response'])
+                'metadata' => json_encode([
+                    'user_type' => $client->userType,
+                    'course_title' => $course->title,
+                    'payment_processor' => 'yoco',
+                    'yoco_response' => $data
+                ])
             ]);
-            
-            // Create or update course subscription
-            $subscription = ClientCourseSubscription::updateOrCreate(
-                [
-                    'client_id' => $user->id,
-                    'course_id' => $course->id
-                ],
-                [
-                    'course_uuid' => $course->uuid,
-                    'payment_status' => 'formal_payment',
-                    'payment_id' => $payment->id,
-                    'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id'),
-                    'started_at' => now(),
-                    'last_accessed_at' => now()
-                ]
-            );
-            
-            // FIX: Redirect to success route with payment ID
-            return redirect()->route('formal.training.payment.success', $payment->id);
-        } else {
-            // Payment failed
-            $payment = Payment::create([
-                'transaction_id' => 'failed_' . uniqid(),
-                'client_id' => $user->id,
-                'amount' => $course->price,
-                'payment_method' => 'card',
-                'status' => 'failed',
-                'payable_type' => 'course',
-                'payable_id' => $course->id,
-                'metadata' => json_encode(['error' => $result['error']])
-            ]);
-            
-            // FIX: Redirect to failed route with payment ID
-            return redirect()->route('formal.training.payment.failed', $payment->id)
-                ->with('error', 'Payment failed: ' . $result['error']);
+
+            if ($payment->status === 'completed') {
+                // Create or update course subscription
+                $subscription = ClientCourseSubscription::updateOrCreate(
+                    [
+                        'client_id' => $client->id,
+                        'course_id' => $course->id
+                    ],
+                    [
+                        'course_uuid' => $course->uuid,
+                        'payment_status' => 'formal_payment',
+                        'payment_id' => $payment->id,
+                        'current_episode_id' => $course->episodes()->orderBy('episode_number')->value('id'),
+                        'started_at' => now(),
+                        'last_accessed_at' => now()
+                    ]
+                );
+
+                // Send notification
+                try {
+                    $client->notify(new PaymentProcessed($payment, 'success'));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send payment notification: " . $e->getMessage());
+                }
+
+                Log::info("Formal training payment successful for client {$client->id}, transaction {$payment->transaction_id}");
+
+                return redirect()->route('formal.training.payment.success', ['payment' => $payment->id])
+                    ->with('success', 'Payment successful! You now have access to the training.');
+
+            } else {
+                Log::warning("Formal training payment failed for client {$client->id}");
+                return redirect()->route('formal.training.payment.failed', ['payment' => $payment->id])
+                    ->with('error', 'Payment failed. Please try again.');
+            }
+
+        } catch (\Exception $e) {
+            Log::error("Formal training payment failed for client {$client->id}: " . $e->getMessage());
+            return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
     }
 
-    // private function processYocoCharge($data)
-    // {
-    //     $url = 'https://online.yoco.com/v1/charges/';
-        
-    //     $ch = curl_init($url);
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //     curl_setopt($ch, CURLOPT_POST, true);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    //         'Content-Type: application/json',
-    //         'Authorization: Bearer ' . env('YOCO_TEST_SECRET_KEY')
-    //     ]);
-    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
-    //     $response = curl_exec($ch);
-    //     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    //     $curlError = curl_error($ch);
-    //     curl_close($ch);
-        
-    //     if ($curlError) {
-    //         return ['success' => false, 'error' => 'cURL Error: ' . $curlError];
-    //     }
-        
-    //     $result = json_decode($response, true);
-        
-    //     if ($httpCode === 201 && isset($result['status']) && $result['status'] === 'successful') {
-    //         return [
-    //             'success' => true, 
-    //             'transaction_id' => $result['id'],
-    //             'response' => $result
-    //         ];
-    //     } else {
-    //         $errorMessage = isset($result['error']['message']) 
-    //             ? $result['error']['message'] 
-    //             : 'Unknown payment error';
-            
-    //         return ['success' => false, 'error' => $errorMessage];
-    //     }
-    // }
-
-    private function processYocoCharge($data)
+    public function paymentSuccess($paymentId)
     {
-        $url = 'https://online.yoco.com/v1/charges/';
-        
-        Log::info("Yoco Charge Request:", $data);
-        
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . env('YOCO_TEST_SECRET_KEY')
-        ]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
-        
-        Log::info("Yoco Charge Response - HTTP Code: $httpCode");
-        Log::info("Yoco Charge Response: " . $response);
-        Log::info("Yoco cURL Error: " . $curlError);
-        
-        if ($curlError) {
-            Log::error("cURL Error: " . $curlError);
-            return ['success' => false, 'error' => 'cURL Error: ' . $curlError];
-        }
-        
-        $result = json_decode($response, true);
-        
-        if ($httpCode === 201 && isset($result['status']) && $result['status'] === 'successful') {
-            Log::info("Yoco Payment Successful: " . $result['id']);
-            return [
-                'success' => true, 
-                'transaction_id' => $result['id'],
-                'response' => $result
-            ];
-        } else {
-            $errorMessage = isset($result['error']['message']) 
-                ? $result['error']['message'] 
-                : 'Unknown payment error';
+        try {
+            $payment = Payment::findOrFail($paymentId);
+            $course = Course::findOrFail($payment->payable_id);
+            $client = Client::findOrFail($payment->client_id);
             
-            Log::error("Yoco Payment Failed: " . $errorMessage);
-            return ['success' => false, 'error' => $errorMessage];
+            return view('formal-training.payment-success', [
+                'course' => $course,
+                'payment' => $payment,
+                'client' => $client,
+                'payment_amount' => $payment->amount,
+                'transaction_id' => $payment->transaction_id
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error loading payment success page: " . $e->getMessage());
+            return redirect()->route('dashboard')
+                ->with('success', 'Payment successful! You now have access to the training.');
         }
-    }
-
-    public function paymentSuccess(Payment $payment)
-    {
-        $course = Course::findOrFail($payment->payable_id);
-        
-        return view('formal-training.payment-success', [
-            'course' => $course,
-            'payment' => $payment,
-            'client' => Client::find($payment->client_id)
-        ]);
     }
     
-    public function paymentFailed(Payment $payment)
+    public function paymentFailed($paymentId)
     {
-        return view('formal-training.payment-failed', [
-            'payment' => $payment
-        ]);
+        try {
+            $payment = Payment::findOrFail($paymentId);
+            return view('formal-training.payment-failed', [
+                'payment' => $payment
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error loading payment failed page: " . $e->getMessage());
+            return redirect()->route('dashboard')
+                ->with('error', 'Payment failed. Please try again.');
+        }
     }
     
     public static function hasPaidForCourse($clientId, $courseId)
@@ -828,4 +777,19 @@ class CourseAccessController extends Controller
             ->exists();
     }
 
+    private function hasDuplicateCoursePayment($client, $courseId)
+    {
+        return Payment::where([
+            'client_id' => $client->id,
+            'payable_type' => 'course',
+            'payable_id' => $courseId,
+            'status' => 'completed'
+        ])->exists();
+    }
+
+    private function getDuplicateCoursePaymentMessage($course)
+    {
+        return "You have already purchased the formal training: '{$course->title}'. " .
+            "Duplicate payments for the same training are not allowed.";
+    }
 }

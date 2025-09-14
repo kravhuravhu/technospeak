@@ -1137,12 +1137,8 @@
                                     if (hasFormalPayment) {
                                         window.location.href = `/enrolled-courses/${courseId}`;
                                     } else {
-                                        // Sithebe, sithebe
-                                        // This is where you'll be working
-                                        // After Yoco is successful, 
-                                        // Update the client_course_subscription->payment_status to 'formal_payment'
-                                        // exmaple for the url with the course->price
-                                        // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                        // Redirect to payment form
+                                        window.location.href = `/formal-training/payment/${courseId}`;
                                     }
                                 } else {
                                     enrollInCourse(courseId);
@@ -1230,17 +1226,20 @@
                         }
 
                         if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: data.message,
-                                timer: 2500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.href = `/enrolled-courses/${courseId}`;
-                            });
-                        } else if (data.open_url) {
-                            window.location.href = data.open_url;
+                            if (data.open_url) {
+                                // Redirect to the specified URL (could be payment page or course page)
+                                window.location.href = data.open_url;
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: data.message,
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = `/enrolled-courses/${courseId}`;
+                                });
+                            }
                         } else {
                             Swal.fire({
                                 icon: 'error',

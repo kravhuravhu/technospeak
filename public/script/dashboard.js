@@ -188,3 +188,58 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// Prevent duplicate form submissions
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                // Re-enable after 5 seconds in case of error
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Submit';
+                }, 5000);
+            }
+        });
+    });
+    
+    // Check registration status before showing modals
+    document.querySelectorAll('.registration-trigger').forEach(trigger => {
+        trigger.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const typeId = this.dataset.typeId;
+            const sessionId = this.dataset.sessionId;
+            
+            try {
+                const response = await fetch(`/api/check-registration/${typeId}`);
+                const data = await response.json();
+                
+                if (data.registered) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Already Registered',
+                        text: 'You have already registered for this type of session.',
+                        timer: 3000
+                    });
+                } else {
+                    // Show the registration modal
+                    const modalId = typeId == 4 ? 'modal-qa' : 'modal-consult';
+                    document.getElementById(modalId).style.display = 'flex';
+                    document.body.classList.add('no-scroll');
+                }
+            } catch (error) {
+                console.error('Error checking registration:', error);
+                // Fallback: show modal anyway
+                const modalId = typeId == 4 ? 'modal-qa' : 'modal-consult';
+                document.getElementById(modalId).style.display = 'flex';
+                document.body.classList.add('no-scroll');
+            }
+        });
+    });
+});

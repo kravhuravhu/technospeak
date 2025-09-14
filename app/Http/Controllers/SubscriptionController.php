@@ -34,34 +34,29 @@ class SubscriptionController extends Controller
         return 'free';
     }
 
-    public static function getAvailablePlans($client, $allTrainingTypes)
+    public static function getAvailablePlans($user, $allTrainingTypes)
     {
-        $subscriptionStatus = self::getSubscriptionStatus($client);
+        $availablePlans = collect();
         
-        return $allTrainingTypes->filter(function($plan) use ($client, $subscriptionStatus) {
-            // Free plan is always available
+        foreach ($allTrainingTypes as $plan) {
+            // Skip free plan (ID 7) as it should never be in available plans
             if ($plan->id == 7) {
-                return true;
+                continue;
             }
             
-            // Premium plan - only show if not already active
+            // For premium plan (ID 6), only show if user doesn't have active premium
             if ($plan->id == 6) {
-                return $subscriptionStatus !== 'active';
+                if ($user->subscription_type !== 'premium') {
+                    $availablePlans->push($plan);
+                }
+                continue;
             }
             
-            // Other plans are always available
-            return true;
-        });
-    }
-
-    public static function hasActiveSubscription($client, $plan)
-    {
-        // Check if user already has an active subscription for this plan
-        if ($plan->id == 6 && $client->subscription_type === 'premium') {
-            return $client->subscription_expiry && $client->subscription_expiry->isFuture();
+            // For other plans, use existing logic
+            $availablePlans->push($plan);
         }
         
-        return false;
+        return $availablePlans;
     }
 
     public static function getPriceForUser($client, $plan)
@@ -80,6 +75,12 @@ class SubscriptionController extends Controller
     {
         $plan = TrainingType::where('name', 'Premium')->firstOrFail();
         $client = Auth::user();
+        
+        // Check for duplicate subscription
+        if ($this->hasDuplicateSubscriptionPayment($client, $plan->id)) {
+            $errorMessage = $this->getDuplicateSubscriptionPaymentMessage($client, $plan->id);
+            return redirect()->route('dashboard')->with('error', $errorMessage);
+        }
         
         // Get price based on user type
         $price = self::getPriceForUser($client, $plan);
@@ -123,20 +124,17 @@ class SubscriptionController extends Controller
         $client = Auth::user();
         $plan = TrainingType::findOrFail($request->plan_id);
         
-        // Check for existing active subscription
-        if (self::hasActiveSubscription($client, $plan)) {
-            return back()->with('error', 'You already have an active subscription. Your current subscription expires on ' . $client->subscription_expiry->format('M d, Y'));
-        }
-        
-        // Check for pending payments for the same plan
-        $pendingPayment = Payment::where('client_id', $client->id)
-            ->where('payable_type', 'subscription')
-            ->where('payable_id', $plan->id)
-            ->where('status', 'pending')
-            ->first();
+        // Enhanced duplicate payment check
+        if ($this->hasDuplicateSubscriptionPayment($client, $plan->id)) {
+            $errorMessage = $this->getDuplicateSubscriptionPaymentMessage($client, $plan->id);
             
-        if ($pendingPayment) {
-            return back()->with('error', 'You already have a pending payment for this subscription. Please wait for it to be processed.');
+            Log::warning("Duplicate subscription payment attempt prevented", [
+                'client_id' => $client->id,
+                'plan_id' => $plan->id,
+                'message' => $errorMessage
+            ]);
+            
+            return back()->with('error', $errorMessage);
         }
         
         $amount = self::getPriceForUser($client, $plan);
@@ -190,10 +188,18 @@ class SubscriptionController extends Controller
                 // Update client course subscriptions
                 $this->updateClientCourseSubscription($client, $plan);
 
+                // Send notification
+                try {
+                    $client->notify(new PaymentProcessed($payment, 'success'));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send payment notification: " . $e->getMessage());
+                }
+
                 Log::info("Subscription payment successful for client {$client->id}, transaction {$payment->transaction_id}");
 
-                return redirect()->route('yoco.payment.success', ['payment' => $payment->id])
-                    ->with('success', 'Payment successful! Your subscription is now active.');
+                // FIX: Redirect directly to success page instead of through route
+                return $this->showSuccessPage($payment);
+
             } else {
                 Log::warning("Subscription payment failed for client {$client->id}");
                 return redirect()->route('yoco.payment.failed', ['payment' => $payment->id])
@@ -204,6 +210,41 @@ class SubscriptionController extends Controller
             Log::error("Subscription payment failed for client {$client->id}: " . $e->getMessage());
             return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
+    }
+
+    private function hasDuplicatePayment($client, $plan)
+    {
+        // For subscription plans (Premium), check active subscription
+        if ($plan->id == 6) {
+            if ($client->subscription_type === 'premium' && 
+                $client->subscription_expiry && 
+                $client->subscription_expiry->isFuture()) {
+                return true;
+            }
+        }
+        
+        // For one-time purchase plans, check completed payments
+        $existingPayment = Payment::where('client_id', $client->id)
+            ->where('payable_type', 'subscription')
+            ->where('payable_id', $plan->id)
+            ->where('status', 'completed')
+            ->exists();
+            
+        return $existingPayment;
+    }
+
+    private function getDuplicatePaymentMessage($client, $plan)
+    {
+        if ($plan->id == 6) {
+            if ($client->subscription_type === 'premium' && 
+                $client->subscription_expiry && 
+                $client->subscription_expiry->isFuture()) {
+                return 'You already have an active Premium subscription. Your current subscription expires on ' . 
+                       $client->subscription_expiry->format('M d, Y');
+            }
+        }
+        
+        return 'You have already purchased this plan. Duplicate payments are not allowed.';
     }
 
     public function redirectToYoco(Request $request)
@@ -298,12 +339,18 @@ class SubscriptionController extends Controller
             ))
         ]);
 
-        // Update client subscription
+        // Update client subscription with ALL required fields
         $client->update([
             'subscription_type' => strtolower($plan->name),
             'subscription_paid_at' => now(),
             'subscription_expiry' => now()->addQuarter(),
-            'updated_at' => now()
+            'updated_at' => now(),
+            // Make sure other required fields are preserved
+            'name' => $client->name,
+            'surname' => $client->surname,
+            'email' => $client->email,
+            'userType' => $client->userType,
+            'status' => $client->status
         ]);
 
         // Update client course subscriptions
@@ -368,14 +415,22 @@ class SubscriptionController extends Controller
 
     protected function showSuccessPage($payment)
     {
-        $client = Client::findOrFail($payment->client_id);
-        $plan = TrainingType::findOrFail($payment->payable_id);
+        try {
+            $client = Client::findOrFail($payment->client_id);
+            $plan = TrainingType::findOrFail($payment->payable_id);
 
-        return view('success-payment', [
-            'plan' => $plan,
-            'payment' => $payment,
-            'client' => $client
-        ]);
+            return view('success-subscription', [
+                'plan' => $plan,
+                'payment' => $payment,
+                'client' => $client,
+                'payment_amount' => $payment->amount,
+                'transaction_id' => $payment->transaction_id
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error showing success page: " . $e->getMessage());
+            return redirect()->route('dashboard')
+                ->with('success', 'Payment successful! Your subscription is now active.');
+        }
     }
 
     protected function updateClientCourseSubscription($client, $plan)
@@ -396,6 +451,14 @@ class SubscriptionController extends Controller
                     ]
                 );
             }
+            
+            // Also update the client's subscription details in the clients table
+            $client->update([
+                'subscription_type' => 'premium',
+                'subscription_paid_at' => now(),
+                'subscription_expiry' => now()->addQuarter(), // 3 months
+                'updated_at' => now()
+            ]);
         }
     }
 
@@ -518,5 +581,63 @@ class SubscriptionController extends Controller
             'payment_amount' => self::getPriceForUser($client, $plan),
             'transaction_id' => $transactionId
         ]);
+    }
+
+    public function hasDuplicateSubscriptionPayment($client, $planId)
+    {
+        // For premium subscriptions, check if user already has an active subscription
+        if ($planId == 6) { // Premium plan ID
+            $subscriptionStatus = strtolower($client->subscription_type);
+            return $subscriptionStatus === 'premium' && 
+                $client->subscription_expiry && 
+                $client->subscription_expiry->isFuture();
+        }
+        
+        // For other subscription types, check completed payments
+        return Payment::where([
+            'client_id' => $client->id,
+            'payable_type' => 'subscription',
+            'payable_id' => $planId,
+            'status' => 'completed'
+        ])->exists();
+    }
+
+    public function getDuplicateSubscriptionPaymentMessage($client, $planId)
+    {
+        $plan = TrainingType::find($planId);
+        $planName = $plan->name ?? 'this subscription';
+        
+        if ($planId == 6) {
+            // Premium subscription specific message
+            if ($client->subscription_type === 'premium' && 
+                $client->subscription_expiry && 
+                $client->subscription_expiry->isFuture()) {
+                return "You already have an active {$planName} subscription. Your current subscription expires on " . 
+                    $client->subscription_expiry->format('M d, Y') . ". " .
+                    "Duplicate subscriptions are not allowed.";
+            }
+        }
+        
+        return "You have already purchased {$planName}. Duplicate payments are not allowed.";
+    }
+
+    public static function hasActiveSubscription($clientId, $planId)
+    {
+        $client = Client::find($clientId);
+        if (!$client) return false;
+        
+        if ($planId == 6) {
+            $subscriptionStatus = strtolower($client->subscription_type);
+            return $subscriptionStatus === 'premium' && 
+                $client->subscription_expiry && 
+                $client->subscription_expiry->isFuture();
+        }
+        
+        return Payment::where([
+            'client_id' => $clientId,
+            'payable_type' => 'subscription',
+            'payable_id' => $planId,
+            'status' => 'completed'
+        ])->exists();
     }
 }

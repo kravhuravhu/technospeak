@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log; 
 use Illuminate\Support\Facades\Http;
 use App\Notifications\PaymentProcessed;
+use App\Models\TrainingType;
 
 class TrainingRegistrationController extends Controller
 {
@@ -50,6 +51,20 @@ class TrainingRegistrationController extends Controller
         return $this->showYocoTrainingPaymentForm($session, $client);
     }
 
+    public function showTrainingSelection()
+    {
+        // Get all available training sessions that are in the future
+        $trainingSessions = TrainingSession::with('type')
+            ->where('scheduled_for', '>=', now())
+            ->orderBy('scheduled_for')
+            ->get();
+        
+        // Get all training types for filtering
+        $trainingTypes = TrainingType::whereIn('id', [1, 2, 3, 4, 5])->get();
+        
+        return view('training.selection', compact('trainingSessions', 'trainingTypes'));
+    }
+
     protected function showYocoTrainingPaymentForm(TrainingSession $session, Client $client)
     {
         $price = $session->type->getPriceForUserType($client->userType);
@@ -68,12 +83,29 @@ class TrainingRegistrationController extends Controller
         $client = Auth::user();
         $session = TrainingSession::with('type')->findOrFail($request->session_id);
 
+        // Check if session is in the past
         if ($session->scheduled_for < now()) {
             return back()->with('error', 'This session is no longer available for registration.');
         }
 
+        // Check if session is full
         if ($session->isFull()) {
             return back()->with('error', 'This session is already full.');
+        }
+
+        // Check for duplicate payment for this specific session
+        if ($this->hasDuplicateTrainingPayment($client, $session->id)) {
+            $errorMessage = $this->getDuplicateTrainingPaymentMessage($session->id);
+            
+            // Log the duplicate payment attempt
+            Log::warning("Duplicate payment attempt prevented", [
+                'client_id' => $client->id,
+                'session_id' => $session->id,
+                'type_id' => $session->type_id,
+                'message' => $errorMessage
+            ]);
+            
+            return back()->with('error', $errorMessage);
         }
 
         $amount = $session->type->getPriceForUserType($client->userType);
@@ -81,9 +113,9 @@ class TrainingRegistrationController extends Controller
         Log::info("Training payment attempt for client {$client->id}, session {$session->id}, amount R$amount, status pending");
 
         try {
-            // Process payment with Yoco (USE TEST KEY LIKE TESTING VERSION)
+            // Process payment with Yoco
             $response = Http::withHeaders([
-                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'), // Changed to TEST key
+                'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'),
             ])->post('https://online.yoco.com/v1/charges/', [
                 'token' => $request->token,
                 'amountInCents' => intval($amount * 100),
@@ -147,17 +179,71 @@ class TrainingRegistrationController extends Controller
         }
     }
 
-    public function showTrainingSuccess($paymentId)
+    public function hasDuplicateTrainingPayment($client, $sessionId)
     {
-        $payment = Payment::findOrFail($paymentId);
-        $client = Client::findOrFail($payment->client_id);
-        $session = TrainingSession::findOrFail($payment->payable_id);
+        // Check if user has already paid for this specific session
+        $existingPayment = Payment::where([
+            'client_id' => $client->id,
+            'payable_type' => 'training',
+            'payable_id' => $sessionId,
+            'status' => 'completed'
+        ])->exists();
 
-        return view('success-group', [
-            'service' => $session, // Pass the session as service
-            'payment' => $payment,
-            'client' => $client
-        ]);
+        return $existingPayment;
+    }
+
+    public function showRegistrationForm($sessionId)
+    {
+        $session = TrainingSession::with('type')->findOrFail($sessionId);
+        $client = auth()->user();
+        
+        // Check if session is in the past
+        if ($session->scheduled_for < now()) {
+            return back()->with('error', 'This session is no longer available for registration.');
+        }
+        
+        // Check if session is full
+        if ($session->isFull()) {
+            return back()->with('error', 'This session is already full.');
+        }
+        
+        // Check if user already paid for this specific session - PREVENT ACCESS
+        if ($this->hasDuplicateTrainingPayment($client, $session->id)) {
+            $errorMessage = $this->getDuplicateTrainingPaymentMessage($session->id);
+            return redirect()->route('training.register')->with('error', $errorMessage);
+        }
+        
+        $price = $session->type->getPriceForUserType($client->userType);
+        
+        return view('training.register-form', compact('session', 'price', 'client'));
+    }
+
+    public function getDuplicateTrainingPaymentMessage($sessionId)
+    {
+        $session = TrainingSession::find($sessionId);
+        $typeName = $session->type->name ?? 'this training session';
+        
+        // Get the user's existing payment for this session
+        $client = Auth::user();
+        
+        $existingPayment = Payment::where([
+            'client_id' => $client->id,
+            'payable_type' => 'training',
+            'payable_id' => $sessionId,
+            'status' => 'completed'
+        ])->first();
+        
+        $message = "You have already paid for {$typeName}: '{$session->title}'. ";
+        
+        if ($existingPayment) {
+            $message .= "Your payment was processed on " . 
+                    $existingPayment->created_at->format('M d, Y') . ". " .
+                    "Duplicate payments for the same session are not allowed.";
+        } else {
+            $message .= "Duplicate payments are not allowed.";
+        }
+        
+        return $message;
     }
 
     public function registrations(TrainingSession $training)
@@ -235,6 +321,15 @@ class TrainingRegistrationController extends Controller
         // ]);
     }
 
+    public static function hasPaidForSession($clientId, $sessionId)
+    {
+        return Payment::where([
+            'client_id' => $clientId,
+            'payable_type' => 'training',
+            'payable_id' => $sessionId,
+            'status' => 'completed'
+        ])->exists();
+    }
     protected function processTrainingPayment(Payment $payment): void
     {
         $registration = TrainingRegistration::firstOrNew([

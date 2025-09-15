@@ -261,7 +261,7 @@
                 <p style="font-size: 0.9rem; color: #6b7280;">
                     Need to reschedule or have questions? Contact support: 
                     <a href="mailto:admin@technospeak.co.za" style="color: var(--primary); text-decoration: none;">
-                        admin@technospeak.co.za
+                        technospeakmails@gmail.com
                     </a>
                 </p>
             </div>

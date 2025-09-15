@@ -465,6 +465,10 @@ Route::get('/yoco/payment/success/{payment}', [SubscriptionController::class, 's
     ->name('yoco.payment.success')
     ->middleware('auth');
 
+Route::get('/subscription/payment-failed/{payment}', [SubscriptionController::class, 'showPaymentFailed'])
+    ->name('subscription.payment.failed')
+    ->middleware('auth');
+
 // API endpoint for frontend validation to check subscription status
 Route::get('/api/check-subscription-status/{planId}', function($planId) {
     $user = Auth::user();
@@ -507,6 +511,11 @@ Route::get('/training/register', [TrainingRegistrationController::class, 'showTr
     ->name('training.register')
     ->middleware('auth');
 
+// Training payment failed route
+Route::get('/training/payment-failed/{payment}', [TrainingRegistrationController::class, 'showTrainingPaymentFailed'])
+    ->name('training.payment.failed')
+    ->middleware('auth');
+
 // API endpoint for frontend validation
 Route::get('/api/user/subscription-status', function() {
     $user = Auth::user();
@@ -547,3 +556,55 @@ Route::get('/formal-training/payment/failed/{payment}', [CourseAccessController:
     ->name('formal.training.payment.failed')
     ->middleware('auth');
 
+// Yoco subscription failure simulation route for testing
+Route::get('/test/payment-failure', function() {
+    // Create a mock failed payment
+    $payment = Payment::create([
+        'transaction_id' => 'test_fail_' . uniqid(),
+        'client_id' => Auth::id(),
+        'amount' => 299,
+        'payment_method' => 'card',
+        'status' => 'failed',
+        'payable_type' => 'subscription',
+        'payable_id' => 6, // Premium plan
+        'metadata' => json_encode([
+            'test' => true,
+            'error_message' => 'Card declined'
+        ])
+    ]);
+    
+    return redirect()->route('subscription.payment.failed', ['payment' => $payment->id])
+        ->with('error', 'Payment failed. Please try again.');
+})->middleware('auth')->name('test.payment.failure');
+
+Route::get('/subscription', [SubscriptionController::class, 'showSubscriptionForm'])->name('subscription.form');
+
+// Yoco training failure simulation route for testing
+Route::get('/test/training-payment-failure', function() {
+    // failed mock  payment for training
+    $session = TrainingSession::where('scheduled_for', '>', now())->first();
+    
+    if (!$session) {
+        return redirect()->route('training.register')
+            ->with('error', 'No available training sessions for testing.');
+    }
+    
+    $payment = Payment::create([
+        'transaction_id' => 'test_train_fail_' . uniqid(),
+        'client_id' => Auth::id(),
+        'amount' => $session->type->getPriceForUserType(Auth::user()->userType),
+        'payment_method' => 'card',
+        'status' => 'failed',
+        'payable_type' => 'training',
+        'payable_id' => $session->id,
+        'metadata' => json_encode([
+            'test' => true,
+            'error_message' => 'Card declined',
+            'session_title' => $session->title,
+            'session_date' => $session->scheduled_for
+        ])
+    ]);
+    
+    return redirect()->route('training.payment.failed', ['payment' => $payment->id])
+        ->with('error', 'Payment failed. Please try again.');
+})->middleware('auth')->name('test.training.payment.failure');

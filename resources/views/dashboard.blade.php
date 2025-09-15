@@ -1862,5 +1862,98 @@
 
         <!-- assistance submission -->
         <script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>
+
+        <script>
+            // Add this JavaScript to your dashboard.blade.php file
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle training card clicks
+    document.querySelectorAll('.training-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const courseId = this.getAttribute('data-course-id');
+            const trainingType = this.getAttribute('data-training-type');
+            const isEnrolled = this.getAttribute('data-enrolled') === 'true';
+            
+            if (isEnrolled) {
+                // If already enrolled, go directly to the course
+                window.location.href = this.getAttribute('data-show-link');
+            } else if (trainingType === 'frml_training') {
+                // For formal trainings, go to the details page first
+                window.location.href = `/unenrolled-courses/${courseId}`;
+            } else {
+                // For tips & tricks, use the existing enrollment flow
+                enrollInCourse(courseId);
+            }
+        });
+    });
+
+    // Your existing enrollInCourse function
+    function enrollInCourse(courseId) {
+        fetch('/courses/enroll', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ course_id: courseId })
+        })
+        .then(async response => {
+            const data = await response.json();
+            
+            if (response.status === 409) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already Enrolled',
+                    text: data.message || 'You are already enrolled in this course',
+                    timer: 3000,
+                    showConfirmButton: true
+                }).then(() => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                });
+                return;
+            }
+
+            if (data.success) {
+                if (data.open_url) {
+                    // Redirect to the specified URL
+                    window.location.href = data.open_url;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                        timer: 2500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = `/enrolled-courses/${courseId}`;
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Enrollment failed',
+                    timer: 5000,
+                    showConfirmButton: true
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Enrollment error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred during enrollment',
+                timer: 5000,
+                showConfirmButton: true
+            });
+        });
+    }
+});
+        </script>
     </body>
 </html>

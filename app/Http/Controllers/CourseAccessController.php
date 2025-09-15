@@ -148,11 +148,11 @@ class CourseAccessController extends Controller
                         'open_url' => url('/enrolled-courses/'.$course->uuid),
                     ]);
                 } else {
-                    // User hasn't paid, redirect to payment page
+                    // User hasn't paid, redirect to details page first
                     return response()->json([
                         'success' => true,
-                        'message' => 'Redirecting to payment page',
-                        'open_url' => url('/formal-training/payment/'.$course->id),
+                        'message' => 'Redirecting to course details',
+                        'open_url' => url('/unenrolled-courses/'.$course->uuid),
                     ]);
                 }
             }
@@ -685,7 +685,7 @@ class CourseAccessController extends Controller
         Log::info("Formal training payment attempt for client {$client->id}, course {$course->id}, amount R$amount, status pending");
 
         try {
-            // Process payment with Yoco - USING THE SAME METHOD AS TRAINING REGISTRATION
+            // Process payment with Yoco
             $response = Http::withHeaders([
                 'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'),
             ])->post('https://online.yoco.com/v1/charges/', [

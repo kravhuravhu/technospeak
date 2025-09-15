@@ -910,16 +910,14 @@
 
                         const hasFormalPayment = document.querySelector('meta[name="has-formal-payment"]')?.content === 'true';
 
-                        console.log('hasFormalPayment:', hasFormalPayment);
-
                         Swal.fire({
                             title: 'Confirm Enrollment',
-                            html: `Are you sure you want to enroll in <strong>${courseTitle}</strong>?`,
+                            html: `Are you sure you want to enroll in <strong>${courseTitle}</strong> for R${coursePrice}?`,
                             icon: 'question',
                             showCancelButton: true,
                             confirmButtonColor: '#38b6ff',
                             cancelButtonColor: '#718096',
-                            confirmButtonText: 'Yes, Enroll',
+                            confirmButtonText: 'Yes, Enroll & Pay',
                             cancelButtonText: 'Cancel'
                         }).then((result) => {
                             if (result.isConfirmed) {
@@ -927,18 +925,127 @@
                                     if (hasFormalPayment) {
                                         window.location.href = `/enrolled-courses/${courseId}`;
                                     } else {
-                                        // Sithebe, sithebe
-                                        // This is where you'll be working
-                                        // After Yoco is successful, 
-                                        // Update the PAYMENT table as usual
-                                        // also update client_course_subscription->payment_status to 'formal_payment'
-                                        // exmaple for the url with the course->price
-                                        // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                        // Redirect to payment form
+                                        window.location.href = `/formal-training/payment/${courseId}`;
                                     }
                                 } else {
                                     enrollInCourse(courseId);
                                 }
                             }
+                        });
+                    });
+                }
+
+                // Sidebar enroll button handler
+                const sidebarEnrollBtn = document.getElementById('sidebar-enroll-btn');
+                if (sidebarEnrollBtn) {
+                    sidebarEnrollBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+
+                        const courseId = this.dataset.courseId;
+                        const planType = this.dataset.planType;
+                        const coursePrice = this.dataset.coursePrice;
+
+                        const courseTitle = document.querySelector('.title-meta-container h1')?.textContent || 'this course';
+                        
+                        const hasFormalPayment = document.querySelector('meta[name="has-formal-payment"]')?.content === 'true';
+
+                        if (!courseId) {
+                            console.error('Course ID not found');
+                            return;
+                        }
+
+                        Swal.fire({
+                            title: 'Confirm Enrollment',
+                            html: `Are you sure you want to enroll in <strong>${courseTitle}</strong> for R${coursePrice}?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#38b6ff',
+                            cancelButtonColor: '#718096',
+                            confirmButtonText: 'Yes, Enroll & Pay',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (planType === 'frml_training') {
+                                    if (hasFormalPayment) {
+                                        window.location.href = `/enrolled-courses/${courseId}`;
+                                    } else {
+                                        // Redirect to payment form
+                                        window.location.href = `/formal-training/payment/${courseId}`;
+                                    }
+                                } else {
+                                    enrollInCourse(courseId);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                function enrollInCourse(courseId) {
+                    fetch('/courses/enroll', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ course_id: courseId })
+                    })
+                    .then(async response => {
+                        const data = await response.json();
+
+                        if (response.status === 409) {
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            } else {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Already Enrolled',
+                                    text: data.message || 'You are already enrolled in this course',
+                                    timer: 3000,
+                                    showConfirmButton: true
+                                }).then(() => {
+                                    if (data.redirect) {
+                                        window.location.href = data.redirect;
+                                    }
+                                });
+                            }
+                            return;
+                        }
+
+                        if (data.success) {
+                            if (data.open_url) {
+                                // Redirect to the specified URL (could be payment page or course page)
+                                window.location.href = data.open_url;
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: data.message,
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = `/enrolled-courses/${courseId}`;
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Enrollment failed',
+                                timer: 5000,
+                                showConfirmButton: true
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Enrollment error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred during enrollment',
+                            timer: 5000,
+                            showConfirmButton: true
                         });
                     });
                 }

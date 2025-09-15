@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         requestType.value = 'problem';
                         toggleFields('problem');
                     }
-                    submitBtn.innerHTML = 'Submit Request';
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
                 } else {
                     Swal.fire('Error', data.message || 'Something went wrong', 'error');
                 }
@@ -130,6 +130,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const spinner = document.createElement('span');
             spinner.classList.add('button-spinner');
+            spinner.style.display = 'inline-block';
+            spinner.style.width = '14px';
+            spinner.style.height = '14px';
+            spinner.style.border = '2px solid #f3f3f3';
+            spinner.style.borderTop = '2px solid #3498db';
+            spinner.style.borderRadius = '50%';
+            spinner.style.marginLeft = '8px';
             submitBtn.appendChild(spinner);
 
             if (!document.querySelector('style[data-spinner]')) {
@@ -180,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     form.reset();
                     const fileLists = form.querySelectorAll('.file-list');
                     fileLists.forEach(list => list.innerHTML = '');
-                    submitBtn.innerHTML = 'Submit Request';
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
                 } else {
                     Swal.fire('Error', data.message || 'Something went wrong', 'error');
                 }
@@ -221,5 +228,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     submitForm('taskAssistanceForm', 'task');
     submitForm('personalGuideForm', 'guide');
-    submitForm('supportForm', 'support');
+    // submitForm('supportForm', 'support');
 });

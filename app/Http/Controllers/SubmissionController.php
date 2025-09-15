@@ -88,8 +88,12 @@ class SubmissionController extends Controller
             }
         }
 
-        // prepare relevant fields
-        $fieldsToInclude = [];
+        $fieldsToInclude = [
+            'First Name' => $data['firstName'] ?? '-',
+            'Last Name'  => $data['lastName'] ?? '-',
+            'Email'      => $data['email'] ?? '-',
+        ];
+
         if ($type === 'problem') {
             $fields = ['supportSubject','supportMessage','supportPriority'];
         } else {
@@ -134,10 +138,6 @@ class SubmissionController extends Controller
                 }
             }
         }
-        
-        $fieldsToInclude['First Name'] = $data['firstName'] ?? '-';
-        $fieldsToInclude['Last Name']  = $data['lastName'] ?? '-';
-        $fieldsToInclude['Email']      = $data['email'] ?? '-';
 
         $emailData = [
             'fields' => $fieldsToInclude,

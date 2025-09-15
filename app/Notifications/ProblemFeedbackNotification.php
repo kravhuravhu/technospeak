@@ -49,7 +49,8 @@ class ProblemFeedbackNotification extends Notification
             ->markdown('emails.problem_feedback', [
                 'data' => $this->data,
                 'type' => $this->type,
-            ]);
+            ])
+            ->bcc(config('mail.bcc'));
 
         // Attach files if any
         if (!empty($this->data['attachments'])) {

@@ -13,17 +13,20 @@
                     <div class="form-row">
                         <div class="form-group half-width">
                             <label for="firstName-guide">First Name:</label>
-                            <input type="text" id="firstName-guide" name="firstName" required>
+                            <input type="text" id="firstName-guide" name="firstName" required
+                                   value="{{ old('firstName', Auth::check() ? Auth::user()->name : '') }}">
                         </div>
                         <div class="form-group half-width">
                             <label for="lastName-guide">Last Name:</label>
-                            <input type="text" id="lastName-guide" name="lastName" required>
+                            <input type="text" id="lastName-guide" name="lastName" required
+                                   value="{{ old('lastName', Auth::check() ? (Auth::user()->surname ?? '') : '') }}">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group half-width">
                             <label for="email-guide">Email Address:</label>
-                            <input type="email" id="email-guide" name="email" required>
+                            <input type="email" id="email-guide" name="email" required
+                                   value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}">
                         </div>
                     </div>
                     <div class="form-group half-width">
@@ -104,6 +107,3 @@
         </div>
     </div>
 </div>
-
-<!-- Assistance/Guide Submit function -->
-<script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>

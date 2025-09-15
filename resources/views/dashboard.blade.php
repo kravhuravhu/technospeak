@@ -458,7 +458,7 @@
                             <div class="section-header">
                                 <div class="title">
                                     <h1>More Trainings</h1>
-                                    <p class="subtitle">Structured courses for in-depth learning</p>
+                                    <p class="subtitle">Structured formal trainings for in-depth learning</p>
                                 </div>
                                 <div class="search-filter-container">
                                     <div class="search-box">
@@ -880,7 +880,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
 
                 <!-- resources containers -->
@@ -989,7 +988,7 @@
                                                 <p>To reset your password:</p>
                                                 <ol>
                                                     <li>Go to the Settings page from your dashboard</li>
-                                                    <li>Click on "Update Password" in the left menu</li>
+                                                    <li>Scroll down to "Update Password" section</li>
                                                     <li>Enter your current password</li>
                                                     <li>Enter your new password twice to confirm</li>
                                                     <li>Click "Save" to update your password</li>
@@ -1011,8 +1010,8 @@
                                             <div class="faq-answer">
                                                 <p>All your enrolled trainings are available in two places:</p>
                                                 <ul>
-                                                    <li><strong>Dashboard:</strong> Your most recent trainings appear in the "My Trainings" section</li>
-                                                    <li><strong>All Trainings Page:</strong> Enrolled courses are marked with a green "Enrolled" badge</li>
+                                                    <li><strong>Dashboard:</strong> Your most recent Tips & Tricks appear in the "Dashboard" section</li>
+                                                    <li><strong>Formal Trainings:</strong>The enrolled formal trainings are marked with a Navy-blue "Enrolled" badge — Whereas the unenrolled trainings are shown below the "My Trainings" section, labelled as "More Trainings".</li>
                                                 </ul>
                                                 <p>You can also filter the All Trainings page to show only your enrolled courses using the "My Courses" filter.</p>
                                                 <div class="faq-helpful">
@@ -1034,7 +1033,7 @@
                                                 <p>To update your email:</p>
                                                 <ol>
                                                     <li>Navigate to your account settings</li>
-                                                    <li>Click on "Edit Profile"</li>
+                                                    <li>Click on "Edit Profile" or go to setting(Left bar)</li>
                                                     <li>Change the email field and save your changes</li>
                                                     <li>Check your new email for a confirmation message</li>
                                                 </ol>
@@ -1056,9 +1055,8 @@
                                             <div class="faq-answer">
                                                 <p>To access invoices:</p>
                                                 <ul>
-                                                    <li>Go to the "Billing" section in your account settings</li>
-                                                    <li>Click on the "Invoices" tab</li>
-                                                    <li>Download any invoice as a PDF by clicking the download icon</li>
+                                                    <li>Each purchase is emailed to you</li>
+                                                    <li>Contact Us for an electronic invoice at <i>admin@technospeak.co.za</i></li>
                                                 </ul>
                                                 <div class="faq-helpful">
                                                     <span>Was this helpful?</span>
@@ -1525,7 +1523,7 @@
                                 </div>
                                 <h4>Call Us</h4>
                                 <p>Speak directly with a support representative</p>
-                                <a href="tel:+1234567890" class="contact-btn">+1 (234) 567-890</a>
+                                <a href="tel:+27692855642" class="contact-btn">+27 (0) 69 285 5642</a>
                             </div>
                             <div class="contact-card">
                                 <div class="contact-icon">
@@ -1862,5 +1860,7 @@
             });
         </script>
 
+        <!-- assistance submission -->
+        <script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>
     </body>
 </html>

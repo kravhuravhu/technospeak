@@ -1743,10 +1743,10 @@
             }
 
             // Disable right-click and context menu
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                showToast('Right-click is disabled to protect content', 'info');
-            });
+            // document.addEventListener('contextmenu', function(e) {
+            //     e.preventDefault();
+            //     showToast('Right-click is disabled to protect content', 'info');
+            // });
             
             // Disable keyboard shortcuts
             document.addEventListener('keydown', function(e) {
@@ -1762,37 +1762,6 @@
                     showToast('Developer tools are disabled to protect content', 'info');
                 }
             });
-
-            // episode selection
-            function handleEpisodeSelection(item) {
-                const videoUrl = item.getAttribute('data-video-url');
-                const episodeTitle = item.getAttribute('data-episode-title');
-
-                const videoContainer = document.getElementById('video-container');
-
-                videoContainer.innerHTML = '<div class="loading-spinner"></div>';
-
-                document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
-                item.classList.add('active');
-
-                setTimeout(() => {
-                    videoContainer.innerHTML = `
-                        <video controls autoplay style="width: 100%; height: 100%">
-                            <source src="${videoUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    `;
-
-                    const video = videoContainer.querySelector('video');
-                    if (video) {
-                        video.play().catch(e => {
-                            showToast('Click on the video to start playback', 'info');
-                        });
-
-                        document.querySelector('.video-description h3').textContent = episodeTitle;
-                    }
-                }, 500);
-            }
 
             // YouTube-like video player implementation
             let hasMarkedCompleted = false;
@@ -2074,7 +2043,7 @@
                 return video;
             }
 
-            // Updated episode selection function
+            // episode selection
             function handleEpisodeSelection(item) {
                 // locked episodes
                 const isLocked = item.getAttribute('data-locked') === 'true';
@@ -2098,8 +2067,23 @@
                 item.classList.add('active');
 
                 setTimeout(() => {
+                    videoContainer.innerHTML = `
+                        <video controls autoplay style="width: 100%; height: 100%">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+
                     createCustomVideoPlayer(videoUrl);
-                    document.querySelector('.video-description h3').textContent = episodeTitle;
+                    
+                    const video = videoContainer.querySelector('video');
+                    if (video) {
+                        video.play().catch(e => {
+                            showToast('Click on the video to start playback', 'info');
+                        });
+
+                        document.querySelector('.video-description h3').textContent = episodeTitle;
+                    }
 
                     const timeDisplay = document.querySelector('.time-display');
                     if (timeDisplay) {
@@ -2784,50 +2768,12 @@
                 }, 2000);
             }
 
-            function startCelebration() {
-                const celebration = document.getElementById('celebration');
-                celebration.style.display = 'block';
-                
-                // Create initial particles
-                for (let i = 0; i < 50; i++) {
-                    createConfetti();
-                    if (i % 5 === 0) createFirework();
-                }
-                
-                // creating more particles
-                const confettiInterval = setInterval(createConfetti, 200);
-                const fireworkInterval = setInterval(createFirework, 1000);
-                
-                return () => {
-                    clearInterval(confettiInterval);
-                    clearInterval(fireworkInterval);
-                    celebration.style.display = 'none';
-                    window.celebrationActive = false;
-                };
-            }
-
             // Close celebration button
             document.getElementById('close-celebration').addEventListener('click', function() {
                 if (window.stopCelebration) {
                     window.stopCelebration();
                 }
             });
-
-            function checkProgressFromResponse(progress) {
-                const coursePlanType = "{{ $course->plan_type }}";
-                
-                if (progress >= 100 && coursePlanType === 'frml_training') {
-                    if (!window.celebrationActive) {
-                        window.stopCelebration = startCelebration();
-                        window.celebrationActive = true;
-                    }
-                } else {
-                    if (window.celebrationActive) {
-                        window.stopCelebration?.();
-                        window.celebrationActive = false;
-                    }
-                }
-            }
 
             // Initial check
             const progressText = document.querySelector('.progress-percent');
@@ -2929,16 +2875,28 @@
             });
 
             // checkProgressFromResponse func
-            function checkProgressFromResponse(progress) {
+            function checkProgressFromResponse(response) {
                 const coursePlanType = "{{ $course->plan_type }}";
-                    
-                if (coursePlanType === 'frml_training' && progress >= 100 && !localStorage.getItem('celebrationDisabled')) {
+                const progress = response.overall_progress;
+                const certificateUrl = response.certificate_url;
+
+                console.log("Progress response:", response);
+                console.log("Overall progress:", progress);
+
+                if (coursePlanType === 'frml_training' && progress >= 100) {
                     if (!window.celebrationActive) {
+                        console.log("🎉 Celebration started!");
+                        if (certificateUrl) {
+                            console.log("✅ Certificate available at:", certificateUrl);
+                        } else {
+                            console.warn("⚠️ Progress is 100 but certificateUrl is missing.");
+                        }
                         window.stopCelebration = startCelebration();
                         window.celebrationActive = true;
                     }
                 } else {
                     if (window.celebrationActive) {
+                        console.log("⏹️ Celebration stopped.");
                         window.stopCelebration?.();
                         window.celebrationActive = false;
                     }

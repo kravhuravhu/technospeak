@@ -12,6 +12,7 @@ class CourseCertificate extends Model
         'course_id',
         'subscription_id',
         'client_id',
+        'certificate_id',
         'certificate_url',
         'issued_at',
         'expires_at',

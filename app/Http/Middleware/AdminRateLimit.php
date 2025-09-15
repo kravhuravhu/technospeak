@@ -1,4 +1,9 @@
 <?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
 class AdminRateLimit
 {
     public function handle($request, Closure $next)

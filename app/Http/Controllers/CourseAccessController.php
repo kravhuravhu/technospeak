@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\GenerateCertificate;
 use App\Models\Course; 
 use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\CourseRating;
 use App\Models\CourseEpisode;
 use App\Models\CourseResource;
+use App\Models\CourseCertificate;
 use App\Models\TrainingType;
 use Illuminate\Support\Facades\Log;
 use App\Models\Payment;
@@ -362,7 +364,8 @@ class CourseAccessController extends Controller
         ]);
 
         $user = Auth::user();
-        
+        \Log::info("updateProgress started for user {$user->id}, course {$course->id}, episode {$episode->id}");
+
         $subscription = $user->courseSubscriptions()
             ->where('course_uuid', $course->uuid)
             ->firstOrFail();
@@ -387,29 +390,52 @@ class CourseAccessController extends Controller
         }
 
         // overall course progress
-        // based on watched seconds & total_duration
         $totalWatched = $subscription->episodeProgress()->sum('watched_seconds');
         $totalDuration = $course->total_duration;
 
-        if ($totalDuration > 0) {
-            $overallProgress = round(($totalWatched / $totalDuration) * 100);
-        } else {
-            $overallProgress = 0;
-        }
+        $overallProgress = $totalDuration > 0
+            ? round(($totalWatched / $totalDuration) * 100)
+            : 0;
 
         $subscription->update([
             'progress' => $overallProgress,
             'last_accessed_at' => now()
         ]);
 
+        \Log::info("User {$user->id} progress updated. Episode {$episode->id} progress={$progressPercent}, overall={$overallProgress}");
+
+        $certificateUrl = null;
+
         if ($overallProgress >= 100) {
             $subscription->markAsCompleted();
+            \Log::info("Course {$course->id} marked completed for subscription {$subscription->id}");
+
+            try {
+                // generate the certificate
+                $certificateUrl = GenerateCertificate::generate($user->name, $subscription->id, $course->id);
+                \Log::info("Certificate generated successfully at {$certificateUrl}");
+
+                // save to DB
+                CourseCertificate::create([
+                    'course_id'       => $course->id,
+                    'subscription_id' => $subscription->id,
+                    'client_id'       => $user->id,
+                    'certificate_id' => 'CERT-' . strtoupper(substr(uniqid(), 0, 10)),
+                    'certificate_url' => $certificateUrl,
+                    'issued_at'       => now(),
+                ]);
+
+                \Log::info("Certificate record saved in DB for user {$user->id}, subscription {$subscription->id}");
+            } catch (\Throwable $e) {
+                \Log::error("Certificate generation failed: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            }
         }
 
         return response()->json([
             'success' => true,
             'progress' => $progress,
-            'overall_progress' => $overallProgress
+            'overall_progress' => $overallProgress,
+            'certificate_url' => $certificateUrl,
         ]);
     }
 

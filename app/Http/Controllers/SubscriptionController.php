@@ -202,7 +202,7 @@ class SubscriptionController extends Controller
 
             } else {
                 Log::warning("Subscription payment failed for client {$client->id}");
-                return redirect()->route('yoco.payment.failed', ['payment' => $payment->id])
+                return redirect()->route('subscription.payment.failed', ['payment' => $payment->id])
                     ->with('error', 'Payment failed. Please try again.');
             }
 
@@ -639,5 +639,27 @@ class SubscriptionController extends Controller
             'payable_id' => $planId,
             'status' => 'completed'
         ])->exists();
+    }
+
+    public function showPaymentFailed($paymentId)
+    {
+        try {
+            $payment = Payment::findOrFail($paymentId);
+            $client = Auth::user();
+            
+            // Verify the payment belongs to the authenticated user
+            if ($payment->client_id !== $client->id) {
+                abort(403, 'Unauthorized');
+            }
+            
+            return view('subscription.payment-failed', [
+                'payment' => $payment,
+                'client' => $client
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error loading subscription payment failed page: " . $e->getMessage());
+            return redirect()->route('dashboard')
+                ->with('error', 'Payment failed. Please try again.');
+        }
     }
 }

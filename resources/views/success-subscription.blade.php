@@ -259,7 +259,7 @@
                 <p style="font-size: 0.9rem; color: #6b7280;">
                     Need help? Contact support: 
                     <a href="mailto:admin@technospeak.co.za" style="color: var(--skBlue); text-decoration: none;">
-                        admin@technospeak.co.za
+                        technospeakmails@gmail.com
                     </a>
                 </p>
             </div>

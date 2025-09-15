@@ -169,7 +169,7 @@ class TrainingRegistrationController extends Controller
                     ->with('success', 'Payment successful! You are now registered for the session.');
             } else {
                 Log::warning("Training payment failed for client {$client->id}");
-                return redirect()->route('yoco.training.failed', ['payment' => $payment->id])
+                return redirect()->route('training.payment.failed', ['payment' => $payment->id])
                     ->with('error', 'Payment failed. Please try again.');
             }
 
@@ -345,4 +345,29 @@ class TrainingRegistrationController extends Controller
         ])->save();
     }
     
+    public function showTrainingPaymentFailed($paymentId)
+    {
+        try {
+            $payment = Payment::findOrFail($paymentId);
+            $client = Auth::user();
+            
+            // Verify the payment belongs to the authenticated user
+            if ($payment->client_id !== $client->id) {
+                abort(403, 'Unauthorized');
+            }
+            
+            // Get the training session details
+            $session = TrainingSession::find($payment->payable_id);
+            
+            return view('training.payment-failed', [
+                'payment' => $payment,
+                'session' => $session,
+                'client' => $client
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error loading training payment failed page: " . $e->getMessage());
+            return redirect()->route('training.register')
+                ->with('error', 'Payment failed. Please try again.');
+        }
+    }
 }

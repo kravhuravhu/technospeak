@@ -60,10 +60,10 @@
                 <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
-            </div>
+            </div> -->
 
             <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
         </form>

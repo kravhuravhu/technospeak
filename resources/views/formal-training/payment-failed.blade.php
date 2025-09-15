@@ -18,6 +18,7 @@
     <h2>Payment Failed</h2>
     <p>We're sorry, but your payment could not be processed.</p>
     <p>Please try again or contact support if the problem persists.</p>
+    <p>Need help? Contact our support team at <strong>technospeakmails@gmail.com</strong> or call <strong>+27 861 777 372</strong></p>
     
     <a href="{{ route('dashboard') }}" class="btn">Back to Dashboard</a>
     <a href="javascript:history.back()" class="btn" style="background: #6c757d;">Try Again</a>

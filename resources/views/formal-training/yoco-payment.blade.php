@@ -2,23 +2,170 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enroll in {{ $course->title }} - Technospeak</title>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 2rem; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { color: #15415a; margin-bottom: 1rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; color: #38b6ff; }
-        input { width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
-        .price { margin: 1rem 0; font-weight: bold; font-size: 1.1rem; }
-        .submit-btn { background: #38b6ff; color: white; border: none; padding: 0.75rem; width: 100%; border-radius: 8px; cursor: pointer; font-size: 1rem; }
-        .submit-btn:hover { background: #2a9ce8; }
-        .submit-btn:disabled { background: #6c757d; cursor: not-allowed; }
-        .message { margin: 1rem 0; padding: 0.75rem; border-radius: 6px; }
-        .success { background: #38a169; color: white; }
-        .error { background: #e53e3e; color: white; }
-        .course-details { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        :root {
+            --primary-color: #38b6ff;
+            --primary-dark: #2a9ce8;
+            --secondary-color: #15415a;
+            --success-color: #38a169;
+            --error-color: #e53e3e;
+            --text-color: #333;
+            --light-gray: #f8f9fa;
+            --medium-gray: #ccc;
+            --white: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f0f2f5; 
+            padding: 1rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            background: var(--white); 
+            padding: 1.5rem;
+            border-radius: var(--border-radius); 
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 { 
+            color: var(--secondary-color); 
+            margin-bottom: 1rem; 
+            font-size: 1.5rem;
+        }
+        
+        .form-group { 
+            margin-bottom: 1rem; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border-radius: var(--border-radius); 
+            border: 1px solid var(--medium-gray);
+            font-size: 1rem;
+        }
+        
+        .price { 
+            margin: 1rem 0; 
+            font-weight: bold; 
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+        }
+        
+        .submit-btn { 
+            background: var(--primary-color); 
+            color: var(--white); 
+            border: none; 
+            padding: 1rem; 
+            width: 100%; 
+            border-radius: var(--border-radius); 
+            cursor: pointer; 
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover { 
+            background: var(--primary-dark); 
+        }
+        
+        .submit-btn:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+        }
+        
+        .message { 
+            margin: 1rem 0; 
+            padding: 0.75rem; 
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .success { 
+            background: var(--success-color); 
+            color: var(--white); 
+        }
+        
+        .error { 
+            background: var(--error-color); 
+            color: var(--white); 
+        }
+        
+        .course-details { 
+            background: var(--light-gray); 
+            padding: 1rem; 
+            border-radius: var(--border-radius); 
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-details p {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .container {
+                padding: 1.25rem;
+            }
+            
+            h2 {
+                font-size: 1.35rem;
+            }
+            
+            input, .submit-btn {
+                padding: 0.875rem;
+            }
+            
+            .course-details {
+                padding: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.25rem;
+            }
+            
+            .course-details {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .price {
+                font-size: 1.15rem;
+            }
+        }
     </style>
 </head>
 <body>

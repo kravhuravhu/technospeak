@@ -56,7 +56,7 @@ class PaymentProcessed extends Notification
                 'status' => $this->status,
                 'payment' => $this->payment
             ])
-            ->bcc('admin@technospeak.co.za');
+            ->bcc('technospeakmails@gmail.com');
     }
 
     public function toDatabase($notifiable)
@@ -102,7 +102,7 @@ class PaymentProcessed extends Notification
 
         return [
             'If you believe this is an error, please contact our support team.',
-            'No funds have been deducted from your account. Support: admin@technospeak.co.za | info@technospeak.co.za'
+            'No funds have been deducted from your account. Support: technospeakmails@gmail.com'
         ];
     }
 }

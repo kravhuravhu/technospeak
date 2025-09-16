@@ -3140,3 +3140,234 @@ section.bar-lt-rt {
     padding: 10px;
   }
 }
+
+/* Responsive Design Additions */
+/* Hamburger menu for mobile */
+.hamburger-menu {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: #38b6ff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+}
+
+/* logout dropdown */
+.name {
+    position: relative;
+    z-index: 1002;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown.show {
+    display: block;
+}
+
+.dropdown a, .dropdown button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #2d3748;
+    text-decoration: none;
+}
+
+.dropdown a:hover, .dropdown button:hover {
+    background: #f1f1f1;
+}
+
+/* Mobile sidebar styles */
+@media screen and (max-width: 1024px) {
+    .hamburger-menu {
+        display: flex;
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: -1000px;
+        top: 0;
+        height: 100vh;
+        z-index: 999;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        overflow-y: auto;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .rightbar {
+        display: none;
+    }
+    
+    /* Adjust content for mobile */
+    .welcome {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px !important;
+    }
+    
+    .welcome-illustration {
+        margin-top: 20px;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr !important;
+        justify-items: center;
+    }
+    
+    .card {
+        width: 100% !important;
+        max-width: 300px;
+    }
+    
+    .search-filter-container {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+    
+    .search-box, .filter-dropdown {
+        width: 100%;
+    }
+    
+    .search-control {
+        width: 100% !important;
+    }
+    
+    /* Settings adjustments */
+    .settings-profile {
+        padding: 10px;
+    }
+    
+    .setting-block {
+        padding: 20px !important;
+    }
+    
+    /* Support section adjustments */
+    .faq-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+    
+    .contact-options {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .status-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main {
+        padding: 10px;
+    }
+    
+    .welcome h1 {
+        font-size: 2em !important;
+    }
+    
+    .section-header {
+        flex-direction: column;
+    }
+    
+    .title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        width: 95% !important;
+        padding: 1rem !important;
+        margin: 5% auto !important;
+    }
+    
+    .modal-meta {
+        flex-direction: column;
+    }
+    
+    .meta-item {
+        min-width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    /* Form adjustments */
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .half-width {
+        width: 100% !important;
+    }
+    
+    /* Resources grid */
+    .resource-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Subscription cards */
+    .plans-grid, .card-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .sidebar {
+        display: flex !important;
+    }
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}

@@ -196,7 +196,10 @@
             <!-- price appears only if plan is formal-->
             <div class="form-group" id="price-group" style="display:none;">
                 <label for="price" class="form-label">Price</label>
-                <input type="number" step="0.01" id="price" name="price" class="form-control" placeholder="Rands">
+                <input type="number" step="0.01" id="price" name="price" class="form-control"
+                    placeholder="Rands"
+                    value="{{ old('price', $course->price) }}">
+                <div class="old-value">Current: R{{ $course->price }}</div>
             </div>
         </div>
         <div class="form-row" style="padding:20px 0">
@@ -472,6 +475,25 @@
         let nextNewEpisodeId = -1; 
         let nextNewResourceId = -1;
 
+        let planType = document.getElementById('plan_type');
+        let priceGroup = document.getElementById('price-group');
+        let priceInput = document.getElementById('price');
+
+        function togglePrice() {
+            if (planType.value === 'frml_training') {
+                priceGroup.style.display = 'block';
+                console.log("Checking plan:" . planType);
+            } else {
+                priceGroup.style.display = 'none';
+                priceInput.value = '';
+            }
+        }
+        
+        togglePrice();
+
+        // run on change
+        planType.addEventListener('change', togglePrice);
+
         function init() {
             bindAddEpisodeButton();
             bindVideoUrlChange();
@@ -490,7 +512,7 @@
                 }
             });
             
-            // Check for duplicate titles
+            // Duplicate titles check
             document.addEventListener('input', function (e) {
                 if (e.target.matches('.form-control[name*="[title]"]')) {
                     checkDuplicateTitles();
@@ -506,17 +528,6 @@
             document.querySelectorAll('.resource-file-url').forEach(input => {
                 if (input.value) {
                     updateFileInfo(input);
-                }
-            });
-
-            // add price if type is formal trainings
-            document.getElementById('plan_type').addEventListener('change', function() {
-                let priceGroup = document.getElementById('price-group');
-                if (this.value === 'frml_training') {
-                    priceGroup.style.display = 'block';
-                } else {
-                    priceGroup.style.display = 'none';
-                    document.getElementById('price').value = '';
                 }
             });
         }

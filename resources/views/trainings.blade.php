@@ -22,6 +22,16 @@
         {{-- Include the navbar --}}
         @include('layouts.navbar', ['whiteBg' => $whiteBg ?? false])
 
+        <!-- group sessions pop-up -->
+        @include('components.sessions_registration', [
+            'typeId' => 4,
+            'typeName' => 'Group Session 1'
+        ])
+        @include('components.sessions_registration', [
+            'typeId' => 5, 
+            'typeName' => 'Group Session 2'
+        ])
+
         <!-- Main Content Section -->
         <main class="main-container">
 
@@ -150,75 +160,86 @@
 
                 <div class="webinars-container">
                     <!-- Card 1 -->
-                    <div class="webinar-card">
-                        <div class="card-header">
-                            <div class="icon-container" style="background-color: rgba(33, 150, 243, 0.1);">
-                                <i class="fas fa-calendar-check icon"></i>
-                            </div>
-                            <div class="date-badge">
-                                <span class="date-day">01</span>
-                                <span class="date-month">MAY</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="webinar-title">AI for Administrative Work</h3>
-                            <p class="webinar-description">Learn how AI tools can automate repetitive tasks and boost your productivity by 40% or more.</p>
-                            <div class="webinar-meta">
-                                <div class="meta-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>7:00 PM GMT</span>
+                    @if($groupSession1)
+                        <div class="webinar-card">
+                            <div class="card-header">
+                                <div class="icon-container" style="background-color: rgba(33, 150, 243, 0.1);">
+                                    <i class="fas fa-calendar-check icon"></i>
                                 </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-user-tie"></i>
-                                    <span>Mr. NO Sithebe</span>
+                                <div class="date-badge">
+                                    <span class="date-day">{{ $groupSession1->scheduled_for->format('d') }}</span>
+                                    <span class="date-month">{{ strtoupper($groupSession1->scheduled_for->format('M')) }}</span>
                                 </div>
                             </div>
-                            <button class="webinar-button">
-                                <span>Reserve Your Spot</span>
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
+                            <div class="card-content">
+                                <h3 class="webinar-title">{{ $groupSession1->title }}</h3>
+                                <p class="webinar-description">
+                                    {{ $groupSession1->description ?? 'Participants remain muted while instructors answer questions from social media (e.g., YouTube).' }}
+                                </p>
+                                <div class="webinar-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>{{ $groupSession1->from_time->format('g:i A T') }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-user-tie"></i>
+                                        <span>{{ $groupSession1->instructor->name ?? 'Instructor TBD' }}</span>
+                                    </div>
+                                </div>
+                                <button class="webinar-button registration-trigger"
+                                        data-type-id="4"
+                                        @if($groupSession1->scheduled_for->isPast()) disabled @endif>
+                                    <span>{{ $groupSession1->scheduled_for->isPast() ? 'Session Ended' : 'Reserve Your Spot' }}</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
+                    @endif
                     <!-- Card 2 -->
-                    <div class="webinar-card featured">
-                        <div class="featured-badge">Popular</div>
-                        <div class="card-header">
-                            <div class="icon-container" style="background-color: rgba(0, 47, 95, 0.1);">
-                                <i class="fas fa-comments icon dark"></i>
-                            </div>
-                            <div class="recurring-badge">
-                                <i class="fas fa-sync-alt"></i>
-                                <span>Weekly</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="webinar-title">Live Q&A Fridays</h3>
-                            <p class="webinar-description">Get your questions answered by our expert panel in this interactive weekly session.</p>
-                            <div class="webinar-meta">
-                                <div class="meta-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>3:00 PM GMT</span>
+                    @if($groupSession2)
+                        <div class="webinar-card featured">
+                            <div class="featured-badge">Popular</div>
+                            <div class="card-header">
+                                <div class="icon-container" style="background-color: rgba(0, 47, 95, 0.1);">
+                                    <i class="fas fa-comments icon dark"></i>
                                 </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-users"></i>
-                                    <span>Panel Discussion</span>
+                                <div class="recurring-badge">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Weekly</span>
                                 </div>
                             </div>
-                            <button class="webinar-button">
-                                <span>Join Live Session</span>
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
+                            <div class="card-content">
+                                <h3 class="webinar-title">{{ $groupSession2->title }}</h3>
+                                <p class="webinar-description">
+                                    {{ $groupSession2->description ?? 'Ask live questions and get immediate answers from our expert panel.' }}
+                                </p>
+                                <div class="webinar-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>{{ $groupSession2->from_time->format('g:i A T') }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-users"></i>
+                                        <span>{{ $groupSession2->instructor->name ?? 'Panel Discussion' }}</span>
+                                    </div>
+                                </div>
+                                <button class="webinar-button registration-trigger"
+                                        data-type-id="5"
+                                        @if($groupSession2->scheduled_for->isPast()) disabled @endif>
+                                    <span>{{ $groupSession2->scheduled_for->isPast() ? 'Session Ended' : 'Join Live Session' }}</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
                 
-                <div class="view-all-container">
+                <!-- <div class="view-all-container">
                     <a href="#" class="view-all-link">
                         View all upcoming events
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                </div>
+                </div> -->
             </section>
 
             <!-- Cheatsheet Section -->
@@ -228,9 +249,7 @@
                         <h2 class="title">
                             Cheatsheet of the Week
                             <span class="lock-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 1C8.14 1 5 4.14 5 8v1H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V11c0-1.1-.9-2-2-2h-1V8c0-3.86-3.14-7-7-7zm0 2c2.76 0 5 2.24 5 5v1H7V8c0-2.76 2.24-5 5-5zm6 10.5c0 .83-.67 1.5-1.5 1.5h-9c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5h9c.83 0 1.5.67 1.5 1.5v5z"/>
-                                </svg>
+                                {{-- your SVG --}}
                             </span>
                         </h2>
                         <p class="subtitle">
@@ -245,7 +264,11 @@
                                 <span class="dot yellow"></span>
                                 <span class="dot green"></span>
                             </div>
-                            <span class="file-name">weekly-cheatsheet.pdf</span>
+                            @if($latestCheatsheet)
+                                <span class="file-name">{{ $latestCheatsheet->title ?? 'cheatsheet.pdf' }}</span>
+                            @else
+                                <span class="file-name">No Cheatsheet Yet</span>
+                            @endif
                         </div>
                         <div class="preview-content">
                             <div class="blurred-content">
@@ -257,7 +280,7 @@
                             </div>
                             <div class="watermark">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 3c-4.97 0-9 3.19-9 7 0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h1v2c0 .55.45 1 1 1h2v-2h4v2h2c.55 0 1-.45 1-1v-2h1c.55 0 1-.45 1-1v-1.26c1.81-1.27 3-3.36 3-5.74 0-3.81-4.03-7-9-7zm-5 7c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1zm8 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"/>
+                                    {{-- your SVG --}}
                                 </svg>
                                 <span>Premium Content</span>
                             </div>
@@ -265,15 +288,24 @@
                     </div>
                     
                     <div class="cta-container">
-                        <button class="unlock-btn">
-                            <span>Unlock This Cheatsheet</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 3c-4.97 0-9 3.19-9 7 0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h1v2c0 .55.45 1 1 1h2v-2h4v2h2c.55 0 1-.45 1-1v-2h1c.55 0 1-.45 1-1v-1.26c1.81-1.27 3-3.36 3-5.74 0-3.81-4.03-7-9-7zm2.85 11.1l-2.13 2.13c-.39.39-1.03.39-1.42 0l-2.13-2.13c-.39-.39-.39-1.03 0-1.42.39-.39 1.03-.39 1.42 0l.71.71V9c0-.55.45-1 1-1s1 .45 1 1v4.39l.71-.71c.39-.39 1.03-.39 1.42 0 .39.39.39 1.03 0 1.42z"/>
-                            </svg>
-                        </button>
+                        @if(auth()->check() && $latestCheatsheet)
+                            <a href="{{ $latestCheatsheet->file_url }}" class="unlock-btn" target="_blank">
+                                <span>Download Cheatsheet</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    {{-- icon svg again --}}
+                                </svg>
+                            </a>
+                        @else
+                            <button class="unlock-btn" onclick="promptLoginOrSubscribe()">
+                                <span>Unlock This Cheatsheet</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3c-4.97 0-9 3.19-9 7 0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h1v2c0 .55.45 1 1 1h2v-2h4v2h2c.55 0 1-.45 1-1v-2h1c.55 0 1-.45 1-1v-1.26c1.81-1.27 3-3.36 3-5.74 0-3.81-4.03-7-9-7zm2.85 11.1l-2.13 2.13c-.39.39-1.03.39-1.42 0l-2.13-2.13c-.39-.39-.39-1.03 0-1.42.39-.39 1.03-.39 1.42 0l.71.71V9c0-.55.45-1 1-1s1 .45 1 1v4.39l.71-.71c.39-.39 1.03-.39 1.42 0 .39.39.39 1.03 0 1.42z"/>
+                                </svg>
+                            </button>
+                        @endif
                         <p class="note">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/>
+                                {{-- another svg --}}
                             </svg>
                             Get full access to every cheatsheet with our quarterly Tips & Tricks subscription.
                         </p>
@@ -293,107 +325,158 @@
 
         <script src="script/trainings.js"></script>
 
+        <!-- Video structure -->
         <script>
-
             document.addEventListener('DOMContentLoaded', function() {
-  const videoContainer = document.querySelector('.video-container');
-  const video = document.querySelector('video');
-  const playOverlay = document.querySelector('.video-overlay');
-  const playButton = document.querySelector('.play-button');
-  const playPauseBtn = document.querySelector('.play-pause');
-  const progressBar = document.querySelector('.progress-bar');
-  const progressContainer = document.querySelector('.progress-container');
-  const hoverTime = document.querySelector('.hover-time');
-  const timeDisplay = document.querySelector('.time-display');
-  const volumeBtn = document.querySelector('.volume-btn');
-  const volumeSlider = document.querySelector('.volume-slider');
-  const fullscreenBtn = document.querySelector('.fullscreen-btn');
-  
-  // Toggle play/pause
-  function togglePlay() {
-    if (video.paused) {
-      video.play();
-      videoContainer.classList.add('playing');
-      playPauseBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z"/>
-        </svg>
-      `;
-    } else {
-      video.pause();
-      videoContainer.classList.remove('playing');
-      playPauseBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
-        </svg>
-      `;
-    }
-  }
-  
-  playButton.addEventListener('click', togglePlay);
-  playPauseBtn.addEventListener('click', togglePlay);
-  video.addEventListener('click', togglePlay);
-  
-  // Update progress bar
-  video.addEventListener('timeupdate', () => {
-    const progress = (video.currentTime / video.duration) * 100;
-    progressBar.style.width = `${progress}%`;
-    
-    // Update time display
-    const currentTime = formatTime(video.currentTime);
-    const duration = formatTime(video.duration);
-    timeDisplay.textContent = `${currentTime} / ${duration}`;
-  });
-  
-  // Seek on progress bar click
-  progressContainer.addEventListener('click', (e) => {
-    const rect = progressContainer.getBoundingClientRect();
-    const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
-    video.currentTime = pos * video.duration;
-  });
-  
-  // Hover time preview
-  progressContainer.addEventListener('mousemove', (e) => {
-    const rect = progressContainer.getBoundingClientRect();
-    const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
-    const time = pos * video.duration;
-    hoverTime.textContent = formatTime(time);
-    hoverTime.style.left = `${e.offsetX}px`;
-  });
-  
-  // Volume controls
-  volumeSlider.addEventListener('input', () => {
-    video.volume = volumeSlider.value;
-    video.muted = volumeSlider.value == 0;
-  });
-  
-  volumeBtn.addEventListener('click', () => {
-    video.muted = !video.muted;
-    volumeSlider.value = video.muted ? 0 : video.volume;
-  });
-  
-  // Fullscreen
-  fullscreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      videoContainer.requestFullscreen().catch(err => {
-        console.log(`Fullscreen error: ${err.message}`);
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  });
-  
-  // Format time as MM:SS
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }
-  
-  // Set initial volume
-  video.volume = volumeSlider.value;
-});
+            const videoContainer = document.querySelector('.video-container');
+            const video = document.querySelector('video');
+            const playOverlay = document.querySelector('.video-overlay');
+            const playButton = document.querySelector('.play-button');
+            const playPauseBtn = document.querySelector('.play-pause');
+            const progressBar = document.querySelector('.progress-bar');
+            const progressContainer = document.querySelector('.progress-container');
+            const hoverTime = document.querySelector('.hover-time');
+            const timeDisplay = document.querySelector('.time-display');
+            const volumeBtn = document.querySelector('.volume-btn');
+            const volumeSlider = document.querySelector('.volume-slider');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+            
+            // Toggle play/pause
+            function togglePlay() {
+                if (video.paused) {
+                video.play();
+                videoContainer.classList.add('playing');
+                playPauseBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z"/>
+                    </svg>
+                `;
+                } else {
+                video.pause();
+                videoContainer.classList.remove('playing');
+                playPauseBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+                    </svg>
+                `;
+                }
+            }
+            
+            playButton.addEventListener('click', togglePlay);
+            playPauseBtn.addEventListener('click', togglePlay);
+            video.addEventListener('click', togglePlay);
+            
+            // Update progress bar
+            video.addEventListener('timeupdate', () => {
+                const progress = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Update time display
+                const currentTime = formatTime(video.currentTime);
+                const duration = formatTime(video.duration);
+                timeDisplay.textContent = `${currentTime} / ${duration}`;
+            });
+            
+            // Seek on progress bar click
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
+                video.currentTime = pos * video.duration;
+            });
+            
+            // Hover time preview
+            progressContainer.addEventListener('mousemove', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.pageX - rect.left) / progressContainer.offsetWidth;
+                const time = pos * video.duration;
+                hoverTime.textContent = formatTime(time);
+                hoverTime.style.left = `${e.offsetX}px`;
+            });
+            
+            // Volume controls
+            volumeSlider.addEventListener('input', () => {
+                video.volume = volumeSlider.value;
+                video.muted = volumeSlider.value == 0;
+            });
+            
+            volumeBtn.addEventListener('click', () => {
+                video.muted = !video.muted;
+                volumeSlider.value = video.muted ? 0 : video.volume;
+            });
+            
+            // Fullscreen
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(err => {
+                    console.log(`Fullscreen error: ${err.message}`);
+                });
+                } else {
+                document.exitFullscreen();
+                }
+            });
+            
+            // Format time as MM:SS
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+            
+            // Set initial volume
+            video.volume = volumeSlider.value;
+            });
         </script>
-        
+
+        <!-- pop-ups -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const triggers = document.querySelectorAll('.registration-trigger');
+
+                triggers.forEach(trigger => {
+                    trigger.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const typeId = this.getAttribute('data-type-id');
+                        const modal = document.getElementById(`session-registration-modal-${typeId}`);
+                        
+                        if (modal) {
+                            modal.style.display = 'flex';
+                            document.body.style.overflow = 'hidden'; // disable background scroll
+                        }
+                    });
+                });
+
+                const closeButtons = document.querySelectorAll('.session-registration-modal .close-modal');
+                closeButtons.forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const modal = this.closest('.session-registration-modal');
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto'; // re-enable scroll
+                    });
+                });
+
+                const overlays = document.querySelectorAll('.session-registration-modal .modal-overlay');
+                overlays.forEach(overlay => {
+                    overlay.addEventListener('click', function () {
+                        const modal = this.closest('.session-registration-modal');
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+            });
+        </script>
+
+        <!-- resource cheetsheet -->
+        <script>
+            function promptLoginOrSubscribe() {
+                @if(!auth()->check())
+                    window.location.href = "{{ route('login', ['redirectTo' => request()->path()]) }}";
+                @else
+                    // Sithebe, sithebe
+                    // Tips and tricks payment should happen here
+                    alert('Please subscribe to access this content.');
+                @endif
+            }
+        </script>
+
     </body>
 </html>

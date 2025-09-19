@@ -410,9 +410,26 @@ class CourseAccessController extends Controller
             $subscription->markAsCompleted();
             \Log::info("Course {$course->id} marked completed for subscription {$subscription->id}");
 
+            $userFullname  = $user->name . ' ' . $user->surname;
+            
+            $instrfirstInitial = strtoupper(substr($course->instructor->name, 0, 1));
+            $instrlastName = ucfirst($course->instructor->surname);
+            $instructorSign = $instrfirstInitial . '. ' . $instrlastName;
+
+            $certificateId = 'CERT-' . strtoupper(substr(uniqid(), 0, 10));
+            $generatedAt   = now(); 
+
             try {
                 // generate the certificate
-                $certificateUrl = GenerateCertificate::generate($user->name, $subscription->id, $course->id);
+                $certificateUrl = GenerateCertificate::generate(
+                    $userFullname, 
+                    $subscription->id, 
+                    $course->id, 
+                    $course->title,
+                    $instructorSign,
+                    $generatedAt,
+                    $certificateId,
+                );
                 \Log::info("Certificate generated successfully at {$certificateUrl}");
 
                 // save to DB
@@ -420,7 +437,7 @@ class CourseAccessController extends Controller
                     'course_id'       => $course->id,
                     'subscription_id' => $subscription->id,
                     'client_id'       => $user->id,
-                    'certificate_id' => 'CERT-' . strtoupper(substr(uniqid(), 0, 10)),
+                    'certificate_id'  => $certificateId,
                     'certificate_url' => $certificateUrl,
                     'issued_at'       => now(),
                 ]);

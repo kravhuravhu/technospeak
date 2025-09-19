@@ -30,12 +30,22 @@
                     <div class="title_container">
                         <h2>Create Account</h2>
                     </div>
-                    <div class="hrzntl"><hr><span>Or</span><hr></div>
-                    <div class="icons">
-                        <a href="#"><i class="fa-brands fa-google"></i></a>
-                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    <div class="social-login-container">
+                        <a href="{{ route('google.login') }}" class="social-login-btn google-btn">
+                            <span class="social-icon">
+                                <i class="fa-brands fa-google"></i>
+                            </span>
+                            <span class="social-text">Continue with Google</span>
+                        </a>
+                        <a href="{{ route('linkedin.login') }}" class="social-login-btn linkedin-btn">
+                            <span class="social-icon">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </span>
+                            <span class="social-text">Continue with LinkedIn</span>
+                        </a>
                     </div>
-                    <div class="dscpt"><p>Or continue with using your email</p></div>
+                    <div class="hrzntl"><hr><span>Or</span><hr></div>
+                    <div class="dscpt"><p>Continue with using your email</p></div>
                     <div class="form_wrapper">
                         <form method="POST" action="{{ route('register') }}">
                             @csrf

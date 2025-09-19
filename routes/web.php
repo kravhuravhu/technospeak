@@ -33,6 +33,8 @@ use App\Http\Controllers\SubmissionController;
 use App\Models\CourseResource;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestingPayment;
+use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\LinkedInAuthController;
 
 // Public routes
 Route::get('/', [
@@ -69,6 +71,14 @@ Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscrib
 Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'])
     ->name('subscription.subscribe.free')
     ->middleware('auth');
+
+// register through Google
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+// register through Linkedin
+Route::get('/auth/linkedin', [LinkedInAuthController::class, 'redirect'])->name('linkedin.login');
+Route::get('/auth/linkedin/callback', [LinkedInAuthController::class, 'callback']);
 
 // Auth routes
 Route::middleware(['auth', 'verified'])->group(function () {

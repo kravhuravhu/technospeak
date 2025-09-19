@@ -35,6 +35,8 @@ class Client extends Authenticatable implements MustVerifyEmail
         'userType',
         'status',
         'archived_at',
+        'google_id',
+        'linkedin_id',
     ];
 
     protected $hidden = [
@@ -49,6 +51,13 @@ class Client extends Authenticatable implements MustVerifyEmail
         'subscription_paid_at' => 'datetime',
         'archived_at' => 'datetime',
     ];
+
+    // adding the google_id to db
+    public function setGoogleId($googleId)
+    {
+        $this->attributes['google_id'] = $googleId;
+        $this->save();
+    }
 
     public function setNameAttribute($value)
     {

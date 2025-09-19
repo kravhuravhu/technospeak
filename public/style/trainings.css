@@ -733,6 +733,12 @@ a.video-item:hover {
     color: var(--lightBlue2Grey-color);
     line-height: 1.6;
     margin-bottom: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
 }
 
 .webinar-meta {
@@ -770,6 +776,11 @@ a.video-item:hover {
     align-items: center;
     justify-content: center;
     gap: 8px;
+}
+.webinar-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .webinar-button:hover {

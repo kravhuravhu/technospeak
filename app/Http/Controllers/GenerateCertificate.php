@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
-use App\Models\CourseCertificate;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver; // or Imagick if you prefer
+use setasign\Fpdi\Tfpdf\Fpdi;
 
 class GenerateCertificate extends Controller
 {
-    public static function generate($userName, $subscriptionId, $courseId)
+    public static function generate($userFullname = null, $subscriptionId, $courseId, $courseName = null, $courseInstructor = null, $generatedAt, $certificateIDno)
     {
-        \Log::info("Starting certificate generation for {$userName}, subscription {$subscriptionId}, course {$courseId}");
+        \Log::info("Starting PDF certificate generation for subscription {$subscriptionId}, course {$courseId}");
 
-        // 1. Fetch the template from the external URL
-        $templateUrl = 'https://node14827-technospeakdata.jnb1.cloudlet.cloud/storage/certificates/tscertificate-68a3cf8a1d06b.png';
+        $templateUrl = 'https://node14827-technospeakdata.jnb1.cloudlet.cloud/storage/certificates/certificate-of-recog-68cb06fa4645d.pdf';
         $templateContent = file_get_contents($templateUrl);
 
         if (!$templateContent) {
@@ -22,30 +19,98 @@ class GenerateCertificate extends Controller
             return null;
         }
 
-        // 2. Create manager (using GD driver here)
-        $manager = new ImageManager(new Driver());
+        $tmpPath = storage_path('app/tmp_template.pdf');
+        file_put_contents($tmpPath, $templateContent);
 
-        // 3. Load image
-        $img = $manager->read($templateContent);
+        $pdf = new Fpdi('L', 'mm', 'A4');
+        $pdf->AddPage();
 
-        // 4. Add the user's name
-        $img->text($userName, 600, 400, function ($font) {
-            $font->filename(public_path('fonts/arial.ttf')); // make sure the font exists
-            $font->size(48);
-            $font->color('#000000');
-            $font->align('center');
-            $font->valign('middle');
-        });
+        $pdf->setSourceFile($tmpPath);
+        $tplId = $pdf->importPage(1);
+        $pdf->useTemplate($tplId, 0, 0);
 
-        // 5. Save it locally with the user's name in filename
-        $fileName = 'certificate_' . preg_replace('/\s+/', '_', $userName) . '_' . $subscriptionId . '.png';
+        $pdf->AddFont('Roboto', '', 'Roboto-Regular.ttf', true);
+        $pdf->AddFont('Roboto', 'B', 'Roboto-Bold.ttf', true);
+        $pdf->AddFont('Roboto', 'EB', 'Roboto-ExtraBold.ttf', true);
+
+        $pdf->AddFont('GreatVibes', '', 'GreatVibes-Regular.ttf', true);
+        $pdf->AddFont('Priestacy', '', 'Priestacy.otf', true);
+
+        $pageWidth = $pdf->GetPageWidth();
+        $pageHeight = $pdf->GetPageHeight();
+
+        if ($userFullname) {
+            $pdf->SetFont('Roboto', 'EB', 20); 
+            $pdf->SetTextColor(6, 38, 68);
+
+            $textWidth = $pdf->GetStringWidth($userFullname);
+            $x = ($pageWidth - $textWidth) / 2;
+            $y = 95.5;
+
+            $pdf->Text($x, $y, $userFullname);
+        }
+
+        if ($courseName) {
+            $pdf->SetFont('Roboto', 'EB', 20); 
+            $pdf->SetTextColor(6, 38, 68);
+
+            $textWidthCourse = $pdf->GetStringWidth($courseName);
+            $xCourse = ($pageWidth - $textWidthCourse) / 2; 
+            $yCourse = 130;
+
+            $pdf->Text($xCourse, $yCourse, $courseName);
+        }
+
+        if($courseInstructor) {
+            $pdf->SetFont('Priestacy', '', 19);
+            $pdf->SetTextColor(0, 0, 0);
+            
+            $textWidth = $pdf->GetStringWidth($courseInstructor);
+            $offset = 70;
+            $x = ($pageWidth - $textWidth) / 2 - $offset;
+            $y = 164;
+
+            $pdf->Text($x, $y, $courseInstructor);
+        }
+
+        if($generatedAt) {
+            $pdf->SetFont('Roboto', '', 13);
+            $pdf->SetTextColor(6, 38, 68);
+            
+            $textWidth = $pdf->GetStringWidth($generatedAt);
+            $offset = 65;
+            $x = ($pageWidth - $textWidth) / 2 + $offset;
+            $y = 165.5;
+
+            $pdf->Text($x, $y, $generatedAt->format('F j, Y'));
+        }
+
+        if($certificateIDno) {
+            $pdf->SetFont('Roboto', '', 10);
+            $pdf->SetTextColor(136, 136, 136);
+            
+            $textWidth = $pdf->GetStringWidth($certificateIDno);
+            $offset = 46;
+            $x = ($pageWidth - $textWidth) / 2 - $offset;
+            $y = 192.6;
+
+            $pdf->Text($x, $y, $certificateIDno);
+        }
+
+        $fileName = 'Certificate_Of_Completion_' 
+            . ($userFullname ? preg_replace('/\s+/', '_', $userFullname) : 'no_name') 
+            . '_' 
+            . ($courseName ? preg_replace('/\s+/', '_', $courseName) : 'no_course') 
+            . '.pdf';
+
         $path = 'certificates/generated/' . $fileName;
 
-        Storage::disk('public')->put($path, (string) $img->encode());
+        $fullPath = storage_path('app/public/' . $path);
+        $pdf->Output($fullPath, 'F');
 
         $url = Storage::url($path);
 
-        \Log::info("Certificate successfully generated: {$url}");
+        \Log::info("PDF Certificate successfully generated: {$url}");
 
         return $url;
     }

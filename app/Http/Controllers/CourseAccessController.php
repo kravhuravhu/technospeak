@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Payment;
 use App\Models\ClientCourseSubscription;
 use Illuminate\Support\Facades\Http;
-use App\Notifications\PaymentProcessed; 
+use App\Notifications\PaymentProcessed;
+use App\Notifications\CertificateIssuedNotification;
 
 class CourseAccessController extends Controller
 {
@@ -443,6 +444,14 @@ class CourseAccessController extends Controller
                 ]);
 
                 \Log::info("Certificate record saved in DB for user {$user->id}, subscription {$subscription->id}");
+                
+                // Send notification
+                $user->notify(new CertificateIssuedNotification(
+                    $userFullname,
+                    $course->title,
+                    $certificateUrl
+                ));
+                \Log::info("Certificate email notification sent to user {$user->email}");
             } catch (\Throwable $e) {
                 \Log::error("Certificate generation failed: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             }

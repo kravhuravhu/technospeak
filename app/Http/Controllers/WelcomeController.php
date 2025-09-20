@@ -65,7 +65,7 @@ class WelcomeController extends Controller
         // resource "Cheatsheet"
         $cheatsheetType = ResourceType::where('name', 'Cheatsheet')->first();
 
-        // Fetch the latest cheatsheet resource
+        // cheatsheet resource
         $latestCheatsheet = null;
         if ($cheatsheetType) {
             $latestCheatsheet = CourseResource::where('resource_type_id', $cheatsheetType->id)

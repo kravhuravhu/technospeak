@@ -151,6 +151,25 @@ class SubscriptionController extends Controller
                 'currency' => 'ZAR',
             ]);
 
+            // ADD DEBUG LOGGING
+            Log::debug('Yoco API Response:', [
+                'response' => $response->json(),
+                'status_code' => $response->status(),
+                'client_id' => $client->id,
+                'plan_id' => $plan->id
+            ]);
+
+            // NEW ERROR HANDLING CODE STARTS HERE
+            if (!$response->successful()) {
+                Log::error("Yoco API request failed", [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                    'client_id' => $client->id
+                ]);
+                
+                return back()->with('error', 'Payment service temporarily unavailable. Please try again.');
+            }
+
             $data = $response->json();
 
             if (isset($data['error'])) {
@@ -158,12 +177,22 @@ class SubscriptionController extends Controller
                 return back()->with('error', $data['error']['message']);
             }
 
+            // Check if we have the required fields
+            if (!isset($data['id']) || !isset($data['status'])) {
+                Log::error("Yoco response missing required fields", [
+                    'response' => $data,
+                    'client_id' => $client->id
+                ]);
+                return back()->with('error', 'Payment processing error: Invalid response format.');
+            }
+            // NEW ERROR HANDLING CODE ENDS HERE
+
             // Create payment record after successful charge
             $payment = Payment::create([
                 'transaction_id' => $data['id'],
                 'client_id' => $client->id,
                 'amount' => $amount,
-                'payment_method' => 'card',
+                'payment_method' => 'yoco', // CHANGED FROM 'card' TO 'yoco'
                 'status' => $data['status'] === 'successful' ? 'completed' : 'failed',
                 'payable_type' => 'subscription',
                 'payable_id' => $plan->id,

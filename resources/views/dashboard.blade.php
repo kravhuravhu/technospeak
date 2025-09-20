@@ -704,9 +704,9 @@
                                     <span class="plan-badge paid-badge">Registered</span>
                                     <h3>{{ $training->name }}</h3>
                                     <div class="plan-price">
-                                        @if($training->student_price)
+                                        <!-- @if($training->student_price)
                                             From R{{ $training->student_price }} 
-                                        @endif
+                                        @endif -->
                                         <!-- @if($training->professional_price)
                                             | R{{ $training->professional_price }} (business)
                                         @endif -->

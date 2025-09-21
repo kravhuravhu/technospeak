@@ -1225,7 +1225,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 10px #000;
@@ -1233,6 +1233,9 @@
             text-align: center;
             opacity: 0;
             animation: text-pulse 3s ease-in-out infinite;
+            & > span {
+                font-size: 1rem;
+            }
         }
 
         @keyframes text-pulse {
@@ -1603,7 +1606,7 @@
     <div class="celebration" id="celebration">
         <div class="celebration-content">
             <button class="close-celebration" id="close-celebration">×</button>
-            <div class="celebration-text">Congratulations! 🎉</div>
+            <p class="celebration-text">Congratulations! 🎉<br><span>Click on Certificate Tab to Download your Achievements</span></p>
         </div>
     </div>
 
@@ -2836,34 +2839,45 @@
             function startCelebration() {
                 const celebration = document.getElementById('celebration');
                 celebration.style.display = 'block';
-                
-                // Create initial particles
+                celebration.style.opacity = '1';
+                celebration.style.transition = 'opacity 1.5s ease';
+
                 for (let i = 0; i < 100; i++) {
                     if (i % 3 === 0) createConfetti();
                     if (i % 5 === 0) createFirework();
                     if (i % 7 === 0) createBalloon();
                     if (i % 4 === 0) createEmojiRain();
                 }
-                
-                // Continue creating particles
+
                 const intervals = {
                     confetti: setInterval(createConfetti, 200),
                     firework: setInterval(createFirework, 1000),
                     balloon: setInterval(createBalloon, 1500),
                     emoji: setInterval(createEmojiRain, 300)
                 };
-                
-                return () => {
+
+                const stopCelebration = () => {
                     clearInterval(intervals.confetti);
                     clearInterval(intervals.firework);
                     clearInterval(intervals.balloon);
                     clearInterval(intervals.emoji);
-                    celebration.style.display = 'none';
                     window.celebrationActive = false;
-                    
-                    // Clear all existing particles
-                    document.querySelectorAll('.confetti, .firework, .balloon, .emoji-rain').forEach(el => el.remove());
+
+                    celebration.style.opacity = '0';
+
+                    setTimeout(() => {
+                        celebration.style.display = 'none';
+                        document.querySelectorAll('.confetti, .firework, .balloon, .emoji-rain').forEach(el => {
+                            el.style.transition = 'opacity 2s ease';
+                            el.style.opacity = '0';
+                            setTimeout(() => el.remove(), 2500);
+                        });
+                    }, 1500);
                 };
+
+                setTimeout(stopCelebration, 5000);
+
+                return stopCelebration;
             }
 
             // In close button handler:

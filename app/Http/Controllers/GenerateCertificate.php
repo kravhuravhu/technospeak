@@ -11,7 +11,7 @@ class GenerateCertificate extends Controller
     {
         \Log::info("Starting PDF certificate generation for subscription {$subscriptionId}, course {$courseId}");
 
-        $templateUrl = 'https://node14827-technospeakdata.jnb1.cloudlet.cloud/storage/certificates/certificate-of-recog-68cb06fa4645d.pdf';
+        $templateUrl = env('CERTIFICATE_TEMPLATE_URL_WAN');
         $templateContent = file_get_contents($templateUrl);
 
         if (!$templateContent) {

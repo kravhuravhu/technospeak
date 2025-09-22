@@ -12,6 +12,7 @@
             --secondary-color: #15415a;
             --success-color: #38a169;
             --error-color: #e53e3e;
+            --warning-color: #d69e2e;
             --text-color: #333;
             --light-gray: #f8f9fa;
             --medium-gray: #ccc;
@@ -86,6 +87,7 @@
             font-size: 1rem;
             font-weight: bold;
             transition: background 0.3s ease;
+            margin-top: 0.5rem;
         }
         
         .submit-btn:hover { 
@@ -95,6 +97,14 @@
         .submit-btn:disabled { 
             background: #6c757d; 
             cursor: not-allowed; 
+        }
+        
+        .submit-btn.eft { 
+            background: var(--primary-color); 
+        }
+        
+        .submit-btn.eft:hover { 
+            background: var(--primary-dark); 
         }
         
         .message { 
@@ -125,6 +135,56 @@
             margin-bottom: 0.5rem;
         }
         
+        /* Payment Method Tabs */
+        .payment-method-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--medium-gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .payment-info {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .payment-info ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .payment-info li {
+            margin-bottom: 0.25rem;
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 576px) {
             body {
@@ -132,7 +192,7 @@
             }
             
             .container {
-                padding: 1.25rem;
+                padding: 1rem;
             }
             
             h2 {
@@ -143,27 +203,9 @@
                 padding: 0.875rem;
             }
             
-            .session-details {
-                padding: 0.875rem;
-            }
-        }
-        
-        @media (max-width: 400px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            h2 {
-                font-size: 1.25rem;
-            }
-            
-            .session-details {
-                padding: 0.75rem;
+            .tab-button {
+                padding: 0.875rem 0.5rem;
                 font-size: 0.9rem;
-            }
-            
-            .price {
-                font-size: 1.15rem;
             }
         }
     </style>
@@ -192,37 +234,105 @@
         </div>
         <a href="{{ route('dashboard') }}" class="submit-btn">Return to Dashboard</a>
     @else
-        <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
-            @csrf
-            <input type="hidden" name="session_id" value="{{ $session->id }}">
-            <input type="hidden" name="token" id="yoco-token">
+        <!-- Payment Method Selection -->
+        <div class="payment-method-tabs">
+            <button type="button" class="tab-button active" data-tab="card">Credit/Debit Card</button>
+            <button type="button" class="tab-button" data-tab="eft">EFT/Bank Transfer</button>
+        </div>
 
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
+        <!-- Card Payment Tab -->
+        <div id="card-tab" class="tab-content active">
+            <div class="payment-info">
+                <strong>Secure Card Payment</strong>
+                <p>Pay instantly with your credit or debit card. Your payment will be processed securely through Yoco.</p>
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
+            <form id="yoco-payment-form" method="POST" action="{{ route('training.yoco.process') }}">
+                @csrf
+                <input type="hidden" name="session_id" value="{{ $session->id }}">
+                <input type="hidden" name="token" id="yoco-token">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" name="name" id="name" value="{{ $client->name }}" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" value="{{ $client->email }}" required readonly>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
+                </div> -->
+
+                <button type="button" id="pay-button" class="submit-btn">
+                    Register with Card - R{{ number_format($price, 2) }}
+                </button>
+            </form>
+        </div>
+
+        <!-- EFT Payment Tab -->
+        <div id="eft-tab" class="tab-content">
+            <div class="payment-info">
+                <strong>EFT/Bank Transfer</strong>
+                <p>Pay via secure EFT transfer. You'll be redirected to Yoco's payment page to complete the transaction.</p>
+                <ul>
+                    <li>Secure bank-level encryption</li>
+                    <li>Instant payment confirmation</li>
+                    <li>No card details required</li>
+                </ul>
             </div>
 
-            <!-- <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
-            </div> -->
+            <form id="eft-payment-form" method="POST" action="{{ route('training.yoco.eft') }}">
+                @csrf
+                <input type="hidden" name="session_id" value="{{ $session->id }}">
 
-            <button type="button" id="pay-button" class="submit-btn">Register Now - R{{ number_format($price, 2) }}</button>
-        </form>
+                <div class="form-group">
+                    <label for="eft-name">Full Name</label>
+                    <input type="text" id="eft-name" value="{{ $client->name }}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="eft-email">Email</label>
+                    <input type="email" id="eft-email" value="{{ $client->email }}" readonly>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="eft-phone">Phone Number</label>
+                    <input type="tel" name="phone" id="eft-phone" value="{{ old('phone') }}" required>
+                </div> -->
+
+                <button type="submit" id="eft-pay-button" class="submit-btn eft">
+                    Register with EFT - R{{ number_format($price, 2) }}
+                </button>
+            </form>
+        </div>
     @endif
 
 </div>
 
 <script>
     const yoco = new window.YocoSDK({
-        publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}" // Changed to TEST key
+        publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}"
     });
 
+    // Tab functionality
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab') + '-tab';
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Card payment functionality
     document.getElementById("pay-button")?.addEventListener("click", function () {
         const amount = {{ $price * 100 }};
         yoco.showPopup({
@@ -236,31 +346,49 @@
                 } else {
                     document.getElementById("yoco-token").value = result.id;
                     document.getElementById("yoco-payment-form").submit();
+                    
+                    // Show loading state
+                    const button = document.getElementById("pay-button");
+                    button.disabled = true;
+                    button.textContent = "Processing...";
                 }
             }
         });
     });
 
-    // Add this script to your payment form
+    // EFT payment loading state
+    document.getElementById("eft-payment-form")?.addEventListener("submit", function (e) {
+        const button = document.getElementById("eft-pay-button");
+        button.disabled = true;
+        button.textContent = "Redirecting to EFT...";
+    });
+
+    // Check payment status on page load
     document.addEventListener('DOMContentLoaded', function() {
         const sessionId = {{ $session->id }};
         const payButton = document.getElementById('pay-button');
+        const eftButton = document.getElementById('eft-pay-button');
         
-        if (!payButton) return;
+        if (!payButton || !eftButton) return;
         
-        // Check payment status on page load
+        // Check if already paid
         fetch(`/api/check-session-payment/${sessionId}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
             }
         })
         .then(response => response.json())
         .then(data => {
             if (data.paid) {
+                // Disable both payment methods
                 payButton.disabled = true;
                 payButton.textContent = 'Already Paid';
                 payButton.style.backgroundColor = '#6c757d';
+                
+                eftButton.disabled = true;
+                eftButton.textContent = 'Already Paid';
+                eftButton.style.backgroundColor = '#6c757d';
                 
                 // Show message
                 const messageDiv = document.createElement('div');

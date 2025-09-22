@@ -139,10 +139,10 @@ class SubscriptionController extends Controller
         
         $amount = self::getPriceForUser($client, $plan);
 
-        Log::info("Subscription payment attempt for client {$client->id}, plan {$plan->id}, amount R$amount, status pending");
+        Log::info("Subscription card payment attempt for client {$client->id}, plan {$plan->id}, amount R$amount, status pending");
 
         try {
-            // Process payment with Yoco
+            // Process card payment with Yoco charges API
             $response = Http::withHeaders([
                 'X-Auth-Secret-Key' => env('YOCO_TEST_SECRET_KEY'),
             ])->post('https://online.yoco.com/v1/charges/', [
@@ -151,15 +151,13 @@ class SubscriptionController extends Controller
                 'currency' => 'ZAR',
             ]);
 
-            // ADD DEBUG LOGGING
-            Log::debug('Yoco API Response:', [
+            Log::debug('Yoco Card API Response:', [
                 'response' => $response->json(),
                 'status_code' => $response->status(),
                 'client_id' => $client->id,
                 'plan_id' => $plan->id
             ]);
 
-            // NEW ERROR HANDLING CODE STARTS HERE
             if (!$response->successful()) {
                 Log::error("Yoco API request failed", [
                     'status' => $response->status(),
@@ -177,7 +175,6 @@ class SubscriptionController extends Controller
                 return back()->with('error', $data['error']['message']);
             }
 
-            // Check if we have the required fields
             if (!isset($data['id']) || !isset($data['status'])) {
                 Log::error("Yoco response missing required fields", [
                     'response' => $data,
@@ -185,14 +182,13 @@ class SubscriptionController extends Controller
                 ]);
                 return back()->with('error', 'Payment processing error: Invalid response format.');
             }
-            // NEW ERROR HANDLING CODE ENDS HERE
 
-            // Create payment record after successful charge
+            // Create payment record
             $payment = Payment::create([
                 'transaction_id' => $data['id'],
                 'client_id' => $client->id,
                 'amount' => $amount,
-                'payment_method' => 'yoco', // CHANGED FROM 'card' TO 'yoco'
+                'payment_method' => 'card',
                 'status' => $data['status'] === 'successful' ? 'completed' : 'failed',
                 'payable_type' => 'subscription',
                 'payable_id' => $plan->id,
@@ -201,17 +197,162 @@ class SubscriptionController extends Controller
                     'plan_name' => $plan->name,
                     'payment_processor' => 'yoco',
                     'yoco_response' => $data,
-                    'calculated_price' => $amount
+                    'calculated_price' => $amount,
+                    'payment_type' => 'card'
                 ])
             ]);
 
-            if ($payment->status === 'completed') {
-                // Update client subscription with proper expiry
+            return $this->handlePaymentResult($payment, $client, $plan);
+
+        } catch (\Exception $e) {
+            Log::error("Subscription card payment failed for client {$client->id}: " . $e->getMessage());
+            return back()->with('error', 'Payment failed: ' . $e->getMessage());
+        }
+    }
+
+    public function processYocoEftPayment(Request $request)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:training_types,id',
+        ]);
+
+        $client = Auth::user();
+        $plan = TrainingType::findOrFail($request->plan_id);
+        
+        // Enhanced duplicate payment check
+        if ($this->hasDuplicateSubscriptionPayment($client, $plan->id)) {
+            $errorMessage = $this->getDuplicateSubscriptionPaymentMessage($client, $plan->id);
+            
+            Log::warning("Duplicate subscription EFT payment attempt prevented", [
+                'client_id' => $client->id,
+                'plan_id' => $plan->id,
+                'message' => $errorMessage
+            ]);
+            
+            return back()->with('error', $errorMessage);
+        }
+        
+        $amount = self::getPriceForUser($client, $plan);
+
+        Log::info("Subscription EFT payment attempt for client {$client->id}, plan {$plan->id}, amount R$amount, status pending");
+
+        try {
+            // Create EFT checkout with Yoco payments API
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('YOCO_TEST_SECRET_KEY'),
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ])->post('https://payments.yoco.com/api/checkouts', [
+                'amount' => intval($amount * 100),
+                'currency' => 'ZAR',
+                'successUrl' => route('subscription.yoco.eft.success', ['plan_id' => $plan->id, 'client_id' => $client->id]),
+                'cancelUrl' => route('subscription.yoco.eft.cancel'),
+                'paymentMethods' => ['eft'],
+                'processingMode' => 'test',
+                'customer' => [
+                    'email' => $client->email,
+                    'name'  => $client->name,
+                ],
+                'metadata' => [
+                    'plan_id' => $plan->id,
+                    'client_id' => $client->id,
+                    'plan_name' => $plan->name,
+                    'user_type' => $client->userType
+                ]
+            ]);
+
+            $data = $response->json();
+            Log::info('Yoco EFT checkout response: ', $data);
+
+            if (!isset($data['redirectUrl'])) {
+                Log::error("Yoco EFT checkout failed - no redirect URL", [
+                    'response' => $data,
+                    'client_id' => $client->id
+                ]);
+                return back()->with('error', 'Failed to create EFT payment link. Please try again.');
+            }
+
+            // Create pending payment record
+            $payment = Payment::create([
+                'transaction_id' => $data['id'] ?? 'pending_' . uniqid(),
+                'client_id' => $client->id,
+                'amount' => $amount,
+                'payment_method' => 'eft',
+                'status' => 'pending',
+                'payable_type' => 'subscription',
+                'payable_id' => $plan->id,
+                'metadata' => json_encode([
+                    'user_type' => $client->userType,
+                    'plan_name' => $plan->name,
+                    'payment_processor' => 'yoco',
+                    'yoco_response' => $data,
+                    'calculated_price' => $amount,
+                    'payment_type' => 'eft',
+                    'checkout_id' => $data['id'],
+                    'redirect_url' => $data['redirectUrl']
+                ])
+            ]);
+
+            Log::info("EFT payment initiated for client {$client->id}, checkout ID: {$data['id']}");
+
+            // Redirect to Yoco EFT payment page
+            return redirect()->away($data['redirectUrl']);
+
+        } catch (\Exception $e) {
+            Log::error("Subscription EFT payment failed for client {$client->id}: " . $e->getMessage());
+            return back()->with('error', 'EFT payment failed: ' . $e->getMessage());
+        }
+    }
+
+    public function handleEftSuccess(Request $request)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:training_types,id',
+            'client_id' => 'required|exists:clients,id',
+            'checkoutId' => 'nullable|string',
+        ]);
+
+        $client = Client::findOrFail($request->client_id);
+        $plan = TrainingType::findOrFail($request->plan_id);
+
+        try {
+            // Find the pending payment
+            $payment = Payment::where('client_id', $client->id)
+                ->where('payable_type', 'subscription')
+                ->where('payable_id', $plan->id)
+                ->where('status', 'pending')
+                ->where('payment_method', 'eft')
+                ->latest()
+                ->first();
+
+            if (!$payment) {
+                Log::error("No pending EFT payment found for client {$client->id}, plan {$plan->id}");
+                return redirect()->route('subscription.form')
+                    ->with('error', 'Payment record not found. Please contact support.');
+            }
+
+            // Verify payment status with Yoco
+            $paymentStatus = $this->verifyYocoEftPayment($payment);
+
+            if ($paymentStatus['status'] === 'completed') {
+                // Update payment status to completed
+                $payment->update([
+                    'status' => 'completed',
+                    'transaction_id' => $paymentStatus['transaction_id'] ?? $payment->transaction_id,
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        [
+                            'processed_at' => now()->toDateTimeString(),
+                            'yoco_verification' => $paymentStatus
+                        ]
+                    ))
+                ]);
+
+                // Update client subscription
                 $client->update([
                     'subscription_type' => strtolower($plan->name),
                     'subscription_paid_at' => now(),
-                    'subscription_expiry' => now()->addQuarter(), // 3 months
-                    'updated_at' => now()
+                    'subscription_expiry' => now()->addQuarter(),
                 ]);
 
                 // Update client course subscriptions
@@ -221,26 +362,183 @@ class SubscriptionController extends Controller
                 try {
                     $client->notify(new PaymentProcessed($payment, 'success'));
                 } catch (\Exception $e) {
-                    Log::error("Failed to send payment notification: " . $e->getMessage());
+                    Log::error("Failed to send EFT payment notification: " . $e->getMessage());
                 }
 
-                Log::info("Subscription payment successful for client {$client->id}, transaction {$payment->transaction_id}");
+                Log::info("EFT subscription payment successful for client {$client->id}, transaction {$payment->transaction_id}");
 
-                // FIX: Redirect directly to success page instead of through route
                 return $this->showSuccessPage($payment);
 
             } else {
-                Log::warning("Subscription payment failed for client {$client->id}");
-                return redirect()->route('subscription.payment.failed', ['payment' => $payment->id])
-                    ->with('error', 'Payment failed. Please try again.');
+                // Payment still pending or failed
+                $payment->update([
+                    'status' => $paymentStatus['status'],
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        [
+                            'verification_attempt' => now()->toDateTimeString(),
+                            'verification_status' => $paymentStatus['status']
+                        ]
+                    ))
+                ]);
+
+                if ($paymentStatus['status'] === 'pending') {
+                    return view('subscription.payment-pending', [
+                        'payment' => $payment,
+                        'client' => $client,
+                        'plan' => $plan,
+                        'pollingUrl' => route('subscription.yoco.eft.status', ['payment' => $payment->id])
+                    ]);
+                } else {
+                    return redirect()->route('subscription.payment.failed', ['payment' => $payment->id])
+                        ->with('error', 'EFT payment verification failed.');
+                }
             }
 
         } catch (\Exception $e) {
-            Log::error("Subscription payment failed for client {$client->id}: " . $e->getMessage());
-            return back()->with('error', 'Payment failed: ' . $e->getMessage());
+            Log::error("EFT success callback error: " . $e->getMessage());
+            return redirect()->route('subscription.form')
+                ->with('error', 'Error processing EFT payment: ' . $e->getMessage());
         }
     }
 
+    private function verifyYocoEftPayment($payment)
+    {
+        try {
+            $metadata = json_decode($payment->metadata, true);
+            $checkoutId = $metadata['checkout_id'] ?? null;
+
+            if (!$checkoutId) {
+                return ['status' => 'failed', 'error' => 'No checkout ID found'];
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('YOCO_TEST_SECRET_KEY'),
+                'Accept'        => 'application/json',
+            ])->get("https://payments.yoco.com/api/checkouts/{$checkoutId}");
+
+            if ($response->successful()) {
+                $data = $response->json();
+                
+                if ($data['status'] === 'completed') {
+                    return [
+                        'status' => 'completed',
+                        'transaction_id' => $data['id'],
+                        'amount' => $data['amount'] / 100,
+                        'currency' => $data['currency'],
+                        'payment_method' => 'eft'
+                    ];
+                } elseif (in_array($data['status'], ['pending', 'processing'])) {
+                    return ['status' => 'pending'];
+                } else {
+                    return ['status' => 'failed'];
+                }
+            }
+
+            return ['status' => 'pending'];
+
+        } catch (\Exception $e) {
+            Log::error("Error verifying Yoco EFT payment: " . $e->getMessage());
+            return ['status' => 'pending', 'error' => $e->getMessage()];
+        }
+    }
+
+    public function checkEftPaymentStatus(Request $request, $paymentId)
+    {
+        $payment = Payment::findOrFail($paymentId);
+        $client = Auth::user();
+
+        // Verify the payment belongs to the authenticated user
+        if ($payment->client_id !== $client->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $verificationResult = $this->verifyYocoEftPayment($payment);
+
+        if ($verificationResult['status'] === 'completed') {
+            // Process successful payment
+            $payment->update(['status' => 'completed']);
+            
+            $client = Client::find($payment->client_id);
+            $plan = TrainingType::find($payment->payable_id);
+            
+            $client->update([
+                'subscription_type' => strtolower($plan->name),
+                'subscription_paid_at' => now(),
+                'subscription_expiry' => now()->addQuarter(),
+            ]);
+
+            $this->updateClientCourseSubscription($client, $plan);
+
+            try {
+                $client->notify(new PaymentProcessed($payment, 'success'));
+            } catch (\Exception $e) {
+                Log::error("Failed to send EFT payment notification: " . $e->getMessage());
+            }
+
+            return response()->json([
+                'status' => 'completed',
+                'redirect' => route('yoco.payment.success', ['payment' => $payment->id])
+            ]);
+
+        } elseif ($verificationResult['status'] === 'failed') {
+            $payment->update(['status' => 'failed']);
+            return response()->json([
+                'status' => 'failed',
+                'redirect' => route('subscription.payment.failed', ['payment' => $payment->id])
+            ]);
+        }
+
+        return response()->json(['status' => 'pending']);
+    }
+
+    public function handleEftCancel(Request $request)
+    {
+        $client = Auth::user();
+        
+        // Find and update any pending EFT payments for this user
+        Payment::where('client_id', $client->id)
+            ->where('status', 'pending')
+            ->where('payment_method', 'eft')
+            ->update(['status' => 'cancelled']);
+
+        Log::info("EFT payment cancelled by client {$client->id}");
+
+        return redirect()->route('subscription.form')
+            ->with('error', 'EFT payment was cancelled. You can try again anytime.');
+    }
+
+    private function handlePaymentResult($payment, $client, $plan)
+    {
+        if ($payment->status === 'completed') {
+            // Update client subscription
+            $client->update([
+                'subscription_type' => strtolower($plan->name),
+                'subscription_paid_at' => now(),
+                'subscription_expiry' => now()->addQuarter(),
+            ]);
+
+            // Update client course subscriptions
+            $this->updateClientCourseSubscription($client, $plan);
+
+            // Send notification
+            try {
+                $client->notify(new PaymentProcessed($payment, 'success'));
+            } catch (\Exception $e) {
+                Log::error("Failed to send payment notification: " . $e->getMessage());
+            }
+
+            Log::info("Subscription payment successful for client {$client->id}, transaction {$payment->transaction_id}");
+
+            return $this->showSuccessPage($payment);
+
+        } else {
+            Log::warning("Subscription payment failed for client {$client->id}");
+            return redirect()->route('subscription.payment.failed', ['payment' => $payment->id])
+                ->with('error', 'Payment failed. Please try again.');
+        }
+    }
+    
     private function hasDuplicatePayment($client, $plan)
     {
         // For subscription plans (Premium), check active subscription

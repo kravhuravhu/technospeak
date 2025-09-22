@@ -35,7 +35,6 @@ class CertificateIssuedNotification extends Notification
                 'userFullname' => $this->userFullname,
                 'courseName' => $this->courseName,
                 'certificateUrl' => $this->certificateUrl
-            ])
-            ->bcc(config('mail.bcc'));
+            ]);
     }
 }

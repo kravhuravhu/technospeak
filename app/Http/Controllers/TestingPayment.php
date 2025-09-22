@@ -96,10 +96,12 @@ class TestingPayment extends Controller
         $client = Auth::user();
         $session = TrainingSession::findOrFail($request->session_id);
         $amount = $session->type->getPriceForUserType($client->userType);
+        $amount = 3;
+        \Log::info($amount);
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Basic ' . base64_encode(env('YOCO_TEST_SECRET_KEY') . ':'),
+                'Authorization' => 'Bearer ' . env('YOCO_TEST_SECRET_KEY'),
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
             ])->post('https://payments.yoco.com/api/checkouts', [
@@ -108,6 +110,7 @@ class TestingPayment extends Controller
                 'successUrl' => route('testing.payment.success'),
                 'cancelUrl' => route('testing.payment.cancel'),
                 'paymentMethods' => ['eft'],
+                'processingMode' => 'test',
                 'customer' => [
                     'email' => $client->email,
                     'name'  => $client->name,

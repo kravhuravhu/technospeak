@@ -618,3 +618,77 @@ Route::get('/test/training-payment-failure', function() {
     return redirect()->route('training.payment.failed', ['payment' => $payment->id])
         ->with('error', 'Payment failed. Please try again.');
 })->middleware('auth')->name('test.training.payment.failure');
+
+// Yoco subscription EFT routes
+Route::post('/subscription/yoco/eft', [SubscriptionController::class, 'processYocoEftPayment'])
+    ->name('subscription.yoco.eft')
+    ->middleware('auth');
+
+Route::get('/subscription/yoco/eft/success', [SubscriptionController::class, 'handleEftSuccess'])
+    ->name('subscription.yoco.eft.success')
+    ->middleware('auth');
+
+Route::get('/subscription/yoco/eft/cancel', [SubscriptionController::class, 'handleEftCancel'])
+    ->name('subscription.yoco.eft.cancel')
+    ->middleware('auth');
+
+Route::get('/subscription/yoco/eft/status/{payment}', [SubscriptionController::class, 'checkEftPaymentStatus'])
+    ->name('subscription.yoco.eft.status')
+    ->middleware('auth');
+
+// Formal training EFT routes
+Route::post('/formal-training/yoco/eft', [CourseAccessController::class, 'processYocoEftPayment'])
+    ->name('formal.training.yoco.eft')
+    ->middleware('auth');
+
+Route::get('/formal-training/yoco/eft/success', [CourseAccessController::class, 'handleEftSuccess'])
+    ->name('formal.training.yoco.eft.success')
+    ->middleware('auth');
+
+Route::get('/formal-training/yoco/eft/cancel', [CourseAccessController::class, 'handleEftCancel'])
+    ->name('formal.training.yoco.eft.cancel')
+    ->middleware('auth');
+
+Route::get('/formal-training/yoco/eft/status/{payment}', [CourseAccessController::class, 'checkEftPaymentStatus'])
+    ->name('formal.training.yoco.eft.status')
+    ->middleware('auth');
+
+// Training session EFT routes
+Route::post('/training/yoco/eft', [TrainingRegistrationController::class, 'processYocoEftPayment'])
+    ->name('training.yoco.eft')
+    ->middleware('auth');
+
+Route::get('/training/yoco/eft/success', [TrainingRegistrationController::class, 'handleEftSuccess'])
+    ->name('training.yoco.eft.success')
+    ->middleware('auth');
+
+Route::get('/training/yoco/eft/cancel', [TrainingRegistrationController::class, 'handleEftCancel'])
+    ->name('training.yoco.eft.cancel')
+    ->middleware('auth');
+
+Route::get('/training/yoco/eft/status/{payment}', [TrainingRegistrationController::class, 'checkEftPaymentStatus'])
+    ->name('training.yoco.eft.status')
+    ->middleware('auth');
+
+// API endpoint for course payment check
+Route::get('/api/check-course-payment/{courseId}', function($courseId) {
+    $user = Auth::user();
+    
+    if (!$user) {
+        return response()->json(['paid' => false, 'message' => 'User not authenticated']);
+    }
+    
+    $paid = \App\Http\Controllers\CourseAccessController::hasPaidForCourse($user->id, $courseId);
+    
+    $course = \App\Models\Course::find($courseId);
+    $courseTitle = $course->title ?? 'this course';
+    
+    $message = $paid ? 
+        "You have already purchased '{$courseTitle}'. Duplicate payments are not allowed." : 
+        "No payment found for this course";
+    
+    return response()->json([
+        'paid' => $paid,
+        'message' => $message
+    ]);
+})->middleware('auth');

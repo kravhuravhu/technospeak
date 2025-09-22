@@ -370,4 +370,326 @@ class TrainingRegistrationController extends Controller
                 ->with('error', 'Payment failed. Please try again.');
         }
     }
+
+    public function processYocoEftPayment(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|exists:training_sessions,id',
+            'phone' => 'nullable|string',
+        ]);
+
+        $client = Auth::user();
+        $session = TrainingSession::with('type')->findOrFail($request->session_id);
+
+        // Check if session is in the past
+        if ($session->scheduled_for < now()) {
+            return back()->with('error', 'This session is no longer available for registration.');
+        }
+
+        // Check if session is full
+        if ($session->isFull()) {
+            return back()->with('error', 'This session is already full.');
+        }
+
+        // Check for duplicate payment
+        if ($this->hasDuplicateTrainingPayment($client, $session->id)) {
+            $errorMessage = $this->getDuplicateTrainingPaymentMessage($session->id);
+            
+            Log::warning("Duplicate training EFT payment attempt prevented", [
+                'client_id' => $client->id,
+                'session_id' => $session->id,
+                'message' => $errorMessage
+            ]);
+            
+            return back()->with('error', $errorMessage);
+        }
+
+        $amount = $session->type->getPriceForUserType($client->userType);
+
+        Log::info("Training EFT payment attempt for client {$client->id}, session {$session->id}, amount R$amount, status pending");
+
+        try {
+            // Create EFT checkout with Yoco payments API
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('YOCO_TEST_SECRET_KEY'),
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ])->post('https://payments.yoco.com/api/checkouts', [
+                'amount' => intval($amount * 100),
+                'currency' => 'ZAR',
+                'successUrl' => route('training.yoco.eft.success', ['session_id' => $session->id, 'client_id' => $client->id]),
+                'cancelUrl' => route('training.yoco.eft.cancel'),
+                'paymentMethods' => ['eft'],
+                'processingMode' => 'test',
+                'customer' => [
+                    'email' => $client->email,
+                    'name'  => $client->name,
+                ],
+                'metadata' => [
+                    'session_id' => $session->id,
+                    'client_id' => $client->id,
+                    'session_title' => $session->title,
+                    'user_type' => $client->userType
+                ]
+            ]);
+
+            $data = $response->json();
+            Log::info('Yoco EFT checkout response for training: ', $data);
+
+            if (!isset($data['redirectUrl'])) {
+                Log::error("Yoco EFT checkout failed - no redirect URL", [
+                    'response' => $data,
+                    'client_id' => $client->id
+                ]);
+                return back()->with('error', 'Failed to create EFT payment link. Please try again.');
+            }
+
+            // Create pending payment record
+            $payment = Payment::create([
+                'transaction_id' => $data['id'] ?? 'pending_' . uniqid(),
+                'client_id' => $client->id,
+                'amount' => $amount,
+                'payment_method' => 'eft',
+                'status' => 'pending',
+                'payable_type' => 'training',
+                'payable_id' => $session->id,
+                'metadata' => json_encode([
+                    'user_type' => $client->userType,
+                    'session_title' => $session->title,
+                    'payment_processor' => 'yoco',
+                    'yoco_response' => $data,
+                    'calculated_price' => $amount,
+                    'payment_type' => 'eft',
+                    'checkout_id' => $data['id'],
+                    'redirect_url' => $data['redirectUrl'],
+                    'phone' => $request->phone
+                ])
+            ]);
+
+            Log::info("EFT payment initiated for training session {$session->id}, client {$client->id}, checkout ID: {$data['id']}");
+
+            // Redirect to Yoco EFT payment page
+            return redirect()->away($data['redirectUrl']);
+
+        } catch (\Exception $e) {
+            Log::error("Training EFT payment failed for client {$client->id}: " . $e->getMessage());
+            return back()->with('error', 'EFT payment failed: ' . $e->getMessage());
+        }
+    }
+
+    public function handleEftSuccess(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|exists:training_sessions,id',
+            'client_id' => 'required|exists:clients,id',
+            'checkoutId' => 'nullable|string',
+        ]);
+
+        $client = Client::findOrFail($request->client_id);
+        $session = TrainingSession::findOrFail($request->session_id);
+
+        try {
+            // Find the pending payment
+            $payment = Payment::where('client_id', $client->id)
+                ->where('payable_type', 'training')
+                ->where('payable_id', $session->id)
+                ->where('status', 'pending')
+                ->where('payment_method', 'eft')
+                ->latest()
+                ->first();
+
+            if (!$payment) {
+                Log::error("No pending EFT payment found for client {$client->id}, session {$session->id}");
+                return redirect()->route('training.register.form', $session)
+                    ->with('error', 'Payment record not found. Please contact support.');
+            }
+
+            // Verify payment status with Yoco
+            $paymentStatus = $this->verifyYocoEftPayment($payment);
+
+            if ($paymentStatus['status'] === 'completed') {
+                // Update payment status to completed
+                $payment->update([
+                    'status' => 'completed',
+                    'transaction_id' => $paymentStatus['transaction_id'] ?? $payment->transaction_id,
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        [
+                            'processed_at' => now()->toDateTimeString(),
+                            'yoco_verification' => $paymentStatus
+                        ]
+                    ))
+                ]);
+
+                // Update training registration
+                $metadata = json_decode($payment->metadata, true);
+                $registration = TrainingRegistration::updateOrCreate(
+                    [
+                        'session_id' => $session->id,
+                        'client_id' => $client->id,
+                    ],
+                    [
+                        'phone' => $metadata['phone'] ?? null,
+                        'payment_status' => 'completed',
+                        'payment_id' => $payment->id,
+                    ]
+                );
+
+                // Send notification
+                try {
+                    $client->notify(new PaymentProcessed($payment, 'success'));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send EFT payment notification: " . $e->getMessage());
+                }
+
+                Log::info("EFT training payment successful for client {$client->id}, transaction {$payment->transaction_id}");
+
+                return redirect()->route('yoco.training.success', ['payment' => $payment->id])
+                    ->with('success', 'EFT payment successful! You are now registered for the session.');
+
+            } else {
+                // Payment still pending or failed
+                $payment->update([
+                    'status' => $paymentStatus['status'],
+                    'metadata' => json_encode(array_merge(
+                        json_decode($payment->metadata, true) ?? [],
+                        [
+                            'verification_attempt' => now()->toDateTimeString(),
+                            'verification_status' => $paymentStatus['status']
+                        ]
+                    ))
+                ]);
+
+                if ($paymentStatus['status'] === 'pending') {
+                    return view('training.payment-pending', [
+                        'payment' => $payment,
+                        'client' => $client,
+                        'session' => $session,
+                        'pollingUrl' => route('training.yoco.eft.status', ['payment' => $payment->id])
+                    ]);
+                } else {
+                    return redirect()->route('training.payment.failed', ['payment' => $payment->id])
+                        ->with('error', 'EFT payment verification failed.');
+                }
+            }
+
+        } catch (\Exception $e) {
+            Log::error("EFT success callback error for training: " . $e->getMessage());
+            return redirect()->route('training.register.form', $session)
+                ->with('error', 'Error processing EFT payment: ' . $e->getMessage());
+        }
+    }
+
+    public function checkEftPaymentStatus(Request $request, $paymentId)
+    {
+        $payment = Payment::findOrFail($paymentId);
+        $client = Auth::user();
+
+        // Verify the payment belongs to the authenticated user
+        if ($payment->client_id !== $client->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $verificationResult = $this->verifyYocoEftPayment($payment);
+
+        if ($verificationResult['status'] === 'completed') {
+            // Process successful payment
+            $payment->update(['status' => 'completed']);
+            
+            $client = Client::find($payment->client_id);
+            $session = TrainingSession::find($payment->payable_id);
+            
+            // Update training registration
+            $metadata = json_decode($payment->metadata, true);
+            TrainingRegistration::updateOrCreate(
+                [
+                    'session_id' => $session->id,
+                    'client_id' => $client->id,
+                ],
+                [
+                    'phone' => $metadata['phone'] ?? null,
+                    'payment_status' => 'completed',
+                    'payment_id' => $payment->id,
+                ]
+            );
+
+            try {
+                $client->notify(new PaymentProcessed($payment, 'success'));
+            } catch (\Exception $e) {
+                Log::error("Failed to send EFT payment notification: " . $e->getMessage());
+            }
+
+            return response()->json([
+                'status' => 'completed',
+                'redirect' => route('yoco.training.success', ['payment' => $payment->id])
+            ]);
+
+        } elseif ($verificationResult['status'] === 'failed') {
+            $payment->update(['status' => 'failed']);
+            return response()->json([
+                'status' => 'failed',
+                'redirect' => route('training.payment.failed', ['payment' => $payment->id])
+            ]);
+        }
+
+        return response()->json(['status' => 'pending']);
+    }
+
+    public function handleEftCancel(Request $request)
+    {
+        $client = Auth::user();
+        
+        // Find and update any pending EFT payments for this user
+        Payment::where('client_id', $client->id)
+            ->where('status', 'pending')
+            ->where('payment_method', 'eft')
+            ->where('payable_type', 'training')
+            ->update(['status' => 'cancelled']);
+
+        Log::info("EFT payment cancelled by client {$client->id} for training");
+
+        return redirect()->route('training.register')
+            ->with('error', 'EFT payment was cancelled. You can try again anytime.');
+    }
+
+    private function verifyYocoEftPayment($payment)
+    {
+        try {
+            $metadata = json_decode($payment->metadata, true);
+            $checkoutId = $metadata['checkout_id'] ?? null;
+
+            if (!$checkoutId) {
+                return ['status' => 'failed', 'error' => 'No checkout ID found'];
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('YOCO_TEST_SECRET_KEY'),
+                'Accept'        => 'application/json',
+            ])->get("https://payments.yoco.com/api/checkouts/{$checkoutId}");
+
+            if ($response->successful()) {
+                $data = $response->json();
+                
+                if ($data['status'] === 'completed') {
+                    return [
+                        'status' => 'completed',
+                        'transaction_id' => $data['id'],
+                        'amount' => $data['amount'] / 100,
+                        'currency' => $data['currency'],
+                        'payment_method' => 'eft'
+                    ];
+                } elseif (in_array($data['status'], ['pending', 'processing'])) {
+                    return ['status' => 'pending'];
+                } else {
+                    return ['status' => 'failed'];
+                }
+            }
+
+            return ['status' => 'pending'];
+
+        } catch (\Exception $e) {
+            Log::error("Error verifying Yoco EFT payment: " . $e->getMessage());
+            return ['status' => 'pending', 'error' => $e->getMessage()];
+        }
+    }
 }

@@ -942,10 +942,9 @@
                             </div>
                             <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
                             <ul>
-                                <li>All clickbait-style videos</li>
+                                <li>All Tips&Tricks videos</li>
                                 <li>Downloadable resources & cheat sheets</li>
-                                <li>Monthly curated tech newsletters</li>
-                                <li>Student and business pricing options</li>
+                                <li>Monthly curated tech newsletters on your favourite topics</li>
                             </ul>
                             <div class="modal-actions">
                                 <button class="btn-secondary" onclick="closeUpgradeModal()">Maybe Later</button>
@@ -1359,21 +1358,30 @@
                         <section class="setting-block">
                             <h2 class="setting-title">Delete Account</h2>
                             <p class="setting-desc">
-                            Once your account is deleted, all of its resources and data will be permanently deleted.
+                                Once your account is deleted, all of its resources and data will be permanently deleted.
                             </p>
 
-                            <form method="POST" action="{{ route('profile.destroy') }}">
-                            @csrf
-                            @method('DELETE')
-
-                            <div class="form-group">
-                                <label for="delete_password">Password</label>
-                                <input id="delete_password" name="password" type="password" placeholder="Enter your password" />
-                                @error('password', 'userDeletion')<div class="error-msg">{{ $message }}</div>@enderror
-                            </div>
-
-                            <button class="delete-btn" type="submit">Delete Account</button>
-                            </form>
+                            @if (!auth()->user()->google_id)
+                                <!-- Password-based deletion -->
+                                <form method="POST" action="{{ route('profile.destroy') }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="form-group">
+                                        <label for="delete_password">Password</label>
+                                        <input id="delete_password" name="password" type="password" placeholder="Enter your password" />
+                                        @error('password', 'userDeletion')<div class="error-msg">{{ $message }}</div>@enderror
+                                    </div>
+                                    <button class="delete-btn" type="submit">Delete Account</button>
+                                </form>
+                            @else
+                                <!-- Google re-authentication -->
+                                <form>
+                                    @csrf
+                                    <a href="{{ route('google.reauth') }}" class="delete-btn">
+                                        Verify W/ Google to Delete account
+                                    </a>
+                                </form>
+                            @endif
                         </section>
                     </div>
                 </div>
@@ -1843,7 +1851,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- success unenrollment -->
-         <script>
+        <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const params = new URLSearchParams(window.location.search);
                 const wasUnenrolled = params.get('unenrolled');

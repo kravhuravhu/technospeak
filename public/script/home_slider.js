@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevBtn = document.querySelector(".arrow-btn-prev");
     const nextBtn = document.querySelector(".arrow-btn-next");
 
-    // Create clones for seamless looping
     const firstCardClone = cards[0].cloneNode(true);
     const lastCardClone = cards[cards.length - 1].cloneNode(true);
 
@@ -131,23 +130,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let currentIndex = 1;
     let isAnimating = false;
+    let autoSlideInterval;
 
     function updateView(animate = true) {
-        if (isAnimating) return;
+        if (isAnimating && animate) return;
 
         const card = allCards[0];
         const cardWidth = card.offsetWidth;
         const cardMargin = window.innerWidth <= 768 ? 20 : 55;
         const totalWidth = cardWidth + cardMargin * 2;
 
-        const translatePercentage = window.innerWidth <= 768 ? 50 : 47.65;
+        const translatePercentage = window.innerWidth <= 768 ? 50 : 49;
         const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 20px))`;
 
         if (animate) {
             isAnimating = true;
-            cardsContainer.style.transition = 'transform 0.5s ease';
+            cardsContainer.style.transition = "transform 0.8s ease";
         } else {
-            cardsContainer.style.transition = 'none';
+            cardsContainer.style.transition = "none";
         }
 
         cardsContainer.style.transform = transformValue;
@@ -158,22 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (index === currentIndex + 1) card.classList.add("next");
             else if (index === currentIndex) card.classList.add("active");
         });
-
-        if (animate) {
-            setTimeout(() => {
-                isAnimating = false;
-                // Handle seamless looping
-                if (currentIndex === 0) {
-                    cardsContainer.style.transition = 'none';
-                    currentIndex = totalCards - 2;
-                    updateView(false);
-                } else if (currentIndex === totalCards - 1) {
-                    cardsContainer.style.transition = 'none';
-                    currentIndex = 1;
-                    updateView(false);
-                }
-            }, 500);
-        }
     }
 
     function nextSlide() {
@@ -188,42 +172,61 @@ document.addEventListener("DOMContentLoaded", function () {
         updateView(true);
     }
 
-    // Handle window resize
-    window.addEventListener('resize', () => {
+    cardsContainer.addEventListener("transitionend", () => {
+        if (currentIndex === 0) {
+            cardsContainer.style.transition = "none";
+            currentIndex = totalCards - 2;
+            updateView(false);
+        } else if (currentIndex === totalCards - 1) {
+            cardsContainer.style.transition = "none";
+            currentIndex = 1;
+            updateView(false);
+        }
+        isAnimating = false;
+    });
+
+    window.addEventListener("resize", () => {
         updateView(false);
     });
 
     prevBtn.addEventListener("click", () => {
         prevSlide();
+        resetAutoSlide();
     });
-
     nextBtn.addEventListener("click", () => {
         nextSlide();
+        resetAutoSlide();
     });
 
     allCards.forEach((card, index) => {
         card.addEventListener("click", () => {
-            if (index === currentIndex - 1) {
-                prevSlide();
-            } else if (index === currentIndex + 1) {
-                nextSlide();
-            }
+            if (index === currentIndex - 1) prevSlide();
+            else if (index === currentIndex + 1) nextSlide();
+            resetAutoSlide();
         });
     });
 
-    // Initialize
-    updateView(false);
-
-    // Add keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            prevSlide();
-        } else if (e.key === 'ArrowRight') {
-            nextSlide();
-        }
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") prevSlide();
+        else if (e.key === "ArrowRight") nextSlide();
+        resetAutoSlide();
     });
-});
 
+    // auto-slide
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+            nextSlide();
+        }, 4000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    updateView(false);
+    startAutoSlide();
+});
 
 // Service Categories section
 const services = {

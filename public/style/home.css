@@ -667,7 +667,7 @@ body {
 
 /* landing home section */
 .landing_container {
-    height: 70vh;
+    /* height: 70vh; */
     width: 100%;
     position: relative;
     background-position: center;
@@ -676,15 +676,16 @@ body {
     background-attachment: fixed;
     background-position: bottom;
     & > .main_container {
-        background-color: rgba(0, 0, 0, .7);
+        background-color: rgba(0, 0, 0, .5);
         height: 100%;
         width: 100%;
         display: flex;
         align-items: center;
+        padding: 100px 0;
         & > .slider_container {
             width: 80%;
             margin: 0 auto;
-            height: 500px;
+            /* height: 500px; */
             position: relative;
             & > .still_block {
                 width: 50%;
@@ -713,7 +714,7 @@ body {
                             width: 100%;
                             padding: 0 10px;
                             & > h3 {
-                                font-size: 4.5rem;
+                                font-size: 4rem;
                                 font-family: 'Roboto', sans-serif;
                                 color: #cccccc;
                                 display: inline-block;
@@ -805,9 +806,8 @@ body {
     position: relative;
     background: linear-gradient(to bottom, #f9f9f9 0%, #ffffff 100%);
     padding: 40px 0;
-    
     & > .main_container {
-        height: 100%;
+        /* height: 100%; */
         width: 85%; 
         display: flex;
         flex-direction: column;
@@ -846,13 +846,13 @@ body {
         & > .main_cont {
             display: flex;
             flex-direction: row;
-            height: 700px;
+            /* height: 700px; */
             width: 100%;
             align-items: center;
             
             & > .container {
                 width: 70%;
-                height: 100%;
+                /* height: 100%; */
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -865,17 +865,19 @@ body {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    
+                    padding: 30px 0;
+                    overflow: hidden;
                     & > .cards {
                         display: flex;
                         transition: transform 0.5s ease;
                         align-items: center;
                         position: relative;
                         padding: 20px 0;
-                        
+                        will-change: transform;
                         & > .card {
                             width: 350px;
-                            height: 600px;
+                            flex: 0 0 auto;
+                            /* height: 600px; */
                             margin: 0 55px;
                             background-color: #ffffff;
                             border-radius: 30px;
@@ -894,8 +896,8 @@ body {
                             }
                             
                             &.active {
-                                height: 650px;
-                                transform: scale(1.05);
+                                /* height: 650px; */
+                                transform: scaleX(1.1) scaleY(1.15);
                                 z-index: 2;
                                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
                                 
@@ -959,6 +961,21 @@ body {
                                     color: #555;
                                     text-align: center;
                                     font-family: 'Roboto', sans-serif;
+                                    &.list-ord {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        margin: 2px 7px;
+                                        text-align: center;
+                                        font-size: .9em;
+                                        & > span {
+                                            margin: 2px 7px;
+                                            & > i {
+                                                color: var(--darkBlue-color);
+                                                font-size: .9em;
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 & > ul {
@@ -1094,12 +1111,6 @@ body {
                                 }
                                 }
                         }
-
-                        /* Infinite carousel clone cards */
-                        .clone-card {
-                                visibility: hidden;
-                                pointer-events: none;
-                        }
                     }
                 }      
             }
@@ -1164,32 +1175,24 @@ body {
 /* Responsive adjustments */
 @media (max-width: 1440px) {
     .categories_cont > .main_container > .main_cont {
-        height: 650px;
-        
+        /* height: 650px;
+         */
         & > .container > .cards-wrapper > .cards > .card {
             width: 320px;
-            height: 580px;
+            /* height: 580px; */
             margin: 0 45px;
-            
-            &.active {
-                height: 620px;
-            }
         }
     }
 }
 
 @media (max-width: 1200px) {
     .categories_cont > .main_container > .main_cont {
-        height: 600px;
+        /* height: 600px; */
         
         & > .container > .cards-wrapper > .cards > .card {
             width: 300px;
-            height: 550px;
+            /* height: 550px; */
             margin: 0 35px;
-            
-            &.active {
-                height: 590px;
-            }
             
             & > .cr-img > img {
                 height: 100px;
@@ -1205,7 +1208,7 @@ body {
 
 @media (max-width: 992px) {
     .categories_cont > .main_container > .main_cont {
-        height: 550px;
+        /* height: 550px; */
         
         & > .container {
             width: 80%;
@@ -1213,12 +1216,8 @@ body {
         
         & > .container > .cards-wrapper > .cards > .card {
             width: 280px;
-            height: 520px;
+            /* height: 520px; */
             margin: 0 25px;
-            
-            &.active {
-                height: 560px;
-            }
             
             & > .cr-img > img {
                 height: 90px;
@@ -1259,19 +1258,19 @@ body {
             }
             
             & > .main_cont {
-                height: 500px;
+                /* height: 500px; */
                 
                 & > .container {
                     width: 100%;
                     
                     & > .cards-wrapper > .cards > .card {
                         width: 260px;
-                        height: 500px;
+                        /* height: 500px; */
                         margin: 0 20px;
                         padding: 20px 15px;
                         
                         &.active {
-                            height: 540px;
+                            /* height: 540px; */
                             
                             & > .cr-img > img {
                                 height: 100px;
@@ -1321,17 +1320,13 @@ body {
 /* Hide card image and shrink content for small screens */
 @media (max-width: 576px) {
     .categories_cont > .main_container > .main_cont {
-        height: 420px;
+        /* height: 420px; */
 
         & > .container > .cards-wrapper > .cards > .card {
             width: 200px;
-            height: 320px;
+            /* height: 320px; */
             margin: 0 8px;
             padding: 10px 8px;
-
-            &.active {
-                height: 340px;
-            }
 
             /* Hide the image for small screens */
             & > .cr-img {
@@ -2409,14 +2404,16 @@ body {
                         & > .field {
                             width: 100%;
                             height: fit-content;
+                            display: flex;
                             & > input[type="text"],
+                            & > input[type="email"],
                             & > textarea {
                                 height: 60px;
                                 width: 100%;
                                 position: relative;
                                 background-color: #ededed;
                                 color: #000;
-                                border-radius: 10px;
+                                border-radius: 35px;
                                 border: none;
                                 padding: 25px 20px;
                                 font-family: "Roboto", sans-serif;
@@ -2435,14 +2432,18 @@ body {
                             & > textarea {
                                 height: 100px;
                             }
-                            & > a {
+                            & > button {
                                 padding: 20px 35px;
                                 background-color: #38b6ff;
                                 color: #ededed;
                                 text-decoration: none;
                                 font-size: 1.1em;
                                 border-radius: 50px;
+                                border: none;
                                 transition: all .3s ease-in-out;
+                                margin: 0 auto;
+                                text-align: center;
+                                justify-self: center;
                                 &:hover {
                                     background-color: #114672e0;
                                 }
@@ -2569,6 +2570,26 @@ body {
             & > .slider_container {
                 & > .still_block {
                     width: 100%;
+                    & > .main_block {
+                        & > .slider {
+                            & > .header {
+                                & > h3 {
+                                    font-size: 3rem;
+                                }
+                            }
+                            & > .dscpt {
+                                & > p {
+                                    font-size: 1.1rem;
+                                }
+                            }
+                            & > .cta {
+                                padding: 0;
+                                & > a {
+                                    font-size: 1rem;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -2729,7 +2750,7 @@ body {
                                 margin: 10px 0;
                                 & > h3,
                                 & > p {
-                                    font-size: 3.5em;
+                                    font-size: 2.6em;
                                     text-align: center;
                                 }
                                 & > p,
@@ -2771,10 +2792,10 @@ body {
                         & > .cards {
                             & > .card {
                                 width: 280px;
-                                height: 450px;
+                                /* height: 450px; */
                                 margin: 0 20px;
                                 &.active {
-                                    height: 500px;
+                                    /* height: 500px; */
                                     & > .cr-img {
                                         height: 200px;
                                         width: 200px;
@@ -3217,16 +3238,16 @@ body {
                 }
             }
              & > .main_cont {
-                height: 550px;
+                /* height: 550px; */
                 & > .container {
                     padding: 10px 5px;
                     & > .cards-wrapper {
                         & > .cards {
                             & > .card {
                                 width: 230px;
-                                height: 370px;
+                                /* height: 370px; */
                                 &.active {
-                                    height: 400px;
+                                    /* height: 400px; */
                                     & > .cr-img {
                                         height: 150px;
                                         width: 150px;

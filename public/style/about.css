@@ -574,12 +574,40 @@ body {
     }
 
     @media (max-width: 480px) {
+        .coach-swiper-container {
+            width: 100%;
+            padding: 20px;
+        }
         .techCoach_content {
             padding: 20px;
             border-radius: 15px;
+            & .swiper-nav-btn {
+                top: -550px;
+                margin: auto;
+                &:nth-child(2) {
+                    left: 105%;
+                }
+                &:nth-child(1) {
+                    left: -12%;
+                }
+            }
         }
         .coach-intro h2 {
             font-size: 1.5rem;
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            & > .feature-icon {
+                margin: 0 auto;
+            }
+            & > .feature-content {
+                text-align: center;
+                margin: 0 auto;
+            }
         }
     }
 }

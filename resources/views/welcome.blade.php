@@ -180,11 +180,9 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>Access our free clickbait videos on social media. Ask questions in comments and get brief answers with links to full details on our website.</p>
-                                        <ul>
-                                            <li>Free access to social media content</li>
-                                            <li>Brief answers to your questions</li>
-                                            <li>Links to detailed explanations</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Free access to social media content</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Brief answers to your questions</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Links to detailed explanations</p>
                                     </div>
                                     <div class="plan-button">
                                         <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Sign up Free</a>
@@ -204,12 +202,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
-                                        <ul>
-                                            <li>All clickbait-style videos</li>
-                                            <li>Downloadable resources & cheat sheets</li>
-                                            <li>Monthly curated tech newsletters</li>
-                                            <li>Student and business pricing options</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>All clickbait-style videos</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Downloadable resources & cheat sheets</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Monthly curated tech newsletters</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Student and business pricing options</p>
                                     </div>
                                     <div class="plan-button">
                                         @if(Auth::check())
@@ -233,12 +229,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>Comprehensive 40-hour training programs in End-User Computing and web development for all skill levels.</p>
-                                        <ul>
-                                            <li>Structured 8-hour daily sessions</li>
-                                            <li>Tailored to students & professionals</li>
-                                            <li>Portfolio development support</li>
-                                            <li>Partnership opportunities</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Structured 8-hour daily sessions</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Tailored to students & professionals</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Portfolio development support</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Partnership opportunities</p>
                                     </div>
                                     <div class="plan-button">
                                         <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
@@ -258,12 +252,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>One-on-one sessions with expert tutors for personalized attention and focused learning.</p>
-                                        <ul>
-                                            <li>Submit requests in advance</li>
-                                            <li>Video call or chat sessions</li>
-                                            <li>Flexible scheduling</li>
-                                            <li>Additional hours available</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Submit requests in advance</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Video call or chat sessions</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Flexible scheduling</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Additional hours available</p>
                                     </div>
                                     <div class="plan-button">
                                         <a href="#categories_cont" id="openPersonalGuideModal">Get Guide</a>
@@ -283,12 +275,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>We provide hands-on support by completing technical tasks for you—ranging from coding and automation to system configurations and troubleshooting etc.</p>
-                                        <ul>
-                                            <li>Coding & web development help</li>
-                                            <li>System configuration support</li>
-                                            <li>Direct task completion</li>
-                                            <li>Student and business rates</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Coding & web development help</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>System configuration support</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Direct task completion</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>>Student and business rates</p>
                                     </div>
                                     <div class="plan-button">
                                         <a href="#categories_cont" id="openTaskAssistanceModal">Get Assistance</a>
@@ -321,12 +311,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>Interactive group sessions where you can ask questions and get immediate expert answers.</p>
-                                        <ul>
-                                            <li>Live Q&A with experts</li>
-                                            <li>Submit questions via chat</li>
-                                            <li>Various tech topics covered</li>
-                                            <li>Different pricing for students/business</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Live Q&A with experts</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Submit questions via chat</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Various tech topics covered</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Different pricing for students/business</p>
                                     </div>
                                         <div class="plan-button">
                                         @if(Auth::check())
@@ -360,12 +348,10 @@
                                     </div>
                                     <div class="st_dscrpt">
                                         <p>Focused sessions addressing comments and questions from our video content.</p>
-                                        <ul>
-                                            <li>Answers to video comments</li>
-                                            <li>Programming & cybersecurity focus</li>
-                                            <li>Interactive skill-building</li>
-                                            <li>Live response to questions</li>
-                                        </ul>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Answers to video comments</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Programming & cybersecurity focus</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Interactive skill-building</p>
+                                        <p class="list-ord"><span><i class="fa-solid fa-circle-check"></i></span>Live response to questions</p>
                                     </div>
                                     <div class="plan-button">
                                         @if(Auth::check())
@@ -690,14 +676,12 @@
                 </div>
                 <div class="form_container">
                     <div class="form"> 
-                        <form action=" " method="POST">
+                        <form action="{{ route('contact.message.send') }}" method="POST">
                             @csrf
                             <div class="block">
-                                <div class="prgrph">
-                                    <p>Full Names:</p>
-                                </div>
+                                <div class="prgrph"><p>Full Names:</p></div>
                                 <div class="field">
-                                    <input type="text" name="uname" placeholder="Enter name here.."/>
+                                    <input type="text" name="contact_full_name" placeholder="Enter name here..." required />
                                 </div>
                             </div>
                             <div class="block">
@@ -705,20 +689,18 @@
                                     <p>Email Address:</p>
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="email" placeholder="Enter email here.."/>
+                                    <input type="email" name="contact_email" placeholder="Enter email here..." required />
                                 </div>
                             </div>
                             <div class="block">
-                                <div class="prgrph">
-                                    <p>Message:</p>
-                                </div>
+                                <div class="prgrph"><p>Message:</p></div>
                                 <div class="field">
-                                    <textarea name="message" placeholder="Enter your message.."></textarea>
+                                    <textarea name="contact_message" placeholder="Enter your message..." required></textarea>
                                 </div>
                             </div>
                             <div class="block">
                                 <div class="field">
-                                    <a href="">Submit</a>
+                                    <button type="submit">Send Message</button>
                                 </div>
                             </div>
                         </form>

@@ -2835,6 +2835,7 @@ section.bar-lt-rt {
                 font-size: 1em;
                 cursor: pointer;
                 border: none;
+                text-decoration: none;
                 &.save-btn {
                   background-color: #38b6ff;
                   color: white;

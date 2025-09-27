@@ -34,7 +34,9 @@ use App\Models\CourseResource;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestingPayment;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\GoogleReauthController;
 use App\Http\Controllers\Auth\LinkedInAuthController;
+use App\Http\Controllers\ContactController;
 
 // Public routes
 Route::get('/', [
@@ -76,6 +78,17 @@ Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
+// google reauth
+Route::get('/google/reauth', [GoogleReauthController::class, 'redirect'])
+    ->name('google.reauth');
+
+Route::get('/google/reauth/callback', [GoogleReauthController::class, 'callback'])
+    ->name('google.reauth.callback');
+
+Route::get('/profile/confirm-delete_google', function () {
+    return view('profile.confirm_delete_google');
+})->name('profile.confirm-delete_google')->middleware('auth');
+
 // register through Linkedin
 Route::get('/auth/linkedin', [LinkedInAuthController::class, 'redirect'])->name('linkedin.login');
 Route::get('/auth/linkedin/callback', [LinkedInAuthController::class, 'callback']);
@@ -107,20 +120,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/api/resources/all', function() {
-        $resources = CourseResource::with('category')->get()->map(function($resource) {
-            return [
-                'id' => $resource->id,
-                'title' => $resource->title,
-                'description' => $resource->description,
-                'thumbnail_url' => $resource->thumbnail_url,
-                'file_url' => $resource->file_url,
-                'file_type' => $resource->file_type,
-                'category' => $resource->category ? [
-                    'id' => $resource->category->id,
-                    'name' => $resource->category->name
-                ] : null
-            ];
-        });
+        $resources = CourseResource::with(['category', 'course'])
+            ->whereHas('course', function($query) {
+                $query->where('plan_type', '!=', 'frml_training');
+            })
+            ->get()
+            ->map(function($resource) {
+                return [
+                    'id' => $resource->id,
+                    'title' => $resource->title,
+                    'description' => $resource->description,
+                    'thumbnail_url' => $resource->thumbnail_url,
+                    'file_url' => $resource->file_url,
+                    'file_type' => $resource->file_type,
+                    'category' => $resource->category ? [
+                        'id' => $resource->category->id,
+                        'name' => $resource->category->name
+                    ] : null
+                ];
+            });
 
         return response()->json($resources);
     });
@@ -692,3 +710,5 @@ Route::get('/api/check-course-payment/{courseId}', function($courseId) {
         'message' => $message
     ]);
 })->middleware('auth');
+
+Route::post('/contact/message', [ContactController::class, 'send'])->name('contact.message.send');

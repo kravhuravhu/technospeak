@@ -56,7 +56,7 @@ class PaymentProcessed extends Notification
                 'status' => $this->status,
                 'payment' => $this->payment
             ])
-            ->bcc('technospeakmails@gmail.com');
+            ->bcc(config('mail.bcc'));
     }
 
     public function toDatabase($notifiable)

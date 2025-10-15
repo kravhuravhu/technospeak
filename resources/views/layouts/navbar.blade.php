@@ -1,7 +1,7 @@
 <section class="nav_container {{ $whiteBg ? 'white_bg_nav_container' : '' }}">
     <nav>
         <div class="logo_container">
-            <a href="#">
+            <a href="/">
                 <img src="{{ $whiteBg ? '/images/default-no-logo.png' : '/images/white-no-logo.png' }}" alt="technospeak_icon">
             </a>
         </div>

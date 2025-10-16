@@ -53,7 +53,7 @@
         <section class="sidebar bar-lt-rt">
             <div class="main_container">
                 <div class="logo_container">
-                    <a href="#">
+                    <a href="/">
                         <img src="@secureAsset('/images/default-no-logo.png')" alt="technospeak_icon">
                     </a>
                 </div>

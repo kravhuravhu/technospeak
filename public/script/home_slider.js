@@ -116,6 +116,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevBtn = document.querySelector(".arrow-btn-prev");
     const nextBtn = document.querySelector(".arrow-btn-next");
 
+    // Only proceed if elements exist
+    if (!cardsContainer || !prevBtn || !nextBtn) return;
+
     const firstCardClone = cards[0].cloneNode(true);
     const lastCardClone = cards[cards.length - 1].cloneNode(true);
 
@@ -136,23 +139,39 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isAnimating && animate) return;
 
         const card = allCards[0];
+        if (!card) return;
+
         const cardWidth = card.offsetWidth;
-        const cardMargin = window.innerWidth <= 768 ? 20 : 55;
+        const cardMargin = window.innerWidth <= 768 ? 
+            (window.innerWidth <= 576 ? 8 : 10) : 25;
+        
         const totalWidth = cardWidth + cardMargin * 2;
 
-        const translatePercentage = window.innerWidth <= 768 ? 50 : 49;
-        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 20px))`;
+        // Adjust translation based on screen size
+        let translatePercentage;
+        if (window.innerWidth <= 576) {
+            translatePercentage = 51;
+        } else if (window.innerWidth <= 768) {
+            translatePercentage = 50.5;
+        } else {
+            translatePercentage = 49.5;
+        }
+
+        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 10px))`;
 
         if (animate) {
             isAnimating = true;
-            cardsContainer.style.transition = "transform 0.8s ease";
+            cardsContainer.style.transition = "transform 0.6s ease";
         } else {
             cardsContainer.style.transition = "none";
         }
 
         cardsContainer.style.transform = transformValue;
 
+        // Update card classes
         allCards.forEach((card, index) => {
+            if (!card.classList) return;
+            
             card.classList.remove("prev", "next", "active");
             if (index === currentIndex - 1) card.classList.add("prev");
             else if (index === currentIndex + 1) card.classList.add("next");
@@ -172,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateView(true);
     }
 
-    cardsContainer.addEventListener("transitionend", () => {
+    function handleTransitionEnd() {
         if (currentIndex === 0) {
             cardsContainer.style.transition = "none";
             currentIndex = totalCards - 2;
@@ -183,8 +202,11 @@ document.addEventListener("DOMContentLoaded", function () {
             updateView(false);
         }
         isAnimating = false;
-    });
+    }
 
+    // Event listeners
+    cardsContainer.addEventListener("transitionend", handleTransitionEnd);
+    
     window.addEventListener("resize", () => {
         updateView(false);
     });
@@ -193,11 +215,13 @@ document.addEventListener("DOMContentLoaded", function () {
         prevSlide();
         resetAutoSlide();
     });
+    
     nextBtn.addEventListener("click", () => {
         nextSlide();
         resetAutoSlide();
     });
 
+    // Card click navigation
     allCards.forEach((card, index) => {
         card.addEventListener("click", () => {
             if (index === currentIndex - 1) prevSlide();
@@ -206,17 +230,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Keyboard navigation
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowLeft") prevSlide();
         else if (e.key === "ArrowRight") nextSlide();
         resetAutoSlide();
     });
 
-    // auto-slide
+    // Auto-slide functionality (optional)
     function startAutoSlide() {
+        // Uncomment if you want auto-sliding
         // autoSlideInterval = setInterval(() => {
         //     nextSlide();
-        // }, 4000);
+        // }, 5000);
     }
 
     function resetAutoSlide() {
@@ -224,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
         startAutoSlide();
     }
 
+    // Initialize
     updateView(false);
     startAutoSlide();
 });

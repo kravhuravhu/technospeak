@@ -676,12 +676,13 @@
                 </div>
                 <div class="form_container">
                     <div class="form"> 
-                        <form action="{{ route('contact.message.send') }}" method="POST">
+                        <form action="{{ route('contact.message.send') }}" method="POST" id="contact-form">
                             @csrf
                             <div class="block">
                                 <div class="prgrph"><p>Full Names:</p></div>
                                 <div class="field">
-                                    <input type="text" name="contact_full_name" placeholder="Enter name here..." required />
+                                    <input type="text" name="contact_full_name" id="contact_full_name" placeholder="Enter name here..." required />
+                                    <div class="error-message" id="name-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
                                 </div>
                             </div>
                             <div class="block">
@@ -689,18 +690,20 @@
                                     <p>Email Address:</p>
                                 </div>
                                 <div class="field">
-                                    <input type="email" name="contact_email" placeholder="Enter email here..." required />
+                                    <input type="email" name="contact_email" id="contact_email" placeholder="Enter email here..." required />
+                                    <div class="error-message" id="email-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
                                 </div>
                             </div>
                             <div class="block">
                                 <div class="prgrph"><p>Message:</p></div>
                                 <div class="field">
-                                    <textarea name="contact_message" placeholder="Enter your message..." required></textarea>
+                                    <textarea name="contact_message" id="contact_message" placeholder="Enter your message..." required></textarea>
+                                    <div class="error-message" id="message-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
                                 </div>
                             </div>
                             <div class="block">
                                 <div class="field">
-                                    <button type="submit">Send Message</button>
+                                    <button type="submit" id="contact-submit-btn">Send Message</button>
                                 </div>
                             </div>
                         </form>
@@ -840,6 +843,283 @@
                 @endif
             });
         </script>
+
+        <!-- Get in touch validation handle -->
+         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const contactForm = document.getElementById('contact-form');
+                const nameInput = document.getElementById('contact_full_name');
+                const emailInput = document.getElementById('contact_email');
+                const messageInput = document.getElementById('contact_message');
+                const nameError = document.getElementById('name-error');
+                const emailError = document.getElementById('email-error');
+                const messageError = document.getElementById('message-error');
+                const submitBtn = document.getElementById('contact-submit-btn');
+
+                // Track validation state
+                let isNameValid = false;
+                let isEmailValid = false;
+                let isMessageValid = false;
+
+                // Validation functions
+                function validateName() {
+                    const name = nameInput.value.trim();
+                    
+                    // Clear previous error
+                    nameError.style.display = 'none';
+                    nameInput.style.borderColor = '';
+                    
+                    if (!name) {
+                        nameError.textContent = 'Full name is required';
+                        nameError.style.display = 'block';
+                        nameInput.style.borderColor = 'red';
+                        isNameValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if name has at least 2 characters
+                    if (name.length < 2) {
+                        nameError.textContent = 'Name must be at least 2 characters long';
+                        nameError.style.display = 'block';
+                        nameInput.style.borderColor = 'red';
+                        isNameValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if name contains only letters, spaces, hyphens, and apostrophes
+                    const nameRegex = /^[a-zA-Z\s\-']+$/;
+                    if (!nameRegex.test(name)) {
+                        nameError.textContent = 'Name can only contain letters, spaces, hyphens, and apostrophes';
+                        nameError.style.display = 'block';
+                        nameInput.style.borderColor = 'red';
+                        isNameValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if name has at least one space (first and last name)
+                    if (!name.includes(' ')) {
+                        nameError.textContent = 'Please enter your full name (first and last name)';
+                        nameError.style.display = 'block';
+                        nameInput.style.borderColor = 'red';
+                        isNameValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if name is too long
+                    if (name.length > 100) {
+                        nameError.textContent = 'Name must be less than 100 characters';
+                        nameError.style.display = 'block';
+                        nameInput.style.borderColor = 'red';
+                        isNameValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Name is valid
+                    nameInput.style.borderColor = 'green';
+                    isNameValid = true;
+                    updateSubmitButton();
+                    return true;
+                }
+
+                function validateEmail() {
+                    const email = emailInput.value.trim();
+                    
+                    // Clear previous error
+                    emailError.style.display = 'none';
+                    emailInput.style.borderColor = '';
+                    
+                    if (!email) {
+                        emailError.textContent = 'Email address is required';
+                        emailError.style.display = 'block';
+                        emailInput.style.borderColor = 'red';
+                        isEmailValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check for proper email format with domain and TLD
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+                    if (!emailRegex.test(email)) {
+                        emailError.textContent = 'Please enter a valid email address (e.g., name@company.co.za)';
+                        emailError.style.display = 'block';
+                        emailInput.style.borderColor = 'red';
+                        isEmailValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check domain part has at least one dot
+                    const domainPart = email.split('@')[1];
+                    if (!domainPart.includes('.')) {
+                        emailError.textContent = 'Email domain must be valid (e.g., gmail.com, company.co.za)';
+                        emailError.style.display = 'block';
+                        emailInput.style.borderColor = 'red';
+                        isEmailValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check for test/invalid domains
+                    const invalidDomains = ['test', 'example', 'localhost', 'invalid', 'fake', 'demo'];
+                    const domain = domainPart.toLowerCase();
+                    const hasInvalidDomain = invalidDomains.some(invalid => 
+                        domain.includes(invalid) || domain === invalid
+                    );
+                    
+                    if (hasInvalidDomain) {
+                        emailError.textContent = 'Please use a valid business or personal email address';
+                        emailError.style.display = 'block';
+                        emailInput.style.borderColor = 'red';
+                        isEmailValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Email is valid
+                    emailInput.style.borderColor = 'green';
+                    isEmailValid = true;
+                    updateSubmitButton();
+                    return true;
+                }
+
+                function validateMessage() {
+                    const message = messageInput.value.trim();
+                    
+                    // Clear previous error
+                    messageError.style.display = 'none';
+                    messageInput.style.borderColor = '';
+                    
+                    if (!message) {
+                        messageError.textContent = 'Message is required';
+                        messageError.style.display = 'block';
+                        messageInput.style.borderColor = 'red';
+                        isMessageValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if message has minimum length
+                    if (message.length < 10) {
+                        messageError.textContent = 'Message must be at least 10 characters long';
+                        messageError.style.display = 'block';
+                        messageInput.style.borderColor = 'red';
+                        isMessageValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check if message is too long
+                    if (message.length > 1000) {
+                        messageError.textContent = 'Message must be less than 1000 characters';
+                        messageError.style.display = 'block';
+                        messageInput.style.borderColor = 'red';
+                        isMessageValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Check for excessive whitespace
+                    const excessiveSpaces = message.split('  ').length > 1; // Check for double spaces
+                    const excessiveNewlines = message.split('\n\n\n').length > 1; // Check for triple newlines
+                    
+                    if (excessiveSpaces || excessiveNewlines) {
+                        messageError.textContent = 'Message contains excessive spacing';
+                        messageError.style.display = 'block';
+                        messageInput.style.borderColor = 'red';
+                        isMessageValid = false;
+                        updateSubmitButton();
+                        return false;
+                    }
+                    
+                    // Message is valid
+                    messageInput.style.borderColor = 'green';
+                    isMessageValid = true;
+                    updateSubmitButton();
+                    return true;
+                }
+
+                function updateSubmitButton() {
+                    // Only enable button when ALL fields are valid
+                    if (isNameValid && isEmailValid && isMessageValid) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.style.cursor = 'pointer';
+                        submitBtn.textContent = 'Send Message';
+                        submitBtn.style.backgroundColor = ''; // Reset to default
+                    } else {
+                        submitBtn.disabled = true;
+                        submitBtn.style.opacity = '0.6';
+                        submitBtn.style.cursor = 'not-allowed';
+                        submitBtn.textContent = 'Please fix errors above';
+                        submitBtn.style.backgroundColor = '#ccc';
+                    }
+                }
+
+                // Real-time validation
+                nameInput.addEventListener('input', function() {
+                    validateName();
+                });
+
+                nameInput.addEventListener('blur', function() {
+                    validateName();
+                });
+
+                emailInput.addEventListener('input', function() {
+                    validateEmail();
+                });
+
+                emailInput.addEventListener('blur', function() {
+                    validateEmail();
+                });
+
+                messageInput.addEventListener('input', function() {
+                    validateMessage();
+                });
+
+                messageInput.addEventListener('blur', function() {
+                    validateMessage();
+                });
+
+                // Handle form submission
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Final validation before submission
+                    const nameValid = validateName();
+                    const emailValid = validateEmail();
+                    const messageValid = validateMessage();
+                    
+                    // If anything is invalid, STOP here
+                    if (!nameValid || !emailValid || !messageValid) {
+                        // Scroll to first error
+                        if (!nameValid) {
+                            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            nameInput.focus();
+                        } else if (!emailValid) {
+                            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            emailInput.focus();
+                        } else {
+                            messageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            messageInput.focus();
+                        }
+                        
+                        alert('Please fix all validation errors before sending the message.');
+                        return false;
+                    }
+                    
+                    // If all validations pass, submit the form
+                    contactForm.submit();
+                });
+
+                // Initialize submit button state
+                updateSubmitButton();
+            });
+            </script>
 
         <!-- assistance submission -->
         <script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>

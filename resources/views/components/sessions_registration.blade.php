@@ -42,21 +42,20 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
                 <div class="form-group">
                     <label for="name-{{ $typeId }}">Full Name</label>
                     <input type="text" id="name-{{ $typeId }}" name="name" 
-                        value="{{ auth()->user() ? auth()->user()->name : '' }}" required>
+                        value="{{ auth()->user() ? auth()->user()->name : '' }}" required readonly>
                 </div>
                 
                 <div class="form-group">
                     <label for="email-{{ $typeId }}">Email Address</label>
                     <input type="email" id="email-{{ $typeId }}" name="email" 
-                        value="{{ auth()->user() ? auth()->user()->email : '' }}" required>
-                    <div class="error-message" id="email-error-{{ $typeId }}" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
+                        value="{{ auth()->user() ? auth()->user()->email : '' }}" required readonly>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>
                     <input type="tel" id="phone-{{ $typeId }}" name="phone" 
                         value="{{ auth()->user() && auth()->user()->phone ? auth()->user()->phone : '' }}"
-                        placeholder="(e.g., 0123456789)" required>
+                        placeholder="10-digit South African number (e.g., 0123456789)" required>
                     <div class="error-message" id="phone-error-{{ $typeId }}" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
                 </div>
                 
@@ -100,78 +99,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!modal) return;
 
     const form = document.getElementById('session-form-{{ $typeId }}');
-    const emailInput = document.getElementById('email-{{ $typeId }}');
     const phoneInput = document.getElementById('phone-{{ $typeId }}');
-    const emailError = document.getElementById('email-error-{{ $typeId }}');
     const phoneError = document.getElementById('phone-error-{{ $typeId }}');
     const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
 
-    // Track validation state - start with both invalid
-    let isEmailValid = false;
+    // Track validation state - start with invalid
     let isPhoneValid = false;
 
-    // Enhanced validation functions
-    function validateEmail() {
-        const email = emailInput.value.trim();
-        
-        // Clear previous error
-        emailError.style.display = 'none';
-        emailInput.style.borderColor = '';
-        
-        if (!email) {
-            emailError.textContent = 'Email is required';
-            emailError.style.display = 'block';
-            emailInput.style.borderColor = 'red';
-            isEmailValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Check for proper email format with domain and TLD
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        if (!emailRegex.test(email)) {
-            emailError.textContent = 'Please enter a valid email address (e.g., name@company.co.za)';
-            emailError.style.display = 'block';
-            emailInput.style.borderColor = 'red';
-            isEmailValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Check domain part has at least one dot
-        const domainPart = email.split('@')[1];
-        if (!domainPart.includes('.')) {
-            emailError.textContent = 'Email domain must be valid (e.g., gmail.com, company.co.za)';
-            emailError.style.display = 'block';
-            emailInput.style.borderColor = 'red';
-            isEmailValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Check for test/invalid domains
-        const invalidDomains = ['test', 'example', 'localhost', 'invalid'];
-        const domain = domainPart.toLowerCase();
-        const hasInvalidDomain = invalidDomains.some(invalid => 
-            domain.includes(invalid) || domain === invalid
-        );
-        
-        if (hasInvalidDomain) {
-            emailError.textContent = 'Please use a valid business or personal email address';
-            emailError.style.display = 'block';
-            emailInput.style.borderColor = 'red';
-            isEmailValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Email is valid
-        emailInput.style.borderColor = 'green';
-        isEmailValid = true;
-        updateSubmitButton();
-        return true;
-    }
-
+    // Phone validation function
     function validatePhone() {
         const phone = phoneInput.value.trim();
         
@@ -218,8 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateSubmitButton() {
-        // Only enable button when BOTH email and phone are valid
-        if (isEmailValid && isPhoneValid) {
+        if (!submitBtn) return;
+        
+        // Only enable button when phone is valid
+        if (isPhoneValid) {
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
             submitBtn.style.cursor = 'pointer';
@@ -229,22 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
             submitBtn.style.cursor = 'not-allowed';
-            submitBtn.textContent = 'Please fix errors above';
+            submitBtn.textContent = 'Please fix phone number error';
             submitBtn.style.backgroundColor = '#ccc';
         }
     }
 
-    // Real-time validation on every input
-    if (emailInput) {
-        emailInput.addEventListener('input', function() {
-            validateEmail();
-        });
-
-        emailInput.addEventListener('blur', function() {
-            validateEmail();
-        });
-    }
-
+    // Real-time validation on phone input only
     if (phoneInput) {
         phoneInput.addEventListener('input', function() {
             // Auto-format while typing but don't interfere with validation
@@ -277,28 +204,23 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // FINAL VALIDATION - Double check everything
-            const finalEmailCheck = validateEmail();
+            // FINAL VALIDATION - Double check phone only
             const finalPhoneCheck = validatePhone();
             
-            // If anything is invalid, STOP here
-            if (!finalEmailCheck || !finalPhoneCheck) {
+            // If phone is invalid, STOP here
+            if (!finalPhoneCheck) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Show which field has error
-                if (!finalEmailCheck) {
-                    emailInput.focus();
-                } else {
-                    phoneInput.focus();
-                }
+                // Focus on phone field
+                phoneInput.focus();
                 
-                alert('Please fix all validation errors before proceeding to payment.');
+                alert('Please fix the phone number error before proceeding to payment.');
                 return false;
             }
             
-            // Only proceed if BOTH are valid - submit the form normally
-            if (isEmailValid && isPhoneValid) {
+            // Only proceed if phone is valid - submit the form normally
+            if (isPhoneValid) {
                 form.submit();
             }
         });
@@ -319,19 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 
                 // Reset validation state when opening modal
-                const emailInput = document.getElementById('email-{{ $typeId }}');
                 const phoneInput = document.getElementById('phone-{{ $typeId }}');
-                const emailError = document.getElementById('email-error-{{ $typeId }}');
                 const phoneError = document.getElementById('phone-error-{{ $typeId }}');
                 const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
                 
-                if (emailInput) emailInput.style.borderColor = '';
                 if (phoneInput) phoneInput.style.borderColor = '';
-                if (emailError) emailError.style.display = 'none';
                 if (phoneError) phoneError.style.display = 'none';
                 
                 // Reset validation state
-                if (window.isEmailValid !== undefined) window.isEmailValid = false;
                 if (window.isPhoneValid !== undefined) window.isPhoneValid = false;
                 
                 // Disable submit button
@@ -339,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.disabled = true;
                     submitBtn.style.opacity = '0.5';
                     submitBtn.style.cursor = 'not-allowed';
-                    submitBtn.textContent = 'Please fix errors above';
+                    submitBtn.textContent = 'Please fix phone number error';
                     submitBtn.style.backgroundColor = '#ccc';
                 }
                 
@@ -488,6 +405,12 @@ function showPopUp(title, message, type = 'success') {
         font-size: 1rem;
         outline: none;
         transition: all 0.3s ease-in-out;
+    }
+
+    .session-registration-modal .form-group input:read-only {
+        background-color: #f8f9fa;
+        border-color: #e9ecef;
+        cursor: not-allowed;
     }
 
     .session-registration-modal .form-group input::placeholder {

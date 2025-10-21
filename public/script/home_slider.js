@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             animateHeaderText(slides[index]);
         }
     
-    }, 5000);  
+    }, 13000);  
     
     // Make dots clickable
     dots.forEach((dot, dotIndex) => {
@@ -112,13 +112,16 @@ document.addEventListener("DOMContentLoaded", function () {
 // Product Plans script section
 document.addEventListener("DOMContentLoaded", function () {
     const cardsContainer = document.querySelector(".cards");
+    if (!cardsContainer) return;
+
     const cards = Array.from(cardsContainer.children);
     const prevBtn = document.querySelector(".arrow-btn-prev");
     const nextBtn = document.querySelector(".arrow-btn-next");
 
-    // Only proceed if elements exist
-    if (!cardsContainer || !prevBtn || !nextBtn) return;
+    // Only proceed if essential elements exist
+    if (!prevBtn || !nextBtn) return;
 
+    // Create clones for infinite loop
     const firstCardClone = cards[0].cloneNode(true);
     const lastCardClone = cards[cards.length - 1].cloneNode(true);
 
@@ -134,48 +137,66 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentIndex = 1;
     let isAnimating = false;
     let autoSlideInterval;
+    let startX = 0;
+    let currentX = 0;
+
+    function calculateTransform() {
+        const card = allCards[0];
+        if (!card) return 'translateX(0)';
+
+        const cardWidth = card.offsetWidth;
+        const cardMargin = getCardMargin();
+        const totalWidth = cardWidth + cardMargin * 2;
+        
+        // Always center the active card
+        const containerWidth = cardsContainer.parentElement.offsetWidth;
+        const centerOffset = containerWidth / 2;
+        const cardCenter = totalWidth * currentIndex + cardWidth / 2;
+        
+        return `translateX(calc(50% - ${cardCenter}px))`;
+    }
+
+    function getCardMargin() {
+        if (window.innerWidth <= 400) return 2;
+        if (window.innerWidth <= 480) return 3;
+        if (window.innerWidth <= 576) return 4;
+        if (window.innerWidth <= 768) return 6;
+        if (window.innerWidth <= 992) return 8;
+        if (window.innerWidth <= 1200) return 10;
+        return 15;
+    }
 
     function updateView(animate = true) {
         if (isAnimating && animate) return;
 
-        const card = allCards[0];
-        if (!card) return;
-
-        const cardWidth = card.offsetWidth;
-        const cardMargin = window.innerWidth <= 768 ? 
-            (window.innerWidth <= 576 ? 8 : 10) : 25;
-        
-        const totalWidth = cardWidth + cardMargin * 2;
-
-        // Adjust translation based on screen size
-        let translatePercentage;
-        if (window.innerWidth <= 576) {
-            translatePercentage = 51;
-        } else if (window.innerWidth <= 768) {
-            translatePercentage = 50.5;
-        } else {
-            translatePercentage = 49.5;
-        }
-
-        const transformValue = `translateX(calc(${translatePercentage}% - ${totalWidth * currentIndex + cardWidth/2}px - 10px))`;
+        const transformValue = calculateTransform();
 
         if (animate) {
             isAnimating = true;
-            cardsContainer.style.transition = "transform 0.6s ease";
+            cardsContainer.style.transition = "transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)";
         } else {
             cardsContainer.style.transition = "none";
         }
 
         cardsContainer.style.transform = transformValue;
 
-        // Update card classes
+        // Update card classes for styling
+        updateCardClasses();
+    }
+
+    function updateCardClasses() {
         allCards.forEach((card, index) => {
             if (!card.classList) return;
             
             card.classList.remove("prev", "next", "active");
-            if (index === currentIndex - 1) card.classList.add("prev");
-            else if (index === currentIndex + 1) card.classList.add("next");
-            else if (index === currentIndex) card.classList.add("active");
+            
+            if (index === currentIndex - 1) {
+                card.classList.add("prev");
+            } else if (index === currentIndex + 1) {
+                card.classList.add("next");
+            } else if (index === currentIndex) {
+                card.classList.add("active");
+            }
         });
     }
 
@@ -192,6 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleTransitionEnd() {
+        // Handle infinite loop
         if (currentIndex === 0) {
             cardsContainer.style.transition = "none";
             currentIndex = totalCards - 2;
@@ -202,6 +224,32 @@ document.addEventListener("DOMContentLoaded", function () {
             updateView(false);
         }
         isAnimating = false;
+    }
+
+    // Touch events for mobile swipe
+    function handleTouchStart(e) {
+        startX = e.touches[0].clientX;
+        currentX = startX;
+    }
+
+    function handleTouchMove(e) {
+        if (!isAnimating) {
+            currentX = e.touches[0].clientX;
+        }
+    }
+
+    function handleTouchEnd() {
+        const diff = startX - currentX;
+        const swipeThreshold = 50;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+            resetAutoSlide();
+        }
     }
 
     // Event listeners
@@ -223,26 +271,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Card click navigation
     allCards.forEach((card, index) => {
-        card.addEventListener("click", () => {
+        card.addEventListener("click", (e) => {
+            // Prevent triggering when clicking buttons inside cards
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+            
             if (index === currentIndex - 1) prevSlide();
             else if (index === currentIndex + 1) nextSlide();
             resetAutoSlide();
         });
     });
 
+    // Touch events for mobile
+    cardsContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+    cardsContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+    cardsContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
     // Keyboard navigation
     document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") prevSlide();
-        else if (e.key === "ArrowRight") nextSlide();
-        resetAutoSlide();
+        if (e.key === "ArrowLeft") {
+            prevSlide();
+            resetAutoSlide();
+        } else if (e.key === "ArrowRight") {
+            nextSlide();
+            resetAutoSlide();
+        }
     });
 
-    // Auto-slide functionality (optional)
+    // Auto-slide functionality (optional - commented out by default)
     function startAutoSlide() {
         // Uncomment if you want auto-sliding
-        // autoSlideInterval = setInterval(() => {
-        //     nextSlide();
-        // }, 5000);
+        /*
+        autoSlideInterval = setInterval(() => {
+            nextSlide();
+        }, 5000);
+        */
     }
 
     function resetAutoSlide() {
@@ -253,6 +315,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize
     updateView(false);
     startAutoSlide();
+
+    // Cleanup function for when the page is unloaded
+    window.addEventListener('beforeunload', () => {
+        clearInterval(autoSlideInterval);
+    });
 });
 
 // Service Categories section

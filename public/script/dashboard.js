@@ -243,3 +243,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+// Tips & tricks script
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to get URL parameters
+    function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Function to handle category parameter on page load
+    function handleCategoryParameter() {
+        const categoryParam = getUrlParameter('category');
+        
+        if (categoryParam) {
+            console.log('Category parameter found:', categoryParam);
+            
+            // Auto-select the category in the filter dropdown
+            const filterSelect = document.getElementById('tipsFilterSelect');
+            if (filterSelect) {
+                filterSelect.value = categoryParam;
+                console.log('Filter select value set to:', categoryParam);
+            }
+            
+            // Ensure tips & tricks section is active
+            setTimeout(() => {
+                const allTricksSection = document.getElementById('usr_alltricks');
+                if (allTricksSection) {
+                    console.log('Switching to tips & tricks section');
+                    
+                    // Use your existing switchToSection function
+                    if (typeof window.switchToSection === 'function') {
+                        window.switchToSection('usr_alltricks');
+                    } else {
+                        // Fallback: manually activate the section
+                        document.querySelectorAll('.content-section').forEach(section => {
+                            section.classList.remove('active');
+                        });
+                        document.querySelectorAll('.nav-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        
+                        allTricksSection.classList.add('active');
+                        const navItem = document.querySelector('.nav-item[data-section="usr_alltricks"]');
+                        if (navItem) navItem.classList.add('active');
+                    }
+                }
+            }, 500); // Increased delay to ensure DOM is ready
+        }
+    }
+
+    // Call this function when DOM is loaded
+    handleCategoryParameter();
+});
+
+// Also call it when hash changes (in case user navigates)
+window.addEventListener('hashchange', handleCategoryParameter);

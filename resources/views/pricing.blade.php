@@ -1141,6 +1141,6 @@
             // Initialize submit button state
             updateSubmitButton();
         });
-        </script>
+    </script>
 
 </html>

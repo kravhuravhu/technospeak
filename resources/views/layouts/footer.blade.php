@@ -42,12 +42,12 @@
                         </li>
                         <li><div class="footerButton">
                                 @if(Auth::check())
-                                    <a href="{{ url('/dashboard#usr_alltrainings') }}" class="footerButton">
-                                        <div>Tutorials</div>
+                                    <a href="{{ url('/dashboard#usr_formaltraining') }}" class="footerButton">
+                                        <div>Training</div>
                                     </a>
                                 @else
                                     <a href="{{ url('/login') }}" class="footerButton">
-                                        <div>Tutorials</div>
+                                        <div>Training</div>
                                     </a>
                                 @endif
                             </div>
@@ -56,11 +56,11 @@
                             <div class="footerButton">
                                 @if(Auth::check())
                                     <a href="{{ url('/dashboard#usr_alltricks') }}" class="footerButton">
-                                        <div>Webinars</div>
+                                        <div>Tips&Tricks</div>
                                     </a>
                                 @else
                                     <a href="{{ url('/login') }}" class="footerButton">
-                                        <div>Webinars</div>
+                                        <div>Tips&Tricks</div>
                                     </a>
                                 @endif
                             </div>

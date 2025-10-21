@@ -10,12 +10,18 @@ use App\Models\TrainingSession;
 use App\Models\Instructor;
 use App\Models\Payment;
 use App\Http\Controllers\CourseAccessController;
+use Illuminate\Http\Request;
+use App\Models\Course;
+use App\Models\CourseCategory;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        
+        // Get filtered category from request
+        $filteredCategory = $request->get('category');
         
         // Get training status with proper case handling
         $userSessions = TrainingRegistration::with(['session', 'payment'])
@@ -37,7 +43,26 @@ class DashboardController extends Controller
             
 
         $courseAccess = new CourseAccessController();
+        
+        // Get all tips and tricks first
+        $courseAccess = new CourseAccessController();
+
+        // Get all tips and tricks first
         $allTipsTricks = $courseAccess->getTipsTricks();
+
+        // Debug: Log what we're getting
+        if ($filteredCategory) {
+            \Log::info("Filtering tips & tricks by category: " . $filteredCategory);
+            \Log::info("Total tips & tricks before filtering: " . $allTipsTricks->count());
+            
+            $allTipsTricks = $this->filterTipsTricksByCategory($allTipsTricks, $filteredCategory);
+            
+            \Log::info("Total tips & tricks after filtering: " . $allTipsTricks->count());
+            
+            // Also log the category names for debugging
+            $categoryNames = $allTipsTricks->pluck('category_name')->unique()->toArray();
+            \Log::info("Available categories in data: " . implode(', ', $categoryNames));
+        }
         $formalTrainings = $courseAccess->getFormalTrainings();
         $recommendedCourses = $courseAccess->getRecommendedCourses();
 
@@ -137,8 +162,24 @@ class DashboardController extends Controller
             'hasActivePremium' => $hasActivePremium,
             'subscriptionExpiry' => $user->subscription_expiry,
             'subscriptionPaidAt' => $user->subscription_paid_at,
-            'user' => $user 
+            'user' => $user,
+            'filteredCategory' => $filteredCategory // Add this to pass to view
         ]);
+    }
+
+    private function filterTipsTricksByCategory($allTipsTricks, $categoryName)
+    {
+        return $allTipsTricks->filter(function($course) use ($categoryName) {
+            // Check if the course has a category and matches the filtered category
+            // Use case-insensitive comparison and trim whitespace
+            if (isset($course['category_name'])) {
+                $courseCategory = trim($course['category_name']);
+                $filterCategory = trim($categoryName);
+                
+                return strcasecmp($courseCategory, $filterCategory) === 0;
+            }
+            return false;
+        });
     }
 
     private function getFilteredAvailablePlans($user, $allTrainingTypes, $groupSessions, $formalTrainingsRegistered)

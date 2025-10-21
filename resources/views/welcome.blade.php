@@ -56,90 +56,85 @@
                 <div class="slider_container">
                     <div class="still_block">
                         <div class="main_block">
+                            <!-- Slide 1: Transform Your Digital Future - Technical Support & Maintenance -->
                             <div class="slider">
                                 <div class="header">
                                     <h3 id="animated_header">Transform Your Digital Future</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p><strong>Technospeak</strong> empowers you to master technology with confidence. We offer easy-to-follow tutorials, 
-                                        practical guides, and real-world support for students, professionals, and small businesses. 
-                                        Whether you want to boost productivity, learn new digital skills, or solve everyday tech challenges, 
-                                        our team is here to help you succeed—no jargon, just results.</p>
+                                    <p><strong>Technospeak</strong> empowers you to master technology with confidence. We offer easy-to-follow tutorials...</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
+                                        <a href="{{ url('/dashboard') }}?category={{ urlencode('Technical Support & Maintenance') }}#usr_alltricks" class="cta">
                                             <div>Explore Solutions</div>
                                         </a>
                                     @else
-                                        <a href="{{ url('/login') }}" class="cta">
+                                        <a href="{{ url('/login') }}?redirect={{ urlencode('dashboard?category=' . urlencode('Technical Support & Maintenance') . '#usr_alltricks') }}" class="cta">
                                             <div>Explore Solutions</div>
                                         </a>
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Slide 2: AI-Powered Business Revolution - AI Content Creation Tools -->
                             <div class="slider">
                                 <div class="header">
                                     <h3>AI-Powered Business Revolution</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Discover how AI can simplify your everyday tasks and boost productivity—no technical background needed. 
-                                        At <strong>Technospeak</strong>, we guide you through practical uses of AI tools for writing, research, and creative 
-                                        projects. Learn to use chatbots, automate simple processes, and make smarter decisions with 
-                                        easy-to-follow tutorials designed for students, professionals, and small businesses.</p>
+                                    <p>Discover how AI can simplify your everyday tasks and boost productivity—no technical background needed...</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
+                                        <a href="{{ url('/dashboard') }}?category={{ urlencode('AI Content Creation Tools') }}#usr_alltricks" class="cta">
                                             <div>Explore Courses</div>
                                         </a>
                                     @else
-                                        <a href="{{ url('/login') }}" class="cta">
+                                        <a href="{{ url('/login') }}?redirect={{ urlencode('dashboard?category=' . urlencode('AI Content Creation Tools') . '#usr_alltricks') }}" class="cta">
                                             <div>Explore Courses</div>
                                         </a>
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Slide 3: Cloud Infrastructure Reimagined - Networking & Internet Essentials -->
                             <div class="slider">
                                 <div class="header">
                                     <h3>Cloud Infrastructure Reimagined</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Unlock the power of cloud tools for learning, collaboration, and productivity. At <strong>Technospeak</strong>, 
-                                        we guide you through using Google Workspace, Microsoft 365, and other essential platforms—no jargon, 
-                                        just practical skills. Whether you’re a student, educator, or small business, we help you work smarter, 
-                                        store safely, and access your files anywhere.</p>
+                                    <p>Unlock the power of cloud tools for learning, collaboration, and productivity. At <strong>Technospeak</strong>, we guide you...</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="cta">
-                                            <div>View Learning Tools</div>
+                                        <a href="{{ url('/dashboard') }}?category={{ urlencode('Networking & Internet Essentials') }}#usr_alltricks" class="cta">
+                                            <div>Explore Courses</div>
                                         </a>
                                     @else
-                                        <a href="{{ url('/login') }}" class="cta">
-                                            <div>View Learning Tools</div>
+                                        <a href="{{ url('/login') }}?redirect={{ urlencode('dashboard?category=' . urlencode('Networking & Internet Essentials') . '#usr_alltricks') }}" class="cta">
+                                            <div>Explore Courses</div>
                                         </a>
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Slide 4: Cybersecurity Awareness - Networking & Internet Essentials -->
                             <div class="slider">
                                 <div class="header">
-                                    <h3>24/7 Cybersecurity Shield</h3>
+                                    <h3>Cybersecurity Awareness</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Stay safe online with our easy-to-follow cybersecurity guidance and practical tools. We help you 
-                                        recognize scams, protect your accounts, and secure your devices—no technical jargon required. Learn 
-                                        how to keep your personal and business information safe, and gain confidence navigating the digital 
-                                        world.</p>
+                                    <p>Stay safe online with our easy-to-follow cybersecurity guidance and practical tools. We help you recognize scams, protect your accounts...</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
-                                        <a href="{{ url('/dashboard#usr_techCoach') }}" class="cta">
-                                            <div>Get Cyber Shield</div>
+                                        <a href="{{ url('/dashboard') }}?category={{ urlencode('Networking & Internet Essentials') }}#usr_alltricks" class="cta">
+                                            <div>Explore Courses</div>
                                         </a>
                                     @else
-                                        <a href="{{ url('/login') }}" class="cta">
-                                            <div>Get Cyber Shield</div>
+                                        <a href="{{ url('/login') }}?redirect={{ urlencode('dashboard?category=' . urlencode('Networking & Internet Essentials') . '#usr_alltricks') }}" class="cta">
+                                            <div>Explore Courses</div>
                                         </a>
                                     @endif
                                 </div>
@@ -156,6 +151,7 @@
                 </div>
             </div>
         </section>
+
 
         <!-- Product Plans section -->
         <section class="categories_cont">
@@ -633,10 +629,10 @@
                 </div>
                 <div class="view-more-container">
                     @if(Auth::check())
-                        <a href="{{ url('/dashboard#usr_alltricks') }}" class="view-more-btn">View More Courses</a>
+                        <a href="{{ url('/dashboard#usr_formaltraining') }}" class="view-more-btn">View More Courses</a>
                     @else
                         @php
-                            $url = url("/dashboard#usr_alltricks");
+                            $url = url("/dashboard#usr_formaltraining");
                         @endphp
                         <a href="{{ url('/login?redirect=' . urlencode($url)) }}" class="view-more-btn">View More Courses</a>
 

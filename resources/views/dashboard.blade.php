@@ -339,18 +339,28 @@
                             <div class="section-header">
                                 <div class="title">
                                     <h1>Tips & Tricks</h1>
-                                    <p class="subtitle">Collections of Tips and tricks designed to boost your skills efficiently.</p>
+                                    @if(isset($filteredCategory) && $filteredCategory)
+                                        <p class="subtitle">Showing results for: <strong>{{ $filteredCategory }}</strong> 
+                                            <a href="{{ url('/dashboard#usr_alltricks') }}" class="clear-filter-btn" style="display: inline-block; padding: 5px 15px; background-color: #3b82f6; color: white; border-radius: 5px; text-decoration: none; font-size: 0.9em; margin-left: 10px; transition: all 0.3s ease;">Clear Filter & Show All</a>
+                                        </p>
+                                    @else
+                                        <p class="subtitle">Collections of Tips and tricks designed to boost your skills efficiently.</p>
+                                    @endif
                                 </div>
                                 <div class="search-filter-container">
                                     <div class="search-box">
                                         <i class="fas fa-search search-icon"></i>
-                                        <input type="text" id="tipsSearchInput" placeholder="Search tips and tricks..." class="search-control">
+                                        <input type="text" id="tipsSearchInput" placeholder="Search tips and tricks..." class="search-control" 
+                                            value="{{ isset($filteredCategory) && $filteredCategory ? '' : '' }}">
                                     </div>
                                     <div class="filter-dropdown">
                                         <select id="tipsFilterSelect" class="search-control">
                                             <option value="">All Categories</option>
                                             @foreach(\App\Models\CourseCategory::all() as $category)
-                                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->name }}" 
+                                                    {{ (isset($filteredCategory) && $filteredCategory === $category->name) ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <i class="fas fa-filter filter-icon"></i>
@@ -365,6 +375,7 @@
                             <div class="card-grid thn_grid_cd" id="tips-trainings">
                                 @if($allTipsTricks->count() > 0)
                                     @foreach($allTipsTricks as $course)
+                                        <!-- Your existing course card code -->
                                         <a href="#" class="training-card"
                                             data-course-id="{{ $course['uuid'] }}"
                                             data-training-type="{{ $course['plan_type'] }}"
@@ -414,7 +425,12 @@
                                     @endforeach
                                 @else
                                     <div class="no-results-message" style="padding: 20px;text-align: center;color: #718096;background: #f8fafc;border-radius: 8px;margin: 20px;font-style: italic;">
-                                        <p>There are no Tips & Tricks available at the moment. Please check back later!</p>
+                                        @if(isset($filteredCategory) && $filteredCategory)
+                                            <p>No Tips & Tricks available for <strong>{{ $filteredCategory }}</strong> at the moment.</p>
+                                            <a href="{{ url('/dashboard#usr_alltricks') }}" class="browse-btn">Browse All Tips & Tricks →</a>
+                                        @else
+                                            <p>There are no Tips & Tricks available at the moment. Please check back later!</p>
+                                        @endif
                                     </div>
                                 @endif
                             </div>

@@ -82,7 +82,7 @@
                                                     <img src="../images/icons/quality.png"/>
                                                 </div>
                                                 <div class="dscpt-p">
-                                                    <p>Comment section Q&A</p>
+                                                    <p>Comment on Q&A session</p>
                                                 </div>
                                             </div>
                                             <div class="dscpt">
@@ -486,235 +486,248 @@
 
         <!-- Main Content Section -->
         <main class="main-container-pricing">
-            <!-- One-on-One Sessions Section -->
-            <section class="session-section1">
-                <div class="section-background1">
-                    <div class="bubble bubble-top-left"></div>
-                    <div class="bubble bubble-bottom-right"></div>
+        <!-- Portfolio Showcase Section -->
+        <section class="portfolio-showcase">
+            <div class="background-elements">
+                <div class="blue-wave"></div>
+                <div class="light-circle"></div>
+            </div>
+            
+            <div class="portfolio-container">
+                <!-- Section Header -->
+                <div class="portfolio-header">
+                    <div class="section-badge">
+                        <span>Our Creative Work</span>
+                    </div>
+                    <h2>See Our Work In Action</h2>
+                    <p class="portfolio-description">
+                        Explore our portfolio of stunning designs and innovative solutions that have helped clients achieve their goals.
+                    </p>
                 </div>
-                
-                <div class="session-container1">
-                    <!-- Video Demo -->
-                    <div class="video-demo1">
-                        <div class="device-mockup1">
-                            <div class="device-frame1">
-                                <div class="device-screen1">
-                                    <div class="video-placeholder1">
-                                        <div class="play-button1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                                            </svg>
-                                        </div>
+
+                <!-- Poster Design Showcase -->
+                <div class="showcase-section">
+                    <div class="showcase-header">
+                        <h3>Creative Poster Designs</h3>
+                        <p>Eye-catching designs that communicate effectively and engage audiences</p>
+                    </div>
+                    <div class="poster-grid">
+                        <div class="poster-item">
+                            <div class="poster-frame">
+                                <img src="../images/portfolio/poster1.jpg" alt="Creative Poster Design 1" class="poster-image">
+                                <div class="poster-overlay">
+                                    <div class="overlay-content">
+                                        <h4>Tech Innovation Poster</h4>
+                                        <p>Modern design for tech conference</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="device-notch1"></div>
                         </div>
-                    </div>
-
-                    <!-- Session Details -->
-                    <div class="session-details1">
-                        <div class="section-badge1">
-                            <span>Premium Service</span>
-                        </div>
-                        <h2>Personalised One-on-One Sessions</h2>
-                        <p class="session-description1">
-                            Get dedicated, customized learning with our expert instructors. Our one-on-one sessions provide:
-                        </p>
-                        <ul class="session-features1">
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                                </svg>
-                                <span>Tailored curriculum based on your needs</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                                </svg>
-                                <span>Flexible scheduling at your convenience</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                                </svg>
-                                <span>Direct feedback and Q&A with experts</span>
-                            </li>
-                        </ul>
-
-                        <div class="session-meta1">
-                            <div class="meta-item1">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                                </svg>
-                                <div>
-                                    <span class="meta-label1">Starting from</span>
-                                    <span class="meta-value1">R110/hour (R210 for business)</span>
-                                </div>
-                            </div>
-                            <div class="meta-item1">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-                                </svg>
-                                <div>
-                                    <span class="meta-label1">Duration</span>
-                                    <span class="meta-value1">60-90 minutes</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="register-btn1" id="openPersonalGuideModalSession" type="button">
-                            <span>Schedule Your Session</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                            </svg>
-                        </button>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                var btn = document.getElementById("openPersonalGuideModalSession");
-                                if (btn) {
-                                    btn.onclick = function(event) {
-                                        event.preventDefault();
-                                        var modal = document.getElementById("personalGuideModalUnique");
-                                        if (modal) {
-                                            modal.style.display = "block";
-                                            document.body.style.overflow = "hidden";
-                                            document.body.style.position = "fixed";
-                                            document.body.style.width = "100%";
-                                        }
-                                    };
-                                }
-                            });
-                        </script>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Live Sessions Section -->
-            <section class="live-sessions">
-                <div class="background-elements">
-                    <div class="blue-wave"></div>
-                    <div class="light-circle"></div>
-                </div>
-                
-                <div class="container">
-                    <!-- Left: Content Card -->
-                    <div class="info-card">
-                        <div class="card-badge">
-                            <span>Interactive Learning</span>
-                        </div>
-                        <h2>Join Our Live Q&A Sessions</h2>
-                        <p class="card-description">
-                            Experience real-time learning with industry professionals. Our live sessions offer:
-                        </p>
-                        <ul class="features-list">
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
-                                </svg>
-                                <span>Direct interaction with instructors</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
-                                </svg>
-                                <span>Practical, hands-on demonstrations</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
-                                </svg>
-                                <span>Q&A and community discussions</span>
-                            </li>
-                        </ul>
-
-                        <div class="session-details">
-                            <div class="detail-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                                </svg>
-                                <div>
-                                    <span class="detail-label">Starting from</span>
-                                    <span class="detail-value">Free/session</span>
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-                                </svg>
-                                <div>
-                                    <span class="detail-label">Duration</span>
-                                    <span class="detail-value">60-90 minutes</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if(Auth::check())
-                            @if($qaSession)
-                                <a href="#" class="register-btn registration-trigger"
-                                   data-type-id="4"
-                                   data-session-id="{{ $qaSession->id }}">
-                                    <span>Reserve Your Spot</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                                    </svg>
-                                </a>
-                            @else
-                                <button class="register-btn" type="button" onclick="Swal.fire('No session available', 'There are currently no live Q/A sessions available. Please check back later.', 'info');">
-                                    <span>Reserve Your Spot</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                                    </svg>
-                                </button>
-                            @endif
-                        @else
-                            <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="register-btn">
-                                <span>Reserve Your Spot</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                                </svg>
-                            </a>
-                        @endif
-                    </div>
-
-                    <!-- Right: Media Section -->
-                    <div class="media-section">
-                        <div class="laptop-mockup">
-                            <div class="laptop-screen">
-                                <div class="video-container">
-                                    <div class="play-overlay">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                                        </svg>
+                        <div class="poster-item">
+                            <div class="poster-frame">
+                                <img src="../images/portfolio/poster2.jpg" alt="Creative Poster Design 2" class="poster-image">
+                                <div class="poster-overlay">
+                                    <div class="overlay-content">
+                                        <h4>Educational Workshop</h4>
+                                        <p>Engaging educational material</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="laptop-base"></div>
                         </div>
-
-                        <div class="social-platforms">
-                            <h3 class="platforms-title">Follow us for updates</h3>
-                            <div class="platform-icons">
-                                <a href="https://www.tiktok.com/@everything.tips8" aria-label="TikTok" class="platform-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.youtube.com/@TechnoSpeak-j3f" aria-label="YouTube" class="platform-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.facebook.com/profile.php?id=61575880092292&mibextid=rS40aB7S9Ucbxw6v" aria-label="Facebook" class="platform-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                                    </svg>
-                                </a>
+                        <div class="poster-item">
+                            <div class="poster-frame">
+                                <img src="../images/portfolio/poster3.jpg" alt="Creative Poster Design 3" class="poster-image">
+                                <div class="poster-overlay">
+                                    <div class="overlay-content">
+                                        <h4>Business Seminar</h4>
+                                        <p>Professional corporate design</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="poster-item">
+                            <div class="poster-frame">
+                                <img src="../images/portfolio/poster4.jpg" alt="Creative Poster Design 4" class="poster-image">
+                                <div class="poster-overlay">
+                                    <div class="overlay-content">
+                                        <h4>Digital Marketing</h4>
+                                        <p>Social media campaign design</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+
+                <!-- Website Design Showcase - Section 1 -->
+                <div class="showcase-section website-showcase">
+                    <div class="showcase-header">
+                        <h3>Website Development Projects</h3>
+                        <p>Responsive, user-friendly websites built with modern technologies</p>
+                    </div>
+                    <div class="website-grid">
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website1.jpg" alt="Website Project 1" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>E-Commerce Platform</h4>
+                                <p>Full-stack e-commerce solution with payment integration</p>
+                                <div class="tech-tags">
+                                    <span>React</span>
+                                    <span>Node.js</span>
+                                    <span>MongoDB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website2.jpg" alt="Website Project 2" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>Corporate Portal</h4>
+                                <p>Enterprise solution with admin dashboard</p>
+                                <div class="tech-tags">
+                                    <span>Vue.js</span>
+                                    <span>Laravel</span>
+                                    <span>MySQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Website Design Showcase - Section 2 -->
+                <div class="showcase-section website-showcase">
+                    <div class="showcase-header">
+                        <h3>Web Applications</h3>
+                        <p>Interactive web applications with seamless user experiences</p>
+                    </div>
+                    <div class="website-grid">
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website3.jpg" alt="Website Project 3" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>Learning Management System</h4>
+                                <p>Educational platform with course management</p>
+                                <div class="tech-tags">
+                                    <span>Angular</span>
+                                    <span>Python</span>
+                                    <span>PostgreSQL</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website4.jpg" alt="Website Project 4" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>Portfolio Website</h4>
+                                <p>Creative portfolio with smooth animations</p>
+                                <div class="tech-tags">
+                                    <span>GSAP</span>
+                                    <span>Three.js</span>
+                                    <span>Firebase</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Website Design Showcase - Section 3 -->
+                <div class="showcase-section website-showcase">
+                    <div class="showcase-header">
+                        <h3>Mobile-First Solutions</h3>
+                        <p>Optimized experiences for all devices and screen sizes</p>
+                    </div>
+                    <div class="website-grid">
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website5.jpg" alt="Website Project 5" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>Travel Booking Platform</h4>
+                                <p>Mobile-first travel booking experience</p>
+                                <div class="tech-tags">
+                                    <span>React Native</span>
+                                    <span>Express.js</span>
+                                    <span>Redis</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="website-item">
+                            <div class="browser-mockup">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <img src="../images/portfolio/website6.jpg" alt="Website Project 6" class="website-image">
+                            </div>
+                            <div class="website-info">
+                                <h4>Health & Fitness App</h4>
+                                <p>Wellness platform with tracking features</p>
+                                <div class="tech-tags">
+                                    <span>Flutter</span>
+                                    <span>Django</span>
+                                    <span>SQLite</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="portfolio-cta">
+                    <div class="cta-content">
+                        <h3>Ready to Start Your Project?</h3>
+                        <p>Let's create something amazing together. Get in touch to discuss your ideas.</p>
+                        <div class="cta-buttons">
+                            <a href="#contact" class="btn btn-primary">Start Your Project</a>
+                            <a href="#portfolio" class="btn btn-secondary">View More Work</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
             <!-- Ask Questions -->
             <div class="question-container">

@@ -31,30 +31,107 @@
                 <div class="overlay"></div>
                 <div class="hero-content">
                     <h1>Empowering Through Technology</h1>
-                    <p>Discover our mission to make tech accessible for everyone</p>
-                    <a href="#vision-mission" class="cta-button">Learn More</a>
+                    <p>We understand the frustration of feeling left behind in a fast-moving digital world. That's why our approach is human-first: we listen, we simplify, and we walk with you every step of the way.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story & Values Section -->
+        <section class="story-values-section">
+            <div class="container">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Our Purpose</h2>
+                        <p>To drive technological empowerment across Africa by equipping individuals and communities with the skills, confidence, and tools they need to thrive in the digital age.</p>
+                    </div>
+                </div>
+
+                <div class="story-values-grid">
+                    <!-- Story Section -->
+                    <div class="story-card">
+                        <h2>Our Story</h2>
+                        <p>TechnoSpeak began as a grassroots initiative by a group of passionate technologists who saw a growing gap between rapid technological advancement and the everyday person's ability to keep up. Founded in 2024, our journey started with the desire to help people who are struggling understand software with confidence.</p>
+                        <p>From those humble beginnings, we've grown into a movement—driven by the belief that everyone deserves access to technology education that is clear, relevant, and empowering.</p>
+                    </div>
+                    
+                    <!-- Values Section -->
+                    <div class="values-card">
+                        <h2>Our Core Values</h2>
+                        <p class="values-intro">The principles that guide everything we do</p>
+                        
+                        <div class="values-list">
+                            <div class="value-item">
+                                <div class="value-icon"><i class="fas fa-heart"></i></div>
+                                <div class="value-text">
+                                    <h3>Empathy</h3>
+                                    <p>We meet people where they are, without judgment.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+                                <div class="value-text">
+                                    <h3>Clarity</h3>
+                                    <p>We simplify the complex and speak in everyday language.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <div class="value-icon"><i class="fas fa-users"></i></div>
+                                <div class="value-text">
+                                    <h3>Inclusivity</h3>
+                                    <p>We believe tech education should be accessible to all.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <div class="value-icon"><i class="fas fa-tools"></i></div>
+                                <div class="value-text">
+                                    <h3>Practicality</h3>
+                                    <p>We focus on skills that make a real difference.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <div class="value-icon"><i class="fas fa-hands-helping"></i></div>
+                                <div class="value-text">
+                                    <h3>Community</h3>
+                                    <p>We grow together, learn together, and rise together.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Vision & Mission Section -->
         <section id="vision-mission" class="vision-mission-section">
-            <div class="section-header">
-                <h2>Our Purpose</h2>
-                <p>Driving technological empowerment across Africa</p>
-            </div>
-            
-            <div class="vision-mission-cards">
-                <div class="vision-card card">
-                    <div class="icon"><i class="fas fa-eye"></i></div>
-                    <h3>Our Vision</h3>
-                    <p>To become Africa's leading provider of accessible, practical technology education that transforms lives and businesses.</p>
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Vision & Mission</h2>
+                    <p>Guiding principles that drive our work</p>
                 </div>
                 
-                <div class="mission-card card">
-                    <div class="icon"><i class="fas fa-bullseye"></i></div>
-                    <h3>Our Mission</h3>
-                    <p>To demystify technology through hands-on training, personalised support, and community-driven learning experiences.</p>
+                <div class="vision-mission-cards">
+                    <div class="vision-card card">
+                        <div class="icon"><i class="fas fa-eye"></i></div>
+                        <h3>Our Vision</h3>
+                        <p>To become Africa's leading provider of accessible, practical technology education—transforming lives, businesses, and communities through knowledge, support, and innovation.</p>
+                        <p class="highlight-text">We envision a continent where technology is not a barrier but a bridge to opportunity.</p>
+                    </div>
+                    
+                    <div class="mission-card card">
+                        <div class="icon"><i class="fas fa-bullseye"></i></div>
+                        <h3>Our Mission</h3>
+                        <p>To demystify technology through:</p>
+                        <ul class="mission-list">
+                            <li><i class="fas fa-check-circle"></i> Hands-on training that focuses on real-world applications</li>
+                            <li><i class="fas fa-check-circle"></i> Personalized support tailored to individual needs and learning styles</li>
+                            <li><i class="fas fa-check-circle"></i> Community-driven learning that fosters collaboration, mentorship, and shared growth</li>
+                        </ul>
+                        <p class="highlight-text">We don't just teach tech—we build confidence, spark curiosity, and create lasting impact.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -421,5 +498,9 @@
                 });
             });
         </script> 
+
+        <!-- ABout Us script -->
+         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="@secureAsset('js/script.js')"></script>
     </body>
 </html>

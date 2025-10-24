@@ -393,7 +393,7 @@ const services = {
 document.addEventListener('DOMContentLoaded', function() {
     const serviceCards = document.querySelectorAll('.service-card');
     const detailsContainer = document.getElementById('service-details');
-    const isMobile = window.innerWidth <= 768;
+    let isMobile = window.innerWidth <= 768;
     
     // Set first service as active by default on desktop
     if (!isMobile && serviceCards.length > 0) {

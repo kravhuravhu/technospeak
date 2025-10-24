@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.5';
             submitBtn.style.cursor = 'not-allowed';
-            submitBtn.textContent = 'Please fix phone number error';
+            submitBtn.textContent = 'Proceed to Payment (enter phone number)';
             submitBtn.style.backgroundColor = '#ccc';
         }
     }
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.disabled = true;
                     submitBtn.style.opacity = '0.5';
                     submitBtn.style.cursor = 'not-allowed';
-                    submitBtn.textContent = 'Please fix phone number error';
+                    submitBtn.textContent = 'Proceed to Payment (enter phone number)';
                     submitBtn.style.backgroundColor = '#ccc';
                 }
                 

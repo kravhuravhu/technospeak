@@ -407,7 +407,7 @@
                 'typeId' => 3,
                 'typeName' => 'Personal Guide'
             ])
-        </section>
+        </section> 
 
         <!-- Service Categories Section -->
         <section class="services-categories">
@@ -1051,7 +1051,7 @@
                         submitBtn.disabled = true;
                         submitBtn.style.opacity = '0.6';
                         submitBtn.style.cursor = 'not-allowed';
-                        submitBtn.textContent = 'Please fix errors above';
+                        submitBtn.textContent = 'Send Message';
                         submitBtn.style.backgroundColor = '#ccc';
                     }
                 }

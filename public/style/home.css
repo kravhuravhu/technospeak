@@ -872,6 +872,9 @@ body {
                         transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
                         align-items: center;
                         will-change: transform;
+                        justify-content: flex-start;
+                        gap: 10px;
+                        padding: 0 10px;
                         
                         & > .card {
                             width: 280px;
@@ -895,6 +898,7 @@ body {
                             
                             &:hover {
                                 box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                                transform: scale(0.95);
                             }
                             
                             /* Active card - perfectly centered and prominent */
@@ -1124,6 +1128,12 @@ body {
                         transform: scale(1.1);
                         box-shadow: 0 5px 15px rgba(56, 182, 255, 0.3);
                     }
+
+                     &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        transform: none;
+                    }
                 }
                 
                 /* Position arrows */
@@ -1184,27 +1194,21 @@ body {
 }
 
 @media (max-width: 1200px) {
-    .categories_cont > .main_container {
-        width: 98%;
-        
-        & > .main_cont > .container > .cards-wrapper > .cards > .card {
+    .categories_cont > .main_container > .main_cont {
+        & > .container > .cards-wrapper > .cards > .card {
             width: 260px;
             min-height: 400px;
-            
-            &.active {
-                margin: 0 12px;
-            }
         }
     }
 }
 
 @media (max-width: 992px) {
     .categories_cont {
-        padding: 25px 0;
+        padding: 30px 0;
         
         & > .main_container {
             & > .title_container {
-                margin-bottom: 15px;
+                margin-bottom: 20px;
                 
                 & > h2 {
                     font-size: 2em;
@@ -1213,48 +1217,23 @@ body {
             
             & > .main_cont {
                 & > .container > .cards-wrapper > .cards > .card {
-                    width: 240px;
-                    min-height: 380px;
-                    margin: 0 8px;
-                    padding: 18px 15px;
-                    
-                    &.active {
-                        margin: 0 10px;
-                    }
+                    width: 260px;
+                    min-height: 420px;
+                    padding: 22px;
                     
                     & > .cr-img > img {
-                        height: 55px;
-                        width: 55px;
+                        height: 65px;
+                        width: 65px;
                     }
                     
                     &.active > .cr-img > img {
-                        height: 60px;
-                        width: 60px;
+                        height: 70px;
+                        width: 70px;
                     }
                     
-                    & > .st_title_container {
-                        min-height: 70px;
-                        
-                        & > h3 {
-                            font-size: 1.2em;
-                        }
+                    & > .st_title_container > h3 {
+                        font-size: 1.3em;
                     }
-                    
-                    & > .st_dscrpt {
-                        & > p {
-                            font-size: 0.88em;
-                        }
-                        
-                        & > p.list-ord {
-                            font-size: 0.82em;
-                        }
-                    }
-                }
-                
-                & > .control_arrows > .arrow-btn {
-                    width: 40px;
-                    height: 40px;
-                    font-size: 1.1rem;
                 }
             }
         }
@@ -1263,95 +1242,47 @@ body {
 
 @media (max-width: 820px) {
     .categories_cont {
-        padding: 20px 0;
+        padding: 25px 0;
         
         & > .main_container {
-            width: 100%;
-            
             & > .title_container > h2 {
                 font-size: 1.8em;
             }
             
             & > .main_cont {
-                & > .container {
-                    width: 100%;
+                & > .container > .cards-wrapper {
+                    padding: 20px 0;
                     
-                    & > .cards-wrapper {
-                        padding: 15px 0;
+                    & > .cards {
+                        gap: 15px;
+                        padding: 0 15px;
                         
-                        & > .cards > .card {
-                            width: 220px;
-                            min-height: 360px;
-                            margin: 0 6px;
-                            padding: 15px 12px;
+                        & > .card {
+                            width: 240px;
+                            min-height: 400px;
+                            padding: 20px;
                             
-                            &.active {
-                                margin: 0 8px;
-                                transform: scale(1);
-                            }
-                            
-                            & > .cr-img {
-                                min-height: 60px;
-                                margin-bottom: 12px;
-                                
-                                & > img {
-                                    height: 50px;
-                                    width: 50px;
-                                }
+                            & > .cr-img > img {
+                                height: 60px;
+                                width: 60px;
                             }
                             
                             &.active > .cr-img > img {
-                                height: 55px;
-                                width: 55px;
+                                height: 65px;
+                                width: 65px;
                             }
                             
-                            & > .st_title_container {
-                                min-height: 65px;
-                                margin-bottom: 10px;
-                                
-                                & > h3 {
-                                    font-size: 1.1em;
-                                }
-                            }
-                            
-                            & > .st_dscrpt {
-                                margin-bottom: 12px;
-                                
-                                & > p {
-                                    font-size: 0.85em;
-                                    margin-bottom: 6px;
-                                }
-                                
-                                & > p.list-ord {
-                                    font-size: 0.8em;
-                                    margin: 4px 0;
-                                }
-                            }
-                            
-                            & > .plan-button > a,
-                            & > .plan-button > button {
-                                padding: 8px 16px;
-                                font-size: 0.88em;
-                                min-width: 110px;
+                            & > .st_title_container > h3 {
+                                font-size: 1.2em;
                             }
                         }
                     }
                 }
                 
-                & > .control_arrows {
-                    & > .arrow-btn {
-                        width: 35px;
-                        height: 35px;
-                        font-size: 1rem;
-                    }
-                    
-                    &.rt_arrw {
-                        left: 5px;
-                    }
-                    
-                    &.lt_arrw {
-                        right: 5px;
-                    }
+                & > .control_arrows > .arrow-btn {
+                    width: 45px;
+                    height: 45px;
+                    font-size: 1.2rem;
                 }
             }
         }
@@ -1361,11 +1292,12 @@ body {
 @media (max-width: 768px) {
     .categories_cont > .main_container > .main_cont {
         & > .container > .cards-wrapper > .cards > .card {
-            width: 200px;
-            min-height: 340px;
+            width: 220px;
+            min-height: 380px;
+            padding: 18px;
             
             & > .st_title_container > h3 {
-                font-size: 1.05em;
+                font-size: 1.1em;
             }
         }
     }
@@ -1374,46 +1306,36 @@ body {
 @media (max-width: 576px) {
     .categories_cont > .main_container > .main_cont {
         & > .container > .cards-wrapper > .cards > .card {
-            width: 180px;
-            min-height: 320px;
-            margin: 0 4px;
-            padding: 12px 10px;
+            width: 200px;
+            min-height: 360px;
+            padding: 16px;
             
-            &.active {
-                margin: 0 6px;
-            }
-            
-            & > .cr-img {
-                min-height: 50px;
-                
-                & > img {
-                    height: 45px;
-                    width: 45px;
-                }
+            & > .cr-img > img {
+                height: 55px;
+                width: 55px;
             }
             
             &.active > .cr-img > img {
-                height: 50px;
-                width: 50px;
+                height: 60px;
+                width: 60px;
             }
             
-            & > .st_title_container {
-                min-height: 60px;
-                
-                & > h3 {
-                    font-size: 1em;
-                }
+            & > .st_title_container > h3 {
+                font-size: 1.05em;
+            }
+        }
+        
+        & > .control_arrows > .arrow-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            
+            &.rt_arrw {
+                left: 5px;
             }
             
-            & > .st_dscrpt > p.list-ord {
-                font-size: 0.78em;
-            }
-            
-            & > .plan-button > a,
-            & > .plan-button > button {
-                padding: 7px 14px;
-                font-size: 0.85em;
-                min-width: 100px;
+            &.lt_arrw {
+                right: 5px;
             }
         }
     }
@@ -1422,19 +1344,12 @@ body {
 @media (max-width: 480px) {
     .categories_cont > .main_container > .main_cont {
         & > .container > .cards-wrapper > .cards > .card {
-            width: 160px;
-            min-height: 300px;
+            width: 180px;
+            min-height: 340px;
+            padding: 14px;
             
             & > .st_title_container > h3 {
-                font-size: 0.95em;
-            }
-        }
-        
-        & > .control_arrows {
-            & > .arrow-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 0.9rem;
+                font-size: 1em;
             }
         }
     }
@@ -1442,21 +1357,16 @@ body {
 
 @media (max-width: 400px) {
     .categories_cont {
-        padding: 15px 0;
+        padding: 20px 0;
         
         & > .main_container > .main_cont {
             & > .container > .cards-wrapper > .cards > .card {
-                width: 150px;
-                min-height: 280px;
-                margin: 0 3px;
-                padding: 10px 8px;
-                
-                &.active {
-                    margin: 0 4px;
-                }
+                width: 160px;
+                min-height: 320px;
+                padding: 12px;
                 
                 & > .st_title_container > h3 {
-                    font-size: 0.9em;
+                    font-size: 0.95em;
                 }
             }
         }

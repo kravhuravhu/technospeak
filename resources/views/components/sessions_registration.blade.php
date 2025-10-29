@@ -35,28 +35,26 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
                 </p>
             </div>
             
-            <form class="registration-form" method="POST" action="{{ route('training.register') }}" id="session-form-{{ $typeId }}">
+            <form class="registration-form" method="POST" action="{{ route('training.register') }}">
                 @csrf
                 <input type="hidden" name="session_id" value="{{ $latestSession->id }}">
                 
                 <div class="form-group">
                     <label for="name-{{ $typeId }}">Full Name</label>
                     <input type="text" id="name-{{ $typeId }}" name="name" 
-                        value="{{ auth()->user() ? auth()->user()->name : '' }}" required readonly>
+                        value="{{ auth()->user() ? auth()->user()->name : '' }}" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email-{{ $typeId }}">Email Address</label>
+                    <label for="email-{{ $typeId }}">Email</label>
                     <input type="email" id="email-{{ $typeId }}" name="email" 
-                        value="{{ auth()->user() ? auth()->user()->email : '' }}" required readonly>
+                        value="{{ auth()->user() ? auth()->user()->email : '' }}" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>
-                    <input type="tel" id="phone-{{ $typeId }}" name="phone" 
-                        value="{{ auth()->user() && auth()->user()->phone ? auth()->user()->phone : '' }}"
-                        placeholder="10-digit South African number (e.g., 0123456789)" required>
-                    <div class="error-message" id="phone-error-{{ $typeId }}" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
+                    <input type="tel" id="phone-{{ $typeId }}" name="phone" required>
+                    <div class="phone-validation-message" id="phone-validation-{{ $typeId }}" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem;"></div>
                 </div>
                 
                 <div class="payment-summary">
@@ -93,215 +91,126 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('session-registration-modal-{{ $typeId }}');
-    
-    if (!modal) return;
+    document.addEventListener('DOMContentLoaded', function() {
+        const triggers = document.querySelectorAll('.registration-trigger[data-type-id="{{ $typeId }}"]');
+        const modal = document.getElementById('session-registration-modal-{{ $typeId }}');
+        const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
+        const modalOverlay = modal ? modal.querySelector('.modal-overlay') : null;
 
-    const form = document.getElementById('session-form-{{ $typeId }}');
-    const phoneInput = document.getElementById('phone-{{ $typeId }}');
-    const phoneError = document.getElementById('phone-error-{{ $typeId }}');
-    const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
-
-    // Track validation state - start with invalid
-    let isPhoneValid = false;
-
-    // Phone validation function
-    function validatePhone() {
-        const phone = phoneInput.value.trim();
-        
-        // Clear previous error
-        phoneError.style.display = 'none';
-        phoneInput.style.borderColor = '';
-        
-        if (!phone) {
-            phoneError.textContent = 'Phone number is required';
-            phoneError.style.display = 'block';
-            phoneInput.style.borderColor = 'red';
-            isPhoneValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Remove all non-digit characters
-        const cleanPhone = phone.replace(/\D/g, '');
-        
-        // STRICT validation: EXACTLY 10 digits and starts with 0
-        if (cleanPhone.length !== 10) {
-            phoneError.textContent = 'Phone number must be exactly 10 digits';
-            phoneError.style.display = 'block';
-            phoneInput.style.borderColor = 'red';
-            isPhoneValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        if (!cleanPhone.startsWith('0')) {
-            phoneError.textContent = 'South African phone numbers must start with 0';
-            phoneError.style.display = 'block';
-            phoneInput.style.borderColor = 'red';
-            isPhoneValid = false;
-            updateSubmitButton();
-            return false;
-        }
-        
-        // Phone is valid
-        phoneInput.style.borderColor = 'green';
-        isPhoneValid = true;
-        updateSubmitButton();
-        return true;
-    }
-
-    function updateSubmitButton() {
-        if (!submitBtn) return;
-        
-        // Only enable button when phone is valid
-        if (isPhoneValid) {
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            submitBtn.style.cursor = 'pointer';
-            submitBtn.textContent = 'Proceed to Payment';
-            submitBtn.style.backgroundColor = ''; // Reset to default
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.5';
-            submitBtn.style.cursor = 'not-allowed';
-            submitBtn.textContent = 'Proceed to Payment (enter phone number)';
-            submitBtn.style.backgroundColor = '#ccc';
-        }
-    }
-
-    // Real-time validation on phone input only
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function() {
-            // Auto-format while typing but don't interfere with validation
-            let phone = phoneInput.value.replace(/\D/g, '');
-            
-            // Limit to 10 digits - user can't type more than 10
-            if (phone.length > 10) {
-                phone = phone.substring(0, 10);
-            }
-            
-            // Format with spaces for better readability
-            if (phone.length > 6) {
-                phoneInput.value = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
-            } else if (phone.length > 3) {
-                phoneInput.value = phone.replace(/(\d{3})(\d{0,3})/, '$1 $2');
-            } else {
-                phoneInput.value = phone;
-            }
-            
-            validatePhone();
-        });
-
-        phoneInput.addEventListener('blur', function() {
-            validatePhone();
-        });
-    }
-
-    // Handle form submission - ADD EXTRA SAFETY CHECK
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // FINAL VALIDATION - Double check phone only
-            const finalPhoneCheck = validatePhone();
-            
-            // If phone is invalid, STOP here
-            if (!finalPhoneCheck) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Focus on phone field
-                phoneInput.focus();
-                
-                alert('Please fix the phone number error before proceeding to payment.');
-                return false;
-            }
-            
-            // Only proceed if phone is valid - submit the form normally
-            if (isPhoneValid) {
-                form.submit();
-            }
-        });
-    }
-
-    // Initialize submit button as disabled
-    updateSubmitButton();
-});
-
-// Modal trigger functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const triggers = document.querySelectorAll('.registration-trigger[data-type-id="{{ $typeId }}"]');
-    const modal = document.getElementById('session-registration-modal-{{ $typeId }}');
-
-    if (triggers.length && modal) {
-        triggers.forEach(trigger => {
-            trigger.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Reset validation state when opening modal
-                const phoneInput = document.getElementById('phone-{{ $typeId }}');
-                const phoneError = document.getElementById('phone-error-{{ $typeId }}');
-                const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
-                
-                if (phoneInput) phoneInput.style.borderColor = '';
-                if (phoneError) phoneError.style.display = 'none';
-                
-                // Reset validation state
-                if (window.isPhoneValid !== undefined) window.isPhoneValid = false;
-                
-                // Disable submit button
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.style.opacity = '0.5';
-                    submitBtn.style.cursor = 'not-allowed';
-                    submitBtn.textContent = 'Proceed to Payment (enter phone number)';
-                    submitBtn.style.backgroundColor = '#ccc';
-                }
-                
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+        if (triggers.length && modal) {
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
             });
-        });
-        
-        modal.querySelector('.close-modal').addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
+            
+            modal.querySelector('.close-modal').addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
 
-        modal.querySelector('.modal-overlay').addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
+            modal.querySelector('.modal-overlay').addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        // Phone number validation
+        const phoneInput = document.getElementById('phone-{{ $typeId }}');
+        const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
+        const validationMessage = document.getElementById('phone-validation-{{ $typeId }}');
+
+        if (phoneInput && submitBtn) {
+            phoneInput.addEventListener('input', function() {
+                validatePhoneNumber(this.value);
+            });
+
+            phoneInput.addEventListener('blur', function() {
+                validatePhoneNumber(this.value);
+            });
+        }
+
+        function validatePhoneNumber(phone) {
+            // Clear previous validation message
+            validationMessage.style.display = 'none';
+            validationMessage.textContent = '';
+            
+            // Remove any non-digit characters
+            const cleanPhone = phone.replace(/\D/g, '');
+            
+            // South African phone number validation
+            // Valid formats: 
+            // - 10 digits starting with 0 (e.g., 0123456789)
+            // - 11 digits starting with 27 (e.g., 27123456789)
+            // - 9 digits starting without 0 (e.g., 123456789)
+            
+            let isValid = false;
+            let message = '';
+            
+            if (cleanPhone.length === 0) {
+                message = 'Phone number is required';
+            } else if (cleanPhone.length === 9 && !cleanPhone.startsWith('0')) {
+                // 9 digits without leading 0
+                isValid = true;
+            } else if (cleanPhone.length === 10 && cleanPhone.startsWith('0')) {
+                // 10 digits starting with 0
+                isValid = true;
+            } else if (cleanPhone.length === 11 && cleanPhone.startsWith('27')) {
+                // 11 digits starting with 27 (country code)
+                isValid = true;
+            } else {
+                message = 'Please enter a valid South African phone number (e.g., 0123456789 or 27123456789)';
+            }
+            
+            // Update UI based on validation
+            if (isValid) {
+                phoneInput.style.borderColor = 'var(--success)';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                phoneInput.style.borderColor = 'var(--danger)';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
+                
+                if (message) {
+                    validationMessage.textContent = message;
+                    validationMessage.style.display = 'block';
+                }
+            }
+            
+            return isValid;
+        }
+    });
+
+    function showPopUp(title, message, type = 'success') {
+        let existingPopup = document.querySelector('.popup');
+        if (existingPopup) existingPopup.remove();
+
+        const popup = document.createElement('div');
+        popup.className = `popup ${type}`;
+        popup.innerHTML = `
+            <h3>${title}</h3>
+            <p>${message}</p>
+        `;
+
+        popup.style.position = 'fixed';
+        popup.style.top = '20px';
+        popup.style.right = '20px';
+        popup.style.padding = '20px';
+        popup.style.backgroundColor = type === 'error' ? '#ffebee' : '#e8f5e9';
+        popup.style.border = type === 'error' ? '1px solid #ef9a9a' : '1px solid #a5d6a7';
+        popup.style.borderRadius = '5px';
+        popup.style.zIndex = '1000';
+        popup.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+
+        document.body.appendChild(popup);
+
+        setTimeout(() => popup.remove(), 10000);
     }
-});
-
-function showPopUp(title, message, type = 'success') {
-    let existingPopup = document.querySelector('.popup');
-    if (existingPopup) existingPopup.remove();
-
-    const popup = document.createElement('div');
-    popup.className = `popup ${type}`;
-    popup.innerHTML = `
-        <h3>${title}</h3>
-        <p>${message}</p>
-    `;
-
-    popup.style.position = 'fixed';
-    popup.style.top = '20px';
-    popup.style.right = '20px';
-    popup.style.padding = '20px';
-    popup.style.backgroundColor = type === 'error' ? '#ffebee' : '#e8f5e9';
-    popup.style.border = type === 'error' ? '1px solid #ef9a9a' : '1px solid #a5d6a7';
-    popup.style.borderRadius = '5px';
-    popup.style.zIndex = '1000';
-    popup.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-
-    document.body.appendChild(popup);
-
-    setTimeout(() => popup.remove(), 10000);
-}
 </script>
 
 <style>
@@ -407,12 +316,6 @@ function showPopUp(title, message, type = 'success') {
         transition: all 0.3s ease-in-out;
     }
 
-    .session-registration-modal .form-group input:read-only {
-        background-color: #f8f9fa;
-        border-color: #e9ecef;
-        cursor: not-allowed;
-    }
-
     .session-registration-modal .form-group input::placeholder {
         color: #1d1d1d;
         font-size: .9em;
@@ -433,7 +336,7 @@ function showPopUp(title, message, type = 'success') {
         font-weight: 600;
         font-size: 1rem;
         width: 100%;
-        transition: background-color 0.3s;
+        transition: all 0.3s;
     }
 
     .session-registration-modal .submit-btn:hover {
@@ -441,9 +344,9 @@ function showPopUp(title, message, type = 'success') {
     }
 
     .session-registration-modal .submit-btn:disabled {
-        background-color: #ccc;
+        background-color: #cccccc;
         cursor: not-allowed;
-        opacity: 0.5;
+        opacity: 0.6;
     }
 
     .session-registration-modal .no-session {
@@ -489,12 +392,5 @@ function showPopUp(title, message, type = 'success') {
         font-size: 0.85rem;
         color: var(--powBlue);
         text-align: right;
-    }
-
-    .error-message {
-        color: red;
-        font-size: 12px;
-        margin-top: 5px;
-        display: none;
     }
 </style>

@@ -514,44 +514,44 @@
                     <div class="poster-grid">
                         <div class="poster-item">
                             <div class="poster-frame">
-                                <img src="../images/portfolio/poster1.jpg" alt="Creative Poster Design 1" class="poster-image">
+                                <img src="@secureAsset('/images/AI-Potential.jpeg')" alt="Creative Poster Design 1" class="poster-image">
                                 <div class="poster-overlay">
                                     <div class="overlay-content">
                                         <h4>Tech Innovation Poster</h4>
-                                        <p>Modern design for tech conference</p>
+                                        <p>Modern design for tech</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="poster-item">
                             <div class="poster-frame">
-                                <img src="../images/portfolio/poster2.jpg" alt="Creative Poster Design 2" class="poster-image">
+                                <img src="@secureAsset('/images/TS-resume.jpeg')" alt="Creative Poster Design 2" class="poster-image">
                                 <div class="poster-overlay">
                                     <div class="overlay-content">
-                                        <h4>Educational Workshop</h4>
-                                        <p>Engaging educational material</p>
+                                        <h4>Education & Resume creation</h4>
+                                        <p>Engaging educational material & Resemuse assistance</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="poster-item">
                             <div class="poster-frame">
-                                <img src="../images/portfolio/poster3.jpg" alt="Creative Poster Design 3" class="poster-image">
+                                <img src="@secureAsset('/images/TS-helloMonday.jpeg')" alt="Creative Poster Design 3" class="poster-image">
                                 <div class="poster-overlay">
                                     <div class="overlay-content">
-                                        <h4>Business Seminar</h4>
-                                        <p>Professional corporate design</p>
+                                        <h4>Casual Posts</h4>
+                                        <p>Engaging & fun posts with TechnoSpeak</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="poster-item">
                             <div class="poster-frame">
-                                <img src="../images/portfolio/poster4.jpg" alt="Creative Poster Design 4" class="poster-image">
+                                <img src="@secureAsset('/images/TS-deliverTech.jpeg')" alt="Creative Poster Design 4" class="poster-image">
                                 <div class="poster-overlay">
                                     <div class="overlay-content">
-                                        <h4>Digital Marketing</h4>
-                                        <p>Social media campaign design</p>
+                                        <h4>Tips & Tricks</h4>
+                                        <p>Deliver free helpful videos</p>
                                     </div>
                                 </div>
                             </div>
@@ -575,11 +575,13 @@
                                         <span></span>
                                     </div>
                                 </div>
-                                <img src="../images/portfolio/website1.jpg" alt="Website Project 1" class="website-image">
+                                <a href="https://www.chippexstravel.co.za/" target="_blank" rel="noopener noreferrer">
+                                    <img src="@secureAsset('/images/chippexTravel.png')" alt="Website Project 1" class="website-image">
+                                </a>
                             </div>
                             <div class="website-info">
                                 <h4>E-Commerce Platform</h4>
-                                <p>Full-stack e-commerce solution with payment integration</p>
+                                <p>Full-stack traveling website solution with payment integration.</p>
                                 <div class="tech-tags">
                                     <span>React</span>
                                     <span>Node.js</span>
@@ -596,13 +598,15 @@
                                         <span></span>
                                     </div>
                                 </div>
-                                <img src="../images/portfolio/website2.jpg" alt="Website Project 2" class="website-image">
+                                <a href="https://nkosimbewelawgroup.co.za/" target="_blank" rel="noopener noreferrer">
+                                    <img src="@secureAsset('/images/nkosimbewe.png')" alt="Website Project 2" class="website-image">
+                                </a>
                             </div>
                             <div class="website-info">
-                                <h4>Corporate Portal</h4>
-                                <p>Enterprise solution with admin dashboard</p>
+                                <h4>Corporate Law Business</h4>
+                                <p>Legal matter handle website, with valuable information.</p>
                                 <div class="tech-tags">
-                                    <span>Vue.js</span>
+                                    <span>PHP</span>
                                     <span>Laravel</span>
                                     <span>MySQL</span>
                                 </div>
@@ -627,15 +631,17 @@
                                         <span></span>
                                     </div>
                                 </div>
-                                <img src="../images/portfolio/website3.jpg" alt="Website Project 3" class="website-image">
+                                <a href="https://mbewegroup.co.za/" target="_blank" rel="noopener noreferrer">
+                                    <img src="@secureAsset('/images/mbewegroup.png')" alt="Website Project 3" class="website-image">
+                                </a>
                             </div>
                             <div class="website-info">
-                                <h4>Learning Management System</h4>
-                                <p>Educational platform with course management</p>
+                                <h4>Law, Property, Financial & Car Hire website</h4>
+                                <p>Handling all the legal & financial matter that matter in daily life.</p>
                                 <div class="tech-tags">
-                                    <span>Angular</span>
-                                    <span>Python</span>
-                                    <span>PostgreSQL</span>
+                                    <span>PHP</span>
+                                    <span>MySql</span>
+                                    <span>HTML, CSS</span>
                                 </div>
                             </div>
                         </div>
@@ -648,15 +654,17 @@
                                         <span></span>
                                     </div>
                                 </div>
-                                <img src="../images/portfolio/website4.jpg" alt="Website Project 4" class="website-image">
+                                <a href="https://africantravelogue.co.za/" target="_blank" rel="noopener noreferrer">
+                                    <img src="@secureAsset('/images/africanTravel.png')" alt="Website Project 4" class="website-image">
+                                </a>
                             </div>
                             <div class="website-info">
-                                <h4>Portfolio Website</h4>
-                                <p>Creative portfolio with smooth animations</p>
+                                <h4>African Experience Traveling website</h4>
+                                <p>Explore the beautiful countries in Africa with exciting activities.</p>
                                 <div class="tech-tags">
-                                    <span>GSAP</span>
-                                    <span>Three.js</span>
-                                    <span>Firebase</span>
+                                    <span>PHP</span>
+                                    <span>MySql</span>
+                                    <span>HTML, CSS</span>
                                 </div>
                             </div>
                         </div>
@@ -664,12 +672,12 @@
                 </div>
 
                 <!-- Website Design Showcase - Section 3 -->
-                <div class="showcase-section website-showcase">
+                <!-- <div class="showcase-section website-showcase">
                     <div class="showcase-header">
                         <h3>Mobile-First Solutions</h3>
                         <p>Optimized experiences for all devices and screen sizes</p>
                     </div>
-                    <div class="website-grid">
+                    <div class="website-grid"> 
                         <div class="website-item">
                             <div class="browser-mockup">
                                 <div class="browser-header">
@@ -713,7 +721,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Call to Action -->
                 <div class="portfolio-cta">

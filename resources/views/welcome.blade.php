@@ -62,7 +62,7 @@
                                     <h3 id="animated_header">Transform Your Digital Future</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p><strong>Technospeak</strong> empowers you to master technology with confidence. We offer easy-to-follow tutorials...</p>
+                                    <p><strong>Technospeak</strong> empowers you to master technology with confidence. We offer easy-to-follow tutorials, practical guides, and real-world support for students, professionals, and small businesses. Whether you want to boost productivity, learn new digital skills, or solve everyday tech challenges, our team is here to help you succeed—no jargon, just results.</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
@@ -83,7 +83,7 @@
                                     <h3>AI-Powered Business Revolution</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Discover how AI can simplify your everyday tasks and boost productivity—no technical background needed...</p>
+                                    <p>Discover how AI can simplify your everyday tasks and boost productivity—no technical background needed. At Technospeak, we guide you through practical uses of AI tools for writing, research, and creative projects. Learn to use chatbots, automate simple processes, and make smarter decisions with easy-to-follow tutorials designed for students, professionals, and small businesses.</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
@@ -104,7 +104,7 @@
                                     <h3>Cloud Infrastructure Reimagined</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Unlock the power of cloud tools for learning, collaboration, and productivity. At <strong>Technospeak</strong>, we guide you...</p>
+                                    <p>Unlock the power of cloud tools for learning, collaboration, and productivity. At <span>Technospeak,<span> we guide you through using Google Workspace, Microsoft 365, and other essential platforms—no jargon, just practical skills. Whether you’re a student, educator, or small business, we help you work smarter, store safely, and access your files anywhere.</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
@@ -125,7 +125,7 @@
                                     <h3>Cybersecurity Awareness</h3>
                                 </div>
                                 <div class="dscpt">
-                                    <p>Stay safe online with our easy-to-follow cybersecurity guidance and practical tools. We help you recognize scams, protect your accounts...</p>
+                                    <p>Stay safe online with our easy-to-follow cybersecurity guidance and practical tools. We help you recognize scams, protect your accounts, and secure your devices—no technical jargon required. Learn how to keep your personal and business information safe, and gain confidence navigating the digital world.</p>
                                 </div>
                                 <div class="cta">
                                     @if(Auth::check())
@@ -647,7 +647,7 @@
                                 <div class="prgrph"><p>Full Names:</p></div>
                                 <div class="field">
                                     <input type="text" name="contact_full_name" id="contact_full_name" placeholder="Enter name here..." required />
-                                    <div class="error-message" id="name-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
+                                    <div class="error-message" id="name-error" style="color: red; display: none; font-size: 12px; margin: 5px auto 0; text-align: center; width: 100%;"></div>
                                 </div>
                             </div>
                             <div class="block">
@@ -656,14 +656,14 @@
                                 </div>
                                 <div class="field">
                                     <input type="email" name="contact_email" id="contact_email" placeholder="Enter email here..." required />
-                                    <div class="error-message" id="email-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
+                                    <div class="error-message" id="email-error" style="color: red; display: none; font-size: 12px; margin: 5px auto 0; text-align: center; width: 100%;"></div>
                                 </div>
                             </div>
                             <div class="block">
                                 <div class="prgrph"><p>Message:</p></div>
                                 <div class="field">
                                     <textarea name="contact_message" id="contact_message" placeholder="Enter your message..." required></textarea>
-                                    <div class="error-message" id="message-error" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
+                                    <div class="error-message" id="message-error" style="color: red; display: none; font-size: 12px; margin: 5px auto 0; text-align: center; width: 100%;"></div>
                                 </div>
                             </div>
                             <div class="block">

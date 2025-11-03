@@ -263,12 +263,6 @@ body {
                                 box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.2);
                             }
                         }
-                        & > p {
-                            font-size: 0.9em;
-                            font-family: "Roboto", sans-serif;
-                            margin: 5px 0 0;
-                            color: #ff2929;
-                        }
                         & > .container-rm-fgp {
                             display: flex;
                             width: 430px;
@@ -284,6 +278,15 @@ body {
                                 font-family: "Roboto", sans-serif;
                                 text-decoration: none;
                             }
+                        }
+                    }
+                    & > p {
+                        font-size: 0.8em;
+                        font-family: "Roboto", sans-serif;
+                        color: #ff2929;
+                        display: none;
+                        &:not(:empty) {
+                            display: block;
                         }
                     }
                     & > button[type="submit"] {
@@ -393,6 +396,8 @@ body {
 
 @media (max-width: 768px) {
     .register_container {
+        height: auto;
+        padding: 20px 10px;
         & > .main_container {
             width: 100%;
             flex-direction: column;
@@ -453,8 +458,7 @@ body {
                                 flex-direction: column;
                                 justify-content: center;
                                 & > div {
-                                    margin: 10px;
-                                    margin: 0 auto;
+                                    margin: 5px auto;
                                 }
                             }
                         }
@@ -479,9 +483,9 @@ body {
                     & > form {
                         gap: 10px;
                         & > .input-icon {
-                            & > input {
+                            /* & > input {
                                 width: 270px;
-                            }
+                            } */
                             & > .container-rm-fgp {
                                 width: 270px;
                             }
@@ -601,4 +605,16 @@ body {
       }
     }
   }
+}
+
+.error {
+    display: none;
+    color: #ff2929;
+    font-size: 0.8em;
+    font-family: "Roboto", sans-serif;
+    padding: 5px;
+}
+
+.error:not(:empty) {
+    display: block;
 }

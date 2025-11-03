@@ -539,6 +539,17 @@ Route::get('/training/register', [TrainingRegistrationController::class, 'showTr
     ->name('training.register')
     ->middleware('auth');
 
+// Training payment success routes
+Route::get('/training/payment/success/{payment}', function($paymentId) {
+    $payment = Payment::findOrFail($paymentId);
+    $session = TrainingSession::find($payment->payable_id);
+    
+    return view('training.payment-success', [
+        'trainingSession' => $session,
+        'payment' => $payment
+    ]);
+})->name('training.payment.success')->middleware('auth');
+
 // Training payment failed route
 Route::get('/training/payment-failed/{payment}', [TrainingRegistrationController::class, 'showTrainingPaymentFailed'])
     ->name('training.payment.failed')
@@ -566,6 +577,24 @@ Route::get('/api/check-session-payment/{sessionId}', function($sessionId) {
         'message' => $paid ? 'You have already paid for this session' : 'No payment found for this session'
     ]);
 })->middleware('auth');
+
+Route::get('/training/payment/{session}', function($sessionId) {
+    $session = TrainingSession::with('type')->findOrFail($sessionId);
+    $client = auth()->user();
+    
+    // Check if session is available
+    if ($session->scheduled_for < now()) {
+        return back()->with('error', 'This session is no longer available for registration.');
+    }
+    
+    if ($session->isFull()) {
+        return back()->with('error', 'This session is already full.');
+    }
+    
+    $price = $session->type->getPriceForUserType($client->userType);
+    
+    return view('training.yoco-payment', compact('session', 'price', 'client'));
+})->name('training.payment.form')->middleware('auth');
 
 // Formal training payment routes
 Route::get('/formal-training/payment/{course}', [CourseAccessController::class, 'showPaymentForm'])
@@ -688,27 +717,42 @@ Route::get('/training/yoco/eft/status/{payment}', [TrainingRegistrationControlle
     ->name('training.yoco.eft.status')
     ->middleware('auth');
 
-// API endpoint for course payment check
-Route::get('/api/check-course-payment/{courseId}', function($courseId) {
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+Route::get('/api/check-registration/{typeId}', function($typeId) {
     $user = Auth::user();
     
+    Log::info('🔍 check-registration started', [
+        'user_id' => $user ? $user->id : null,
+        'type_id' => $typeId
+    ]);
+    
     if (!$user) {
+        Log::info('❌ Not authenticated');
         return response()->json(['paid' => false, 'message' => 'User not authenticated']);
     }
-    
-    $paid = \App\Http\Controllers\CourseAccessController::hasPaidForCourse($user->id, $courseId);
-    
-    $course = \App\Models\Course::find($courseId);
-    $courseTitle = $course->title ?? 'this course';
-    
-    $message = $paid ? 
-        "You have already purchased '{$courseTitle}'. Duplicate payments are not allowed." : 
-        "No payment found for this course";
-    
-    return response()->json([
-        'paid' => $paid,
-        'message' => $message
+
+    $clientId = $user->id;
+
+    $registered = Payment::where('client_id', $clientId)
+        ->where('status', 'completed')
+        ->whereHasMorph(
+            'payable',
+            [\App\Models\TrainingSession::class],
+            function ($query) use ($typeId) {
+                $query->where('type_id', $typeId);
+            }
+        )
+        ->exists();
+
+    Log::info('✅ check-registration query done', [
+        'client_id' => $clientId,
+        'registered' => $registered
     ]);
+
+    return response()->json(['registered' => $registered]);
 })->middleware('auth');
+
 
 Route::post('/contact/message', [ContactController::class, 'send'])->name('contact.message.send');

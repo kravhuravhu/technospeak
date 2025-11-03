@@ -15,7 +15,7 @@
             <div class="main_container">
                 <div class="welcome_" id="welcomeSwapArea">
                     <div class="logo_container">
-                        <a href="#"><img src="../images/white-no-logo.png" alt="technospeak white logo"/></a>
+                        <a href="/"><img src="../images/white-no-logo.png" alt="technospeak white logo"/></a>
                     </div>
                     <div class="title_content">
                         <h2>Welcome Back!</h2>
@@ -47,28 +47,29 @@
                     <div class="hrzntl"><hr><span>Or</span><hr></div>
                     <div class="dscpt"><p>Continue with using your email</p></div>
                     <div class="form_wrapper">
-                        <form method="POST" action="{{ route('register') }}">
+                        <form method="POST" action="{{ route('register') }}" id="registerForm">
                             @csrf
                             <div class="input-icon">
                                 <i class="fa fa-user"></i>
                                 <input type="text" name="name" placeholder="Enter your name" value="{{ old('name') }}" required>
-                                @error('name') <p>{{ $message }}</p> @enderror
                             </div>
+                            @error('name') <p>{{ $message }}</p> @enderror
                             <div class="input-icon">
                                 <i class="fa fa-user"></i>
                                 <input type="text" name="surname" placeholder="Enter your surname" value="{{ old('surname') }}" required>
-                                @error('surname') <p>{{ $message }}</p> @enderror
                             </div>
+                            @error('surname') <p>{{ $message }}</p> @enderror
                             <div class="input-icon">
                                 <i class="fa fa-envelope"></i>
                                 <input type="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
-                                @error('email') <p>{{ $message }}</p> @enderror
                             </div>
+                            <div class="error" id="emailError"></div>
+                            @error('email') <p class="error">{{ $message }}</p> @enderror
                             <div class="input-icon">
                                 <i class="fa fa-lock"></i>
                                 <input type="password" name="password" placeholder="Enter password here" required>
-                                @error('password') <p>{{ $message }}</p> @enderror
                             </div>
+                            @error('password') <p>{{ $message }}</p> @enderror
                             <div class="input-icon">
                                 <i class="fa fa-lock"></i>
                                 <input type="password" name="password_confirmation" placeholder="Re-enter your password" required>
@@ -152,6 +153,36 @@
             window.addEventListener('popstate', function (e) {
                 const url = e.state?.url || '/register';
                 swapContent(url, false);
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailInput = document.querySelector('input[name="email"]');
+            const emailError = document.getElementById('emailError');
+            const form = document.getElementById('registerForm');
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            function validateEmail() {
+                const value = emailInput.value.trim();
+                if (!value) {
+                    emailError.textContent = 'Email is required';
+                    return false;
+                } else if (!emailRegex.test(value)) {
+                    emailError.textContent = 'Enter a valid email';
+                    return false;
+                } else {
+                    emailError.textContent = '';
+                    return true;
+                }
+            }
+
+            emailInput.addEventListener('input', validateEmail);
+
+            form.addEventListener('submit', (e) => {
+                if (!validateEmail()) {
+                    e.preventDefault();
+                    emailInput.focus();
+                }
             });
         });
         </script>

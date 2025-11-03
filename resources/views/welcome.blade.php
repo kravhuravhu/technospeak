@@ -269,9 +269,9 @@
                             <li class="products swiper-slide">
                                 <img src="@secureAsset('/images/live Q&A session.png')" alt="Group Session 1" class="product-image"/>
                                 <h3 class="subtitle">Live Q&A Sessions</h3>
-                                    <div class="price-tag">
-                                        <span>From R130/hour</span>
-                                    </div>
+                                <div class="price-tag">
+                                    <span>From R130/hour</span>
+                                </div>
 
                                 <i class="description">
                                     <p>Interactive group sessions where you can ask questions and get immediate expert answers.</p>
@@ -283,23 +283,23 @@
 
                                 <div class="plan-button">
                                     @if(Auth::check())
-                                    <!-- Group Q/A Button -->
-                                    @if(isset($qaSession) && $qaSession)
-                                        <a href="#" class="btn btn-primary registration-trigger" 
-                                        data-type-id="4" 
-                                        data-session-id="{{ $qaSession->id }}">
-                                            BOOK NOW
-                                        </a>
-                                    @else
-                                        <button class="btn btn-primary" disabled>BOOK NOW</button>
-                                    @endif
+                                        <!-- Group Q/A Button -->
+                                        @if(isset($qaSession) && $qaSession)
+                                            <a href="#" class="btn btn-primary registration-trigger" 
+                                            data-type-id="4" 
+                                            data-session-id="{{ $qaSession->id }}">
+                                                BOOK NOW
+                                            </a>
+                                        @else
+                                            <button class="btn btn-primary" disabled>NO SESSION</button>
+                                        @endif
                                     @else
                                         <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
                                     @endif
                                 </div>
                             </li>
 
-                            <!-- Card 7: Group Session 2 (cleaned and consistent with other cards) -->
+                            <!-- Card 7: Group Session 2 -->
                             <li class="products swiper-slide">
                                 <img src="@secureAsset('images/live consultation.png')" alt="Group Session 2" class="product-image"/>
                                 <h3 class="subtitle">Response Consultations</h3>
@@ -320,12 +320,12 @@
                                     @if(Auth::check())
                                         @if(isset($consultSession) && $consultSession)
                                             <a href="#" class="btn btn-primary registration-trigger"
-                                               data-type-id="5"
-                                               data-session-id="{{ $consultSession->id }}">
+                                            data-type-id="5"
+                                            data-session-id="{{ $consultSession->id }}">
                                                 BOOK NOW
                                             </a>
                                         @else
-                                            <button class="btn btn-primary" disabled>BOOK NOW</button>
+                                            <button class="btn btn-primary" disabled>NO SESSION</button>
                                         @endif
                                     @else
                                         <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>

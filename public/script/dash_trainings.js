@@ -203,7 +203,7 @@ function enrollInCourse(courseId, buttonElement = null, originalText = 'Full Det
     .then(async response => {
         const data = await response.json();
         if (response.ok && data.success) {
-            showSwalNotification('success', 'Success', data.message || 'Successfully enrolled! Redirecting now...');
+            showSwalNotification('success', 'Success', data.message || 'Redirecting now...');
             updateEnrollmentUI(courseId, data.open_url);
             closeModal();
             refreshMyTrainings();

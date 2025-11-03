@@ -6,7 +6,7 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
     ->first();
 @endphp
 
-{{-- if already registered --}}
+{{-- Session registration modal --}}
 @if(session('success') || session('error'))
     <script>
         window.addEventListener('DOMContentLoaded', function () {
@@ -23,37 +23,42 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
     <div class="modal-overlay"></div>
     <div class="modal-content">
         <button class="close-modal">&times;</button>
-        
+
         @if($latestSession)
             <h3>Register for {{ $latestSession->title }}</h3>
+
+            {{-- Logged-in info --}}
+            <div class="logged-in-info" style="margin-bottom: 1rem; font-size: 0.95rem; color: var(--darkBlue);">
+                @if(auth()->user())
+                    Logged in as: <strong>{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }})
+                @else
+                    Not logged in
+                @endif
+            </div>
+
             <div class="session-details">
                 <p><strong>Date & Time:</strong> {{ $latestSession->scheduled_for->format('F j, Y g:i A') }}</p>
                 <p><strong>Duration:</strong> {{ $latestSession->formatted_duration }}</p>
                 <p><strong>Instructor:</strong> {{ $latestSession->instructor->name ?? 'TBA' }}</p>
-                <p><strong>Available Spots:</strong> 
-                    {{ $latestSession->available_spots ?? 'Unlimited' }}
-                </p>
+                <p><strong>Available Spots:</strong> {{ $latestSession->available_spots ?? 'Unlimited' }}</p>
             </div>
-            
+
+            {{-- Description --}}
+            <div class="session-details">
+                <p>{{ $latestSession->type->name ?? 'Tech Stuff' }} — <strong> What's it about?:</strong> {{ $latestSession->description }}</p>
+            </div>
+
+            {{-- Registration Form --}}
             <form class="registration-form" method="POST" action="{{ route('training.register') }}">
                 @csrf
                 <input type="hidden" name="session_id" value="{{ $latestSession->id }}">
-                
-                <div class="form-group">
-                    <label for="name-{{ $typeId }}">Full Name</label>
-                    <input type="text" id="name-{{ $typeId }}" name="name" 
-                        value="{{ auth()->user() ? auth()->user()->name : '' }}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email-{{ $typeId }}">Email</label>
-                    <input type="email" id="email-{{ $typeId }}" name="email" 
-                        value="{{ auth()->user() ? auth()->user()->email : '' }}" required>
-                </div>
+                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
                 
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>
-                    <input type="tel" id="phone-{{ $typeId }}" name="phone" required>
+                    <input type="tel" id="phone-{{ $typeId }}" name="phone" required 
+                        value="{{ auth()->user()->phone ?? '' }}">
                     <div class="phone-validation-message" id="phone-validation-{{ $typeId }}" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem;"></div>
                 </div>
                 
@@ -77,13 +82,13 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
                         @endif
                     </p>
                 </div>
-                
-                <button type="submit" class="submit-btn" id="submit-btn-{{ $typeId }}" disabled>Proceed to Payment</button>
+
+                <button type="submit" class="submit-btn" id="submit-btn-{{ $typeId }}" disabled>Complete Registration</button>
             </form>
         @else
             <div class="no-session">
                 <h3>No Upcoming Sessions Scheduled</h3>
-                <p>There are currently no upcoming {{ $typeName }} sessions scheduled.</p>
+                <p>There are currently no upcoming {{ $typeName ?? 'sessions' }} scheduled.</p>
                 <p>Please check back later or contact us for more information.</p>
             </div>
         @endif
@@ -94,121 +99,53 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
     document.addEventListener('DOMContentLoaded', function() {
         const triggers = document.querySelectorAll('.registration-trigger[data-type-id="{{ $typeId }}"]');
         const modal = document.getElementById('session-registration-modal-{{ $typeId }}');
-        const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
-        const modalOverlay = modal ? modal.querySelector('.modal-overlay') : null;
+        const closeModalBtn = modal?.querySelector('.close-modal');
+        const modalOverlay = modal?.querySelector('.modal-overlay');
 
-        if (triggers.length && modal) {
-            triggers.forEach(trigger => {
-                trigger.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    modal.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                });
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             });
-            
-            modal.querySelector('.close-modal').addEventListener('click', function() {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
+        });
 
-            modal.querySelector('.modal-overlay').addEventListener('click', function() {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-        }
+        closeModalBtn?.addEventListener('click', () => { modal.style.display = 'none'; document.body.style.overflow = 'auto'; });
+        modalOverlay?.addEventListener('click', () => { modal.style.display = 'none'; document.body.style.overflow = 'auto'; });
 
-        // Phone number validation
+        // Phone validation
         const phoneInput = document.getElementById('phone-{{ $typeId }}');
         const submitBtn = document.getElementById('submit-btn-{{ $typeId }}');
         const validationMessage = document.getElementById('phone-validation-{{ $typeId }}');
 
-        if (phoneInput && submitBtn) {
-            phoneInput.addEventListener('input', function() {
-                validatePhoneNumber(this.value);
-            });
-
-            phoneInput.addEventListener('blur', function() {
-                validatePhoneNumber(this.value);
-            });
-        }
+        phoneInput?.addEventListener('input', () => validatePhoneNumber(phoneInput.value));
+        phoneInput?.addEventListener('blur', () => validatePhoneNumber(phoneInput.value));
 
         function validatePhoneNumber(phone) {
-            // Clear previous validation message
             validationMessage.style.display = 'none';
             validationMessage.textContent = '';
-            
-            // Remove any non-digit characters
             const cleanPhone = phone.replace(/\D/g, '');
-            
-            // South African phone number validation
-            // Valid formats: 
-            // - 10 digits starting with 0 (e.g., 0123456789)
-            // - 11 digits starting with 27 (e.g., 27123456789)
-            // - 9 digits starting without 0 (e.g., 123456789)
-            
             let isValid = false;
             let message = '';
-            
-            if (cleanPhone.length === 0) {
-                message = 'Phone number is required';
-            } else if (cleanPhone.length === 9 && !cleanPhone.startsWith('0')) {
-                // 9 digits without leading 0
-                isValid = true;
-            } else if (cleanPhone.length === 10 && cleanPhone.startsWith('0')) {
-                // 10 digits starting with 0
-                isValid = true;
-            } else if (cleanPhone.length === 11 && cleanPhone.startsWith('27')) {
-                // 11 digits starting with 27 (country code)
-                isValid = true;
-            } else {
-                message = 'Please enter a valid South African phone number (e.g., 0123456789 or 27123456789)';
-            }
-            
-            // Update UI based on validation
-            if (isValid) {
-                phoneInput.style.borderColor = 'var(--success)';
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                submitBtn.style.cursor = 'pointer';
-            } else {
-                phoneInput.style.borderColor = 'var(--danger)';
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-                
-                if (message) {
-                    validationMessage.textContent = message;
-                    validationMessage.style.display = 'block';
-                }
-            }
-            
-            return isValid;
+
+            if (!cleanPhone) message = 'Phone number is required';
+            else if (cleanPhone.length === 9 && !cleanPhone.startsWith('0')) isValid = true;
+            else if (cleanPhone.length === 10 && cleanPhone.startsWith('0')) isValid = true;
+            else if (cleanPhone.length === 11 && cleanPhone.startsWith('27')) isValid = true;
+            else message = 'Please enter a valid South African phone number (e.g., 0123456789 or 27123456789)';
+
+            if (isValid) { phoneInput.style.borderColor = 'var(--success)'; submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.cursor = 'pointer'; }
+            else { phoneInput.style.borderColor = 'var(--danger)'; submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.style.cursor = 'not-allowed'; if(message) { validationMessage.textContent = message; validationMessage.style.display = 'block'; } }
         }
     });
 
     function showPopUp(title, message, type = 'success') {
-        let existingPopup = document.querySelector('.popup');
-        if (existingPopup) existingPopup.remove();
-
+        document.querySelector('.popup')?.remove();
         const popup = document.createElement('div');
         popup.className = `popup ${type}`;
-        popup.innerHTML = `
-            <h3>${title}</h3>
-            <p>${message}</p>
-        `;
-
-        popup.style.position = 'fixed';
-        popup.style.top = '20px';
-        popup.style.right = '20px';
-        popup.style.padding = '20px';
-        popup.style.backgroundColor = type === 'error' ? '#ffebee' : '#e8f5e9';
-        popup.style.border = type === 'error' ? '1px solid #ef9a9a' : '1px solid #a5d6a7';
-        popup.style.borderRadius = '5px';
-        popup.style.zIndex = '1000';
-        popup.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-
+        popup.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
+        popup.style = 'position:fixed; top:20px; right:20px; padding:20px; border-radius:5px; z-index:1000; box-shadow:0 2px 10px rgba(0,0,0,0.1); background-color:' + (type === 'error' ? '#ffebee' : '#e8f5e9') + '; border:1px solid ' + (type === 'error' ? '#ef9a9a' : '#a5d6a7') + ';';
         document.body.appendChild(popup);
-
         setTimeout(() => popup.remove(), 10000);
     }
 </script>

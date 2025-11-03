@@ -188,7 +188,7 @@
                 <div class="content-section active dashboard_content with_current_learnings" id="usr_dashboard">
                     <div class="topbar search-bar">
                         <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Search...">
+                        <input type="text" id="dashboardSearch" placeholder="Search your current Tips&Tricks">
                     </div>
                     <div class="welcome">
                         <div class="nname">
@@ -375,7 +375,6 @@
                             <div class="card-grid thn_grid_cd" id="tips-trainings">
                                 @if($allTipsTricks->count() > 0)
                                     @foreach($allTipsTricks as $course)
-                                        <!-- Your existing course card code -->
                                         <a href="#" class="training-card"
                                             data-course-id="{{ $course['uuid'] }}"
                                             data-training-type="{{ $course['plan_type'] }}"
@@ -1452,25 +1451,23 @@
                         @forelse ($upcomingGroupSessions as $i => $session)
                             @php
                                 $bgClass = $i % 2 === 0 ? 'if-qa-session-background-color' : 'if-new-video-background-color';
-
                                 $typeIcon = match($session->type->name) {
                                     'Group Session 1' => 'fa-comments',
                                     'Group Session 2' => 'fa-video',
                                     default => 'fa-calendar',
                                 };
-
-                                // Determine type ID for modal
                                 $typeId = $session->type->id;
+                                $isUpcoming = $session->scheduled_for->isFuture();
                             @endphp
 
-                            <div class="up_session_bar registration-trigger" data-type-id="{{ $typeId }}" style="cursor:pointer;">
+                            <div class="up_session_bar {{ $isUpcoming ? 'registration-trigger' : 'session-disabled' }}" data-type-id="{{ $isUpcoming ? $typeId : '' }}" style="cursor: {{ $isUpcoming ? 'pointer' : 'not-allowed' }}; opacity: {{ $isUpcoming ? '1' : '0.5' }};">
                                 <div class="icon up_container {{ $bgClass }}">
                                     <i class="fa {{ $typeIcon }}" aria-hidden="true"></i>
                                 </div>
                                 <div class="content_sbar up_container">
                                     <strong>{{ $session->title }} - {{ $session->type->name }}</strong>
                                     <p>{{ $session->scheduled_for->format('d M Y, l') }} - 
-                                        @if ($session->scheduled_for->isFuture())
+                                        @if ($isUpcoming)
                                             <span class="text-green-600 text-sm" style="color:#1fb12b;"><i>Upcoming</i></span>
                                         @else
                                             <span class="text-gray-500 text-sm" style="color:#d36262;"><i>Completed</i></span>
@@ -1574,6 +1571,56 @@
         </section>
 
         <!-- Js connections -->
+        <!-- main dash search -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('dashboardSearch');
+                const myLearningsContainer = document.querySelector('#usr_dashboard .my_learnings .card-grid');
+                const myLearningsCards = myLearningsContainer.querySelectorAll('a.enrolled-course-link');
+                const emptyState = myLearningsContainer.querySelector('.empty-state');
+
+                const noResultsMessage = document.createElement('div');
+                noResultsMessage.className = 'no-results-message';
+                noResultsMessage.style.padding = '20px';
+                noResultsMessage.style.textAlign = 'center';
+                noResultsMessage.style.color = '#718096';
+                noResultsMessage.style.background = '#f8fafc';
+                noResultsMessage.style.borderRadius = '8px';
+                noResultsMessage.style.margin = '20px';
+                noResultsMessage.style.fontStyle = 'italic';
+                noResultsMessage.innerHTML = '<p>There are no current Tips & Tricks matching your search. Please try a different keyword!</p>';
+
+                searchInput.addEventListener('input', function () {
+                    const query = searchInput.value.toLowerCase();
+                    let anyVisible = false;
+
+                    myLearningsCards.forEach(card => {
+                        const title = card.querySelector('h1')?.innerText.toLowerCase() || '';
+                        const description = card.querySelector('p')?.innerText.toLowerCase() || '';
+
+                        if (title.includes(query) || description.includes(query)) {
+                            card.style.display = '';
+                            anyVisible = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    if (!anyVisible) {
+                        if (!myLearningsContainer.contains(noResultsMessage)) {
+                            myLearningsContainer.appendChild(noResultsMessage);
+                        }
+                        if (emptyState) emptyState.style.display = 'none';
+                    } else {
+                        if (myLearningsContainer.contains(noResultsMessage)) {
+                            myLearningsContainer.removeChild(noResultsMessage);
+                        }
+                        if (emptyState) emptyState.style.display = '';
+                    }
+                });
+            });
+        </script>
+
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const progressPercent = {{ $progressPercent }};
@@ -1876,8 +1923,8 @@
                 if (wasUnenrolled === '1') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Unenrolled',
-                        text: decodeURIComponent(message || 'You have been unenrolled successfully'),
+                        title: 'Removed',
+                        text: decodeURIComponent(message || 'You no longer have access.'),
                         timer: 7000,
                         toast: true,
                         position: 'top-end',

@@ -11,14 +11,14 @@
             <div class="input-icon">
                 <i class="fa fa-envelope"></i>
                 <input type="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required autofocus>
-                @error('email') <p>{{ $message }}</p> @enderror
             </div>
-
+            @error('email') <p>{{ $message }}</p> @enderror
+            
             <div class="input-icon">
                 <i class="fa fa-lock"></i>
                 <input type="password" name="password" placeholder="Enter your password" required>
-                @error('password') <p>{{ $message }}</p> @enderror
             </div>
+            @error('password') <p>{{ $message }}</p> @enderror
 
             <button type="submit">Login</button>
         </form>

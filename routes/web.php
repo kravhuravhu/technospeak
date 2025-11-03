@@ -688,27 +688,42 @@ Route::get('/training/yoco/eft/status/{payment}', [TrainingRegistrationControlle
     ->name('training.yoco.eft.status')
     ->middleware('auth');
 
-// API endpoint for course payment check
-Route::get('/api/check-course-payment/{courseId}', function($courseId) {
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+Route::get('/api/check-registration/{typeId}', function($typeId) {
     $user = Auth::user();
     
+    Log::info('🔍 check-registration started', [
+        'user_id' => $user ? $user->id : null,
+        'type_id' => $typeId
+    ]);
+    
     if (!$user) {
+        Log::info('❌ Not authenticated');
         return response()->json(['paid' => false, 'message' => 'User not authenticated']);
     }
-    
-    $paid = \App\Http\Controllers\CourseAccessController::hasPaidForCourse($user->id, $courseId);
-    
-    $course = \App\Models\Course::find($courseId);
-    $courseTitle = $course->title ?? 'this course';
-    
-    $message = $paid ? 
-        "You have already purchased '{$courseTitle}'. Duplicate payments are not allowed." : 
-        "No payment found for this course";
-    
-    return response()->json([
-        'paid' => $paid,
-        'message' => $message
+
+    $clientId = $user->id;
+
+    $registered = Payment::where('client_id', $clientId)
+        ->where('status', 'completed')
+        ->whereHasMorph(
+            'payable',
+            [\App\Models\TrainingSession::class],
+            function ($query) use ($typeId) {
+                $query->where('type_id', $typeId);
+            }
+        )
+        ->exists();
+
+    Log::info('✅ check-registration query done', [
+        'client_id' => $clientId,
+        'registered' => $registered
     ]);
+
+    return response()->json(['registered' => $registered]);
 })->middleware('auth');
+
 
 Route::post('/contact/message', [ContactController::class, 'send'])->name('contact.message.send');

@@ -27,6 +27,7 @@
                         <input type="email" id="email-task" name="email" required
                                value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}">
                     </div>
+                    <div class="error-message" id="email-error-task" style="color: red; display: none; font-size: 12px; margin-top: 5px;"></div>
                 </div>
                 <div class="form-section">
                     <h2 class="form-section-title">TASK OBJECTIVE</h2>
@@ -435,8 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add null check for submitBtn
         if (!submitBtn) return;
         
-        // Only check the fields that require validation
-        if (isTaskTypeValid && isGoalValid && isTaskDescriptionValid) {
+        if (isTaskTypeValid && isGoalValid && isTaskDescriptionValid && isEmailValid) {
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
             submitBtn.style.cursor = 'pointer';
@@ -486,6 +486,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         taskDescription.addEventListener('blur', function() {
             validateTaskDescription();
+            updateSubmitButton();
+        });
+    }
+
+    const email = document.getElementById('email-task');
+    let isEmailValid = false;
+
+    function validateEmail() {
+        const value = email.value.trim();
+        const errorElement = document.getElementById('email-error-task');
+
+        // Simple email regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!value) {
+            if (errorElement) {
+                errorElement.textContent = 'Please enter your email address';
+                errorElement.style.display = 'block';
+            }
+            isEmailValid = false;
+            return false;
+        } else if (!emailRegex.test(value)) {
+            if (errorElement) {
+                errorElement.textContent = 'Please enter a valid email address';
+                errorElement.style.display = 'block';
+            }
+            isEmailValid = false;
+            return false;
+        } else {
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+            isEmailValid = true;
+            return true;
+        }
+    }
+
+    // Real-time validation
+    if (email) {
+        email.addEventListener('input', () => {
+            validateEmail();
+            updateSubmitButton();
+        });
+        email.addEventListener('blur', () => {
+            validateEmail();
             updateSubmitButton();
         });
     }

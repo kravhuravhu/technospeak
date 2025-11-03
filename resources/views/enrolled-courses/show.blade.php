@@ -1918,13 +1918,13 @@
                 });
 
                 // Play/pause button
-                playPauseBtn.addEventListener('click', function() {
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                });
+                // playPauseBtn.addEventListener('click', function() {
+                //     if (video.paused) {
+                //         video.play();
+                //     } else {
+                //         video.pause();
+                //     }
+                // });
                 
                 // Volume controls
                 volumeBtn.addEventListener('click', function() {
@@ -2230,17 +2230,17 @@
 
                     Swal.fire({
                         title: 'Confirm Unenrollment',
-                        html: `Are you sure you want to Unenroll from <strong>${courseTitle}</strong>?<br><br>Your progress will be lost.<br><br><i style="font-size:small;">Including your certificates, progress report will be reset...</i>`,
+                        html: `Are you sure you want to be removed from <strong>${courseTitle}</strong> watch list?<br><br>Your progress will be lost.<br><br><i style="font-size:small;">Including your certificates, progress report will be reset...</i>`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#e53e3e',
                         cancelButtonColor: '#38b6ff',
-                        confirmButtonText: 'Yes, Unenroll',
+                        confirmButtonText: 'Yes, Remove',
                         cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             Swal.fire({
-                                title: 'Unenrolling...',
+                                title: 'Removing...',
                                 allowOutsideClick: false,
                                 didOpen: () => Swal.showLoading(),
                             });

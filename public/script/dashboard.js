@@ -1,80 +1,3 @@
-
-// Issue section 
-// document.addEventListener('DOMContentLoaded', function() {
-//     const form = document.getElementById('issueForm');
-//     const confirmation = document.getElementById('confirmation');
-//     const backBtn = document.querySelector('.back-btn');
-
-//     form.addEventListener('submit', async function(e) {
-//         e.preventDefault();
-        
-//         // Form validation
-//         const title = document.getElementById('issueTitle').value.trim();
-//         const description = document.getElementById('issueDescription').value.trim();
-//         const category = document.getElementById('issueCategory').value;
-//         const urgency = document.querySelector('input[name="urgency"]:checked')?.value;
-        
-//         if (!title || !description || !category || !urgency) {
-//             alert('Please fill in all required fields');
-//             return;
-//         }
-
-//         const submitBtn = form.querySelector('.submit-btn');
-//         const originalBtnText = submitBtn.innerHTML;
-        
-//         // Show loading state
-//         submitBtn.innerHTML = '<span>Processing...</span><i class="fas fa-spinner fa-spin"></i>';
-//         submitBtn.disabled = true;
-
-//         try {
-//             // Get CSRF token from meta tag
-//             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-            
-//             const response = await fetch('/issues', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Accept': 'application/json',
-//                     'X-Requested-With': 'XMLHttpRequest',
-//                     'X-CSRF-TOKEN': csrfToken
-//                 },
-//                 body: JSON.stringify({
-//                     issueTitle: title,
-//                     issueDescription: description,
-//                     issueCategory: category,
-//                     urgency: urgency
-//                 })
-//             });
-
-//             const data = await response.json();
-
-//             if (!response.ok) {
-//                 throw new Error(data.message || 'Server returned an error');
-//             }
-
-//             if (data.success) {
-//                 form.style.display = 'none';
-//                 confirmation.style.display = 'block';
-//                 confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//             } else {
-//                 throw new Error(data.message || 'There was an error submitting your issue');
-//             }
-//         } catch (error) {
-//             console.error('Error:', error);
-//             alert(`Error: ${error.message}`);
-//             submitBtn.innerHTML = originalBtnText;
-//             submitBtn.disabled = false;
-//         }
-//     });
-    
-//     backBtn.addEventListener('click', function() {
-//         confirmation.style.display = 'none';
-//         form.style.display = 'block';
-//         form.reset();
-//         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//     });
-// });
-
 /* script for Support section */
 document.addEventListener('DOMContentLoaded', function() {
     const faqQuestions = document.querySelectorAll('.faq-question');
@@ -187,8 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     filterFAQs('', 'all');
 });
 
-
-// Prevent duplicate form submissions
+// duplicated form submissions
 document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('form');
     
@@ -244,59 +166,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// get URL parameters
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
 
-// Tips & tricks script
-document.addEventListener('DOMContentLoaded', function() {
-    // Function to get URL parameters
-    function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
-    // Function to handle category parameter on page load
-    function handleCategoryParameter() {
-        const categoryParam = getUrlParameter('category');
-        
-        if (categoryParam) {
-            console.log('Category parameter found:', categoryParam);
-            
-            // Auto-select the category in the filter dropdown
-            const filterSelect = document.getElementById('tipsFilterSelect');
-            if (filterSelect) {
-                filterSelect.value = categoryParam;
-                console.log('Filter select value set to:', categoryParam);
-            }
-            
-            // Ensure tips & tricks section is active
-            setTimeout(() => {
-                const allTricksSection = document.getElementById('usr_alltricks');
-                if (allTricksSection) {
-                    console.log('Switching to tips & tricks section');
-                    
-                    // Use your existing switchToSection function
-                    if (typeof window.switchToSection === 'function') {
-                        window.switchToSection('usr_alltricks');
-                    } else {
-                        // Fallback: manually activate the section
-                        document.querySelectorAll('.content-section').forEach(section => {
-                            section.classList.remove('active');
-                        });
-                        document.querySelectorAll('.nav-item').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        
-                        allTricksSection.classList.add('active');
-                        const navItem = document.querySelector('.nav-item[data-section="usr_alltricks"]');
-                        if (navItem) navItem.classList.add('active');
-                    }
-                }
-            }, 500); // Increased delay to ensure DOM is ready
+// category parameter on page load
+function handleCategoryParameter() {
+    const categoryParam = getUrlParameter('category');
+    
+    if (categoryParam) {
+        console.log('Category parameter found:', categoryParam);
+        const filterSelect = document.getElementById('tipsFilterSelect');
+        if (filterSelect) {
+            filterSelect.value = categoryParam;
+            console.log('Filter select value set to:', categoryParam);
         }
-    }
 
-    // Call this function when DOM is loaded
+        setTimeout(() => {
+            const allTricksSection = document.getElementById('usr_alltricks');
+            if (allTricksSection) {
+                console.log('Switching to tips & tricks section');
+                if (typeof window.switchToSection === 'function') {
+                    window.switchToSection('usr_alltricks');
+                } else {
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    allTricksSection.classList.add('active');
+                    const navItem = document.querySelector('.nav-item[data-section="usr_alltricks"]');
+                    if (navItem) navItem.classList.add('active');
+                }
+            }
+        }, 500);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
     handleCategoryParameter();
 });
 
-// Also call it when hash changes (in case user navigates)
 window.addEventListener('hashchange', handleCategoryParameter);

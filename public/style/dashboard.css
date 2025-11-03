@@ -520,6 +520,15 @@ section.bar-lt-rt {
               }
             }
           }
+          .session-disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            filter: grayscale(0.7);
+          }
+          .session-disabled .content_sbar strong,
+          .session-disabled p {
+              color: #888 !important;
+          }
         }
       }
       /* contact support */
@@ -728,8 +737,8 @@ section.bar-lt-rt {
             outline: none;
             transition: box-shadow 0.3s ease-in-out;
             &::placeholder {
-              color: #1d1d1d;
-              font-size: .9em;
+              color: #3f3f3f;
+              font-size: 1em;
             }
             &:focus {
               box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.2);

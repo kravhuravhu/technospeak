@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     function filterCourses(searchInput, filterSelect, container, moreContainer, noResultsElement) {
-        const searchTerm = searchInput.value.toLowerCase();
+        const searchTerm = searchInput.value.trim().toLowerCase();
         const filterValue = filterSelect.value.toLowerCase();
-        
+
         let allCards = [];
 
         if (container) allCards = Array.from(container.querySelectorAll('.training-card'));
@@ -17,11 +17,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const description = card.getAttribute('data-description').toLowerCase();
             const category = card.getAttribute('data-category').toLowerCase();
 
-            const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+            const cleanText = (text) => text.replace(/[\s\W_]+/g, '');
+
+            const cleanTitle = cleanText(title);
+            const cleanDescription = cleanText(description);
+
+            const searchWords = searchTerm.split(/\s+/).filter(Boolean);
+
+            const matchesSearch = searchWords.every(word => {
+                const cleaned = cleanText(word);
+                const regex = new RegExp(cleaned.split('').join('.*?'), 'i');
+                return regex.test(cleanTitle) || regex.test(cleanDescription);
+            });
+
             const matchesFilter = !filterValue || category === filterValue;
 
-            card.style.display = (matchesSearch && matchesFilter) ? 'block' : 'none';
-            if (matchesSearch && matchesFilter) visibleCount++;
+            card.style.display = (searchTerm === '' || matchesSearch) && matchesFilter ? 'block' : 'none';
+            if ((searchTerm === '' || matchesSearch) && matchesFilter) visibleCount++;
         });
 
         if (noResultsElement) {

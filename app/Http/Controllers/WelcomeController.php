@@ -21,11 +21,22 @@ class WelcomeController extends Controller
                     ->latest()
                     ->take(6)
                     ->get();
+        
+        // Get upcoming sessions for Group Session 1 (QA) and Group Session 2 (Consultation)
+        $qaSession = TrainingSession::where('type_id', 4)
+                        ->where('scheduled_for', '>', now())
+                        ->orderBy('scheduled_for')
+                        ->first();
+                        
+        $consultSession = TrainingSession::where('type_id', 5)
+                        ->where('scheduled_for', '>', now())
+                        ->orderBy('scheduled_for')
+                        ->first();
                     
-        return view('welcome', compact('courses'));
+        return view('welcome', compact('courses', 'qaSession', 'consultSession'));
     }
 
-    // load course on trainigs page
+    // load course on trainings page
     // load also the upcoming sessions
     public function trainingsPage()
     {
@@ -33,34 +44,21 @@ class WelcomeController extends Controller
             return Course::tipsTricks()->inRandomOrder()->take(3)->get();
         });
 
-        // recommend a random trainin for formal
+        // recommend a random training for formal
         $recommendedTraining = Course::where('plan_type', 'frml_training')->inRandomOrder()->first();
 
-        // allow group session registrations
+        // Get upcoming sessions
         $groupSession1 = TrainingSession::where('type_id', 4)
                             ->where('scheduled_for', '>', now())
                             ->orderBy('scheduled_for')
                             ->with('type', 'instructor')
                             ->first();
-        if (!$groupSession1) {
-            $groupSession1 = TrainingSession::where('type_id', 4)
-                                ->where('scheduled_for', '<=', now())
-                                ->orderByDesc('scheduled_for')
-                                ->with('type', 'instructor')
-                                ->first();
-        }
+        
         $groupSession2 = TrainingSession::where('type_id', 5)
                             ->where('scheduled_for', '>', now())
                             ->orderBy('scheduled_for')
                             ->with('type', 'instructor')
                             ->first();
-        if (!$groupSession2) {
-            $groupSession2 = TrainingSession::where('type_id', 5)
-                                ->where('scheduled_for', '<=', now())
-                                ->orderByDesc('scheduled_for')
-                                ->with('type', 'instructor')
-                                ->first();
-        }
 
         // resource "Cheatsheet"
         $cheatsheetType = ResourceType::where('name', 'Cheatsheet')->first();

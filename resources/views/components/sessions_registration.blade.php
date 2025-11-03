@@ -52,11 +52,16 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
             <form class="registration-form" method="POST" action="{{ route('training.register') }}">
                 @csrf
                 <input type="hidden" name="session_id" value="{{ $latestSession->id }}">
+                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
+                
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>
-                    <input type="tel" id="phone-{{ $typeId }}" name="phone" required>
+                    <input type="tel" id="phone-{{ $typeId }}" name="phone" required 
+                        value="{{ auth()->user()->phone ?? '' }}">
                     <div class="phone-validation-message" id="phone-validation-{{ $typeId }}" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem;"></div>
                 </div>
+                
                 <div class="payment-summary">
                     <h4>Payment Summary</h4>
                     <div class="price-display">

@@ -539,6 +539,17 @@ Route::get('/training/register', [TrainingRegistrationController::class, 'showTr
     ->name('training.register')
     ->middleware('auth');
 
+// Training payment success routes
+Route::get('/training/payment/success/{payment}', function($paymentId) {
+    $payment = Payment::findOrFail($paymentId);
+    $session = TrainingSession::find($payment->payable_id);
+    
+    return view('training.payment-success', [
+        'trainingSession' => $session,
+        'payment' => $payment
+    ]);
+})->name('training.payment.success')->middleware('auth');
+
 // Training payment failed route
 Route::get('/training/payment-failed/{payment}', [TrainingRegistrationController::class, 'showTrainingPaymentFailed'])
     ->name('training.payment.failed')
@@ -566,6 +577,24 @@ Route::get('/api/check-session-payment/{sessionId}', function($sessionId) {
         'message' => $paid ? 'You have already paid for this session' : 'No payment found for this session'
     ]);
 })->middleware('auth');
+
+Route::get('/training/payment/{session}', function($sessionId) {
+    $session = TrainingSession::with('type')->findOrFail($sessionId);
+    $client = auth()->user();
+    
+    // Check if session is available
+    if ($session->scheduled_for < now()) {
+        return back()->with('error', 'This session is no longer available for registration.');
+    }
+    
+    if ($session->isFull()) {
+        return back()->with('error', 'This session is already full.');
+    }
+    
+    $price = $session->type->getPriceForUserType($client->userType);
+    
+    return view('training.yoco-payment', compact('session', 'price', 'client'));
+})->name('training.payment.form')->middleware('auth');
 
 // Formal training payment routes
 Route::get('/formal-training/payment/{course}', [CourseAccessController::class, 'showPaymentForm'])

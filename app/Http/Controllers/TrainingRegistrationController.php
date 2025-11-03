@@ -25,7 +25,9 @@ class TrainingRegistrationController extends Controller
         ]);
 
         $session = TrainingSession::with('type')->find($validated['session_id']);
+        $client = auth()->user();
 
+        // Check if session is available
         if (!$session || $session->scheduled_for < now()) {
             return back()->with('error', 'This session is no longer available for registration.');
         }
@@ -34,12 +36,17 @@ class TrainingRegistrationController extends Controller
             return back()->with('error', 'This session is already full.');
         }
 
-        $client = auth()->user();
+        // Check if user already paid for this session
+        if ($this->hasDuplicateTrainingPayment($client, $session->id)) {
+            $errorMessage = $this->getDuplicateTrainingPaymentMessage($session->id);
+            return back()->with('error', $errorMessage);
+        }
 
-        $registration = TrainingRegistration::firstOrCreate(
+        // Create or update registration with pending status
+        $registration = TrainingRegistration::updateOrCreate(
             [
                 'session_id' => $validated['session_id'],
-                'client_id' => $client->id ?? null,
+                'client_id' => $client->id,
             ],
             [
                 'phone' => $validated['phone'],
@@ -47,7 +54,7 @@ class TrainingRegistrationController extends Controller
             ]
         );
 
-        // Show the Yoco payment form
+        // REDIRECT TO YOUR EXISTING PAYMENT FORM - FIXED
         return $this->showYocoTrainingPaymentForm($session, $client);
     }
 

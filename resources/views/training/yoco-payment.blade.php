@@ -273,7 +273,7 @@
             </form>
         </div>
 
-        <!-- EFT Payment Tab -->
+        {{-- EFT Payment Tab --}}
         <div id="eft-tab" class="tab-content">
             <div class="payment-info">
                 <strong>EFT/Bank Transfer</strong>
@@ -288,6 +288,9 @@
             <form id="eft-payment-form" method="POST" action="{{ route('training.yoco.eft') }}">
                 @csrf
                 <input type="hidden" name="session_id" value="{{ $session->id }}">
+                
+                {{-- Add phone field to EFT form --}}
+                <input type="hidden" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}">
 
                 <div class="form-group">
                     <label for="eft-name">Full Name</label>
@@ -298,11 +301,6 @@
                     <label for="eft-email">Email</label>
                     <input type="email" id="eft-email" value="{{ $client->email }}" readonly>
                 </div>
-
-                <!-- <div class="form-group">
-                    <label for="eft-phone">Phone Number</label>
-                    <input type="tel" name="phone" id="eft-phone" value="{{ old('phone') }}" required>
-                </div> -->
 
                 <button type="submit" id="eft-pay-button" class="submit-btn eft">
                     Register with EFT - R{{ number_format($price, 2) }}

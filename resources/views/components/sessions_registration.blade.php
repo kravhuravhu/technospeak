@@ -52,8 +52,8 @@ $latestSession = \App\Models\TrainingSession::where('type_id', $typeId)
             <form class="registration-form" method="POST" action="{{ route('training.register') }}">
                 @csrf
                 <input type="hidden" name="session_id" value="{{ $latestSession->id }}">
-                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
-                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
+                <input type="hidden" name="name" value="{{ auth()->user() ? auth()->user()->name : '' }}">
+                <input type="hidden" name="email" value="{{ auth()->user() ? auth()->user()->email : '' }}">
                 
                 <div class="form-group">
                     <label for="phone-{{ $typeId }}">Phone Number</label>

@@ -103,7 +103,30 @@ class CourseAccessController extends Controller
         
         $courses = $this->adminCourseController->trainingCallFormal()
             ->map(function($course) use ($user) {
-                $course['is_enrolled'] = $user->isSubscribedTo($course['id']);
+                // Check if $course is an array or object and get the ID accordingly
+                $courseId = is_array($course) ? $course['id'] : $course->id;
+                
+                $course['is_enrolled'] = $user->isSubscribedTo($courseId);
+                
+                // Check if user has paid for this formal training
+                $course['has_paid'] = self::hasPaidForCourse($user->id, $courseId);
+                
+                // Get payment details if paid
+                if ($course['has_paid']) {
+                    $payment = Payment::where('client_id', $user->id)
+                        ->where('payable_type', 'course')
+                        ->where('payable_id', $courseId)
+                        ->where('status', 'completed')
+                        ->first();
+                    
+                    $course['payment_details'] = $payment ? [
+                        'transaction_id' => $payment->transaction_id,
+                        'amount' => $payment->amount,
+                        'payment_date' => $payment->created_at,
+                        'payment_method' => $payment->payment_method
+                    ] : null;
+                }
+                
                 return $course;
             });
             

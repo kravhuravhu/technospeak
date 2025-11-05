@@ -675,37 +675,86 @@
                     </div>
                     
                     <!-- 2. Your Group Sessions -->
-                    @if($groupSessions->count() > 0)
                     <div class="group-sessions">
                         <div class="container">
                             <div class="title">
                                 <h2>Your Group Sessions</h2>
-                                <p>Sessions you've enrolled in</p>
+                                <p>Sessions you've enrolled in with detailed information</p>
                             </div>
                             
+                            @if($groupSessions->count() > 0)
                             <div class="card-grid">
                                 @foreach($groupSessions as $session)
-                                <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Enrolled</span>
-                                    <h3>{{ $session->name }}</h3>
-                                    <div class="plan-price">
-                                        @if($session->student_price)
-                                            From R{{ $session->student_price }} 
-                                        @endif
-                                        <!-- @if($session->professional_price)
-                                            | R{{ $session->professional_price }} (business)
-                                        @endif -->
+                                <div class="session-card {{ $session['is_active'] ? 'active-session' : 'completed-session' }}">
+                                    <span class="session-badge {{ $session['is_active'] ? 'active-badge' : 'completed-badge' }}">
+                                        {{ $session['is_active'] ? 'Enrolled' : 'Completed' }}
+                                    </span>
+                                    
+                                    <div class="session-header">
+                                        <h3>{{ $session['name'] }}</h3>
+                                        <div class="session-type">{{ $session['type_name'] }}</div>
                                     </div>
-                                    <p class="plan-description">{{ $session->description }}</p>
+                                    
+                                    <div class="session-details">
+                                        <div class="detail-row">
+                                            <span class="detail-label">Date:</span>
+                                            <span class="detail-value">{{ $session['formatted_date'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Time:</span>
+                                            <span class="detail-value">{{ $session['formatted_time'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Duration:</span>
+                                            <span class="detail-value">{{ $session['duration'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Instructor:</span>
+                                            <span class="detail-value">{{ $session['instructor_name'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Category:</span>
+                                            <span class="detail-value">{{ $session['category_name'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Amount Paid:</span>
+                                            <span class="detail-value price-display">
+                                                R{{ number_format($session['student_price'] ?? $session['professional_price'], 2) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="session-description">{{ $session['description'] }}</p>
+                                    
+                                    <div class="session-footer">
+                                        <div class="session-status {{ $session['is_active'] ? 'active-status' : 'completed-status' }}">
+                                            <i class="fas {{ $session['is_active'] ? 'fa-calendar-check' : 'fa-check-circle' }}"></i>
+                                            {{ $session['is_active'] ? 'Upcoming Session' : 'Session Completed' }}
+                                        </div>
+                                        <div class="payment-info">
+                                            @if(isset($session['formatted_payment_date']) && $session['formatted_payment_date'] !== 'N/A')
+                                                Paid on {{ $session['formatted_payment_date'] }}
+                                                <span class="transaction-id">{{ substr($session['transaction_id'], -8) }}</span>
+                                            @else
+                                                Payment details not available
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
+                            @else
+                            <div class="empty-state">
+                                <i class="fas fa-users fa-3x"></i>
+                                <h3>No Group Sessions Yet</h3>
+                                <p>You haven't enrolled in any group sessions yet.</p>
+                                <a href="{{ route('training.register') }}" class="btn">Browse Available Sessions</a>
+                            </div>
+                            @endif
                         </div>
                     </div>
-                    @endif
-                    
+
                     <!-- 3. Your Formal Trainings -->
-                    @if($formalTrainingsRegistered->count() > 0)
                     <div class="formal-trainings">
                         <div class="container">
                             <div class="title">
@@ -713,26 +762,73 @@
                                 <p>Formal trainings you've registered for</p>
                             </div>
                             
+                            @if($formalTrainingsRegistered->count() > 0)
                             <div class="card-grid">
                                 @foreach($formalTrainingsRegistered as $training)
-                                <div class="plan-card">
-                                    <span class="plan-badge paid-badge">Registered</span>
-                                    <h3>{{ $training->name }}</h3>
-                                    <div class="plan-price">
-                                        <!-- @if($training->student_price)
-                                            From R{{ $training->student_price }} 
-                                        @endif -->
-                                        <!-- @if($training->professional_price)
-                                            | R{{ $training->professional_price }} (business)
-                                        @endif -->
+                                <div class="training-card {{ $training['is_active'] ? 'active-session' : 'completed-session' }}">
+                                    <span class="session-badge {{ $training['is_active'] ? 'active-badge' : 'completed-badge' }}">
+                                        {{ $training['is_active'] ? 'Registered' : 'Completed' }}
+                                    </span>
+                                    
+                                    <div class="session-header">
+                                        <h3>{{ $training['name'] }}</h3>
+                                        <div class="session-type">{{ $training['type_name'] }}</div>
                                     </div>
-                                    <p class="plan-description">{{ $training->description }}</p>
+                                    
+                                    <div class="session-details">
+                                        <div class="detail-row">
+                                            <span class="detail-label">Date:</span>
+                                            <span class="detail-value">{{ $training['formatted_date'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Time:</span>
+                                            <span class="detail-value">{{ $training['formatted_time'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Duration:</span>
+                                            <span class="detail-value">{{ $training['duration'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Instructor:</span>
+                                            <span class="detail-value">{{ $training['instructor_name'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Category:</span>
+                                            <span class="detail-value">{{ $training['category_name'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Amount Paid:</span>
+                                            <span class="detail-value price-display">
+                                                R{{ number_format($training['student_price'] ?? $training['professional_price'], 2) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="session-description">{{ $training['description'] }}</p>
+                                    
+                                    <div class="session-footer">
+                                        <div class="session-status {{ $training['is_active'] ? 'active-status' : 'completed-status' }}">
+                                            <i class="fas {{ $training['is_active'] ? 'fa-calendar-check' : 'fa-graduation-cap' }}"></i>
+                                            {{ $training['is_active'] ? 'Upcoming Training' : 'Training Completed' }}
+                                        </div>
+                                        <div class="payment-info">
+                                            Paid on {{ $training['formatted_payment_date'] }}
+                                            <span class="transaction-id">{{ substr($training['transaction_id'], -8) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
+                            @else
+                            <div class="empty-state">
+                                <i class="fas fa-graduation-cap fa-3x"></i>
+                                <h3>No Formal Trainings Yet</h3>
+                                <p>You haven't registered for any formal trainings yet.</p>
+                                <a href="{{ url('/dashboard#usr_formaltraining') }}" class="btn">Browse Formal Trainings</a>
+                            </div>
+                            @endif
                         </div>
                     </div>
-                    @endif
                     
                     <!-- 4. Available Product Plans -->
                     <div class="available-plans">

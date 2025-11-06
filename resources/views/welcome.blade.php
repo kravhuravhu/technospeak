@@ -162,81 +162,82 @@
                         <ul class="product-list swiper-wrapper">
                             <!-- Card 1: Free Subscription -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/Free subscription.png')" alt="Free Subscription" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/Free subscription.png" alt="Free Subscription" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Free Subscription</h3>
 
                                 <i class="description">
-                                    <p>Access our free clickbait videos on social media. Ask questions in comments and get brief answers with links to full details on our website.</p>
-                                    <p>Free access to social media content</p>
-                                    <p>Brief answers to your questions</p>
-                                    <p>Links to detailed explanations</p>
+                                    <p>Access our free clickbait videos on social media</p>
+                                    <p>Ask questions in comments</p>
+                                    <p>Brief answers with links to full details</p>
                                 </i>
 
                                 <div class="plan-button">
-                                    <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Sign up Free</a>
+                                    <a href="/login">Sign up Free</a>
                                 </div>
                             </li>
 
                             <!-- Card 2: Premium Subscription -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/premium subscription.png')" alt="Premium Subscription" class="product-image"/>
+                                <div class="popular-badge">POPULAR</div>
+                                <div class="product-image-container">
+                                    <img src="/images/premium subscription.png" alt="Premium Subscription" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Premium Subscription</h3>
                                     <div class="price-tag">
                                         <span>From R350/quarter</span>
                                     </div>
 
                                 <i class="description">
-                                    <p>Full access to all our premium content with exclusive resources for serious learners and professionals.</p>
-                                    <p>All clickbait-style videos</p>
+                                    <p>Full access to all premium content</p>
                                     <p>Downloadable resources & cheat sheets</p>
                                     <p>Monthly curated tech newsletters</p>
                                     <p>Student and business pricing options</p>
                                 </i>
 
                                 <div class="plan-button">
-                                    @if(Auth::check())
-                                        <a href="{{ route('subscription.yoco.form') }}">Subscribe Now</a>
-                                    @else
-                                        <a href="{{ url('/login?redirect=subscription/yoco/form') }}">Subscribe Now</a>
-                                    @endif
+                                    <a href="/login?redirect=subscription/yoco/form">Subscribe Now</a>
                                 </div>
                             </li>
 
                             <!-- Card 3: Formal Training -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/Formal training.png')" alt="Formal Training" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/Formal training.png" alt="Formal Training" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Formal Training</h3>
                                     <div class="price-tag">
                                         <span>From R1500/training</span>
                                     </div>
 
                                 <i class="description">
-                                    <p>Comprehensive 40-hour training programs in End-User Computing and web development for all skill levels.</p>
-                                    <p>Structured 8-hour daily sessions</p>
-                                    <p>Tailored to students & professionals</p>
+                                    <p>40-hour training programs</p>
+                                    <p>End-User Computing & web development</p>
                                     <p>Portfolio development support</p>
                                     <p>Partnership opportunities</p>
                                 </i>
 
                                 <div class="plan-button">
-                                    <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
+                                    <a href="/login">Enroll Now</a>
                                 </div>
                             </li>
 
                             <!-- Card 4: Personal Guide -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/Personal guide.png')" alt="Personal Guide" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/Personal guide.png" alt="Personal Guide" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Personal Guide</h3>
                                     <div class="price-tag">
                                         <span>From R110/hour</span>
                                     </div>
 
                                 <i class="description">
-                                    <p>One-on-one sessions with expert tutors for personalized attention and focused learning.</p>
+                                    <p>One-on-one sessions with tutors</p>
                                     <p>Submit requests in advance</p>
                                     <p>Video call or chat sessions</p>
                                     <p>Flexible scheduling</p>
-                                    <p>Additional hours available</p>
                                 </i>
 
                                 <div class="plan-button">
@@ -246,17 +247,18 @@
 
                             <!-- Card 5: Task Assistance -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/Task assistance.png')" alt="Task Assistance" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/Task assistance.png" alt="Task Assistance" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Task Assistance</h3>
                                     <div class="price-tag">
                                         <span>From R100/hour</span>
                                     </div>
 
                                 <i class="description">
-                                    <p>We provide hands-on support by completing technical tasks for you—ranging from coding and automation to system configurations and troubleshooting etc.</p>
+                                    <p>Hands-on technical task completion</p>
                                     <p>Coding & web development help</p>
                                     <p>System configuration support</p>
-                                    <p>Direct task completion</p>
                                     <p>Student and business rates</p>
                                 </i>
 
@@ -267,41 +269,31 @@
 
                             <!-- Card 6: Group Session 1 -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('/images/live Q&A session.png')" alt="Group Session 1" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/live Q&A session.png" alt="Group Session 1" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Live Q&A Sessions</h3>
                                 <div class="price-tag">
                                     <span>From R130/hour</span>
                                 </div>
 
                                 <i class="description">
-                                    <p>Interactive group sessions where you can ask questions and get immediate expert answers.</p>
-                                    <p>Live Q&A with experts</p>
+                                    <p>Interactive group sessions</p>
+                                    <p>Live Q&A with Technos</p>
                                     <p>Submit questions via chat</p>
                                     <p>Various tech topics covered</p>
-                                    <p>Different pricing for students/business</p>
                                 </i>
 
                                 <div class="plan-button">
-                                    @if(Auth::check())
-                                        <!-- Group Q/A Button -->
-                                        @if(isset($qaSession) && $qaSession)
-                                            <a href="#" class="btn btn-primary registration-trigger" 
-                                            data-type-id="4" 
-                                            data-session-id="{{ $qaSession->id }}">
-                                                BOOK NOW
-                                            </a>
-                                        @else
-                                            <button class="btn btn-primary" disabled>NO SESSION</button>
-                                        @endif
-                                    @else
-                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
-                                    @endif
+                                    <button class="btn btn-primary">BOOK NOW</button>
                                 </div>
                             </li>
 
                             <!-- Card 7: Group Session 2 -->
                             <li class="products swiper-slide">
-                                <img src="@secureAsset('images/live consultation.png')" alt="Group Session 2" class="product-image"/>
+                                <div class="product-image-container">
+                                    <img src="/images/live consultation.png" alt="Group Session 2" class="product-image"/>
+                                </div>
                                 <h3 class="subtitle">Response Consultations</h3>
 
                                 <div class="price-tag">
@@ -309,30 +301,16 @@
                                 </div>
 
                                 <i class="description">
-                                    <p>Focused sessions addressing comments and questions from our video content.</p>
+                                    <p>Focused Q&A sessions</p>
                                     <p>Answers to video comments</p>
-                                    <p>Programming &amp; cybersecurity focus</p>
+                                    <p>Programming & cybersecurity focus</p>
                                     <p>Interactive skill-building</p>
-                                    <p>Live response to questions</p>
                                 </i>
 
                                 <div class="plan-button">
-                                    @if(Auth::check())
-                                        @if(isset($consultSession) && $consultSession)
-                                            <a href="#" class="btn btn-primary registration-trigger"
-                                            data-type-id="5"
-                                            data-session-id="{{ $consultSession->id }}">
-                                                BOOK NOW
-                                            </a>
-                                        @else
-                                            <button class="btn btn-primary" disabled>NO SESSION</button>
-                                        @endif
-                                    @else
-                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
-                                    @endif
+                                    <button class="btn btn-primary">BOOK NOW</button>
                                 </div>
                             </li>
-
                         </ul>
 
                         <div class="swiper-pagination"></div>
@@ -382,7 +360,7 @@
         <section class="services-categories">
             <div class="services-container">
                 <div class="services-header">
-                    <h2 class="services-title">Service Categories</h2>
+                    <h2 class="section-title">Service Categories</h2>
                     <p class="services-subtitle">
                         Explore our wide range of done-for-you services designed to make your life easier. 
                         From professional design and content creation to technical support, web development, 
@@ -398,62 +376,42 @@
                                 <div class="card-icon">🎨</div>
                                 <h3>Graphic Design Tools</h3>
                                 <p>Professional visuals for your brand</p>
-                                <div class="card-hover-content">
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="ai">
                                 <div class="card-icon">🤖</div>
                                 <h3>AI Content Creation</h3>
                                 <p>Smart content generation</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="office">
                                 <div class="card-icon">📊</div>
                                 <h3>Office Admin (ICT)</h3>
                                 <p>Streamline office tasks</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="support">
                                 <div class="card-icon">🔧</div>
                                 <h3>Technical Support</h3>
                                 <p>Reliable IT assistance</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="web">
                                 <div class="card-icon">💻</div>
                                 <h3>Web & App Programming</h3>
                                 <p>Custom digital solutions</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="network">
                                 <div class="card-icon">🌐</div>
                                 <h3>Networking Essentials</h3>
                                 <p>Secure connectivity solutions</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
 
                             <div class="service-card" data-service="marketing">
                                 <div class="card-icon">📢</div>
                                 <h3>Digital Marketing</h3>
                                 <p>Grow your online presence</p>
-                                <div class="card-hover-content">
-                                
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1090,13 +1048,14 @@
         </script>
 
         <!-- Swiper initialization for Product Plans slider -->
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 if (typeof Swiper !== 'undefined') {
                     const swiper = new Swiper('.slider-wrapper', {
                         loop: true,
                         grabCursor: true,
-                        spaceBetween: 20,
+                        spaceBetween: 15,
                         slidesPerView: 1,
                         pagination: {
                             el: '.swiper-pagination',
@@ -1110,23 +1069,25 @@
                         breakpoints: {
                             640: {
                                 slidesPerView: 2,
-                                spaceBetween: 20
+                                spaceBetween: 15
+                            },
+                            768: {
+                                slidesPerView: 2,
+                                spaceBetween: 15
                             },
                             1024: {
                                 slidesPerView: 3,
-                                spaceBetween: 25
+                                spaceBetween: 20
                             },
                             1280: {
                                 slidesPerView: 3,
-                                spaceBetween: 30
+                                spaceBetween: 20
                             }
                         }
                     });
                 }
             });
         </script>
-
-
 
         <!-- assistance submission -->
         <script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>

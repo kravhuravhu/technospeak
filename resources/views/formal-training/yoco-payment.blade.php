@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +53,7 @@
         
         .form-group { 
             margin-bottom: 1rem; 
+            position: relative;
         }
         
         label { 
@@ -67,6 +69,27 @@
             border-radius: var(--border-radius); 
             border: 1px solid var(--medium-gray);
             font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        input.error {
+            border-color: var(--error-color);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
         }
         
         .price { 
@@ -262,7 +285,9 @@
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required>
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required 
+                           placeholder="e.g., 082 123 4567 or 0821234567">
+                    <div class="error-message" id="phone-error">Please enter a valid South African phone number (10 digits)</div>
                 </div>
 
                 <button type="button" id="pay-button" class="submit-btn">
@@ -299,7 +324,9 @@
 
                 <div class="form-group">
                     <label for="eft-phone">Phone Number</label>
-                    <input type="tel" name="phone" id="eft-phone" value="{{ old('phone') }}" required>
+                    <input type="tel" name="phone" id="eft-phone" value="{{ old('phone') }}" required 
+                           placeholder="e.g., 082 123 4567 or 0821234567">
+                    <div class="error-message" id="eft-phone-error">Please enter a valid South African phone number (10 digits)</div>
                 </div>
 
                 <button type="submit" id="eft-pay-button" class="submit-btn eft">
@@ -316,6 +343,58 @@
         publicKey: "{{ env('YOCO_TEST_PUBLIC_KEY') }}"
     });
 
+    // Phone number validation function for South African numbers
+    function validateSouthAfricanPhone(phone) {
+        // Remove all non-digit characters
+        const cleaned = phone.replace(/\D/g, '');
+        
+        // Check if it's exactly 10 digits
+        if (cleaned.length !== 10) {
+            return false;
+        }
+        
+        // Check if it starts with a valid South African mobile prefix
+        const validPrefixes = ['060', '061', '062', '063', '064', '065', '066', '067', '068', '069', 
+                              '070', '071', '072', '073', '074', '075', '076', '077', '078', '079',
+                              '081', '082', '083', '084', '085', '086', '087', '088', '089'];
+        
+        const prefix = cleaned.substring(0, 3);
+        return validPrefixes.includes(prefix);
+    }
+
+    // Format phone number as user types
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        
+        if (value.length > 0) {
+            if (value.length <= 3) {
+                value = value;
+            } else if (value.length <= 6) {
+                value = value.substring(0, 3) + ' ' + value.substring(3);
+            } else {
+                value = value.substring(0, 3) + ' ' + value.substring(3, 6) + ' ' + value.substring(6, 10);
+            }
+        }
+        
+        input.value = value;
+    }
+
+    // Validate phone number and show error
+    function validatePhoneInput(input, errorElement) {
+        const phone = input.value;
+        const isValid = validateSouthAfricanPhone(phone);
+        
+        if (isValid) {
+            input.classList.remove('error');
+            errorElement.classList.remove('show');
+            return true;
+        } else {
+            input.classList.add('error');
+            errorElement.classList.add('show');
+            return false;
+        }
+    }
+
     // Tab functionality
     document.querySelectorAll('.tab-button').forEach(button => {
         button.addEventListener('click', function() {
@@ -330,8 +409,45 @@
         });
     });
 
-    // Card payment functionality
+    // Phone number formatting and validation for card payment form
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phone-error');
+    
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            formatPhoneNumber(this);
+            validatePhoneInput(this, phoneError);
+        });
+        
+        phoneInput.addEventListener('blur', function() {
+            validatePhoneInput(this, phoneError);
+        });
+    }
+
+    // Phone number formatting and validation for EFT payment form
+    const eftPhoneInput = document.getElementById('eft-phone');
+    const eftPhoneError = document.getElementById('eft-phone-error');
+    
+    if (eftPhoneInput) {
+        eftPhoneInput.addEventListener('input', function() {
+            formatPhoneNumber(this);
+            validatePhoneInput(this, eftPhoneError);
+        });
+        
+        eftPhoneInput.addEventListener('blur', function() {
+            validatePhoneInput(this, eftPhoneError);
+        });
+    }
+
+    // Card payment functionality with validation
     document.getElementById("pay-button")?.addEventListener("click", function () {
+        const phoneValid = validatePhoneInput(phoneInput, phoneError);
+        
+        if (!phoneValid) {
+            phoneInput.focus();
+            return;
+        }
+
         const amount = {{ $course->price * 100 }};
         yoco.showPopup({
             amountInCents: amount,
@@ -354,8 +470,16 @@
         });
     });
 
-    // EFT payment loading state
+    // EFT payment form submission with validation
     document.getElementById("eft-payment-form")?.addEventListener("submit", function (e) {
+        const phoneValid = validatePhoneInput(eftPhoneInput, eftPhoneError);
+        
+        if (!phoneValid) {
+            e.preventDefault();
+            eftPhoneInput.focus();
+            return;
+        }
+
         const button = document.getElementById("eft-pay-button");
         button.disabled = true;
         button.textContent = "Redirecting to EFT...";

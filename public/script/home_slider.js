@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Service Categories section
+// Service Categories data
 const services = {
     design: {
         icon: "🎨",
@@ -500,4 +500,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-

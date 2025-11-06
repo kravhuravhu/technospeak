@@ -13,6 +13,7 @@ use App\Http\Controllers\CourseAccessController;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -114,32 +115,11 @@ class DashboardController extends Controller
             $currentPlan = TrainingType::find(7); // Free plan
         }
 
-        // 2. Your group sessions (types 4 and 5 that user has registered for)
-        $groupSessions = TrainingRegistration::with('session.type')
-            ->where('client_id', $user->id)
-            ->where('payment_status', 'completed')
-            ->whereHas('session', function($query) {
-                $query->whereIn('type_id', [4, 5]);
-            })
-            ->get()
-            ->map(function($reg) {
-                return $reg->session->type;
-            })
-            ->filter()
-            ->unique('id');
+        // 2. Your group sessions (types 4 and 5 that user has registered for) - ENHANCED LOGIC
+        $groupSessions = $this->getUserGroupSessionsWithDetails($user);
         
-        // 3. Your formal trainings - Check payments table for completed course payments
-        $formalTrainingsRegistered = Payment::where('client_id', $user->id)
-            ->where('payable_type', 'course')
-            ->where('status', 'completed')
-            ->get()
-            ->map(function($payment) {
-                // Since we're dealing with formal training as a concept rather than specific courses,
-                // we'll return the formal training type (ID 1)
-                return TrainingType::find(1);
-            })
-            ->filter()
-            ->unique('id');
+        // 3. Your formal trainings - ENHANCED LOGIC with detailed information
+        $formalTrainingsRegistered = $this->getUserFormalTrainingsWithDetails($user);
 
         // 4. Available product plans - filter out plans user already has
         $availablePlans = $this->getFilteredAvailablePlans($user, $allTrainingTypes, $groupSessions, $formalTrainingsRegistered);
@@ -163,8 +143,118 @@ class DashboardController extends Controller
             'subscriptionExpiry' => $user->subscription_expiry,
             'subscriptionPaidAt' => $user->subscription_paid_at,
             'user' => $user,
-            'filteredCategory' => $filteredCategory // Add this to pass to view
+            'filteredCategory' => $filteredCategory // to pass to view
         ]);
+    }
+
+    protected function getUserGroupSessionsWithDetails($user)
+    {
+        if (!$user) {
+            return collect();
+        }
+
+        // Get completed payments for group sessions (types 4 and 5)
+        $paidGroupSessions = Payment::where('client_id', $user->id)
+            ->where('status', 'completed')
+            ->where('payable_type', 'training')
+            ->whereHasMorph('payable', [TrainingSession::class], function($query) {
+                $query->whereIn('type_id', [4, 5]); // Group Session 1 & 2
+            })
+            ->with(['payable' => function($query) {
+                $query->with(['type', 'instructor', 'category']);
+            }])
+            ->get()
+            ->map(function($payment) {
+                $session = $payment->payable;
+                if (!$session) return null;
+                
+                $isActive = $session->scheduled_for >= now();
+                $status = $isActive ? 'upcoming' : 'completed';
+                
+                return [
+                    'id' => $session->id,
+                    'type_id' => $session->type_id,
+                    'name' => $session->title,
+                    'description' => $session->description,
+                    'type_name' => $session->type->name,
+                    'category_name' => $session->category->name ?? 'General',
+                    'instructor_name' => $session->instructor->name ?? 'Technospeak Team',
+                    'scheduled_for' => $session->scheduled_for,
+                    'from_time' => $session->from_time,
+                    'to_time' => $session->to_time,
+                    'formatted_date' => Carbon::parse($session->scheduled_for)->format('M d, Y'),
+                    'formatted_time' => Carbon::parse($session->from_time)->format('g:i A') . ' - ' . Carbon::parse($session->to_time)->format('g:i A'),
+                    'student_price' => $session->type->student_price,
+                    'professional_price' => $session->type->professional_price,
+                    'payment_date' => $payment->created_at,
+                    'formatted_payment_date' => Carbon::parse($payment->created_at)->format('M d, Y'),
+                    'transaction_id' => $payment->transaction_id,
+                    'is_active' => $isActive,
+                    'status' => $status,
+                    'max_participants' => $session->max_participants,
+                    'duration' => $session->formatted_duration
+                ];
+            })
+            ->filter() // Remove nulls
+            ->sortBy('scheduled_for') // Sort by date
+            ->values();
+
+        return $paidGroupSessions;
+    }
+
+    protected function getUserFormalTrainingsWithDetails($user)
+    {
+        if (!$user) {
+            return collect();
+        }
+
+        // Get completed payments for formal trainings (type 1)
+        $paidFormalTrainings = Payment::where('client_id', $user->id)
+            ->where('status', 'completed')
+            ->where('payable_type', 'training')
+            ->whereHasMorph('payable', [TrainingSession::class], function($query) {
+                $query->where('type_id', 1); // Formal Training
+            })
+            ->with(['payable' => function($query) {
+                $query->with(['type', 'instructor', 'category']);
+            }])
+            ->get()
+            ->map(function($payment) {
+                $session = $payment->payable;
+                if (!$session) return null;
+                
+                $isActive = $session->scheduled_for >= now();
+                $status = $isActive ? 'upcoming' : 'completed';
+                
+                return [
+                    'id' => $session->id,
+                    'type_id' => $session->type_id,
+                    'name' => $session->title,
+                    'description' => $session->description,
+                    'type_name' => $session->type->name,
+                    'category_name' => $session->category->name ?? 'General',
+                    'instructor_name' => $session->instructor->name ?? 'Technospeak Team',
+                    'scheduled_for' => $session->scheduled_for,
+                    'from_time' => $session->from_time,
+                    'to_time' => $session->to_time,
+                    'formatted_date' => Carbon::parse($session->scheduled_for)->format('M d, Y'),
+                    'formatted_time' => Carbon::parse($session->from_time)->format('g:i A') . ' - ' . Carbon::parse($session->to_time)->format('g:i A'),
+                    'student_price' => $session->type->student_price,
+                    'professional_price' => $session->type->professional_price,
+                    'payment_date' => $payment->created_at,
+                    'formatted_payment_date' => Carbon::parse($payment->created_at)->format('M d, Y'),
+                    'transaction_id' => $payment->transaction_id,
+                    'is_active' => $isActive,
+                    'status' => $status,
+                    'max_participants' => $session->max_participants,
+                    'duration' => $session->formatted_duration
+                ];
+            })
+            ->filter() // Remove nulls
+            ->sortBy('scheduled_for') // Sort by date
+            ->values();
+
+        return $paidFormalTrainings;
     }
 
     private function filterTipsTricksByCategory($allTipsTricks, $categoryName)
@@ -212,18 +302,21 @@ class DashboardController extends Controller
                 continue;
             }
             
-            // For group sessions (4,5), check if user has already registered
+            // For group sessions (4,5), check if user has already registered for ACTIVE sessions
             if (in_array($plan->id, [4, 5])) {
-                $hasRegistered = $groupSessions->contains('id', $plan->id);
-                if (!$hasRegistered) {
+                $hasActiveRegistration = $groupSessions->contains(function($session) use ($plan) {
+                    return $session['type_id'] == $plan->id && $session['is_active'];
+                });
+                if (!$hasActiveRegistration) {
                     $availablePlans->push($plan);
                 }
                 continue;
             }
             
-            // For formal training (1), check if user has already paid for any course
+            // For formal training (1), check if user has already paid for any ACTIVE formal training session
             if ($plan->id == 1) {
-                if (!$hasPaidForFormalTraining) {
+                $hasActiveFormalTraining = $formalTrainingsRegistered->contains('is_active', true);
+                if (!$hasActiveFormalTraining) {
                     $availablePlans->push($plan);
                 }
                 continue;

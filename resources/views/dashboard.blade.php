@@ -777,6 +777,13 @@
                                     
                                     <div class="session-details">
                                         <div class="detail-row">
+                                            <span class="detail-label">Type:</span>
+                                            <span class="detail-value">
+                                                {{ $training['source'] === 'course' ? 'Self-paced Course' : 'Scheduled Session' }}
+                                            </span>
+                                        </div>
+                                        @if($training['source'] === 'training_session')
+                                        <div class="detail-row">
                                             <span class="detail-label">Date:</span>
                                             <span class="detail-value">{{ $training['formatted_date'] }}</span>
                                         </div>
@@ -784,6 +791,16 @@
                                             <span class="detail-label">Time:</span>
                                             <span class="detail-value">{{ $training['formatted_time'] }}</span>
                                         </div>
+                                        @else
+                                        <div class="detail-row">
+                                            <span class="detail-label">Enrolled:</span>
+                                            <span class="detail-value">{{ $training['formatted_date'] }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Schedule:</span>
+                                            <span class="detail-value">{{ $training['formatted_time'] }}</span>
+                                        </div>
+                                        @endif
                                         <div class="detail-row">
                                             <span class="detail-label">Duration:</span>
                                             <span class="detail-value">{{ $training['duration'] }}</span>
@@ -802,6 +819,12 @@
                                                 R{{ number_format($training['student_price'] ?? $training['professional_price'], 2) }}
                                             </span>
                                         </div>
+                                        @if($training['source'] === 'course' && isset($training['progress']))
+                                        <div class="detail-row">
+                                            <span class="detail-label">Progress:</span>
+                                            <span class="detail-value">{{ $training['progress'] }}%</span>
+                                        </div>
+                                        @endif
                                     </div>
                                     
                                     <p class="session-description">{{ $training['description'] }}</p>
@@ -815,6 +838,13 @@
                                             Paid on {{ $training['formatted_payment_date'] }}
                                             <span class="transaction-id">{{ substr($training['transaction_id'], -8) }}</span>
                                         </div>
+                                        @if($training['source'] === 'course' && isset($training['course_uuid']) && $training['is_active'])
+                                        <div class="training-actions">
+                                            <a href="{{ route('enrolled-courses.show', $training['course_uuid']) }}" class="btn btn-primary btn-sm">
+                                                Continue Learning
+                                            </a>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 @endforeach

@@ -174,7 +174,7 @@
                                 </i>
 
                                 <div class="plan-button">
-                                    <a href="/login">Sign up Free</a>
+                                    <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Sign up Free</a>
                                 </div>
                             </li>
 
@@ -197,7 +197,11 @@
                                 </i>
 
                                 <div class="plan-button">
-                                    <a href="/login?redirect=subscription/yoco/form">Subscribe Now</a>
+                                    @if(Auth::check())
+                                        <a href="{{ route('subscription.yoco.form') }}">Subscribe Now</a>
+                                    @else
+                                        <a href="{{ url('/login?redirect=subscription/yoco/form') }}">Subscribe Now</a>
+                                    @endif
                                 </div>
                             </li>
 
@@ -219,7 +223,7 @@
                                 </i>
 
                                 <div class="plan-button">
-                                    <a href="/login">Enroll Now</a>
+                                    <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
                                 </div>
                             </li>
 
@@ -285,7 +289,20 @@
                                 </i>
 
                                 <div class="plan-button">
-                                    <button class="btn btn-primary">BOOK NOW</button>
+                                    @if(Auth::check())
+                                        <!-- Group Q/A Button -->
+                                        @if(isset($qaSession) && $qaSession)
+                                            <a href="#" class="btn btn-primary registration-trigger" 
+                                            data-type-id="4" 
+                                            data-session-id="{{ $qaSession->id }}">
+                                                BOOK NOW
+                                            </a>
+                                        @else
+                                            <button class="btn btn-primary" disabled>NO SESSION</button>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
+                                    @endif
                                 </div>
                             </li>
 
@@ -308,7 +325,19 @@
                                 </i>
 
                                 <div class="plan-button">
-                                    <button class="btn btn-primary">BOOK NOW</button>
+                                    @if(Auth::check())
+                                        @if(isset($consultSession) && $consultSession)
+                                            <a href="#" class="btn btn-primary registration-trigger"
+                                            data-type-id="5"
+                                            data-session-id="{{ $consultSession->id }}">
+                                                BOOK NOW
+                                            </a>
+                                        @else
+                                            <button class="btn btn-primary" disabled>NO SESSION</button>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">BOOK NOW</a>
+                                    @endif
                                 </div>
                             </li>
                         </ul>

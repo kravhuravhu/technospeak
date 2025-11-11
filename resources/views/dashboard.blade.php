@@ -838,13 +838,12 @@
                                             Paid on {{ $training['formatted_payment_date'] }}
                                             <span class="transaction-id">{{ substr($training['transaction_id'], -8) }}</span>
                                         </div>
-                                        @if($training['source'] === 'course' && isset($training['course_uuid']) && $training['is_active'])
+                                        <!-- Replaced the Continue Learning button with More Formal Trainings -->
                                         <div class="training-actions">
-                                            <a href="{{ route('enrolled-courses.show', $training['course_uuid']) }}" class="btn btn-primary btn-sm">
-                                                Continue Learning
+                                            <a href="{{ url('/dashboard#usr_formaltraining') }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-book-open"></i> More Formal Trainings
                                             </a>
                                         </div>
-                                        @endif
                                     </div>
                                 </div>
                                 @endforeach

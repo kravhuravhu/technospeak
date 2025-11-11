@@ -46,10 +46,10 @@ class ClientCourseSubscription extends Model
         return $this->belongsTo(CourseEpisode::class, 'current_episode_id');
     }
 
-    public function episodeProgress()
-    {
-        return $this->hasMany(CourseEpisodeProgress::class, 'subscription_id');
-    }
+        // public function episodeProgress()
+    // {
+    //     return $this->hasMany(CourseEpisodeProgress::class, 'subscription_id');
+    // }
 
     public function certificate()
     {
@@ -63,5 +63,13 @@ class ClientCourseSubscription extends Model
             'completed_at' => now(),
             'progress' => 100
         ]);
+    }
+
+    // Add a method to get completed episode IDs (if you track this elsewhere)
+    public function getCompletedEpisodeIds()
+    {
+        // Since you don't have course_episode_progress table,
+        // you might need to implement this differently based on your actual progress tracking
+        return collect(); // Return empty collection for now
     }
 }

@@ -209,10 +209,6 @@ class DashboardController extends Controller
             return collect();
         }
 
-        // Get formal trainings from two sources:
-        // 1. Training sessions (traditional formal training registrations)
-        // 2. Course purchases (formal training courses)
-        
         $formalTrainings = collect();
 
         // Source 1: Traditional training sessions (type 1 - Formal Training)
@@ -259,7 +255,7 @@ class DashboardController extends Controller
                 ];
             })
             ->filter()
-            ->values(); // Reset keys
+            ->values();
 
         // Source 2: Formal training courses (plan_type = 'frml_training')
         $paidFormalCourses = Payment::where('client_id', $user->id)
@@ -312,9 +308,9 @@ class DashboardController extends Controller
                 ];
             })
             ->filter()
-            ->values(); // Reset keys
+            ->values();
 
-        // Combine both sources using array_merge instead of Eloquent merge
+        // Combine both sources and ensure ALL are included
         $formalTrainings = collect(array_merge($paidFormalSessions->toArray(), $paidFormalCourses->toArray()))
             ->sortBy('scheduled_for') // Sort by date
             ->values();

@@ -9,6 +9,8 @@ class ClientCourseSubscription extends Model
 {
     use HasFactory;
 
+    protected $table = 'client_course_subscriptions';
+
     protected $fillable = [
         'client_id',
         'course_id',
@@ -23,14 +25,15 @@ class ClientCourseSubscription extends Model
     ];
 
     protected $casts = [
-        'subscribed_at' => 'datetime',
+        'started_at' => 'datetime',
+        'last_accessed_at' => 'datetime',
+        'completed_at' => 'datetime',
         'completed' => 'boolean',
-        'completed_at' => 'datetime'
     ];
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function course()
@@ -43,26 +46,30 @@ class ClientCourseSubscription extends Model
         return $this->belongsTo(CourseEpisode::class, 'current_episode_id');
     }
 
-    public function episodeProgress()
-    {
-        return $this->hasMany(EpisodeProgress::class, 'subscription_id');
-    }
+        // public function episodeProgress()
+    // {
+    //     return $this->hasMany(CourseEpisodeProgress::class, 'subscription_id');
+    // }
 
     public function certificate()
     {
         return $this->hasOne(CourseCertificate::class, 'subscription_id');
     }
 
-    public function resources()
-    {
-        return $this->hasMany(CourseResource::class, 'course_id');
-    }
-
     public function markAsCompleted()
     {
         $this->update([
             'completed' => true,
-            'completed_at' => now()
+            'completed_at' => now(),
+            'progress' => 100
         ]);
+    }
+
+    // Add a method to get completed episode IDs (if you track this elsewhere)
+    public function getCompletedEpisodeIds()
+    {
+        // Since you don't have course_episode_progress table,
+        // you might need to implement this differently based on your actual progress tracking
+        return collect(); // Return empty collection for now
     }
 }

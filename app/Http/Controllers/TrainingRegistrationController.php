@@ -54,7 +54,7 @@ class TrainingRegistrationController extends Controller
             ]
         );
 
-        // REDIRECT TO YOUR EXISTING PAYMENT FORM - FIXED
+        // REDIRECT TO YOCO PAYMENT FORM
         return $this->showYocoTrainingPaymentForm($session, $client);
     }
 
@@ -187,26 +187,26 @@ class TrainingRegistrationController extends Controller
     }
 
 
-public function hasDuplicateTrainingPayment($client, $sessionId)
-{
-    $session = TrainingSession::find($sessionId);
-    if (!$session) return false;
+    public function hasDuplicateTrainingPayment($client, $sessionId)
+    {
+        $session = TrainingSession::find($sessionId);
+        if (!$session) return false;
 
-    // Check if user has already paid for this specific session
-    $existingPayment = Payment::where([
-            'client_id' => $client->id,
-            'payable_type' => 'training',
-            'payable_id' => $sessionId,
-            'status' => 'completed'
-        ])->exists();
+        // Check if user has already paid for this specific session
+        $existingPayment = Payment::where([
+                'client_id' => $client->id,
+                'payable_type' => 'training',
+                'payable_id' => $sessionId,
+                'status' => 'completed'
+            ])->exists();
 
-    // If payment exists, check if the session is still in the future
-    if ($existingPayment) {
-        return $session->scheduled_for >= now();
+        // If payment exists, check if the session is still in the future
+        if ($existingPayment) {
+            return $session->scheduled_for >= now();
+        }
+
+        return false;
     }
-
-    return false;
-}
 
     public function showRegistrationForm($sessionId)
     {

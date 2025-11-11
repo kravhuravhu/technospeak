@@ -9,6 +9,7 @@ use App\Models\TrainingRegistration;
 use App\Models\TrainingSession;
 use App\Models\Instructor;
 use App\Models\Payment;
+use App\Models\ClientCourseSubscription;
 use App\Http\Controllers\CourseAccessController;
 use Illuminate\Http\Request;
 use App\Models\Course;
@@ -208,8 +209,10 @@ class DashboardController extends Controller
             return collect();
         }
 
-        // Get completed payments for formal trainings (type 1)
-        $paidFormalTrainings = Payment::where('client_id', $user->id)
+        $formalTrainings = collect();
+
+        // Source 1: Traditional training sessions (type 1 - Formal Training)
+        $paidFormalSessions = Payment::where('client_id', $user->id)
             ->where('status', 'completed')
             ->where('payable_type', 'training')
             ->whereHasMorph('payable', [TrainingSession::class], function($query) {
@@ -247,14 +250,72 @@ class DashboardController extends Controller
                     'is_active' => $isActive,
                     'status' => $status,
                     'max_participants' => $session->max_participants,
-                    'duration' => $session->formatted_duration
+                    'duration' => $session->formatted_duration,
+                    'source' => 'training_session'
                 ];
             })
-            ->filter() // Remove nulls
+            ->filter()
+            ->values();
+
+        // Source 2: Formal training courses (plan_type = 'frml_training')
+        $paidFormalCourses = Payment::where('client_id', $user->id)
+            ->where('status', 'completed')
+            ->where('payable_type', 'course')
+            ->whereHasMorph('payable', [Course::class], function($query) {
+                $query->where('plan_type', 'frml_training'); // Formal Training courses
+            })
+            ->with(['payable' => function($query) {
+                $query->with(['category', 'instructor']);
+            }])
+            ->get()
+            ->map(function($payment) use ($user) {
+                $course = $payment->payable;
+                if (!$course) return null;
+
+                // For courses, we consider them "active" if not completed
+                $subscription = ClientCourseSubscription::where('client_id', $user->id)
+                    ->where('course_id', $course->id)
+                    ->first();
+                
+                $isActive = $subscription && $subscription->progress < 100;
+                $status = $isActive ? 'upcoming' : 'completed';
+                
+                return [
+                    'id' => $course->id,
+                    'type_id' => 1, // Map to Formal Training type
+                    'name' => $course->title,
+                    'description' => $course->description,
+                    'type_name' => 'Formal Training',
+                    'category_name' => $course->category->name ?? 'General',
+                    'instructor_name' => $course->instructor->name ?? 'Technospeak Team',
+                    'scheduled_for' => $course->created_at, // Use course creation date
+                    'from_time' => '00:00:00',
+                    'to_time' => '23:59:59',
+                    'formatted_date' => Carbon::parse($course->created_at)->format('M d, Y'),
+                    'formatted_time' => 'Self-paced',
+                    'student_price' => $course->price,
+                    'professional_price' => $course->price,
+                    'payment_date' => $payment->created_at,
+                    'formatted_payment_date' => Carbon::parse($payment->created_at)->format('M d, Y'),
+                    'transaction_id' => $payment->transaction_id,
+                    'is_active' => $isActive,
+                    'status' => $status,
+                    'max_participants' => 1, // Individual course
+                    'duration' => $course->formatted_duration,
+                    'source' => 'course',
+                    'course_uuid' => $course->uuid,
+                    'progress' => $subscription ? $subscription->progress : 0
+                ];
+            })
+            ->filter()
+            ->values();
+
+        // Combine both sources and ensure ALL are included
+        $formalTrainings = collect(array_merge($paidFormalSessions->toArray(), $paidFormalCourses->toArray()))
             ->sortBy('scheduled_for') // Sort by date
             ->values();
 
-        return $paidFormalTrainings;
+        return $formalTrainings;
     }
 
     private function filterTipsTricksByCategory($allTipsTricks, $categoryName)
@@ -282,12 +343,6 @@ class DashboardController extends Controller
                         $user->subscription_expiry && 
                         $user->subscription_expiry->isFuture();
         
-        // Check if user has paid for any formal training (course)
-        $hasPaidForFormalTraining = Payment::where('client_id', $user->id)
-            ->where('payable_type', 'course')
-            ->where('status', 'completed')
-            ->exists();
-        
         foreach ($allTrainingTypes as $plan) {
             // Skip free plan (ID 7) as it should never be in available plans
             if ($plan->id == 7) {
@@ -313,7 +368,7 @@ class DashboardController extends Controller
                 continue;
             }
             
-            // For formal training (1), check if user has already paid for any ACTIVE formal training session
+            // For formal training (1), check if user has any ACTIVE formal training (from either source)
             if ($plan->id == 1) {
                 $hasActiveFormalTraining = $formalTrainingsRegistered->contains('is_active', true);
                 if (!$hasActiveFormalTraining) {

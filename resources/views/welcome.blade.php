@@ -167,11 +167,11 @@
                                 </div>
                                 <h3 class="subtitle">Free Subscription</h3>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>Access our free clickbait videos on social media</p>
                                     <p>Ask questions in comments</p>
                                     <p>Brief answers with links to full details</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     <a href="{{ Auth::check() ? url('/dashboard#usr_alltricks') : url('/login') }}">Sign up Free</a>
@@ -189,12 +189,12 @@
                                         <span>From R350/quarter</span>
                                     </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>Full access to all premium content</p>
                                     <p>Downloadable resources & cheat sheets</p>
                                     <p>Monthly curated tech newsletters</p>
                                     <p>Student and business pricing options</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     @if(Auth::check())
@@ -215,12 +215,12 @@
                                         <span>From R1500/training</span>
                                     </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>40-hour training programs</p>
                                     <p>End-User Computing & web development</p>
                                     <p>Portfolio development support</p>
                                     <p>Partnership opportunities</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     <a href="{{ Auth::check() ? url('/dashboard#usr_formaltraining') : url('/login') }}">Enroll Now</a>
@@ -237,12 +237,12 @@
                                         <span>From R110/hour</span>
                                     </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>One-on-one sessions with tutors</p>
                                     <p>Submit requests in advance</p>
                                     <p>Video call or chat sessions</p>
                                     <p>Flexible scheduling</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     <a href="#categories_cont" id="openPersonalGuideModal">Get Guide</a>
@@ -259,12 +259,12 @@
                                         <span>From R100/hour</span>
                                     </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>Hands-on technical task completion</p>
                                     <p>Coding & web development help</p>
                                     <p>System configuration support</p>
                                     <p>Student and business rates</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     <a href="#categories_cont" id="openTaskAssistanceModal">Get Assistance</a>
@@ -281,12 +281,12 @@
                                     <span>From R130/hour</span>
                                 </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>Interactive group sessions</p>
                                     <p>Live Q&A with Technos</p>
                                     <p>Submit questions via chat</p>
                                     <p>Various tech topics covered</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     @if(Auth::check())
@@ -317,12 +317,12 @@
                                     <span>From R130/hour</span>
                                 </div>
 
-                                <i class="description">
+                                <div class="description">
                                     <p>Focused Q&A sessions</p>
                                     <p>Answers to video comments</p>
                                     <p>Programming & cybersecurity focus</p>
                                     <p>Interactive skill-building</p>
-                                </i>
+                                </div>
 
                                 <div class="plan-button">
                                     @if(Auth::check())
@@ -342,9 +342,18 @@
                             </li>
                         </ul>
 
+                        <!-- Swiper Pagination -->
                         <div class="swiper-pagination"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
+                    </div>
+
+                    <!-- Swiper Navigation Buttons -->
+                    <div class="swiper-nav-btns">
+                        <button class="swiper-nav-btn swiper-button-prev">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="swiper-nav-btn swiper-button-next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>

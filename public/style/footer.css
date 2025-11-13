@@ -1,7 +1,7 @@
 .footer {
     background-color: var(--darkBlue-color);
     color: var(--lightWhite-color);
-    padding: 30px 0 0;
+    padding: 25px 0 0;
     width: 100%;
     font-family: 'Roboto', sans-serif;
 
@@ -15,18 +15,18 @@
     .footer-content {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 40px;
-        margin-bottom: 50px;
+        gap: 35px;
+        margin-bottom: 40px;
     }
 
     .footer-brand {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 18px;
     }
 
     .footer-logo {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: 700;
         color: var(--lightWhite-color);
         margin: 0;
@@ -34,22 +34,22 @@
 
     .footer-tagline {
         color: var(--lightBlue2Grey-color);
-        font-size: 1rem;
+        font-size: 0.95rem;
         line-height: 1.6;
         margin: 0;
     }
 
     .social-links {
         display: flex;
-        gap: 16px;
+        gap: 14px;
     }
 
     .social-links a {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
@@ -57,29 +57,29 @@
 
     .social-links a:hover {
         background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
+        transform: translateY(-2px);
     }
 
     .social-links svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         fill: var(--lightWhite-color);
     }
 
     .links-column {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
     }
 
     .links-title {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 600;
         color: var(--lightWhite-color);
-        margin: 0 0 10px;
+        margin: 0 0 8px;
         position: relative;
-        padding-bottom: 8px;
-        padding-top: 5px;
+        padding-bottom: 6px;
+        padding-top: 4px;
     }
 
     .links-title:after {
@@ -87,7 +87,7 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 40px;
+        width: 35px;
         height: 2px;
         background-color: var(--primary-color);
     }
@@ -96,16 +96,16 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        margin-top: -10px;
+        margin-top: -8px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
     .links-column a {
         color: var(--lightBlue2Grey-color);
         text-decoration: none;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         transition: color 0.3s ease;
     }
 
@@ -115,15 +115,15 @@
 
     /* Contact Us */
     .footer-contact {
-        padding: 20px;
+        padding: 18px;
     }
 
     .contact-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: #ffffff;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         position: relative;
-        padding-bottom: 8px;
+        padding-bottom: 6px;
     }
 
     .contact-title:after {
@@ -131,7 +131,7 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 40px;
+        width: 35px;
         height: 2px;
         background-color: #4299e1;
     }
@@ -139,18 +139,18 @@
     .contact-details {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
     }
 
     .contact-item {
         display: flex;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
     }
 
     .contact-item svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         color: var(--primary-color);
         flex-shrink: 0;
         margin-top: 2px;
@@ -169,12 +169,12 @@
 
     .working-hours {
         color: #a0aec0;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         line-height: 1.5;
     }
 
     .working-hours div {
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
 
     @media (max-width: 768px) {
@@ -200,30 +200,30 @@
 
     .footer-bottom {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 20px 0;
+        padding: 18px 0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     .copyright {
         color: #a0aec0;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         margin: 0;
     }
 
     .footer-legal {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         flex-wrap: wrap;
         justify-content: center;
     }
 
     .footer-legal a {
         color: #a0aec0;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         text-decoration: none;
         transition: color 0.3s ease;
     }
@@ -234,13 +234,13 @@
 
     .footer-legal span {
         color: #4a5568;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     @media (max-width: 768px) {
         .footer-content {
             grid-template-columns: 1fr;
-            gap: 30px;
+            gap: 25px;
         }
         
         .footer-brand {
@@ -276,21 +276,21 @@
 
     @media (max-width: 480px) {
         .footer {
-            padding: 40px 0 0;
+            padding: 35px 0 0;
         }
         
         .footer-content {
-            gap: 25px;
+            gap: 20px;
         }
         
         .footer-bottom {
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
         
         .footer-legal {
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
         
         .footer-legal span {

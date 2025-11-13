@@ -838,7 +838,7 @@
                                             Paid on {{ $training['formatted_payment_date'] }}
                                             <span class="transaction-id">{{ substr($training['transaction_id'], -8) }}</span>
                                         </div>
-                                        <!-- Replaced the Continue Learning button with More Formal Trainings -->
+                                        <!-- More Formal Trainings -->
                                         <div class="training-actions">
                                             <a href="{{ url('/dashboard#usr_formaltraining') }}" class="btn btn-primary btn-sm">
                                                 <i class="fas fa-book-open"></i> More Formal Trainings
@@ -1006,7 +1006,7 @@
                                                             BOOK NOW
                                                         </a>
                                                     @else
-                                                        <button class="btn btn-primary" disabled>BOOK NOW</button>
+                                                        <button class="btn btn-primary" disabled>NO SESSION</button>
                                                     @endif
                                                 @elseif($plan->id == 2) <!-- Task Assistance -->
                                                     <a href="{{ url('/dashboard#usr_taskAssistance') }}" class="btn btn-primary">Get Help</a>

@@ -529,7 +529,7 @@
                                 <div class="poster-overlay">
                                     <div class="overlay-content">
                                         <h4>Education & Resume creation</h4>
-                                        <p>Engaging educational material & Resemuse assistance</p>
+                                        <p>Engaging educational material & Resume assistance</p>
                                     </div>
                                 </div>
                             </div>
@@ -729,8 +729,8 @@
                         <h3>Ready to Start Your Project?</h3>
                         <p>Let's create something amazing together. Get in touch to discuss your ideas.</p>
                         <div class="cta-buttons">
-                            <a href="#contact" class="btn btn-primary">Start Your Project</a>
-                            <a href="#portfolio" class="btn btn-secondary">View More Work</a>
+                            <a href="{{ url('/#contact-section') }}" class="btn btn-primary">Start Your Project</a>
+                            <!-- <a href="#portfolio" class="btn btn-secondary">View More Work</a> -->
                         </div>
                     </div>
                 </div>

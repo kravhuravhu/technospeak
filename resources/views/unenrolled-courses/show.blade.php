@@ -1292,6 +1292,7 @@
                                     // Update the client_course_subscription->payment_status to 'formal_payment'
                                     // exmaple for the url with the course->price
                                     // window.location.href = `/payment/checkout/${courseId}?amount=${coursePrice}`;
+                                    window.location.href = `/formal-training/payment/${courseId}`;
                                 }
                             } else {
                                 enrollInCourse(courseId);

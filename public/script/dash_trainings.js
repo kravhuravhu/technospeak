@@ -223,7 +223,7 @@ function enrollInCourse(courseId, buttonElement = null, originalText = 'Full Det
                 }, 100);
                 return;
             }
-            showSwalNotification('error', 'Error', data.message || 'Could not enroll');
+            showSwalNotification('error', 'Error', data.message || 'Could not open');
             if (buttonElement) {
                 buttonElement.disabled = false;
                 buttonElement.innerHTML = originalText;
@@ -232,7 +232,7 @@ function enrollInCourse(courseId, buttonElement = null, originalText = 'Full Det
         }
     })
     .catch(() => {
-        showSwalNotification('error', 'Error', 'An error occurred during enrollment');
+        showSwalNotification('error', 'Error', 'An error occurred while opening..');
         if (buttonElement) {
             buttonElement.disabled = false;
             buttonElement.innerHTML = originalText;

@@ -175,7 +175,7 @@ class CourseAccessController extends Controller
                     // User hasn't paid, redirect to details page first
                     return response()->json([
                         'success' => true,
-                        'message' => 'Redirecting to course details',
+                        'message' => 'Redirecting to full details',
                         'open_url' => url('/unenrolled-courses/'.$course->uuid),
                     ]);
                 }
@@ -192,7 +192,7 @@ class CourseAccessController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Successfully enrolled, redirecting...',
+                'message' => 'Preparing & setting up access, redirecting…',
                 'subscription' => $subscription,
                 'open_url' => url('/enrolled-courses/'.$course->uuid),
             ]);
@@ -200,7 +200,7 @@ class CourseAccessController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Server error during enrollment: ' . $e->getMessage()
+                'message' => 'Server error during access setup: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -494,10 +494,10 @@ class CourseAccessController extends Controller
         if (!$user->isSubscribedTo($course->id)) {
             if (request()->expectsJson()) {
                 return response()->json([
-                    'error' => 'You are not enrolled in this course'
+                    'error' => 'You do not have access to this content!'
                 ], 403);
             }
-            abort(403, 'You are not enrolled in this course');
+            abort(403, 'You do not have access to this content!');
         }
 
         $subscription = $user->courseSubscriptions()
@@ -510,18 +510,26 @@ class CourseAccessController extends Controller
 
         $subscription->delete();
 
+        Payment::where('client_id', $user->id)
+            ->where('payable_type', 'course')
+            ->where('payable_id', $course->id)
+            ->where('status', 'completed')
+            ->update([
+                'enrollment_marker' => 'unenrolled'
+            ]);
+
         if (request()->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'redirect' => route('dashboard'),
-                'message' => 'Successfully unenrolled from ' . $course->title
+                'message' => 'You have successfully withdrawn from ' . $course->title
             ]);
         }
 
         return redirect()->route('dashboard')
             ->with('toast', [
                 'type' => 'success',
-                'message' => 'Successfully unenrolled from ' . $course->title
+                'message' => 'You have successfully withdrawn from ' . $course->title
             ]);
     }
 
@@ -847,6 +855,7 @@ class CourseAccessController extends Controller
             ->where('payable_type', 'course')
             ->where('payable_id', $courseId)
             ->where('status', 'completed')
+            ->whereNull('enrollment_marker')
             ->exists();
     }
 

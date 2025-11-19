@@ -41,10 +41,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT'),
     ],
 
-    'google-reauth' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REAUTH_REDIRECT'),
+    'google_reauth' => [
+        'client_id' => env('GOOGLE_REAUTH_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_REAUTH_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
     'linkedin' => [

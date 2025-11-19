@@ -78,16 +78,17 @@ Route::get('/subscription/free', [SubscriptionController::class, 'subscribeFree'
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
-// google reauth
 Route::get('/google/reauth', [GoogleReauthController::class, 'redirect'])
-    ->name('google.reauth');
+    ->name('google.reauth')
+    ->middleware('auth');
 
-Route::get('/google/reauth/callback', [GoogleReauthController::class, 'callback'])
-    ->name('google.reauth.callback');
+Route::get('/auth/google/callback/reauth', [GoogleReauthController::class, 'callback'])
+    ->name('google.reauth.callback')
+    ->middleware('auth');
 
-Route::get('/profile/confirm-delete_google', function () {
+Route::get('/profile/confirm_delete_google', function () {
     return view('profile.confirm_delete_google');
-})->name('profile.confirm-delete_google')->middleware('auth');
+})->name('profile.confirm-delete-google')->middleware('auth');
 
 // register through Linkedin
 Route::get('/auth/linkedin', [LinkedInAuthController::class, 'redirect'])->name('linkedin.login');

@@ -67,7 +67,7 @@ class InstructorController extends Controller
             'surname' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
             'email' => 'required|email|unique:instructors,email,' . $id,
-            'password' => 'required|string|confirmed|min:6',
+            'password' => 'nullable|string|confirmed|min:6',
             'bio' => 'nullable|string',
             'thumbnail' => 'nullable|url',
             'features' => 'nullable|json',

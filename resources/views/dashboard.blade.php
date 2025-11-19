@@ -171,7 +171,7 @@
             <div class="promo ">
                 <div class="rightbar_nav">
                     <div class="txt_btn" id="txt_btn_rm">
-                        <p>Something about cheatsheet? well ipsum dolor sit amet consectetur</p>
+                        <p>Unlock cheatsheets & exclusive content tailored to your goal.</p>
                         <button>Upgrade Now</button>
                     </div>
                     <div class="profile_cont_rt_bar" id="profile_tag">
@@ -1517,7 +1517,7 @@
                                 <!-- Google re-authentication -->
                                 <form>
                                     @csrf
-                                    <a href="{{ route('google.reauth.callback') }}" class="delete-btn">
+                                    <a href="{{ route('google.reauth') }}" class="delete-btn">
                                         Verify W/ Google to Delete account
                                     </a>
                                 </form>
@@ -2070,6 +2070,98 @@
         <script src="@secureAsset('/script/sendMail/support_assistance.js')"></script>
 
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Handle training card clicks
+                document.querySelectorAll('.training-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const courseId = this.getAttribute('data-course-id');
+                        const trainingType = this.getAttribute('data-training-type');
+                        const isEnrolled = this.getAttribute('data-enrolled') === 'true';
+                        
+                        if (isEnrolled) {
+                            // If already enrolled, go directly to the course
+                            window.location.href = this.getAttribute('data-show-link');
+                        } else if (trainingType === 'frml_training') {
+                            // For formal trainings, go to the details page first
+                            window.location.href = `/unenrolled-courses/${courseId}`;
+                        } else {
+                            // For tips & tricks, use the existing enrollment flow
+                            enrollInCourse(courseId);
+                        }
+                    });
+                });
+
+                // Your existing enrollInCourse function
+                function enrollInCourse(courseId) {
+                    fetch('/courses/enroll', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ course_id: courseId })
+                    })
+                    .then(async response => {
+                        const data = await response.json();
+                        
+                        if (response.status === 409) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Already Enrolled',
+                                text: data.message || 'You are already enrolled in this course',
+                                timer: 3000,
+                                showConfirmButton: true
+                            }).then(() => {
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                }
+                            });
+                            return;
+                        }
+
+                        if (data.success) {
+                            if (data.open_url) {
+                                // Redirect to the specified URL
+                                window.location.href = data.open_url;
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: data.message,
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = `/enrolled-courses/${courseId}`;
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Enrollment failed',
+                                timer: 5000,
+                                showConfirmButton: true
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Enrollment error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred during enrollment',
+                            timer: 5000,
+                            showConfirmButton: true
+                        });
+                    });
+                }
+            });
+        </script>
+
+        <script>
             // Mobile sidebar functionality
             document.addEventListener('DOMContentLoaded', function() {
                 const hamburgerMenu = document.getElementById('hamburgerMenu');
@@ -2102,59 +2194,6 @@
                         document.body.classList.remove('no-scroll');
                     }
                 });
-            });
-        </script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-
-                const profileForm = document.querySelector('form[action="{{ route('profile.update') }}"]');
-                const emailInput = profileForm.querySelector('input[name="email"]');
-
-                const saveBtn = profileForm.querySelector('.save-btn');
-
-                let errorBox = document.createElement('div');
-                errorBox.style.color = 'red';
-                errorBox.style.fontSize = '14px';
-                errorBox.style.marginTop = '4px';
-                emailInput.insertAdjacentElement('afterend', errorBox);
-
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                function validate() {
-                    const value = emailInput.value.trim();
-
-                    if (!value) {
-                        errorBox.textContent = 'Email is required';
-                        saveBtn.disabled = true;
-                        saveBtn.style.opacity = "0.5";
-                        return false;
-                    }
-
-                    if (!emailRegex.test(value)) {
-                        errorBox.textContent = 'Enter a valid email address';
-                        saveBtn.disabled = true;
-                        saveBtn.style.opacity = "0.5";
-                        return false;
-                    }
-
-                    errorBox.textContent = '';
-                    saveBtn.disabled = false;
-                    saveBtn.style.opacity = "1";
-                    return true;
-                }
-
-                emailInput.addEventListener('input', validate);
-
-                profileForm.addEventListener('submit', function(e) {
-                    if (!validate()) {
-                        e.preventDefault();
-                        emailInput.focus();
-                    }
-                });
-
-                // initial load check
-                validate();
             });
         </script>
     </body>

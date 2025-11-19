@@ -17,8 +17,8 @@
             --light-gray: #f8f9fa;
             --medium-gray: #ccc;
             --white: #fff;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 6px;
+            --box-shadow: 0 3px 5px rgba(0,0,0,0.08);
         }
         
         * {
@@ -32,47 +32,48 @@
             background: #f0f2f5; 
             padding: 1rem;
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.5;
         }
         
         .container { 
-            max-width: 500px; 
+            max-width: 480px; 
             margin: auto; 
             background: var(--white); 
-            padding: 1.5rem;
+            padding: 1.3rem;
             border-radius: var(--border-radius); 
             box-shadow: var(--box-shadow);
         }
         
         h2 { 
             color: var(--secondary-color); 
-            margin-bottom: 1rem; 
-            font-size: 1.5rem;
+            margin-bottom: 0.8rem; 
+            font-size: 1.4rem;
         }
         
         .form-group { 
-            margin-bottom: 1rem; 
+            margin-bottom: 0.8rem; 
         }
         
         label { 
             display: block; 
-            margin-bottom: 0.5rem; 
+            margin-bottom: 0.4rem; 
             color: var(--primary-color);
             font-weight: bold;
+            font-size: 0.9rem;
         }
         
         input { 
             width: 100%; 
-            padding: 0.75rem; 
+            padding: 0.65rem; 
             border-radius: var(--border-radius); 
             border: 1px solid var(--medium-gray);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .price { 
-            margin: 1rem 0; 
+            margin: 0.8rem 0; 
             font-weight: bold; 
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             color: var(--secondary-color);
         }
         
@@ -80,14 +81,14 @@
             background: var(--primary-color); 
             color: var(--white); 
             border: none; 
-            padding: 1rem; 
+            padding: 0.8rem; 
             width: 100%; 
             border-radius: var(--border-radius); 
             cursor: pointer; 
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             transition: background 0.3s ease;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
         }
         
         .submit-btn:hover { 
@@ -108,10 +109,11 @@
         }
         
         .message { 
-            margin: 1rem 0; 
-            padding: 0.75rem; 
+            margin: 0.8rem 0; 
+            padding: 0.65rem; 
             border-radius: var(--border-radius);
             text-align: center;
+            font-size: 0.9rem;
         }
         
         .success { 
@@ -131,32 +133,33 @@
         
         .plan-details { 
             background: var(--light-gray); 
-            padding: 1rem; 
+            padding: 0.8rem; 
             border-radius: var(--border-radius); 
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
         }
         
         .plan-details p {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
         
         /* Payment Method Tabs */
         .payment-method-tabs {
             display: flex;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             border-bottom: 2px solid var(--light-gray);
         }
         
         .tab-button {
             flex: 1;
-            padding: 1rem;
+            padding: 0.8rem;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: var(--medium-gray);
-            border-bottom: 3px solid transparent;
+            border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
         }
         
@@ -175,24 +178,24 @@
         
         .payment-info {
             background: var(--light-gray);
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
         }
         
         .payment-info ul {
-            margin-left: 1.5rem;
-            margin-top: 0.5rem;
+            margin-left: 1.2rem;
+            margin-top: 0.4rem;
         }
         
         .payment-info li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
         
         .divider {
             text-align: center;
-            margin: 1.5rem 0;
+            margin: 1.2rem 0;
             position: relative;
         }
         
@@ -208,14 +211,14 @@
         
         .divider span {
             background: var(--white);
-            padding: 0 1rem;
+            padding: 0 0.8rem;
             color: var(--medium-gray);
         }
         
         /* Responsive adjustments */
         @media (max-width: 576px) {
             body {
-                padding: 0.5rem;
+                padding: 0.4rem;
             }
             
             .container {
@@ -223,30 +226,30 @@
             }
             
             h2 {
-                font-size: 1.35rem;
+                font-size: 1.3rem;
             }
             
             input, .submit-btn {
-                padding: 0.875rem;
+                padding: 0.75rem;
             }
             
             .tab-button {
-                padding: 0.875rem 0.5rem;
-                font-size: 0.9rem;
+                padding: 0.75rem 0.4rem;
+                font-size: 0.85rem;
             }
         }
         
         @media (max-width: 400px) {
             h2 {
-                font-size: 1.25rem;
+                font-size: 1.2rem;
             }
             
             .plan-details {
-                padding: 0.875rem;
+                padding: 0.75rem;
             }
             
             .price {
-                font-size: 1.15rem;
+                font-size: 1.1rem;
             }
             
             .payment-method-tabs {
@@ -359,7 +362,7 @@
         <div id="simple-method-selection" style="display: none;">
             <div class="form-group">
                 <label>Choose Payment Method:</label>
-                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                <div style="display: flex; gap: 0.8rem; margin-top: 0.4rem;">
                     <button type="button" id="select-card" class="submit-btn" style="flex: 1;">
                         Credit Card
                     </button>

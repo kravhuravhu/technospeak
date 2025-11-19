@@ -8,7 +8,7 @@
         body { 
             font-family: Arial, sans-serif; 
             background: #f0f2f5; 
-            padding: 2rem; 
+            padding: 1.5rem; 
             text-align: center; 
             margin: 0;
             min-height: 100vh;
@@ -17,40 +17,42 @@
             justify-content: center;
         }
         .container { 
-            max-width: 600px; 
+            max-width: 520px; 
             margin: auto; 
             background: white; 
-            padding: 2rem; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 1.8rem; 
+            border-radius: 10px; 
+            box-shadow: 0 3px 5px rgba(0,0,0,0.08); 
         }
         .error-icon { 
             color: #e53e3e; 
-            font-size: 4rem; 
-            margin-bottom: 1rem; 
+            font-size: 3.2rem; 
+            margin-bottom: 0.8rem; 
         }
         h2 { 
             color: #15415a; 
-            margin-bottom: 1rem; 
-            font-size: 1.8rem;
+            margin-bottom: 0.8rem; 
+            font-size: 1.6rem;
         }
         p {
             color: #4a5568;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
         }
         .btn { 
             background: #38b6ff; 
             color: white; 
-            padding: 0.75rem 1.5rem; 
+            padding: 0.65rem 1.3rem; 
             text-decoration: none; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             display: inline-block; 
-            margin: 0.5rem;
+            margin: 0.4rem;
             font-weight: 500;
             transition: background-color 0.2s;
             border: none;
             cursor: pointer;
+            font-size: 0.9rem;
         }
         .btn:hover { 
             background: #2a9ce8; 
@@ -62,11 +64,14 @@
             background: #5a6268;
         }
         .support-info {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
+            margin-top: 1.2rem;
+            padding-top: 0.8rem;
             border-top: 1px solid #e2e8f0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #718096;
+        }
+        .support-info strong {
+            font-weight: 600;
         }
     </style>
 </head>

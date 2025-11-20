@@ -53,6 +53,11 @@ class GoogleReauthController extends Controller
             ]);
 
             if ($googleUser->getEmail() === auth()->user()->email) {
+                session([
+                    'google_reauth_verified_for' => auth()->id(),
+                    'google_reauth_time' => now()->toDateTimeString(),
+                ]);
+
                 Log::info('Google reauthentication successful', [
                     'user_id' => auth()->id(),
                     'user_email' => auth()->user()->email

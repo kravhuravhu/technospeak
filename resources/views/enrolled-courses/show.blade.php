@@ -1746,10 +1746,10 @@
             }
 
             // Disable right-click and context menu
-            // document.addEventListener('contextmenu', function(e) {
-            //     e.preventDefault();
-            //     showToast('Right-click is disabled to protect content', 'info');
-            // });
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showToast('Right-click is disabled to protect content', 'info');
+            });
             
             // Disable keyboard shortcuts
             document.addEventListener('keydown', function(e) {

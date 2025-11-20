@@ -48,11 +48,21 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
+
+        $sessionUserId = session('google_reauth_verified_for');
+
+        if ($sessionUserId && $sessionUserId === $user->id) {
+            session()->forget(['google_reauth_verified_for', 'google_reauth_time']);
+        } else {
+            $request->validateWithBag('userDeletion', [
+                'password' => ['required', 'current_password'],
+            ]);
+        }
+
+        session()->forget('reauth_passed');
+        $user->google_id = null;
+        $user->save();
 
         if (
             $user->courseSubscriptions()->exists() ||

@@ -25,15 +25,15 @@
             </span>
             <span class="social-text">Continue with Google</span>
         </a>
-        <a href="{{ route('linkedin.login') }}" class="social-login-btn linkedin-btn">
+        <!--<a href="{{ route('linkedin.login') }}" class="social-login-btn linkedin-btn">
             <span class="social-icon">
                 <i class="fa-brands fa-linkedin"></i>
             </span>
             <span class="social-text">Continue with LinkedIn</span>
-        </a>
+        </a>-->
     </div>
     <div class="hrzntl"><hr><span>Or</span><hr></div>
-    <div class="dscpt"><p>Continue with using your email</p></div>
+    <div class="dscpt"><p>Continue with Email</p></div>
     <div class="form_wrapper">
         <form method="POST" action="{{ route('login') }}" id="loginForm">
             @csrf

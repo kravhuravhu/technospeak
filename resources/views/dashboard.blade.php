@@ -1517,7 +1517,7 @@
                                 <!-- Google re-authentication -->
                                 <form>
                                     @csrf
-                                    <a href="{{ route('google.reauth.callback') }}" class="delete-btn">
+                                    <a href="{{ route('google.reauth') }}" class="delete-btn">
                                         Verify W/ Google to Delete account
                                     </a>
                                 </form>

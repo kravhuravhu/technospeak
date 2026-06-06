@@ -143,8 +143,8 @@
     
     <div class="details-grid">
         <div class="detail-card">
-            <h4>Assigned Tickets</h4>
-            <div class="detail-value">{{ $instructor->assignedIssues->count() }}</div>
+            <h4>Resolved Tickets</h4>
+            <div class="detail-value">0 / 0</div>
         </div>
         
         <div class="detail-card">
